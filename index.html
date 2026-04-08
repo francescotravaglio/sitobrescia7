@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGESCI Brescia 7 - Gruppo Scout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .scout-title { font-family: 'Patrick Hand', cursive; }
+        .bg-agesci-blue { background-color: #003366; }
+        .text-agesci-blue { color: #003366; }
+        .bg-agesci-yellow { background-color: #ffcc00; }
+        /* Immagine originale dal sito brescia 7 come sfondo */
+        .hero-gradient { 
+            background: linear-gradient(rgba(0,51,102,0.6), rgba(0,51,102,0.6)), url('https://agescibrescia7.com/wp-content/uploads/2016/06/cropped-bs7_header.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- NAVIGATION -->
+    <nav class="bg-agesci-blue text-white p-4 sticky top-0 z-50 shadow-lg border-b-2 border-yellow-400">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="logo.png" alt="Logo Brescia 7" class="h-12 w-auto bg-white rounded-full p-1">
+                <span class="text-xl font-bold tracking-tight">BRESCIA 7</span>
+            </div>
+            <div class="hidden lg:flex space-x-6 uppercase text-xs font-bold">
+                <a href="#storia" class="hover:text-yellow-400">La Storia</a>
+                <a href="#progetto" class="hover:text-yellow-400">Progetto Educativo</a>
+                <a href="#branche" class="hover:text-yellow-400">Le Unità</a>
+                <a href="#modulistica" class="hover:text-yellow-400">Modulistica</a>
+                <a href="#contatti" class="hover:text-yellow-400">Contatti</a>
+            </div>
+            <a href="mailto:info@agescibrescia7.com" class="bg-agesci-yellow text-blue-900 px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition">ISCRIVITI</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero-gradient h-[65vh] flex items-center justify-center text-white text-center px-4">
+        <div class="max-w-3xl">
+            <h2 class="text-5xl md:text-7xl font-bold scout-title mb-4 drop-shadow-lg">Buona Strada dal BS7</h2>
+            <p class="text-lg md:text-2xl opacity-95 mb-8 font-light">Associazione Guide e Scouts Cattolici Italiani - San Polo</p>
+            <div class="flex justify-center gap-4 text-xs font-bold uppercase">
+                <span class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full shadow-lg">Insieme nel Bosco</span>
+                <span class="bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Avventura</span>
+                <span class="bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Servizio</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- STORIA E IMMAGINE ORIGINALE -->
+    <section id="storia" class="py-16 container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <h2 class="text-3xl font-bold text-agesci-blue mb-6 border-l-4 border-yellow-400 pl-4 uppercase">La nostra Storia</h2>
+            <p class="mb-4 text-gray-700 leading-relaxed">Il Gruppo Scout **Agesci Brescia 7** nasce nel 1977. La nostra missione è educare i giovani secondo i valori dello scautismo, radicati nel quartiere di San Polo.</p>
+            <p class="text-gray-700 leading-relaxed italic">"Lasciate il mondo un po' migliore di come lo avete trovato."</p>
+            <div class="mt-8">
+                <img src="https://agescibrescia7.com/wp-content/uploads/2016/06/gruppo-300x200.jpg" alt="Foto Gruppo Originale" class="rounded-xl shadow-lg border-4 border-white">
+            </div>
+        </div>
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+            <h3 class="font-bold text-xl text-agesci-blue mb-6">Identità del Gruppo</h3>
+            <ul class="space-y-6 text-sm">
+                <li class="flex items-start gap-4">
+                    <span class="bg-blue-100 p-2 rounded-lg text-blue-600 font-bold">FAZ</span>
+                    <p><strong>Il Fazzolettone:</strong> Colore Blu con due fettucce bianche incrociate, simbolo della nostra appartenenza e della nostra promessa.</p>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-green-100 p-2 rounded-lg text-green-600 font-bold">PAR</span>
+                    <p><strong>La Sede:</strong> Siamo ospiti della Parrocchia S. Angela Merici a Brescia, cuore pulsante delle nostre attività settimanali.</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- LE UNITÀ (MODIFICATE: CERCHIO) -->
+    <section id="branche" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-agesci-blue mb-12 uppercase">Le Nostre Unità</h2>
+            <div class="grid md:grid-cols-3 gap-8 text-left">
+                
+                <!-- Cerchio Coccinelle -->
+                <div class="bg-white p-8 rounded-3xl border-t-8 border-red-500 shadow-xl relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition duration-500">
+                        <img src="https://agescibrescia7.com/wp-content/uploads/2016/06/cerchio-150x150.jpg" class="w-32 h-32 rounded-full" alt="Icona Cerchio">
+                    </div>
+                    <h4 class="text-red-600 font-bold text-xs uppercase mb-2">Coccinelle (8-11 anni)</h4>
+                    <h3 class="text-2xl font-bold mb-4">Cerchio "Ali di Speranza"</h3>
+                    <p class="text-gray-600 text-sm mb-4 italic text-red-700">"Eccomi!"</p>
+                    <p class="text-gray-600 text-xs">Viviamo la gioia attraverso l'ambiente fantastico del **Bosco**. Impariamo a conoscerci e a volerci bene come una grande famiglia.</p>
+                </div>
+
+                <!-- Reparto -->
+                <div class="bg-white p-8 rounded-3xl border-t-8 border-green-600 shadow-xl relative overflow-hidden group">
+                    <h4 class="text-green-700 font-bold text-xs uppercase mb-2">Esploratori e Guide (12-16 anni)</h4>
+                    <h3 class="text-2xl font-bold mb-4">Reparto "Alce Mite"</h3>
+                    <p class="text-gray-600 text-sm mb-4 italic text-green-700">"Sii Preparato"</p>
+                    <p class="text-gray-600 text-xs">L'avventura, la squadriglia e la competenza. Tra campi estivi e uscite, costruiamo il nostro carattere e la nostra autonomia.</p>
+                </div>
+
+                <!-- Clan -->
+                <div class="bg-white p-8 rounded-3xl border-t-8 border-red-700 shadow-xl relative overflow-hidden group">
+                    <h4 class="text-red-800 font-bold text-xs uppercase mb-2">Rover e Scolte (17-21 anni)</h4>
+                    <h3 class="text-2xl font-bold mb-4">Clan "Azimouth"</h3>
+                    <p class="text-gray-600 text-sm mb-4 italic text-red-800">"Servire"</p>
+                    <p class="text-gray-600 text-xs">La strada, la comunità e la scelta del servizio verso il prossimo. Per diventare cittadini consapevoli e pronti alla vita.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROGETTO EDUCATIVO (INFO DAL SITO) -->
+    <section id="progetto" class="py-16 bg-agesci-blue text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-12">PROGETTO EDUCATIVO 2022-25</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 text-left">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition">
+                    <h4 class="font-bold text-yellow-400 mb-2">Relazione Felice</h4>
+                    <p class="text-xs opacity-80 leading-relaxed">Saper riconoscere ed esprimere le proprie emozioni, avendo cura della relazione con l’altro.</p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition">
+                    <h4 class="font-bold text-yellow-400 mb-2">Bene Comune</h4>
+                    <p class="text-xs opacity-80 leading-relaxed">Cura della sede, del materiale e partecipazione attiva alla vita della parrocchia e del quartiere.</p>
+                </div>
+            </div>
+            <p class="mt-12 text-sm italic opacity-60">"Crescere uomini e donne della partenza"</p>
+        </div>
+    </section>
+
+    <!-- MODULISTICA -->
+    <section id="modulistica" class="py-16 container mx-auto px-4">
+        <div class="max-w-2xl mx-auto bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 text-center">
+            <h2 class="text-2xl font-bold text-agesci-blue mb-8 uppercase tracking-widest">Documentazione</h2>
+            <div class="grid gap-4">
+                <a href="#" class="p-4 bg-gray-50 rounded-2xl hover:bg-yellow-400 transition font-bold text-sm">Scarica Modulo Iscrizione</a>
+                <a href="#" class="p-4 bg-gray-50 rounded-2xl hover:bg-yellow-400 transition font-bold text-sm">Patto Associativo AGESCI</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contatti" class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <img src="logo.png" alt="BS7" class="h-20 mb-6 brightness-0 invert opacity-50">
+                    <p class="text-sm opacity-60 uppercase font-bold tracking-widest">Agesci Brescia 7</p>
+                </div>
+                <div>
+                    <h4 class="text-agesci-yellow font-bold mb-4 uppercase">Dove siamo</h4>
+                    <p class="text-sm opacity-80 leading-relaxed">
+                        Parrocchia S. Angela Merici<br>
+                        Via Cimabue, 271<br>
+                        25134 – Brescia (BS)
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-agesci-yellow font-bold mb-4 uppercase">Contatti</h4>
+                    <p class="text-sm opacity-80">Email: info@agescibrescia7.com</p>
+                    <p class="text-sm opacity-80">Telefono: +39 340 874 0678</p>
+                    <div class="flex gap-4 mt-6">
+                        <a href="#" class="text-xs font-bold border border-white/20 px-3 py-1 rounded hover:bg-white hover:text-black">INSTAGRAM</a>
+                        <a href="#" class="text-xs font-bold border border-white/20 px-3 py-1 rounded hover:bg-white hover:text-black">FACEBOOK</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex justify-between items-center text-[10px] opacity-40 uppercase tracking-[0.3em]">
+                <span>© 2026 Brescia 7 Scout</span>
+                <span class="scout-title text-xl text-yellow-400 lowercase normal-case tracking-normal">Semel Scout, Semper Scout</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
