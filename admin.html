@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin – AGESCI Brescia 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scout: '#003366',
+                        'scout-dark': '#001a3d',
+                        gold: '#fcc400',
+                    },
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: .75rem;
+            padding: .65rem 1rem; border-radius: .75rem;
+            font-size: .8rem; font-weight: 600;
+            color: rgba(255,255,255,.6);
+            transition: background .2s, color .2s;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,.08); color: #fff; }
+        .sidebar-link.active { background: rgba(252,196,0,.15); color: #fcc400; }
+        .sidebar-link i { width: 1.1rem; text-align: center; font-size: .85rem; }
+
+        .stat-card {
+            background: #fff; border-radius: 1.25rem;
+            padding: 1.5rem; border: 1px solid #f0f0f0;
+            transition: box-shadow .2s;
+        }
+        .stat-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+
+        .badge {
+            display: inline-block; padding: .2rem .6rem;
+            border-radius: 9999px; font-size: .65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .badge-new    { background: #ecfdf5; color: #059669; }
+        .badge-read   { background: #f1f5f9; color: #94a3b8; }
+        .badge-iscrizione { background: #eff6ff; color: #2563eb; }
+        .badge-info   { background: #fefce8; color: #ca8a04; }
+
+        .tab-btn { padding: .5rem 1.25rem; border-radius: .6rem; font-size: .8rem; font-weight: 700;
+                   transition: background .2s, color .2s; cursor: pointer; }
+        .tab-btn.active { background: #003366; color: #fff; }
+        .tab-btn:not(.active) { color: #64748b; }
+        .tab-btn:not(.active):hover { background: #f1f5f9; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        input[type="text"], input[type="date"], input[type="password"],
+        input[type="email"], select, textarea {
+            width: 100%; padding: .65rem 1rem; border: 1px solid #e5e7eb;
+            border-radius: .75rem; font-size: .85rem; outline: none;
+            font-family: 'Montserrat', sans-serif; transition: border-color .2s, box-shadow .2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0,51,102,.1);
+        }
+        label { display: block; font-size: .7rem; font-weight: 700;
+                text-transform: uppercase; letter-spacing: .1em;
+                color: #64748b; margin-bottom: .4rem; }
+
+        .table-row:hover { background: #f8fafc; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5);
+                         z-index: 1000; display: flex; align-items: center;
+                         justify-content: center; padding: 1rem; }
+        .modal-box { background: #fff; border-radius: 1.5rem; padding: 2rem;
+                     max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  LOGIN OVERLAY                                                 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="login-overlay" class="fixed inset-0 bg-scout z-50 flex items-center justify-center">
+    <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-sm text-center">
+        <img src="logo.png" alt="BS7" class="h-16 mx-auto mb-6">
+        <h1 class="text-2xl font-black text-scout mb-1">Area Riservata</h1>
+        <p class="text-gray-400 text-sm mb-8">Pannello di amministrazione BS7</p>
+
+        <div class="text-left space-y-4 mb-6">
+            <div>
+                <label>Password</label>
+                <div class="relative">
+                    <input type="password" id="login-pw" placeholder="••••••••"
+                           onkeydown="if(event.key==='Enter')doLogin()">
+                    <button onclick="togglePw()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-scout">
+                        <i class="fas fa-eye text-sm" id="pw-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Password errata. Riprova.</p>
+
+        <button onclick="doLogin()"
+                class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
+            <i class="fas fa-lock-open mr-2"></i>Accedi
+        </button>
+
+        <a href="index.html" class="block mt-5 text-xs text-gray-400 hover:text-scout transition">
+            ← Torna al sito
+        </a>
+
+        <p class="mt-8 text-xs text-gray-300">Password predefinita: <code class="bg-gray-100 px-1 rounded">bs7admin</code><br>
+        Cambiarla nelle Impostazioni dopo il primo accesso.</p>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  MAIN LAYOUT                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="app" class="hidden flex min-h-screen">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <aside class="w-60 bg-scout-dark flex-shrink-0 flex flex-col min-h-screen sticky top-0 h-screen overflow-y-auto">
+        <!-- Logo -->
+        <div class="px-5 py-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="BS7" class="h-9 brightness-0 invert opacity-80">
+                <div>
+                    <div class="text-white font-black text-sm">BRESCIA 7</div>
+                    <div class="text-white/40 text-xs">Admin Panel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-5 space-y-1">
+            <div onclick="showTab('dashboard')" class="sidebar-link active" id="nav-dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </div>
+            <div onclick="showTab('richieste')" class="sidebar-link" id="nav-richieste">
+                <i class="fas fa-inbox"></i> Richieste
+                <span id="badge-unread" class="ml-auto bg-gold text-scout text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
+            <div onclick="showTab('eventi')" class="sidebar-link" id="nav-eventi">
+                <i class="fas fa-calendar-alt"></i> Calendario
+            </div>
+            <div onclick="showTab('annunci')" class="sidebar-link" id="nav-annunci">
+                <i class="fas fa-bullhorn"></i> Annunci
+            </div>
+            <div onclick="showTab('calendario-google')" class="sidebar-link" id="nav-calendario-google">
+                <i class="fab fa-google"></i> Google Calendar
+            </div>
+            <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
+                <i class="fas fa-cog"></i> Impostazioni
+            </div>
+        </nav>
+
+        <!-- Footer sidebar -->
+        <div class="px-5 py-4 border-t border-white/10 text-xs text-white/30">
+            <div class="flex items-center justify-between">
+                <span>Admin BS7</span>
+                <button onclick="logout()" class="hover:text-white transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+    <main class="flex-1 overflow-auto">
+
+        <!-- Top bar -->
+        <header class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 z-40">
+            <div>
+                <h1 id="page-title" class="font-black text-scout text-xl">Dashboard</h1>
+                <p id="page-sub" class="text-gray-400 text-xs mt-0.5">Riepilogo generale</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="index.html" target="_blank"
+                   class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-scout transition border border-gray-200 px-4 py-2 rounded-xl hover:border-scout">
+                    <i class="fas fa-external-link-alt text-xs"></i> Vedi sito
+                </a>
+                <button onclick="logout()"
+                        class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-500 transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="p-8">
+
+            <!-- ──────────────────────── DASHBOARD ───────────────── -->
+            <section id="tab-dashboard" class="tab-panel active space-y-8">
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-5" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-blue-50 p-2.5 rounded-xl"><i class="fas fa-inbox text-scout"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Totale</span>
+                        </div>
+                        <div class="text-3xl font-black text-scout" id="stat-total">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste ricevute</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-envelope text-amber-500"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Da leggere</span>
+                        </div>
+                        <div class="text-3xl font-black text-amber-500" id="stat-unread">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Messaggi non letti</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-green-50 p-2.5 rounded-xl"><i class="fas fa-user-plus text-green-600"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Iscrizioni</span>
+                        </div>
+                        <div class="text-3xl font-black text-green-600" id="stat-iscrizioni">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste iscrizione</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-purple-50 p-2.5 rounded-xl"><i class="fas fa-calendar text-purple-600"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Prossimi</span>
+                        </div>
+                        <div class="text-3xl font-black text-purple-600" id="stat-eventi">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Eventi in programma</div>
+                    </div>
+                </div>
+
+                <!-- Ultime richieste -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-black text-scout">Ultime richieste</h3>
+                        <button onclick="showTab('richieste')" class="text-xs text-scout font-semibold hover:underline">Vedi tutte →</button>
+                    </div>
+                    <div id="dashboard-recent" class="divide-y divide-gray-50">
+                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>
+                    </div>
+                </div>
+
+                <!-- Prossimi eventi -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-black text-scout">Prossimi eventi</h3>
+                        <button onclick="showTab('eventi')" class="text-xs text-scout font-semibold hover:underline">Gestisci →</button>
+                    </div>
+                    <div id="dashboard-events" class="divide-y divide-gray-50">
+                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── RICHIESTE ───────────────── -->
+            <section id="tab-richieste" class="tab-panel space-y-6">
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex gap-2" id="filter-tabs">
+                        <button onclick="filterRichieste('tutte')"  class="tab-btn active" id="f-tutte">Tutte</button>
+                        <button onclick="filterRichieste('nuove')"  class="tab-btn" id="f-nuove">Non lette</button>
+                        <button onclick="filterRichieste('iscrizione')" class="tab-btn" id="f-iscrizione">Iscrizioni</button>
+                        <button onclick="filterRichieste('informazioni')" class="tab-btn" id="f-informazioni">Info</button>
+                    </div>
+                    <button onclick="clearAllRichieste()"
+                            class="text-xs text-red-400 hover:text-red-600 font-semibold transition flex items-center gap-1">
+                        <i class="fas fa-trash-alt"></i> Svuota archivio
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div id="richieste-table">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── EVENTI ──────────────────── -->
+            <section id="tab-eventi" class="tab-panel space-y-6">
+                <!-- Aggiungi evento -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Nuovo evento</h3>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label>Titolo evento *</label>
+                            <input type="text" id="ev-titolo" placeholder="Es. Campo estivo Reparto">
+                        </div>
+                        <div>
+                            <label>Data *</label>
+                            <input type="date" id="ev-data">
+                        </div>
+                        <div>
+                            <label>Unità</label>
+                            <select id="ev-unita">
+                                <option value="tutto">Tutto il gruppo</option>
+                                <option value="cerchio">Cerchio</option>
+                                <option value="reparto">Reparto</option>
+                                <option value="clan">Clan</option>
+                                <option value="capi">Capi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Luogo</label>
+                            <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga...">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label>Descrizione</label>
+                            <textarea id="ev-descr" rows="2" placeholder="Breve descrizione dell'evento..."></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addEvento()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-plus mr-2"></i>Aggiungi evento
+                    </button>
+                </div>
+
+                <!-- Lista eventi -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-black text-scout">Tutti gli eventi</h3>
+                    </div>
+                    <div id="eventi-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── ANNUNCI ─────────────────── -->
+            <section id="tab-annunci" class="tab-panel space-y-6">
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Nuovo annuncio</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Titolo *</label>
+                            <input type="text" id="ann-titolo" placeholder="Es. Quota 2024/25">
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label>Categoria</label>
+                                <select id="ann-cat">
+                                    <option value="news">News</option>
+                                    <option value="urgente">Urgente</option>
+                                    <option value="evento">Evento</option>
+                                    <option value="info">Info</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Scadenza (opzionale)</label>
+                                <input type="date" id="ann-scad">
+                            </div>
+                        </div>
+                        <div>
+                            <label>Testo *</label>
+                            <textarea id="ann-testo" rows="4" placeholder="Testo dell'annuncio..."></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addAnnuncio()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-paper-plane mr-2"></i>Pubblica annuncio
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-black text-scout">Annunci pubblicati</h3>
+                    </div>
+                    <div id="annunci-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────── GOOGLE CALENDAR ─────────────── -->
+            <section id="tab-calendario-google" class="tab-panel space-y-6">
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Configura Google Calendar</h3>
+                    <p class="text-gray-500 text-sm mb-6">Collega il Google Calendar del gruppo al sito.</p>
+
+                    <!-- Steps -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
+                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                            <div>
+                                <div class="font-bold text-scout text-sm mb-1">Crea il calendario</div>
+                                <p class="text-gray-600 text-xs leading-relaxed">Vai su <strong>calendar.google.com</strong>, crea un nuovo calendario per il gruppo (es. "Eventi BS7").</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
+                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                            <div>
+                                <div class="font-bold text-scout text-sm mb-1">Rendilo pubblico</div>
+                                <p class="text-gray-600 text-xs leading-relaxed">Impostazioni del calendario → <strong>"Accesso alle autorizzazioni"</strong> → spunta "Rendi disponibile al pubblico".</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
+                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                            <div>
+                                <div class="font-bold text-scout text-sm mb-1">Copia l'ID calendario</div>
+                                <p class="text-gray-600 text-xs leading-relaxed">In fondo alle Impostazioni trovi <strong>"ID calendario"</strong> (es. <code class="bg-white px-1 rounded">abc123@group.calendar.google.com</code>). Copialo.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start bg-amber-50 rounded-2xl p-5">
+                            <div class="bg-gold text-scout font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">4</div>
+                            <div>
+                                <div class="font-bold text-scout text-sm mb-1">Incolla qui sotto e salva</div>
+                                <p class="text-gray-600 text-xs leading-relaxed">Il sito aggiorna automaticamente il calendario incorporato nel iframe della pagina principale.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input ID -->
+                    <div class="flex gap-3 items-end">
+                        <div class="flex-1">
+                            <label>ID Calendario Google *</label>
+                            <input type="text" id="gcal-id"
+                                   placeholder="es. gruppobs7@gmail.com oppure abc123@group.calendar.google.com">
+                        </div>
+                        <button onclick="saveCalendarId()"
+                                class="bg-scout text-white font-black px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition flex-shrink-0">
+                            <i class="fas fa-save mr-2"></i>Salva
+                        </button>
+                    </div>
+                    <p id="gcal-saved-msg" class="text-green-600 text-xs mt-2 hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Salvato! Aggiorna il file index.html con l'ID indicato nell'iframe del calendario.
+                    </p>
+                </div>
+
+                <!-- Anteprima -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-black text-scout">Anteprima calendario</h3>
+                    </div>
+                    <div id="gcal-preview" class="p-4">
+                        <div class="bg-gray-50 rounded-xl p-8 text-center text-gray-400 text-sm">
+                            Inserisci un ID calendario per vedere l'anteprima.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Link apertura diretta -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-3">Gestione rapida eventi</h3>
+                    <p class="text-gray-500 text-sm mb-4">Apri Google Calendar per aggiungere, modificare o eliminare eventi direttamente.</p>
+                    <a href="https://calendar.google.com" target="_blank"
+                       class="inline-flex items-center gap-2 bg-blue-600 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-blue-700 transition">
+                        <i class="fab fa-google"></i> Apri Google Calendar
+                    </a>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── IMPOSTAZIONI ─────────────── -->
+            <section id="tab-impostazioni" class="tab-panel space-y-6">
+
+                <!-- Cambia password -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Cambia password admin</h3>
+                    <div class="grid sm:grid-cols-3 gap-4">
+                        <div>
+                            <label>Password attuale</label>
+                            <input type="password" id="pw-old" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label>Nuova password</label>
+                            <input type="password" id="pw-new" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label>Conferma password</label>
+                            <input type="password" id="pw-confirm" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <p id="pw-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                    <button onclick="changePw()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-key mr-2"></i>Aggiorna password
+                    </button>
+                </div>
+
+                <!-- Info sito -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Informazioni del gruppo</h3>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label>Email di contatto</label>
+                            <input type="email" id="cfg-email" placeholder="info@agescibrescia7.com">
+                        </div>
+                        <div>
+                            <label>Telefono</label>
+                            <input type="text" id="cfg-tel" placeholder="+39 340 874 0678">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label>Indirizzo sede</label>
+                            <input type="text" id="cfg-indirizzo" placeholder="Via Cimabue, 271 – 25134 Brescia">
+                        </div>
+                        <div>
+                            <label>Instagram</label>
+                            <input type="text" id="cfg-ig" placeholder="@agesci_brescia7">
+                        </div>
+                        <div>
+                            <label>Facebook URL</label>
+                            <input type="text" id="cfg-fb" placeholder="https://facebook.com/...">
+                        </div>
+                    </div>
+                    <button onclick="saveConfig()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-save mr-2"></i>Salva impostazioni
+                    </button>
+                    <p id="cfg-msg" class="text-green-600 text-xs mt-3 hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Impostazioni salvate.
+                    </p>
+                </div>
+
+                <!-- Export dati -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Esporta dati</h3>
+                    <p class="text-gray-500 text-sm mb-5">Scarica tutte le richieste ricevute in formato JSON.</p>
+                    <button onclick="exportData()"
+                            class="flex items-center gap-2 border border-gray-200 text-gray-600 font-bold px-5 py-3 rounded-xl text-sm hover:border-scout hover:text-scout transition">
+                        <i class="fas fa-download"></i> Esporta richieste (.json)
+                    </button>
+                </div>
+
+                <!-- Reset -->
+                <div class="bg-red-50 rounded-2xl border border-red-100 p-6">
+                    <h3 class="font-black text-red-600 mb-2">Zona pericolosa</h3>
+                    <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (richieste, eventi, annunci).</p>
+                    <button onclick="resetAll()"
+                            class="flex items-center gap-2 bg-red-500 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-red-600 transition">
+                        <i class="fas fa-trash-alt"></i> Cancella tutti i dati
+                    </button>
+                </div>
+            </section>
+
+        </div><!-- /p-8 -->
+    </main>
+</div><!-- /app -->
+
+<!-- ── MODAL DETTAGLIO RICHIESTA ─────────────────────────────────── -->
+<div id="modal-richiesta" class="modal-overlay hidden" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Dettaglio richiesta</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                                    -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── Costanti ─────────────────────────────────────────────────────
+const KEYS = {
+    pw:         'bs7_admin_pw',
+    richieste:  'bs7_richieste',
+    eventi:     'bs7_eventi',
+    annunci:    'bs7_annunci',
+    gcal:       'bs7_gcal_id',
+    config:     'bs7_config',
+    logged:     'bs7_logged',
+};
+
+const DEFAULT_PW = 'bs7admin';
+
+// ── Helpers ──────────────────────────────────────────────────────
+const get  = key => JSON.parse(localStorage.getItem(key) || 'null');
+const set  = (key, val) => localStorage.setItem(key, JSON.stringify(val));
+const getPw = () => get(KEYS.pw) || DEFAULT_PW;
+
+function fmtDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('it-IT', {day:'2-digit', month:'short', year:'numeric'});
+}
+function fmtDatetime(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleString('it-IT', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+}
+
+function tipoLabel(t) {
+    const m = {iscrizione:'Iscrizione', informazioni:'Informazioni', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', altro:'Altro'};
+    return m[t] || t;
+}
+
+function toast(msg, ok = true) {
+    const el = document.createElement('div');
+    el.className = `fixed bottom-6 right-6 z-[2000] px-5 py-3 rounded-xl shadow-lg font-semibold text-sm text-white transition
+                    ${ok ? 'bg-green-600' : 'bg-red-500'}`;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+}
+
+// ── Login ────────────────────────────────────────────────────────
+function doLogin() {
+    const val = document.getElementById('login-pw').value;
+    if (val === getPw()) {
+        set(KEYS.logged, true);
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('app').classList.remove('hidden');
+        document.getElementById('app').classList.add('flex');
+        refreshAll();
+    } else {
+        document.getElementById('login-error').classList.remove('hidden');
+        document.getElementById('login-pw').value = '';
+        document.getElementById('login-pw').focus();
+    }
+}
+
+function logout() {
+    set(KEYS.logged, false);
+    location.reload();
+}
+
+function togglePw() {
+    const inp = document.getElementById('login-pw');
+    const ic  = document.getElementById('pw-icon');
+    if (inp.type === 'password') {
+        inp.type = 'text'; ic.className = 'fas fa-eye-slash text-sm';
+    } else {
+        inp.type = 'password'; ic.className = 'fas fa-eye text-sm';
+    }
+}
+
+// Auto-login se già loggato
+if (get(KEYS.logged)) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('app').classList.remove('hidden');
+        document.getElementById('app').classList.add('flex');
+        refreshAll();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('login-pw').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doLogin();
+    });
+    loadConfig();
+    loadCalendarId();
+});
+
+// ── Tab navigation ───────────────────────────────────────────────
+const TAB_META = {
+    dashboard:         { title: 'Dashboard',         sub: 'Riepilogo generale' },
+    richieste:         { title: 'Richieste',          sub: 'Messaggi e iscrizioni dal sito' },
+    eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
+    annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
+    'calendario-google': { title: 'Google Calendar', sub: 'Configurazione calendario integrato' },
+    impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
+};
+
+function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+    const meta = TAB_META[name] || {};
+    document.getElementById('page-title').textContent = meta.title || name;
+    document.getElementById('page-sub').textContent   = meta.sub   || '';
+
+    // Lazy render
+    if (name === 'richieste')   renderRichieste('tutte');
+    if (name === 'eventi')      renderEventi();
+    if (name === 'annunci')     renderAnnunci();
+    if (name === 'dashboard')   renderDashboard();
+}
+
+// ── Refresh globale ───────────────────────────────────────────────
+function refreshAll() {
+    renderDashboard();
+    updateBadge();
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────
+function renderDashboard() {
+    const richieste = get(KEYS.richieste) || [];
+    const eventi    = get(KEYS.eventi)    || [];
+    const now       = new Date();
+    const unread    = richieste.filter(r => !r.letta).length;
+    const iscrizioni = richieste.filter(r => r.dati?.tipo === 'iscrizione').length;
+    const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
+
+    document.getElementById('stat-total').textContent    = richieste.length;
+    document.getElementById('stat-unread').textContent   = unread;
+    document.getElementById('stat-iscrizioni').textContent = iscrizioni;
+    document.getElementById('stat-eventi').textContent   = prossimi;
+
+    // Ultime 5 richieste
+    const recEl = document.getElementById('dashboard-recent');
+    if (!richieste.length) {
+        recEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>';
+    } else {
+        recEl.innerHTML = richieste.slice(0, 5).map(r => richiestaRow(r, true)).join('');
+    }
+
+    // Prossimi 3 eventi
+    const evEl = document.getElementById('dashboard-events');
+    const upcoming = eventi.filter(e => new Date(e.data) >= now)
+                           .sort((a,b) => new Date(a.data)-new Date(b.data))
+                           .slice(0,3);
+    if (!upcoming.length) {
+        evEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>';
+    } else {
+        evEl.innerHTML = upcoming.map(eventRow).join('');
+    }
+}
+
+function updateBadge() {
+    const richieste = get(KEYS.richieste) || [];
+    const n = richieste.filter(r => !r.letta).length;
+    const b = document.getElementById('badge-unread');
+    if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
+    else b.classList.add('hidden');
+}
+
+// ── RICHIESTE ────────────────────────────────────────────────────
+let currentFilter = 'tutte';
+
+function filterRichieste(f) {
+    currentFilter = f;
+    ['tutte','nuove','iscrizione','informazioni'].forEach(k => {
+        document.getElementById('f-' + k)?.classList.toggle('active', k === f);
+    });
+    renderRichieste(f);
+}
+
+function renderRichieste(filtro) {
+    const all = get(KEYS.richieste) || [];
+    let list = all;
+    if (filtro === 'nuove')       list = all.filter(r => !r.letta);
+    if (filtro === 'iscrizione')  list = all.filter(r => r.dati?.tipo === 'iscrizione');
+    if (filtro === 'informazioni')list = all.filter(r => r.dati?.tipo === 'informazioni');
+
+    const el = document.getElementById('richieste-table');
+    if (!list.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta in questa categoria.</div>';
+        return;
+    }
+    el.innerHTML = `
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Nome</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Tipo</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data</th>
+                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                ${list.map(r => richiestaRow(r, false)).join('')}
+            </tbody>
+        </table>`;
+}
+
+function richiestaRow(r, compact) {
+    const nome = `${r.dati?.nome || ''} ${r.dati?.cognome || ''}`.trim() || 'Senza nome';
+    const statoBadge = r.letta
+        ? '<span class="badge badge-read">Letta</span>'
+        : '<span class="badge badge-new">Nuova</span>';
+    const tipoBadge = r.dati?.tipo === 'iscrizione'
+        ? '<span class="badge badge-iscrizione">Iscrizione</span>'
+        : '<span class="badge badge-info">' + tipoLabel(r.dati?.tipo) + '</span>';
+
+    if (compact) {
+        return `<div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 table-row">
+            <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-800 truncate">${nome}</div>
+                <div class="text-xs text-gray-400">${fmtDatetime(r.timestamp)}</div>
+            </div>
+            ${statoBadge}
+            <button onclick="openRichiesta(${r.id})" class="text-scout text-xs font-bold hover:underline">Apri</button>
+        </div>`;
+    }
+
+    return `<tr class="table-row">
+        <td class="px-6 py-4 font-semibold text-gray-800">${nome}</td>
+        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${r.dati?.email || '—'}</td>
+        <td class="px-6 py-4 hidden lg:table-cell">${tipoBadge}</td>
+        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${fmtDatetime(r.timestamp)}</td>
+        <td class="px-6 py-4">${statoBadge}</td>
+        <td class="px-6 py-4 text-right">
+            <div class="flex gap-2 justify-end">
+                <button onclick="openRichiesta(${r.id})" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
+                <button onclick="deleteRichiesta(${r.id})" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
+}
+
+function openRichiesta(id) {
+    const all = get(KEYS.richieste) || [];
+    const r = all.find(x => x.id === id);
+    if (!r) return;
+
+    // Marca come letta
+    r.letta = true;
+    set(KEYS.richieste, all);
+    updateBadge();
+    renderRichieste(currentFilter);
+
+    const d = r.dati || {};
+    document.getElementById('modal-body').innerHTML = `
+        <div class="space-y-4 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Nome</div>
+                    <div class="font-semibold">${d.nome || '—'} ${d.cognome || ''}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Tipo richiesta</div>
+                    <div class="font-semibold">${tipoLabel(d.tipo)}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${d.email}" class="font-semibold text-scout hover:underline">${d.email || '—'}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <div class="font-semibold">${d.telefono || '—'}</div>
+                </div>
+                ${d.nascita ? `<div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Data di nascita</div>
+                    <div class="font-semibold">${fmtDate(d.nascita)}</div>
+                </div>` : ''}
+            </div>
+            ${d.messaggio ? `<div class="bg-blue-50 rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-2">Messaggio</div>
+                <p class="text-gray-700 leading-relaxed">${d.messaggio}</p>
+            </div>` : ''}
+            <div class="text-xs text-gray-400 pt-2">Ricevuto: ${fmtDatetime(r.timestamp)}</div>
+            <div class="flex gap-3 pt-2">
+                <a href="mailto:${d.email}?subject=Risposta%20richiesta%20AGESCI%20Brescia%207"
+                   class="flex items-center gap-2 bg-scout text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
+                    <i class="fas fa-reply"></i> Rispondi per email
+                </a>
+                <button onclick="deleteRichiesta(${id}); closeModal()"
+                        class="flex items-center gap-2 text-red-400 font-bold text-sm border border-red-200 px-4 py-2.5 rounded-xl hover:bg-red-50 transition">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-richiesta').classList.remove('hidden');
+}
+
+function closeModal(e) {
+    if (!e || e.target === document.getElementById('modal-richiesta')) {
+        document.getElementById('modal-richiesta').classList.add('hidden');
+    }
+}
+
+function deleteRichiesta(id) {
+    if (!confirm('Eliminare questa richiesta?')) return;
+    const all = (get(KEYS.richieste) || []).filter(r => r.id !== id);
+    set(KEYS.richieste, all);
+    renderRichieste(currentFilter);
+    renderDashboard();
+    updateBadge();
+    toast('Richiesta eliminata.');
+}
+
+function clearAllRichieste() {
+    if (!confirm('Eliminare TUTTE le richieste? Operazione irreversibile.')) return;
+    set(KEYS.richieste, []);
+    renderRichieste('tutte');
+    renderDashboard();
+    updateBadge();
+    toast('Archivio svuotato.');
+}
+
+// ── EVENTI ────────────────────────────────────────────────────────
+function addEvento() {
+    const titolo = document.getElementById('ev-titolo').value.trim();
+    const data   = document.getElementById('ev-data').value;
+    if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
+
+    const ev = {
+        id:          Date.now(),
+        titolo,
+        data,
+        unita:       document.getElementById('ev-unita').value,
+        luogo:       document.getElementById('ev-luogo').value.trim(),
+        descrizione: document.getElementById('ev-descr').value.trim(),
+    };
+
+    const all = get(KEYS.eventi) || [];
+    all.push(ev);
+    set(KEYS.eventi, all);
+
+    // Reset form
+    ['ev-titolo','ev-data','ev-luogo','ev-descr'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ev-unita').selectedIndex = 0;
+
+    renderEventi();
+    renderDashboard();
+    toast('Evento aggiunto!');
+}
+
+function renderEventi() {
+    const all = (get(KEYS.eventi) || []).sort((a,b) => new Date(a.data)-new Date(b.data));
+    const el  = document.getElementById('eventi-list');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>';
+        return;
+    }
+    el.innerHTML = all.map(eventRow).join('');
+}
+
+function eventRow(ev) {
+    const d     = new Date(ev.data);
+    const past  = d < new Date();
+    const day   = d.toLocaleDateString('it-IT', {day:'2-digit'});
+    const mon   = d.toLocaleDateString('it-IT', {month:'short'}).toUpperCase();
+    const unitaColors = {cerchio:'bg-red-100 text-red-600', reparto:'bg-green-100 text-green-700', clan:'bg-blue-100 text-blue-800', capi:'bg-purple-100 text-purple-700', tutto:'bg-gray-100 text-gray-600'};
+    const uc = unitaColors[ev.unita] || unitaColors.tutto;
+
+    return `<div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 border-b border-gray-50 last:border-0 ${past ? 'opacity-50' : ''}">
+        <div class="bg-scout text-white rounded-xl px-3 py-2 text-center flex-shrink-0 w-14">
+            <div class="text-xs font-bold opacity-60">${mon}</div>
+            <div class="text-2xl font-black leading-tight">${day}</div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="font-bold text-gray-800">${ev.titolo}</div>
+            <div class="flex flex-wrap gap-2 mt-1">
+                <span class="badge ${uc}">${ev.unita}</span>
+                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${ev.luogo}</span>` : ''}
+            </div>
+            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${ev.descrizione}</div>` : ''}
+        </div>
+        <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition ml-2 flex-shrink-0">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>`;
+}
+
+function deleteEvento(id) {
+    if (!confirm('Eliminare questo evento?')) return;
+    set(KEYS.eventi, (get(KEYS.eventi)||[]).filter(e => e.id !== id));
+    renderEventi();
+    renderDashboard();
+    toast('Evento eliminato.');
+}
+
+// ── ANNUNCI ───────────────────────────────────────────────────────
+function addAnnuncio() {
+    const titolo = document.getElementById('ann-titolo').value.trim();
+    const testo  = document.getElementById('ann-testo').value.trim();
+    if (!titolo || !testo) { toast('Titolo e testo sono obbligatori.', false); return; }
+
+    const ann = {
+        id:        Date.now(),
+        titolo,
+        testo,
+        categoria: document.getElementById('ann-cat').value,
+        scadenza:  document.getElementById('ann-scad').value || null,
+        timestamp: new Date().toISOString(),
+    };
+
+    const all = get(KEYS.annunci) || [];
+    all.unshift(ann);
+    set(KEYS.annunci, all);
+
+    ['ann-titolo','ann-testo','ann-scad'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ann-cat').selectedIndex = 0;
+    renderAnnunci();
+    toast('Annuncio pubblicato!');
+}
+
+function renderAnnunci() {
+    const all = get(KEYS.annunci) || [];
+    const el  = document.getElementById('annunci-list');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio pubblicato.</div>';
+        return;
+    }
+    const catColors = {news:'bg-blue-50 text-blue-700', urgente:'bg-red-50 text-red-600', evento:'bg-purple-50 text-purple-700', info:'bg-amber-50 text-amber-700'};
+    el.innerHTML = all.map(a => {
+        const cc = catColors[a.categoria] || catColors.info;
+        return `<div class="flex items-start gap-4 px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50">
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap gap-2 items-center mb-1">
+                    <span class="font-bold text-gray-800">${a.titolo}</span>
+                    <span class="badge ${cc}">${a.categoria}</span>
+                    ${a.scadenza ? `<span class="text-xs text-gray-400">Scade: ${fmtDate(a.scadenza)}</span>` : ''}
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">${a.testo}</p>
+                <div class="text-xs text-gray-400 mt-2">${fmtDatetime(a.timestamp)}</div>
+            </div>
+            <button onclick="deleteAnnuncio(${a.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0 mt-1">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function deleteAnnuncio(id) {
+    if (!confirm('Eliminare questo annuncio?')) return;
+    set(KEYS.annunci, (get(KEYS.annunci)||[]).filter(a => a.id !== id));
+    renderAnnunci();
+    toast('Annuncio eliminato.');
+}
+
+// ── GOOGLE CALENDAR ───────────────────────────────────────────────
+function loadCalendarId() {
+    const id = get(KEYS.gcal);
+    if (id) document.getElementById('gcal-id').value = id;
+}
+
+function saveCalendarId() {
+    const id = document.getElementById('gcal-id').value.trim();
+    if (!id) { toast('Inserisci un ID calendario.', false); return; }
+    set(KEYS.gcal, id);
+
+    // Preview
+    const encoded = encodeURIComponent(id);
+    document.getElementById('gcal-preview').innerHTML = `
+        <iframe src="https://calendar.google.com/calendar/embed?src=${encoded}&ctz=Europe%2FRome&showTitle=0&showNav=1&mode=MONTH"
+                style="border:0" width="100%" height="500" frameborder="0" scrolling="no" class="rounded-xl"></iframe>`;
+
+    document.getElementById('gcal-saved-msg').classList.remove('hidden');
+    toast('ID calendario salvato!');
+}
+
+// ── IMPOSTAZIONI ─────────────────────────────────────────────────
+function loadConfig() {
+    const cfg = get(KEYS.config) || {};
+    if (cfg.email)    document.getElementById('cfg-email').value    = cfg.email;
+    if (cfg.tel)      document.getElementById('cfg-tel').value      = cfg.tel;
+    if (cfg.indirizzo)document.getElementById('cfg-indirizzo').value = cfg.indirizzo;
+    if (cfg.ig)       document.getElementById('cfg-ig').value       = cfg.ig;
+    if (cfg.fb)       document.getElementById('cfg-fb').value       = cfg.fb;
+}
+
+function saveConfig() {
+    set(KEYS.config, {
+        email:     document.getElementById('cfg-email').value.trim(),
+        tel:       document.getElementById('cfg-tel').value.trim(),
+        indirizzo: document.getElementById('cfg-indirizzo').value.trim(),
+        ig:        document.getElementById('cfg-ig').value.trim(),
+        fb:        document.getElementById('cfg-fb').value.trim(),
+    });
+    const msg = document.getElementById('cfg-msg');
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 3000);
+    toast('Impostazioni salvate!');
+}
+
+function changePw() {
+    const old     = document.getElementById('pw-old').value;
+    const nw      = document.getElementById('pw-new').value;
+    const confirm = document.getElementById('pw-confirm').value;
+    const msg     = document.getElementById('pw-msg');
+
+    msg.classList.remove('hidden', 'text-green-600', 'text-red-500');
+
+    if (old !== getPw()) {
+        msg.textContent = '❌ Password attuale errata.';
+        msg.classList.add('text-red-500');
+        return;
+    }
+    if (nw.length < 6) {
+        msg.textContent = '❌ La nuova password deve avere almeno 6 caratteri.';
+        msg.classList.add('text-red-500');
+        return;
+    }
+    if (nw !== confirm) {
+        msg.textContent = '❌ Le password non coincidono.';
+        msg.classList.add('text-red-500');
+        return;
+    }
+    set(KEYS.pw, nw);
+    ['pw-old','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+    msg.textContent = '✅ Password aggiornata con successo.';
+    msg.classList.add('text-green-600');
+    toast('Password cambiata!');
+}
+
+function exportData() {
+    const data = {
+        richieste: get(KEYS.richieste) || [],
+        eventi:    get(KEYS.eventi)    || [],
+        annunci:   get(KEYS.annunci)   || [],
+        esportato: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `bs7-dati-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Export completato!');
+}
+
+function resetAll() {
+    if (!confirm('⚠️ Eliminare TUTTI i dati (richieste, eventi, annunci)? Operazione irreversibile!')) return;
+    [KEYS.richieste, KEYS.eventi, KEYS.annunci].forEach(k => localStorage.removeItem(k));
+    refreshAll();
+    renderEventi();
+    renderAnnunci();
+    toast('Tutti i dati eliminati.');
+}
+</script>
+</body>
+</html>
