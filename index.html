@@ -982,11 +982,20 @@
         checks.forEach(c => { if (!c.checked) { c.style.outline = '2px solid #ef4444'; valid = false; } else { c.style.outline = ''; } });
         if (!valid) { alert('Accetta tutti i consensi obbligatori per procedere.'); return; }
 
-        const form = document.getElementById('contact-form');
-        const data = new FormData(form);
+        // Raccoglie solo i campi del tipo attivo (evita conflitti tra campi min/mag nascosti)
+        const prefix = currentTipo === 'minorenne' ? 'min' : 'mag';
+        const activePanels = document.querySelectorAll(`[id^="panel-${prefix}-"]`);
+        const data = {};
+        activePanels.forEach(panel => {
+            panel.querySelectorAll('input, select, textarea').forEach(el => {
+                if (!el.name) return;
+                if (el.type === 'checkbox') { data[el.name] = el.checked ? 'si' : ''; }
+                else { data[el.name] = el.value; }
+            });
+        });
         const submission = {
             tipo: currentTipo,
-            dati: Object.fromEntries(data),
+            dati: data,
             timestamp: new Date().toISOString(),
             letta: false,
             stato: 'nuova'

@@ -812,28 +812,34 @@ function openRichiesta(id) {
     }
 
     const d = r.dati || {};
+    const isMin = r.tipo === 'minorenne';
+    const emailVal = d.email || d.gen1_email || '';
+    const telVal   = d.telefono || d.gen1_tel || '';
+    const nomeVal  = isMin
+        ? `${d.nome || '—'} ${d.cognome || ''} <span class="text-xs text-gray-400">(Genitore: ${d.gen1_nome || ''} ${d.gen1_cognome || ''})</span>`
+        : `${d.nome || '—'} ${d.cognome || ''}`;
     document.getElementById('modal-body').innerHTML = `
         <div class="space-y-4 text-sm">
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
                     <div class="text-xs text-gray-400 mb-1">Nome</div>
-                    <div class="font-semibold">${d.nome || '—'} ${d.cognome || ''}</div>
+                    <div class="font-semibold">${nomeVal}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                     <div class="text-xs text-gray-400 mb-1">Tipo richiesta</div>
-                    <div class="font-semibold">${tipoLabel(d.tipo)}</div>
+                    <div class="font-semibold">${tipoLabel(r.tipo)}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                     <div class="text-xs text-gray-400 mb-1">Email</div>
-                    <a href="mailto:${d.email}" class="font-semibold text-scout hover:underline">${d.email || '—'}</a>
+                    <a href="mailto:${emailVal}" class="font-semibold text-scout hover:underline">${emailVal || '—'}</a>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                     <div class="text-xs text-gray-400 mb-1">Telefono</div>
-                    <div class="font-semibold">${d.telefono || '—'}</div>
+                    <div class="font-semibold">${telVal || '—'}</div>
                 </div>
-                ${d.nascita ? `<div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                ${d.data_nascita ? `<div class="bg-gray-50 rounded-xl p-4 col-span-2">
                     <div class="text-xs text-gray-400 mb-1">Data di nascita</div>
-                    <div class="font-semibold">${fmtDate(d.nascita)}</div>
+                    <div class="font-semibold">${fmtDate(d.data_nascita)}</div>
                 </div>` : ''}
             </div>
             ${d.messaggio ? `<div class="bg-blue-50 rounded-xl p-4">
@@ -842,7 +848,7 @@ function openRichiesta(id) {
             </div>` : ''}
             <div class="text-xs text-gray-400 pt-2">Ricevuto: ${fmtDatetime(r.timestamp)}</div>
             <div class="flex gap-3 pt-2">
-                <a href="mailto:${d.email}?subject=Risposta%20richiesta%20AGESCI%20Brescia%207"
+                <a href="mailto:${emailVal}?subject=Risposta%20richiesta%20AGESCI%20Brescia%207"
                    class="flex items-center gap-2 bg-scout text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
                     <i class="fas fa-reply"></i> Rispondi per email
                 </a>
