@@ -137,12 +137,13 @@
                 <a href="#branche"   class="nav-link hover:text-scout transition">Le Unità</a>
                 <a href="#progetto"  class="nav-link hover:text-scout transition">Progetto Ed.</a>
                 <a href="#calendario"class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="#area-soci" class="nav-link hover:text-scout transition">Area Soci</a>
                 <a href="#modulistica"class="nav-link hover:text-scout transition">Documenti</a>
                 <a href="#contatti"  class="nav-link hover:text-scout transition">Contatti</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="#iscrizione" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
+                <a href="#area-soci" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
                     <i class="fas fa-star text-xs"></i> ISCRIVITI
                 </a>
                 <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
@@ -159,12 +160,69 @@
             <a href="#branche"    onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
             <a href="#progetto"   onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Progetto Educativo</a>
             <a href="#calendario" onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="#area-soci"  onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
             <a href="#modulistica"onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
             <a href="#contatti"   onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Contatti</a>
-            <a href="#iscrizione" onclick="toggleMobileMenu()" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
+            <a href="#area-soci"  onclick="toggleMobileMenu()" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
         </div>
     </div>
 </nav>
+
+<!-- ── MODAL PRE-ISCRIZIONE ──────────────────────────────────────── -->
+<div id="modal-pre" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closePreIscrizione()">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10">
+    <button onclick="closePreIscrizione()" class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="text-center mb-6">
+      <div class="w-14 h-14 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-3">
+        <i class="fas fa-feather-alt text-scout text-2xl"></i>
+      </div>
+      <h3 class="text-2xl font-black text-scout">Unisciti a noi</h3>
+      <p class="text-gray-400 text-sm mt-1">Pre-iscrizione rapida – ti ricontatteremo presto</p>
+    </div>
+    <form id="form-pre" novalidate class="space-y-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">Nome genitore *</label>
+          <input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field">
+        </div>
+        <div>
+          <label class="form-label">Cognome genitore *</label>
+          <input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field">
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Nome del bambino/a *</label>
+        <input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field">
+      </div>
+      <div>
+        <label class="form-label">Data di nascita del bambino/a *</label>
+        <input type="date" id="pre-bimbo-nascita" required class="input-field">
+      </div>
+      <div>
+        <label class="form-label">Email genitore *</label>
+        <input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field">
+      </div>
+      <div>
+        <label class="form-label">Telefono</label>
+        <input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field">
+      </div>
+      <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
+      <button type="button" onclick="submitPreIscrizione()"
+        class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg">
+        <i class="fas fa-paper-plane mr-2"></i>Invia pre-iscrizione
+      </button>
+    </form>
+    <div id="pre-success" class="hidden text-center py-4">
+      <div class="text-5xl mb-3">🎉</div>
+      <h4 class="text-xl font-black text-scout mb-2">Richiesta inviata!</h4>
+      <p class="text-gray-500 text-sm">Ti contatteremo entro 48 ore per completare l'iscrizione.<br>Buona strada!</p>
+      <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
 <header class="hero-bg min-h-[90vh] flex items-center justify-center relative overflow-hidden">
@@ -181,9 +239,9 @@
             <strong class="font-semibold">Gruppo Brescia 7 – Parrocchia S. Angela Merici</strong>
         </p>
         <div class="fade-up delay-3 flex flex-wrap justify-center gap-4">
-            <a href="#iscrizione" class="bg-gold text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl">
+            <button onclick="openPreIscrizione()" class="bg-gold text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
                 <i class="fas fa-feather-alt mr-2"></i>Unisciti a noi
-            </a>
+            </button>
             <a href="#branche" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
                 Scopri le unità <i class="fas fa-arrow-right ml-2 text-sm"></i>
             </a>
@@ -403,18 +461,18 @@
 </section>
 
 <!-- ── ISCRIZIONE ─────────────────────────────────────────────────── -->
-<section id="iscrizione" class="py-28 bg-gray-50">
+<section id="area-soci" class="py-28 bg-gray-50">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid lg:grid-cols-2 gap-20 items-start">
 
       <!-- Info colonna sinistra -->
       <div>
-        <div class="section-tag">Entra nel gruppo</div>
+        <div class="section-tag">Modulo ufficiale AGESCI</div>
         <h2 class="text-5xl font-black text-scout mb-6 leading-tight">
-          Inizia la tua<br><span class="text-gold" style="text-shadow:0 2px 8px rgba(252,196,0,.3)">avventura</span>
+          Area<br><span class="text-gold" style="text-shadow:0 2px 8px rgba(252,196,0,.3)">Soci</span>
         </h2>
         <p class="text-gray-600 leading-relaxed mb-10 text-lg">
-          Compila il modulo digitale di iscrizione. Ti contatteremo entro 48 ore per confermare l'iscrizione e comunicarti la quota.
+          Compila il modulo ufficiale di iscrizione AGESCI. Al termine riceverai il PDF compilato e firmato via email da conservare.
         </p>
         <div class="space-y-6">
           <div class="flex items-start gap-4">
@@ -613,12 +671,24 @@
                   <input type="checkbox" id="uscite-min" name="consenso_uscite" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
                   <label for="uscite-min" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Autorizzo la partecipazione del minore alle <strong class="text-gray-700">attività, uscite e campi</strong> organizzati dal Gruppo Scout AGESCI Brescia 7.</label>
                 </div>
+                <!-- Firma minorenne -->
+                <div>
+                  <label class="form-label">Firma del genitore/tutore *</label>
+                  <div class="border-2 border-dashed border-gray-200 rounded-xl p-1.5 bg-gray-50">
+                    <canvas id="sig-canvas-min" width="500" height="130"
+                      class="w-full rounded-lg bg-white border border-gray-100 cursor-crosshair touch-none block"></canvas>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma con il mouse o il dito</p>
+                    <button type="button" onclick="clearSig('sig-canvas-min')" class="text-xs text-scout hover:underline">Cancella</button>
+                  </div>
+                </div>
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
-                  <i class="fas fa-info-circle mr-1"></i> Dopo l'invio riceverete conferma via email con le istruzioni per il <strong>pagamento della quota</strong> tramite bonifico.
+                  <i class="fas fa-info-circle mr-1"></i> Riceverai il PDF compilato e firmato via email. La quota va versata tramite <strong>bonifico bancario</strong>.
                 </div>
                 <button type="button" onclick="submitForm()"
                   class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg hover:shadow-xl">
-                  <i class="fas fa-paper-plane mr-2"></i>Invia iscrizione
+                  <i class="fas fa-file-pdf mr-2"></i>Invia e genera PDF
                 </button>
               </div>
             </div>
@@ -632,12 +702,24 @@
                   <input type="checkbox" id="foto-mag" name="consenso_foto" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
                   <label for="foto-mag" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Autorizzo l'utilizzo di <strong class="text-gray-700">foto e video</strong> per finalità associative, pubblicazioni sul sito e social del gruppo.</label>
                 </div>
+                <!-- Firma maggiorenne -->
+                <div>
+                  <label class="form-label">Firma *</label>
+                  <div class="border-2 border-dashed border-gray-200 rounded-xl p-1.5 bg-gray-50">
+                    <canvas id="sig-canvas-mag" width="500" height="130"
+                      class="w-full rounded-lg bg-white border border-gray-100 cursor-crosshair touch-none block"></canvas>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma con il mouse o il dito</p>
+                    <button type="button" onclick="clearSig('sig-canvas-mag')" class="text-xs text-scout hover:underline">Cancella</button>
+                  </div>
+                </div>
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
-                  <i class="fas fa-info-circle mr-1"></i> Dopo l'invio riceverete conferma via email con le istruzioni per il <strong>pagamento della quota</strong> tramite bonifico.
+                  <i class="fas fa-info-circle mr-1"></i> Riceverai il PDF compilato e firmato via email. La quota va versata tramite <strong>bonifico bancario</strong>.
                 </div>
                 <button type="button" onclick="submitForm()"
                   class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg hover:shadow-xl">
-                  <i class="fas fa-paper-plane mr-2"></i>Invia iscrizione
+                  <i class="fas fa-file-pdf mr-2"></i>Invia e genera PDF
                 </button>
               </div>
             </div>
@@ -659,10 +741,18 @@
 
           <!-- Successo -->
           <div id="form-success" class="hidden text-center py-10">
-            <div class="text-6xl mb-4">✅</div>
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-check text-green-600 text-2xl"></i>
+            </div>
             <h4 class="text-2xl font-black text-scout mb-2">Iscrizione inviata!</h4>
-            <p class="text-gray-500 text-sm">Ti risponderemo entro 48 ore con i dettagli.<br>Buona strada! 🌿</p>
-            <button onclick="resetForm()" class="mt-6 text-scout underline text-sm font-semibold">Nuova iscrizione</button>
+            <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Ti abbiamo inviato una copia via email. Buona strada! 🌿</p>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 text-left mb-4">
+              <i class="fas fa-university mr-1"></i> Ricorda di effettuare il <strong>bonifico bancario</strong> a:<br>
+              <span class="font-mono font-bold">IT 70 Y 08575 11201 000000184420</span><br>
+              Intestato a: <strong>AGESCI GRUPPO BRESCIA 7</strong><br>
+              Causale: <strong>COGNOME NOME – BRANCA</strong>
+            </div>
+            <button onclick="resetForm()" class="mt-2 text-scout underline text-sm font-semibold">Nuova iscrizione</button>
           </div>
 
         </div><!-- end p-8 -->
@@ -761,7 +851,7 @@
                     <li><a href="#branche"     class="hover:text-white transition">Le Unità</a></li>
                     <li><a href="#progetto"    class="hover:text-white transition">Progetto educativo</a></li>
                     <li><a href="#calendario"  class="hover:text-white transition">Calendario eventi</a></li>
-                    <li><a href="#iscrizione"  class="hover:text-white transition">Iscrizioni</a></li>
+                    <li><a href="#area-soci"   class="hover:text-white transition">Area Soci</a></li>
                     <li><a href="#modulistica" class="hover:text-white transition">Modulistica</a></li>
                 </ul>
             </div>
@@ -902,9 +992,14 @@
             stato: 'nuova'
         };
 
-        // Salva in Firestore
+        // Salva in Firestore + genera PDF + invia email
         window.db.collection('iscrizioni').add(submission)
             .then(() => {
+                // Genera e scarica PDF
+                try { generateAndDownloadPDF(submission); } catch(e) { console.warn('PDF error:', e); }
+                // Invia email (se EmailJS configurato)
+                try { sendConfirmationEmail(submission); } catch(e) { console.warn('Email error:', e); }
+                // Mostra successo
                 form.classList.add('hidden');
                 document.getElementById('form-nav').classList.add('hidden');
                 document.getElementById('steps-indicator').classList.add('hidden');
@@ -963,8 +1058,205 @@
         });
     }
     loadEvents();
+
+    // ── Signature pad ─────────────────────────────────────────────
+    function initSig(id) {
+        const c = document.getElementById(id); if (!c) return;
+        const ctx = c.getContext('2d'); let drawing = false;
+        function pos(e) {
+            const r = c.getBoundingClientRect(), sx = c.width/r.width, sy = c.height/r.height;
+            const src = e.touches ? e.touches[0] : e;
+            return { x: (src.clientX - r.left)*sx, y: (src.clientY - r.top)*sy };
+        }
+        c.addEventListener('mousedown',  e => { drawing=true; ctx.beginPath(); const p=pos(e); ctx.moveTo(p.x,p.y); });
+        c.addEventListener('mousemove',  e => { if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#003366'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
+        c.addEventListener('mouseup',    () => drawing=false);
+        c.addEventListener('mouseleave', () => drawing=false);
+        c.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=pos(e); ctx.moveTo(p.x,p.y); }, {passive:false});
+        c.addEventListener('touchmove',  e => { e.preventDefault(); if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#003366'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); }, {passive:false});
+        c.addEventListener('touchend',   () => drawing=false);
+    }
+    window.clearSig = id => { const c=document.getElementById(id); if(c) c.getContext('2d').clearRect(0,0,c.width,c.height); };
+    function sigEmpty(id) {
+        const c=document.getElementById(id); if(!c) return true;
+        return !c.getContext('2d').getImageData(0,0,c.width,c.height).data.some((v,i)=>i%4===3&&v>0);
+    }
+    // Init canvases quando visibili
+    const _origUpdateFormView = updateFormView;
+    updateFormView = function() {
+        _origUpdateFormView();
+        if (currentStep === 4) {
+            initSig('sig-canvas-min');
+            initSig('sig-canvas-mag');
+        }
+    };
+
+    // ── Pre-iscrizione modal ──────────────────────────────────────
+    window.openPreIscrizione = function() {
+        document.getElementById('modal-pre').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+    window.closePreIscrizione = function() {
+        document.getElementById('modal-pre').classList.add('hidden');
+        document.body.style.overflow = '';
+        document.getElementById('form-pre').reset();
+        document.getElementById('form-pre').classList.remove('hidden');
+        document.getElementById('pre-success').classList.add('hidden');
+        document.getElementById('pre-error').classList.add('hidden');
+    };
+    window.submitPreIscrizione = function() {
+        const genNome    = document.getElementById('pre-gen-nome').value.trim();
+        const genCognome = document.getElementById('pre-gen-cognome').value.trim();
+        const bimboNome  = document.getElementById('pre-bimbo-nome').value.trim();
+        const nascita    = document.getElementById('pre-bimbo-nascita').value;
+        const email      = document.getElementById('pre-email').value.trim();
+        const errEl      = document.getElementById('pre-error');
+        if (!genNome || !genCognome || !bimboNome || !nascita || !email) {
+            errEl.classList.remove('hidden'); return;
+        }
+        errEl.classList.add('hidden');
+        window.db.collection('pre_iscrizioni').add({
+            genitore_nome: genNome, genitore_cognome: genCognome,
+            bambino_nome: bimboNome, data_nascita: nascita,
+            email, telefono: document.getElementById('pre-tel').value.trim(),
+            timestamp: new Date().toISOString(), letta: false
+        }).then(() => {
+            document.getElementById('form-pre').classList.add('hidden');
+            document.getElementById('pre-success').classList.remove('hidden');
+        }).catch(err => { console.error(err); alert('Errore. Riprova.'); });
+    };
+
+    // ── PDF generation ────────────────────────────────────────────
+    window.generateAndDownloadPDF = function(submission) {
+        if (!window.jspdf) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit:'mm', format:'a4' });
+        const d   = submission.dati || {};
+        const tipo = submission.tipo;
+        const W = 210, M = 15;
+
+        // Header
+        doc.setFillColor(0,51,102);
+        doc.rect(0,0,W,38,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
+        doc.text('AGESCI BRESCIA 7', M, 14);
+        doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.text('Gruppo Scout San Polo – Parrocchia S. Angela Merici, Via Cimabue 271, Brescia', M, 21);
+        doc.setFontSize(11); doc.setFont('helvetica','bold');
+        doc.text('MODULO ISCRIZIONE ' + tipo.toUpperCase(), M, 30);
+        doc.setFontSize(8); doc.setTextColor(200,220,255);
+        doc.text(new Date().toLocaleDateString('it-IT'), W-M, 30, {align:'right'});
+
+        let y = 48;
+        doc.setTextColor(0);
+
+        function sec(title) {
+            doc.setFillColor(0,51,102);
+            doc.rect(M, y, W-2*M, 7, 'F');
+            doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','bold');
+            doc.text(title.toUpperCase(), M+3, y+5);
+            doc.setTextColor(0); doc.setFont('helvetica','normal');
+            y += 11;
+        }
+        function row(label, value) {
+            if (y > 268) { doc.addPage(); y = 20; }
+            doc.setFontSize(8); doc.setFont('helvetica','bold');
+            doc.setTextColor(100); doc.text(label, M, y);
+            doc.setFont('helvetica','normal'); doc.setTextColor(0);
+            doc.text(String(value||'—'), M+65, y);
+            doc.setDrawColor(220); doc.line(M, y+2, W-M, y+2);
+            y += 8;
+        }
+
+        if (tipo === 'minorenne') {
+            sec('Dati del ragazzo/a');
+            row('Nome', d.nome);            row('Cognome', d.cognome);
+            row('Data di nascita', d.data_nascita);  row('Luogo di nascita', d.luogo_nascita);
+            row('Codice Fiscale', d.cf);    row('Indirizzo', d.indirizzo);
+            row('Unità', d.unita);
+            y += 3; sec('Genitori / Tutori');
+            row('Genitore 1 – Nome', d.gen1_nome);    row('Genitore 1 – Cognome', d.gen1_cognome);
+            row('Genitore 1 – Telefono', d.gen1_tel); row('Genitore 1 – Email', d.gen1_email);
+            if (d.gen2_nome) {
+                row('Genitore 2 – Nome', d.gen2_nome);    row('Genitore 2 – Cognome', d.gen2_cognome);
+                row('Genitore 2 – Telefono', d.gen2_tel);
+            }
+            y += 3; sec('Dati Sanitari');
+            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
+            row('Allergie', d.allergie);           row('Farmaci', d.farmaci);
+            row('Patologie', d.patologie);         row('Note mediche', d.note_sanitarie);
+        } else {
+            sec('Dati personali');
+            row('Nome', d.nome);                   row('Cognome', d.cognome);
+            row('Data di nascita', d.data_nascita); row('Luogo di nascita', d.luogo_nascita);
+            row('Codice Fiscale', d.cf);           row('Indirizzo', d.indirizzo);
+            row('Telefono', d.telefono);           row('Email', d.email);
+            row('Ruolo', d.ruolo);
+            y += 3; sec('Contatto di emergenza');
+            row('Nome', d.emerg_nome);             row('Cognome', d.emerg_cognome);
+            row('Telefono', d.emerg_tel);          row('Relazione', d.emerg_relazione);
+            y += 3; sec('Dati Sanitari');
+            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
+            row('Allergie', d.allergie);
+        }
+
+        y += 3; sec('Consensi');
+        row('Trattamento dati', d.privacy ? '✓ Sì' : '✗ No');
+        row('Foto/Video', d.consenso_foto ? '✓ Sì' : '✗ No');
+        if (tipo === 'minorenne') row('Uscite e campi', d.consenso_uscite ? '✓ Sì' : '✗ No');
+
+        // Firma
+        y += 3; sec('Firma');
+        const sigId = tipo === 'minorenne' ? 'sig-canvas-min' : 'sig-canvas-mag';
+        if (!sigEmpty(sigId)) {
+            const img = document.getElementById(sigId).toDataURL('image/png');
+            doc.addImage(img, 'PNG', M, y, 80, 28);
+            y += 32;
+        } else {
+            doc.setDrawColor(180); doc.rect(M, y, 85, 28);
+            doc.setFontSize(7); doc.setTextColor(150);
+            doc.text('(firma non inserita)', M+3, y+15);
+            doc.setTextColor(0); y += 32;
+        }
+        row('Luogo e data', 'Brescia, ' + new Date().toLocaleDateString('it-IT'));
+
+        // Footer
+        doc.setFillColor(0,51,102);
+        doc.rect(0, 285, W, 12, 'F');
+        doc.setFontSize(7); doc.setTextColor(200,220,255); doc.setFont('helvetica','normal');
+        doc.text('AGESCI Brescia 7 – info@agescibrescia7.com – agescibrescia7.com', W/2, 292, {align:'center'});
+
+        const nome = (d.nome||'') + '_' + (d.cognome||'');
+        doc.save('Iscrizione_' + nome + '_BS7.pdf');
+        return doc;
+    };
+
+    // ── Email via EmailJS ─────────────────────────────────────────
+    // CONFIGURA: inserisci le tue credenziali EmailJS (emailjs.com, piano gratuito)
+    const EMAILJS_SERVICE  = 'service_brescia7';   // ← tuo Service ID
+    const EMAILJS_TEMPLATE = 'template_iscrizione'; // ← tuo Template ID
+    const EMAILJS_KEY      = 'YOUR_PUBLIC_KEY';     // ← tua Public Key
+
+    window.sendConfirmationEmail = function(submission) {
+        if (!window.emailjs || EMAILJS_KEY === 'YOUR_PUBLIC_KEY') return;
+        const d = submission.dati || {};
+        const toEmail = d.email || d.gen1_email || '';
+        if (!toEmail) return;
+        window.emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+            to_email:   toEmail,
+            nome:       (d.nome || '') + ' ' + (d.cognome || ''),
+            tipo:       submission.tipo,
+            timestamp:  new Date().toLocaleDateString('it-IT'),
+            iban:       'IT 70 Y 08575 11201 000000184420',
+        }).catch(e => console.warn('EmailJS:', e));
+    };
+
 </script>
 
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
