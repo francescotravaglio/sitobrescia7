@@ -1233,9 +1233,9 @@
 
     // ── Email via EmailJS ─────────────────────────────────────────
     // CONFIGURA: inserisci le tue credenziali EmailJS (emailjs.com, piano gratuito)
-    const EMAILJS_SERVICE  = 'service_brescia7';   // ← tuo Service ID
-    const EMAILJS_TEMPLATE = 'template_iscrizione'; // ← tuo Template ID
-    const EMAILJS_KEY      = 'YOUR_PUBLIC_KEY';     // ← tua Public Key
+    const EMAILJS_SERVICE  = 'service_rtxg48l';
+    const EMAILJS_TEMPLATE = '1sm8xnm';
+    const EMAILJS_KEY      = '2-7fs3VQpyEDJMonD';
 
     window.sendConfirmationEmail = function(submission) {
         if (!window.emailjs || EMAILJS_KEY === 'YOUR_PUBLIC_KEY') return;
@@ -1257,6 +1257,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>window.addEventListener('load', function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
