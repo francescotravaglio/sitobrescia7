@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin – AGESCI Brescia 7</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -160,6 +161,9 @@
             </div>
             <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
                 <i class="fas fa-cog"></i> Impostazioni
+            </div>
+            <div onclick="showTab('soci')" class="sidebar-link" id="nav-soci">
+                <i class="fas fa-users"></i> Soci
             </div>
         </nav>
 
@@ -536,6 +540,52 @@
                 </div>
             </section>
 
+            <!-- ──────────────────────── SOCI ────────────────────── -->
+            <section id="tab-soci" class="tab-panel space-y-6">
+                <!-- Import Excel -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Elenco Soci</h3>
+                    <p class="text-gray-500 text-sm mb-5">Importa il file Excel (ElencoSoci) per visualizzare e ricercare i soci del gruppo.</p>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition cursor-pointer">
+                            <i class="fas fa-file-excel"></i> Importa Excel
+                            <input type="file" id="soci-file-input" accept=".xlsx,.xls" class="hidden" onchange="importSoci(this)">
+                        </label>
+                        <span id="soci-file-name" class="text-sm text-gray-400 italic"></span>
+                    </div>
+                    <p id="soci-import-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                </div>
+
+                <!-- Search + Table -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap gap-3 items-center justify-between">
+                        <h3 class="font-black text-scout">Lista Soci <span id="soci-count" class="text-gray-400 font-semibold text-sm ml-2"></span></h3>
+                        <input type="text" id="soci-search" placeholder="Cerca per nome, cognome, branca..."
+                               oninput="filterSoci(this.value)"
+                               class="border border-gray-200 rounded-xl px-4 py-2 text-sm w-64 focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm" id="soci-table">
+                            <thead>
+                                <tr class="bg-gray-50 text-left">
+                                    <th onclick="sortSoci('CodiceSocio')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Codice <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-CodiceSocio"></i></th>
+                                    <th onclick="sortSoci('Nome')"          class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Nome <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Nome"></i></th>
+                                    <th onclick="sortSoci('Cognome')"       class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Cognome <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Cognome"></i></th>
+                                    <th onclick="sortSoci('Branca')"        class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Branca <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Branca"></i></th>
+                                    <th onclick="sortSoci('TipoUnita')"     class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Tipo Unità <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-TipoUnita"></i></th>
+                                    <th onclick="sortSoci('StatusSocio')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Stato <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-StatusSocio"></i></th>
+                                    <th onclick="sortSoci('DataNascita')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Data Nascita <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-DataNascita"></i></th>
+                                    <th onclick="sortSoci('Cellulare')"     class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Cellulare <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Cellulare"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="soci-tbody">
+                                <tr><td colspan="8" class="px-6 py-12 text-center text-gray-400">Nessun dato. Importa un file Excel per iniziare.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
         </div><!-- /p-8 -->
     </main>
 </div><!-- /app -->
@@ -656,6 +706,7 @@ const TAB_META = {
     annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
     'calendario-google': { title: 'Google Calendar', sub: 'Configurazione calendario integrato' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
+    soci:              { title: 'Elenco Soci',        sub: 'Importa e gestisci la lista dei soci' },
 };
 
 function showTab(name) {
@@ -672,6 +723,7 @@ function showTab(name) {
     if (name === 'eventi')      renderEventi();
     if (name === 'annunci')     renderAnnunci();
     if (name === 'dashboard')   renderDashboard();
+    if (name === 'soci')        renderSoci();
 }
 
 // ── Refresh globale ───────────────────────────────────────────────
@@ -1124,6 +1176,129 @@ function resetAll() {
     renderEventi();
     renderAnnunci();
 }
+
+// ── SOCI ─────────────────────────────────────────────────────────
+const SOCI_COLUMNS = ['CodiceSocio','Nome','Cognome','Branca','TipoUnita','StatusSocio','DataNascita','Cellulare'];
+let sociData      = [];   // full dataset
+let sociFiltered  = [];   // after search filter
+let sociSortCol   = '';
+let sociSortAsc   = true;
+
+function importSoci(input) {
+    const file = input.files[0];
+    if (!file) return;
+    document.getElementById('soci-file-name').textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const wb   = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+            const ws   = wb.Sheets['ElencoSoci'] || wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+            sociData = rows;
+            localStorage.setItem('soci_lista', JSON.stringify(rows));
+            sociFiltered = [...sociData];
+            renderSoci();
+            const msg = document.getElementById('soci-import-msg');
+            msg.textContent = '✅ Importati ' + rows.length + ' soci.';
+            msg.className = 'text-xs mt-3 font-semibold text-green-600';
+            msg.classList.remove('hidden');
+            setTimeout(() => msg.classList.add('hidden'), 4000);
+            toast('Importati ' + rows.length + ' soci!');
+        } catch(err) {
+            console.error(err);
+            const msg = document.getElementById('soci-import-msg');
+            msg.textContent = '❌ Errore lettura file: ' + err.message;
+            msg.className = 'text-xs mt-3 font-semibold text-red-500';
+            msg.classList.remove('hidden');
+            toast('Errore importazione Excel.', false);
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function filterSoci(q) {
+    const lq = q.toLowerCase();
+    sociFiltered = sociData.filter(row => {
+        return SOCI_COLUMNS.some(col => {
+            const v = (row[col] || '').toString().toLowerCase();
+            return v.includes(lq);
+        });
+    });
+    renderSoci();
+}
+
+function sortSoci(col) {
+    if (sociSortCol === col) {
+        sociSortAsc = !sociSortAsc;
+    } else {
+        sociSortCol = col;
+        sociSortAsc = true;
+    }
+    sociFiltered.sort((a, b) => {
+        const va = (a[col] || '').toString().toLowerCase();
+        const vb = (b[col] || '').toString().toLowerCase();
+        if (va < vb) return sociSortAsc ? -1 : 1;
+        if (va > vb) return sociSortAsc ? 1  : -1;
+        return 0;
+    });
+    // Update sort icons
+    SOCI_COLUMNS.forEach(c => {
+        const ic = document.getElementById('sort-icon-' + c);
+        if (!ic) return;
+        ic.className = c === sociSortCol
+            ? 'fas fa-sort-' + (sociSortAsc ? 'up' : 'down') + ' ml-1 text-scout'
+            : 'fas fa-sort ml-1 text-gray-300';
+    });
+    renderSoci();
+}
+
+function renderSoci() {
+    const tbody = document.getElementById('soci-tbody');
+    const count = document.getElementById('soci-count');
+    if (!sociFiltered.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-12 text-center text-gray-400">Nessun socio trovato.</td></tr>';
+        count.textContent = '(0)';
+        return;
+    }
+    count.textContent = '(' + sociFiltered.length + ')';
+    tbody.innerHTML = sociFiltered.map(row => {
+        const dn = row['DataNascita'];
+        let dnStr = '—';
+        if (dn) {
+            if (dn instanceof Date) {
+                dnStr = dn.toLocaleDateString('it-IT');
+            } else {
+                dnStr = dn.toString();
+            }
+        }
+        const statusClass = {
+            'Attivo':    'badge-new',
+            'Inattivo':  'badge-read',
+            'Sospeso':   'badge-info',
+        }[row['StatusSocio']] || 'badge-read';
+        return `<tr class="table-row border-t border-gray-50">
+            <td class="px-4 py-3 font-mono text-xs text-gray-500">${row['CodiceSocio'] || '—'}</td>
+            <td class="px-4 py-3 font-semibold text-scout">${row['Nome'] || '—'}</td>
+            <td class="px-4 py-3">${row['Cognome'] || '—'}</td>
+            <td class="px-4 py-3 text-xs">${row['Branca'] || '—'}</td>
+            <td class="px-4 py-3 text-xs">${row['TipoUnita'] || '—'}</td>
+            <td class="px-4 py-3"><span class="badge ${statusClass}">${row['StatusSocio'] || '—'}</span></td>
+            <td class="px-4 py-3 text-xs whitespace-nowrap">${dnStr}</td>
+            <td class="px-4 py-3 text-xs">${row['Cellulare'] || '—'}</td>
+        </tr>`;
+    }).join('');
+}
+
+// Load persisted soci on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('soci_lista');
+    if (saved) {
+        try {
+            sociData     = JSON.parse(saved);
+            sociFiltered = [...sociData];
+        } catch(e) { sociData = []; sociFiltered = []; }
+    }
+});
 </script>
 
 <!-- Firebase SDK -->

@@ -127,6 +127,9 @@
             </div>
 
             <div class="flex items-center gap-3">
+                <button id="btn-logout-nav" onclick="sociLogout()" class="hidden items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-500 transition border border-gray-200 px-4 py-2 rounded-xl hover:border-red-300">
+                    <i class="fas fa-sign-out-alt text-xs"></i> Esci
+                </button>
                 <a href="area-soci.html" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
                     <i class="fas fa-star text-xs"></i> ISCRIVITI
                 </a>
@@ -149,6 +152,81 @@
         </div>
     </div>
 </nav>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  LOGIN WALL – Area Soci                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="soci-login-wall" class="fixed inset-0 bg-scout z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-sm text-center">
+        <img src="logo.png" alt="AGESCI Brescia 7" class="h-16 mx-auto mb-4">
+        <h1 class="text-xl font-black text-scout mb-1">Area Soci</h1>
+        <p class="text-gray-400 text-sm mb-8">Accesso riservato ai soci del Gruppo BS7</p>
+
+        <!-- Login form -->
+        <div id="soci-login-form">
+            <div class="text-left space-y-4 mb-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Codice Socio</label>
+                    <input type="number" id="soci-codice" placeholder="Es. 12345"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10"
+                           onkeydown="if(event.key==='Enter')sociLogin()">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" id="soci-password" placeholder="••••••••"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10"
+                           onkeydown="if(event.key==='Enter')sociLogin()">
+                </div>
+            </div>
+            <p id="soci-login-error" class="text-red-500 text-xs mb-4 hidden">Codice Socio o password errati. Riprova.</p>
+            <button onclick="sociLogin()"
+                    class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase mb-4">
+                <i class="fas fa-lock-open mr-2"></i>Accedi
+            </button>
+            <button onclick="sociShowRegister()" class="text-xs text-scout font-semibold hover:underline">
+                Nuovo? Crea accesso
+            </button>
+        </div>
+
+        <!-- Registration form -->
+        <div id="soci-register-form" class="hidden">
+            <p class="text-xs text-gray-500 mb-5">Inserisci il tuo Codice Socio e scegli una password per accedere all'area riservata.</p>
+            <div class="text-left space-y-4 mb-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Codice Socio</label>
+                    <input type="number" id="reg-codice" placeholder="Es. 12345"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" id="reg-password" placeholder="Minimo 6 caratteri"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Conferma Password</label>
+                    <input type="password" id="reg-password2" placeholder="Ripeti la password"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10"
+                           onkeydown="if(event.key==='Enter')sociRegister()">
+                </div>
+            </div>
+            <p id="soci-register-error" class="text-red-500 text-xs mb-4 hidden"></p>
+            <button onclick="sociRegister()"
+                    class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase mb-4">
+                <i class="fas fa-user-plus mr-2"></i>Crea Accesso
+            </button>
+            <button onclick="sociShowLogin()" class="text-xs text-gray-400 hover:text-scout transition">
+                ← Torna al login
+            </button>
+        </div>
+
+        <a href="index.html" class="block mt-5 text-xs text-gray-400 hover:text-scout transition">
+            ← Torna al sito
+        </a>
+    </div>
+</div>
+
+<!-- ── AREA SOCI CONTENT (shown after login) ──────────────────────── -->
+<div id="area-soci-content" class="hidden">
 
 <!-- ── MINI HERO ─────────────────────────────────────────────────── -->
 <div class="bg-gradient-to-r from-scout-dark to-scout py-16 px-6 text-white text-center">
@@ -534,6 +612,7 @@
         </div>
     </div>
 </footer>
+</div><!-- /#area-soci-content -->
 
 <!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
 <script>
@@ -641,7 +720,7 @@
 
         window.db.collection('iscrizioni').add(submission)
             .then(function() {
-                try { generateAndDownloadPDF(submission); } catch(e) { console.warn('PDF error:', e); }
+                generateAndDownloadPDF(submission).catch(e => console.warn('PDF error:', e));
                 sendConfirmationEmail(submission);
                 var form = document.getElementById('contact-form');
                 var els = ['form-nav','steps-indicator','step-label'];
@@ -700,106 +779,218 @@
         }
     };
 
-    // ── PDF generation ────────────────────────────────────────────
-    window.generateAndDownloadPDF = function(submission) {
-        if (!window.jspdf) return;
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit:'mm', format:'a4' });
-        const d   = submission.dati || {};
+    // ── PDF generation – riempie i moduli ufficiali AGESCI ──────────
+    window.generateAndDownloadPDF = async function(submission) {
+        const d    = submission.dati || {};
         const tipo = submission.tipo;
-        const W = 210, M = 15;
+        const today = new Date().toLocaleDateString('it-IT');
 
-        doc.setFillColor(0,51,102);
-        doc.rect(0,0,W,38,'F');
-        doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
-        doc.text('AGESCI BRESCIA 7', M, 14);
-        doc.setFontSize(9); doc.setFont('helvetica','normal');
-        doc.text('Gruppo Scout San Polo – Parrocchia S. Angela Merici, Via Cimabue 271, Brescia', M, 21);
-        doc.setFontSize(11); doc.setFont('helvetica','bold');
-        doc.text('MODULO ISCRIZIONE ' + tipo.toUpperCase(), M, 30);
-        doc.setFontSize(8); doc.setTextColor(200,220,255);
-        doc.text(new Date().toLocaleDateString('it-IT'), W-M, 30, {align:'right'});
-
-        let y = 48;
-        doc.setTextColor(0);
-
-        function sec(title) {
-            doc.setFillColor(0,51,102);
-            doc.rect(M, y, W-2*M, 7, 'F');
-            doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','bold');
-            doc.text(title.toUpperCase(), M+3, y+5);
-            doc.setTextColor(0); doc.setFont('helvetica','normal');
-            y += 11;
+        // ── helpers ─────────────────────────────────────────────────
+        function clip(text, maxWidth, size) {
+            // approximate max chars by width/size ratio (Helvetica ~0.5 ratio)
+            const maxChars = Math.floor(maxWidth / (size * 0.45));
+            return String(text || '').substring(0, maxChars);
         }
-        function row(label, value) {
-            if (y > 268) { doc.addPage(); y = 20; }
-            doc.setFontSize(8); doc.setFont('helvetica','bold');
-            doc.setTextColor(100); doc.text(label, M, y);
-            doc.setFont('helvetica','normal'); doc.setTextColor(0);
-            doc.text(String(value||'—'), M+65, y);
-            doc.setDrawColor(220); doc.line(M, y+2, W-M, y+2);
-            y += 8;
+        function draw(page, font, x, y, text, maxWidth, size) {
+            const str = clip(text, maxWidth, size || 8);
+            if (!str) return;
+            page.drawText(str, { x, y, size: size || 8, font, color: PDFLib.rgb(0,0,0), maxWidth });
+        }
+        async function sigImage(doc, canvasId) {
+            if (sigEmpty(canvasId)) return null;
+            const dataUrl = document.getElementById(canvasId).toDataURL('image/png');
+            const resp = await fetch(dataUrl);
+            const bytes = await resp.arrayBuffer();
+            return doc.embedPng(bytes);
         }
 
-        if (tipo === 'minorenne') {
-            sec('Dati del ragazzo/a');
-            row('Nome', d.nome);            row('Cognome', d.cognome);
-            row('Data di nascita', d.data_nascita);  row('Luogo di nascita', d.luogo_nascita);
-            row('Codice Fiscale', d.cf);    row('Indirizzo', d.indirizzo);
-            row('Unità', d.unita);
-            y += 3; sec('Genitori / Tutori');
-            row('Genitore 1 – Nome', d.gen1_nome);    row('Genitore 1 – Cognome', d.gen1_cognome);
-            row('Genitore 1 – Telefono', d.gen1_tel); row('Genitore 1 – Email', d.gen1_email);
-            if (d.gen2_nome) {
-                row('Genitore 2 – Nome', d.gen2_nome);    row('Genitore 2 – Cognome', d.gen2_cognome);
-                row('Genitore 2 – Telefono', d.gen2_tel);
+        // ── Try official PDF filling ─────────────────────────────────
+        try {
+            if (typeof PDFLib === 'undefined') throw new Error('pdf-lib non caricato');
+
+            const { PDFDocument, StandardFonts } = PDFLib;
+
+            // Fetch the 3 official PDFs in parallel
+            const [b1, b2, b3] = await Promise.all([
+                fetch('documents/modulo-adesione-minorenne.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+                fetch('documents/scheda-sanitaria-minorenne.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+                fetch('documents/informativa-gdpr-minori.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+            ]);
+
+            const [doc1, doc2, doc3] = await Promise.all([
+                PDFDocument.load(b1),
+                PDFDocument.load(b2),
+                PDFDocument.load(b3),
+            ]);
+
+            const [f1, f2] = await Promise.all([
+                doc1.embedFont(StandardFonts.Helvetica),
+                doc2.embedFont(StandardFonts.Helvetica),
+            ]);
+
+            // ── modulo-adesione (doc1) ───────────────────────────────
+            const [mp1, mp2, mp3] = doc1.getPages();
+
+            if (tipo === 'minorenne') {
+                // Page 1 – Genitore 1
+                draw(mp1, f1, 174, 567, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 277);
+                draw(mp1, f1, 475, 521, d.gen1_tel || '', 62);
+                draw(mp1, f1, 127, 451, d.gen1_email || '', 230);
+                draw(mp1, f1, 399, 451, d.gen1_tel || '', 138);
+                // Genitore 2
+                if (d.gen2_nome) {
+                    draw(mp1, f1, 174, 424, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 277);
+                    draw(mp1, f1, 475, 378, d.gen2_tel || '', 62);
+                    draw(mp1, f1, 127, 308, d.gen2_email || '', 230);
+                    draw(mp1, f1, 399, 308, d.gen2_tel || '', 138);
+                }
+                // Nome gruppo
+                draw(mp1, f1, 194, 95, 'AGESCI BRESCIA 7', 223);
+
+                // Page 2 – Minore
+                draw(mp2, f1, 136, 644, (d.nome||'') + ' ' + (d.cognome||''), 321);
+                draw(mp2, f1, 181, 621, d.luogo_nascita || '', 203);
+                draw(mp2, f1, 461, 621, d.data_nascita || '', 76);
+                draw(mp2, f1, 155, 597, d.cf || '', 328);
+                draw(mp2, f1, 241, 574, d.indirizzo || '', 190);
+                draw(mp2, f1, 120, 528, d.gen1_email || '', 234);
+
+                // Page 3 – Firme
+                draw(mp3, f1, 341, 195, 'Brescia', 183);
+                draw(mp3, f1, 201, 195, today, 90);
+                draw(mp3, f1, 67,  157, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 224);
+                draw(mp3, f1, 307, 157, 'Genitore/Tutore', 224);
+
+                // Signature on page 3
+                const sig1 = await sigImage(doc1, 'sig-canvas-min');
+                if (sig1) mp3.drawImage(sig1, { x: 67, y: 125, width: 130, height: 28 });
+
+            } else {
+                // Maggiorenne: fill page 2 fields with adult data
+                draw(mp2, f1, 136, 644, (d.nome||'') + ' ' + (d.cognome||''), 321);
+                draw(mp2, f1, 181, 621, d.luogo_nascita || '', 203);
+                draw(mp2, f1, 461, 621, d.data_nascita || '', 76);
+                draw(mp2, f1, 155, 597, d.cf || '', 328);
+                draw(mp2, f1, 241, 574, d.indirizzo || '', 190);
+                draw(mp2, f1, 120, 528, d.email || '', 234);
+                draw(mp2, f1, 397, 528, d.telefono || '', 140);
+                draw(mp3, f1, 341, 195, 'Brescia', 183);
+                draw(mp3, f1, 201, 195, today, 90);
+                draw(mp3, f1, 67,  157, (d.nome||'') + ' ' + (d.cognome||''), 224);
+
+                const sig1m = await sigImage(doc1, 'sig-canvas-mag');
+                if (sig1m) mp3.drawImage(sig1m, { x: 67, y: 125, width: 130, height: 28 });
             }
-            y += 3; sec('Dati Sanitari');
-            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
-            row('Allergie', d.allergie);           row('Farmaci', d.farmaci);
-            row('Patologie', d.patologie);         row('Note mediche', d.note_sanitarie);
-        } else {
-            sec('Dati personali');
-            row('Nome', d.nome);                   row('Cognome', d.cognome);
-            row('Data di nascita', d.data_nascita); row('Luogo di nascita', d.luogo_nascita);
-            row('Codice Fiscale', d.cf);           row('Indirizzo', d.indirizzo);
-            row('Telefono', d.telefono);           row('Email', d.email);
-            row('Ruolo', d.ruolo);
-            y += 3; sec('Contatto di emergenza');
-            row('Nome', d.emerg_nome);             row('Cognome', d.emerg_cognome);
-            row('Telefono', d.emerg_tel);          row('Relazione', d.emerg_relazione);
-            y += 3; sec('Dati Sanitari');
-            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
-            row('Allergie', d.allergie);
+
+            // ── scheda-sanitaria (doc2) ──────────────────────────────
+            const [sp1, sp2] = doc2.getPages();
+
+            if (tipo === 'minorenne') {
+                // Page 1 – Genitore 1 (stessa struttura del modulo)
+                draw(sp1, f2, 174, 567, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 277);
+                draw(sp1, f2, 475, 521, d.gen1_tel || '', 62);
+                draw(sp1, f2, 127, 451, d.gen1_email || '', 230);
+                if (d.gen2_nome) {
+                    draw(sp1, f2, 174, 424, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 277);
+                    draw(sp1, f2, 475, 378, d.gen2_tel || '', 62);
+                }
+
+                // Page 2 – Dati minore
+                draw(sp2, f2, 121, 551, d.cognome || '', 156);
+                draw(sp2, f2, 428, 551, d.nome    || '', 103);
+                draw(sp2, f2, 108, 534, d.luogo_nascita || '', 250);
+                draw(sp2, f2, 428, 534, d.data_nascita  || '', 103);
+                draw(sp2, f2, 141, 516, d.cf || '', 200);
+                // Contatto emergenza = genitore 1
+                draw(sp2, f2, 195, 499, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 156);
+                draw(sp2, f2, 355, 499, d.gen1_tel || '', 176);
+
+                // Condizioni / patologie
+                const cond = [d.patologie, d.farmaci].filter(Boolean).join(' | ');
+                if (cond) {
+                    draw(sp2, f2, 68, 427, cond, 463);
+                    if (cond.length > 85) draw(sp2, f2, 68, 410, cond.substring(85), 463);
+                }
+                // Allergie
+                const all = d.allergie || '';
+                if (all) {
+                    draw(sp2, f2, 68, 346, all, 463);
+                    if (all.length > 85) draw(sp2, f2, 68, 328, all.substring(85), 463);
+                }
+                // Note sanitarie
+                const note = [d.note_sanitarie, d.medico_nome ? 'Medico: ' + d.medico_nome : ''].filter(Boolean).join(' – ');
+                if (note) {
+                    draw(sp2, f2, 215, 287, note, 316);
+                    if (note.length > 65) draw(sp2, f2, 68, 269, note.substring(65), 463);
+                }
+
+                // Data/luogo firma + firma
+                draw(sp2, f2, 107, 218, today, 77);
+                draw(sp2, f2, 227, 218, 'Brescia', 303);
+                draw(sp2, f2, 67,  170, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 224);
+                draw(sp2, f2, 307, 170, 'Genitore/Tutore', 224);
+
+                const sig2 = await sigImage(doc2, 'sig-canvas-min');
+                if (sig2) sp2.drawImage(sig2, { x: 67, y: 138, width: 130, height: 28 });
+            }
+
+            // ── Merge: doc1 + doc2 + doc3 ───────────────────────────
+            const merged = await PDFDocument.create();
+
+            const cp1 = await merged.copyPages(doc1, doc1.getPageIndices());
+            cp1.forEach(p => merged.addPage(p));
+            const cp2 = await merged.copyPages(doc2, doc2.getPageIndices());
+            cp2.forEach(p => merged.addPage(p));
+            const cp3 = await merged.copyPages(doc3, doc3.getPageIndices());
+            cp3.forEach(p => merged.addPage(p));
+
+            merged.setTitle('Iscrizione AGESCI BS7 – ' + (d.nome||'') + ' ' + (d.cognome||''));
+            merged.setAuthor('AGESCI Brescia 7');
+
+            const bytes = await merged.save();
+            const blob  = new Blob([bytes], { type: 'application/pdf' });
+            const url   = URL.createObjectURL(blob);
+            const a     = document.createElement('a');
+            a.href = url;
+            a.download = 'Iscrizione_' + (d.nome||'') + '_' + (d.cognome||'') + '_BS7.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+        } catch(err) {
+            // ── Fallback: riepilogo jsPDF ────────────────────────────
+            console.warn('[pdf-lib] Errore, uso fallback jsPDF:', err);
+            if (!window.jspdf) return;
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit:'mm', format:'a4' });
+            const W = 210, M = 15;
+            doc.setFillColor(0,51,102); doc.rect(0,0,W,38,'F');
+            doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
+            doc.text('AGESCI BRESCIA 7', M, 14);
+            doc.setFontSize(9); doc.setFont('helvetica','normal');
+            doc.text('Parrocchia S. Angela Merici – Via Cimabue 271, Brescia', M, 21);
+            doc.setFontSize(11); doc.setFont('helvetica','bold');
+            doc.text('MODULO ISCRIZIONE ' + tipo.toUpperCase(), M, 30);
+            let y = 48; doc.setTextColor(0);
+            function sec(t) {
+                doc.setFillColor(0,51,102); doc.rect(M,y,W-2*M,7,'F');
+                doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','bold');
+                doc.text(t.toUpperCase(), M+3, y+5); doc.setTextColor(0); doc.setFont('helvetica','normal'); y+=11;
+            }
+            function row(l, v) {
+                if (y>268){ doc.addPage(); y=20; }
+                doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(100); doc.text(l, M, y);
+                doc.setFont('helvetica','normal'); doc.setTextColor(0); doc.text(String(v||'—'), M+65, y);
+                doc.setDrawColor(220); doc.line(M, y+2, W-M, y+2); y+=8;
+            }
+            sec('Dati'); row('Nome', d.nome); row('Cognome', d.cognome); row('C.F.', d.cf);
+            row('Nato/a a', d.luogo_nascita); row('Data nascita', d.data_nascita); row('Indirizzo', d.indirizzo);
+            if (tipo==='minorenne') { sec('Genitore 1'); row('Nome', d.gen1_nome+' '+d.gen1_cognome); row('Tel.', d.gen1_tel); row('Email', d.gen1_email); }
+            sec('Sanitari'); row('Allergie', d.allergie); row('Farmaci', d.farmaci); row('Patologie', d.patologie);
+            const nome = (d.nome||'')+'_'+(d.cognome||'');
+            doc.save('Iscrizione_'+nome+'_BS7.pdf');
         }
-
-        y += 3; sec('Consensi');
-        row('Trattamento dati', d.privacy ? '✓ Sì' : '✗ No');
-        row('Foto/Video', d.consenso_foto ? '✓ Sì' : '✗ No');
-        if (tipo === 'minorenne') row('Uscite e campi', d.consenso_uscite ? '✓ Sì' : '✗ No');
-
-        y += 3; sec('Firma');
-        const sigId = tipo === 'minorenne' ? 'sig-canvas-min' : 'sig-canvas-mag';
-        if (!sigEmpty(sigId)) {
-            const img = document.getElementById(sigId).toDataURL('image/png');
-            doc.addImage(img, 'PNG', M, y, 80, 28);
-            y += 32;
-        } else {
-            doc.setDrawColor(180); doc.rect(M, y, 85, 28);
-            doc.setFontSize(7); doc.setTextColor(150);
-            doc.text('(firma non inserita)', M+3, y+15);
-            doc.setTextColor(0); y += 32;
-        }
-        row('Luogo e data', 'Brescia, ' + new Date().toLocaleDateString('it-IT'));
-
-        doc.setFillColor(0,51,102);
-        doc.rect(0, 285, W, 12, 'F');
-        doc.setFontSize(7); doc.setTextColor(200,220,255); doc.setFont('helvetica','normal');
-        doc.text('AGESCI Brescia 7 – info@agescibrescia7.com – agescibrescia7.com', W/2, 292, {align:'center'});
-
-        const nome = (d.nome||'') + '_' + (d.cognome||'');
-        doc.save('Iscrizione_' + nome + '_BS7.pdf');
-        return doc;
     };
 
     // ── Email via EmailJS ─────────────────────────────────────────
@@ -828,7 +1019,9 @@
     };
 </script>
 
-<!-- jsPDF -->
+<!-- pdf-lib (official PDF filling) -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<!-- jsPDF (fallback) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -846,6 +1039,151 @@
         appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
     });
     window.db = firebase.firestore();
+</script>
+
+<!-- ── AREA SOCI AUTH ─────────────────────────────────────────────── -->
+<script>
+(function() {
+    'use strict';
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function showWall()    { document.getElementById('soci-login-wall').classList.remove('hidden'); }
+    function hideWall()    { document.getElementById('soci-login-wall').classList.add('hidden'); }
+    function showContent() {
+        document.getElementById('area-soci-content').classList.remove('hidden');
+        var btn = document.getElementById('btn-logout-nav');
+        if (btn) { btn.classList.remove('hidden'); btn.classList.add('flex'); }
+    }
+    function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
+
+    function errLogin(msg) {
+        var el = document.getElementById('soci-login-error');
+        el.textContent = msg || 'Codice Socio o password errati. Riprova.';
+        el.classList.remove('hidden');
+    }
+    function errRegister(msg) {
+        var el = document.getElementById('soci-register-error');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+    }
+    function clearErrors() {
+        document.getElementById('soci-login-error').classList.add('hidden');
+        document.getElementById('soci-register-error').classList.add('hidden');
+    }
+
+    // ── Session check ─────────────────────────────────────────────
+    function isLoggedIn() {
+        return !!sessionStorage.getItem('soci_session');
+    }
+    function setSession(codiceSocio) {
+        sessionStorage.setItem('soci_session', JSON.stringify({ codiceSocio: codiceSocio, ts: Date.now() }));
+    }
+    function clearSession() {
+        sessionStorage.removeItem('soci_session');
+    }
+
+    // ── Login ─────────────────────────────────────────────────────
+    window.sociLogin = function() {
+        clearErrors();
+        var codice   = document.getElementById('soci-codice').value.trim();
+        var password = document.getElementById('soci-password').value;
+
+        if (!codice)   { errLogin('Inserisci il Codice Socio.'); return; }
+        if (!password) { errLogin('Inserisci la password.'); return; }
+
+        window.db.collection('soci_auth')
+            .where('codiceSocio', '==', codice)
+            .get()
+            .then(function(snap) {
+                if (snap.empty) { errLogin('Nessun account trovato per questo Codice Socio.'); return; }
+                var found = false;
+                snap.forEach(function(doc) {
+                    if (doc.data().password === password) found = true;
+                });
+                if (found) {
+                    setSession(codice);
+                    hideWall();
+                    showContent();
+                } else {
+                    errLogin('Password errata. Riprova.');
+                }
+            })
+            .catch(function(err) {
+                console.error('Firestore login error:', err);
+                errLogin('Errore di connessione. Riprova.');
+            });
+    };
+
+    // ── Register ──────────────────────────────────────────────────
+    window.sociRegister = function() {
+        clearErrors();
+        var codice   = document.getElementById('reg-codice').value.trim();
+        var password = document.getElementById('reg-password').value;
+        var password2= document.getElementById('reg-password2').value;
+
+        if (!codice)          { errRegister('Inserisci il Codice Socio.'); return; }
+        if (password.length < 6) { errRegister('La password deve avere almeno 6 caratteri.'); return; }
+        if (password !== password2) { errRegister('Le password non coincidono.'); return; }
+
+        // Check if already registered
+        window.db.collection('soci_auth')
+            .where('codiceSocio', '==', codice)
+            .get()
+            .then(function(snap) {
+                if (!snap.empty) { errRegister('Questo Codice Socio ha già un accesso. Usa il login.'); return; }
+                return window.db.collection('soci_auth').add({
+                    codiceSocio: codice,
+                    password:    password,
+                    timestamp:   new Date().toISOString()
+                });
+            })
+            .then(function(docRef) {
+                if (!docRef) return; // already returned above due to duplicate
+                setSession(codice);
+                hideWall();
+                showContent();
+            })
+            .catch(function(err) {
+                console.error('Firestore register error:', err);
+                errRegister('Errore di connessione. Riprova.');
+            });
+    };
+
+    // ── Toggle login/register views ───────────────────────────────
+    window.sociShowRegister = function() {
+        clearErrors();
+        document.getElementById('soci-login-form').classList.add('hidden');
+        document.getElementById('soci-register-form').classList.remove('hidden');
+    };
+    window.sociShowLogin = function() {
+        clearErrors();
+        document.getElementById('soci-register-form').classList.add('hidden');
+        document.getElementById('soci-login-form').classList.remove('hidden');
+    };
+
+    // ── Logout ────────────────────────────────────────────────────
+    window.sociLogout = function() {
+        clearSession();
+        hideContent();
+        showWall();
+        sociShowLogin();
+        document.getElementById('soci-codice').value = '';
+        document.getElementById('soci-password').value = '';
+        var btn = document.getElementById('btn-logout-nav');
+        if (btn) { btn.classList.add('hidden'); btn.classList.remove('flex'); }
+    };
+
+    // ── On page load ──────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+        if (isLoggedIn()) {
+            hideWall();
+            showContent();
+        } else {
+            showWall();
+            hideContent();
+        }
+    });
+})();
 </script>
 </body>
 </html>
