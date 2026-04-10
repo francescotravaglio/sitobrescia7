@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Soci – AGESCI Brescia 7</title>
+    <meta name="description" content="Iscriviti al Gruppo Scout AGESCI Brescia 7 – Compila il modulo ufficiale di iscrizione online.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'scout': '#003366',
+                        'scout-dark': '#001a3d',
+                        'scout-mid': '#1a5276',
+                        'gold': '#fcc400',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        scout: ['Patrick Hand', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+
+        .nav-link { position: relative; padding-bottom: 3px; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: #fcc400;
+            transition: width .3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+        .section-tag::before, .section-tag::after {
+            content: '';
+            display: block;
+            width: 2rem;
+            height: 2px;
+            background: #fcc400;
+        }
+
+        /* ── Multi-step form ── */
+        .tab-type { transition: all .2s; }
+        .tab-type.active { background: #003366; color: #fff; }
+        .step-panel { display: none; }
+        .step-panel.active { display: block; }
+        .step-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; transition:all .3s; flex-shrink:0; }
+        .step-dot.done   { background:#003366; color:#fff; }
+        .step-dot.current{ background:#fcc400; color:#003366; }
+        .step-dot.todo   { background:#e5e7eb; color:#9ca3af; }
+        .step-line { flex:1; height:2px; transition:background .3s; }
+        .input-field {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: .75rem;
+            font-size: .875rem;
+            transition: box-shadow .2s, border-color .2s;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .input-field:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0,51,102,.1);
+        }
+        .form-label { display:block; font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp .8s ease both; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+<!-- ── TOP BAR ─────────────────────────────────────────────────── -->
+<div class="bg-scout text-white text-xs py-2 hidden md:block">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <span class="opacity-70"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</span>
+        <div class="flex gap-6 opacity-80">
+            <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
+            <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
+        </div>
+    </div>
+</div>
+
+<!-- ── NAVIGATION ────────────────────────────────────────────────── -->
+<nav id="navbar" class="bg-white sticky top-0 z-50 border-b border-gray-100 transition-shadow">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
+                <div class="hidden sm:block leading-tight">
+                    <div class="font-black text-scout text-lg">BRESCIA 7</div>
+                    <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-7 text-sm font-semibold text-gray-600">
+                <a href="index.html#storia"  class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="index.html#branche" class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="area-soci.html"     class="nav-link hover:text-scout transition text-scout">Area Soci</a>
+                <a href="documenti.html"     class="nav-link hover:text-scout transition">Documenti</a>
+                <a href="index.html#contatti"class="nav-link hover:text-scout transition">Contatti</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="area-soci.html" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
+                    <i class="fas fa-star text-xs"></i> ISCRIVITI
+                </a>
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
+        <div class="px-6 py-6 flex flex-col gap-1">
+            <a href="index.html#storia"  onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="index.html#branche" onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
+            <a href="documenti.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
+            <a href="index.html#contatti"onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Contatti</a>
+            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── MINI HERO ─────────────────────────────────────────────────── -->
+<div class="bg-gradient-to-r from-scout-dark to-scout py-16 px-6 text-white text-center">
+    <div class="max-w-3xl mx-auto fade-up">
+        <div class="inline-flex items-center gap-2 bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
+            <i class="fas fa-star text-xs"></i> Modulo ufficiale AGESCI
+        </div>
+        <h1 class="text-5xl md:text-6xl font-black mb-3">Area <span class="text-gold">Soci</span></h1>
+        <p class="text-white/70 text-base">Compila il modulo di iscrizione – riceverai il PDF firmato via email</p>
+    </div>
+</div>
+
+<!-- ── ISCRIZIONE ─────────────────────────────────────────────────── -->
+<section id="area-soci" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid lg:grid-cols-2 gap-20 items-start">
+
+      <!-- Info colonna sinistra -->
+      <div>
+        <div class="section-tag">Informazioni utili</div>
+        <h2 class="text-4xl font-black text-scout mb-6 leading-tight">
+          Iscriviti al<br><span class="text-gold" style="text-shadow:0 2px 8px rgba(252,196,0,.3)">Gruppo BS7</span>
+        </h2>
+        <p class="text-gray-600 leading-relaxed mb-10 text-lg">
+          Compila il modulo ufficiale di iscrizione AGESCI. Al termine riceverai il PDF compilato e firmato via email da conservare.
+        </p>
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-map-marker-alt text-scout text-lg w-5 text-center"></i></div>
+            <div><div class="font-bold text-scout mb-0.5">Sede</div><p class="text-gray-500 text-sm">Parrocchia S. Angela Merici<br>Via Cimabue, 271 – 25134 Brescia (BS)</p></div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-envelope text-scout text-lg w-5 text-center"></i></div>
+            <div><div class="font-bold text-scout mb-0.5">Email</div><a href="mailto:info@agescibrescia7.com" class="text-gray-500 text-sm hover:text-scout transition">info@agescibrescia7.com</a></div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-phone text-scout text-lg w-5 text-center"></i></div>
+            <div><div class="font-bold text-scout mb-0.5">Telefono</div><a href="tel:+393408740678" class="text-gray-500 text-sm hover:text-scout transition">+39 340 874 0678</a></div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-university text-scout text-lg w-5 text-center"></i></div>
+            <div><div class="font-bold text-scout mb-0.5">Quota associativa</div>
+              <p class="text-gray-500 text-sm">Bonifico a: <strong class="text-gray-700">AGESCI GRUPPO BRESCIA 7</strong><br>IT 70 Y 08575 11201 000000184420<br>Causale: COGNOME NOME – BRANCA</p></div>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-10">
+          <a href="https://www.instagram.com/agesci_brescia7" target="_blank" class="flex items-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform shadow-md"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="#" class="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform shadow-md"><i class="fab fa-facebook"></i> Facebook</a>
+        </div>
+      </div>
+
+      <!-- Form colonna destra -->
+      <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden" id="form-container">
+
+        <!-- Tipo iscrizione tabs -->
+        <div class="flex border-b border-gray-100">
+          <button onclick="setTipo('minorenne')" id="tab-min" class="tab-type active flex-1 py-4 text-sm font-black uppercase tracking-widest border-r border-gray-100">
+            <i class="fas fa-child mr-2"></i>Minorenne
+          </button>
+          <button onclick="setTipo('maggiorenne')" id="tab-mag" class="tab-type flex-1 py-4 text-sm font-black uppercase tracking-widest text-gray-400">
+            <i class="fas fa-user mr-2"></i>Maggiorenne
+          </button>
+        </div>
+
+        <div class="p-8 md:p-10">
+          <!-- Progress steps -->
+          <div class="flex items-center mb-8" id="steps-indicator">
+            <div class="step-dot current" id="dot-1">1</div>
+            <div class="step-line bg-gray-200" id="line-1"></div>
+            <div class="step-dot todo" id="dot-2">2</div>
+            <div class="step-line bg-gray-200" id="line-2"></div>
+            <div class="step-dot todo" id="dot-3">3</div>
+            <div class="step-line bg-gray-200" id="line-3"></div>
+            <div class="step-dot todo" id="dot-4">4</div>
+          </div>
+          <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mb-6" id="step-label">Step 1 di 4 — Dati del ragazzo/a</p>
+
+          <!-- ══ FORM ══ -->
+          <form id="contact-form" novalidate>
+
+            <!-- ─── STEP 1 MINORENNE: Dati ragazzo ─── -->
+            <div class="step-panel active" id="panel-min-1">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Nome *</label><input type="text" name="nome" required placeholder="Mario" class="input-field"></div>
+                <div><label class="form-label">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Data di nascita *</label><input type="date" name="data_nascita" required class="input-field"></div>
+                <div><label class="form-label">Luogo di nascita *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
+              </div>
+              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="cf" required placeholder="RSSMRA10A01B157Z" maxlength="16" class="input-field uppercase"></div>
+              <div class="mb-4"><label class="form-label">Indirizzo di residenza *</label><input type="text" name="indirizzo" required placeholder="Via Roma 1, 25100 Brescia" class="input-field"></div>
+              <div class="mb-4">
+                <label class="form-label">Unità *</label>
+                <select name="unita" required class="input-field bg-white">
+                  <option value="">Seleziona l'unità...</option>
+                  <option value="branco">🐺 Branco/Cerchio – Lupetti/Coccinelle (8-11 anni)</option>
+                  <option value="reparto">⚜️ Reparto – Esploratori/Guide (12-16 anni)</option>
+                  <option value="clan">🔥 Clan/Fuoco – Rover/Scolte (17-21 anni)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ─── STEP 1 MAGGIORENNE: Dati personali ─── -->
+            <div class="step-panel" id="panel-mag-1">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Nome *</label><input type="text" name="nome" required placeholder="Mario" class="input-field"></div>
+                <div><label class="form-label">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Data di nascita *</label><input type="date" name="data_nascita" required class="input-field"></div>
+                <div><label class="form-label">Luogo di nascita *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
+              </div>
+              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="cf" required placeholder="RSSMRA85A01B157Z" maxlength="16" class="input-field uppercase"></div>
+              <div class="mb-4"><label class="form-label">Indirizzo di residenza *</label><input type="text" name="indirizzo" required placeholder="Via Roma 1, 25100 Brescia" class="input-field"></div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Telefono *</label><input type="tel" name="telefono" required placeholder="+39 340 123 4567" class="input-field"></div>
+                <div><label class="form-label">Email *</label><input type="email" name="email" required placeholder="mario@email.com" class="input-field"></div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Ruolo/Unità *</label>
+                <select name="unita" required class="input-field bg-white">
+                  <option value="">Seleziona...</option>
+                  <option value="capo-branco">Capo Branco/Cerchio</option>
+                  <option value="capo-reparto">Capo Reparto</option>
+                  <option value="capo-clan">Capo Clan/Fuoco</option>
+                  <option value="clan">🔥 Clan/Fuoco – Rover/Scolte (17-21 anni)</option>
+                  <option value="comitato">Comitato di Gruppo</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ─── STEP 2 MINORENNE: Dati genitori ─── -->
+            <div class="step-panel" id="panel-min-2">
+              <p class="text-xs font-bold text-scout uppercase tracking-widest mb-4">Genitore / Tutore 1</p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Nome *</label><input type="text" name="gen1_nome" required placeholder="Giuseppe" class="input-field"></div>
+                <div><label class="form-label">Cognome *</label><input type="text" name="gen1_cognome" required placeholder="Rossi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Telefono *</label><input type="tel" name="gen1_tel" required placeholder="+39 340 000 0000" class="input-field"></div>
+                <div><label class="form-label">Email *</label><input type="email" name="gen1_email" required placeholder="giuseppe@email.com" class="input-field"></div>
+              </div>
+              <hr class="my-5 border-gray-100">
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Genitore / Tutore 2 <span class="font-normal">(facoltativo)</span></p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Nome</label><input type="text" name="gen2_nome" placeholder="Anna" class="input-field"></div>
+                <div><label class="form-label">Cognome</label><input type="text" name="gen2_cognome" placeholder="Verdi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Telefono</label><input type="tel" name="gen2_tel" placeholder="+39 340 000 0001" class="input-field"></div>
+                <div><label class="form-label">Email</label><input type="email" name="gen2_email" placeholder="anna@email.com" class="input-field"></div>
+              </div>
+            </div>
+
+            <!-- ─── STEP 2 MAGGIORENNE: Contatto emergenza ─── -->
+            <div class="step-panel" id="panel-mag-2">
+              <p class="text-xs font-bold text-scout uppercase tracking-widest mb-4">Contatto di Emergenza</p>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Nome *</label><input type="text" name="emerg_nome" required placeholder="Anna" class="input-field"></div>
+                <div><label class="form-label">Cognome *</label><input type="text" name="emerg_cognome" required placeholder="Rossi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Telefono *</label><input type="tel" name="emerg_tel" required placeholder="+39 340 000 0000" class="input-field"></div>
+                <div><label class="form-label">Relazione</label>
+                  <select name="emerg_relazione" class="input-field bg-white">
+                    <option value="">Seleziona...</option>
+                    <option>Coniuge/Partner</option><option>Genitore</option><option>Figlio/a</option><option>Fratello/Sorella</option><option>Amico/a</option><option>Altro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- ─── STEP 3 (entrambi): Dati sanitari ─── -->
+            <div class="step-panel" id="panel-min-3">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Medico curante</label><input type="text" name="medico_nome" placeholder="Dott. Bianchi" class="input-field"></div>
+                <div><label class="form-label">Tel. medico</label><input type="tel" name="medico_tel" placeholder="+39 030 000 0000" class="input-field"></div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Gruppo sanguigno</label>
+                <select name="gruppo_sangue" class="input-field bg-white">
+                  <option value="">Non noto</option>
+                  <option>0+</option><option>0-</option><option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+                </select>
+              </div>
+              <div class="mb-4"><label class="form-label">Allergie / intolleranze alimentari</label><textarea name="allergie" rows="2" placeholder="Es. arachidi, glutine, lattosio..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Farmaci abituali</label><textarea name="farmaci" rows="2" placeholder="Nome del farmaco, dosaggio, orario..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Patologie / condizioni particolari</label><textarea name="patologie" rows="2" placeholder="Es. asma, diabete, epilessia..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Note per i capi</label><textarea name="note_sanitarie" rows="2" placeholder="Qualsiasi informazione utile..." class="input-field resize-none"></textarea></div>
+            </div>
+            <div class="step-panel" id="panel-mag-3">
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Medico curante</label><input type="text" name="medico_nome" placeholder="Dott. Bianchi" class="input-field"></div>
+                <div><label class="form-label">Tel. medico</label><input type="tel" name="medico_tel" placeholder="+39 030 000 0000" class="input-field"></div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Gruppo sanguigno</label>
+                <select name="gruppo_sangue" class="input-field bg-white">
+                  <option value="">Non noto</option>
+                  <option>0+</option><option>0-</option><option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+                </select>
+              </div>
+              <div class="mb-4"><label class="form-label">Allergie / patologie</label><textarea name="allergie" rows="3" placeholder="Es. allergie, patologie croniche..." class="input-field resize-none"></textarea></div>
+            </div>
+
+            <!-- ─── STEP 4 (entrambi): Consensi ─── -->
+            <div class="step-panel" id="panel-min-4">
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+                  <input type="checkbox" id="privacy-min" name="privacy" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+                  <label for="privacy-min" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Acconsento al <strong class="text-gray-700">trattamento dei dati personali</strong> del minore ai sensi del GDPR (UE 2016/679) per le finalità associative di AGESCI Brescia 7.</label>
+                </div>
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+                  <input type="checkbox" id="foto-min" name="consenso_foto" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+                  <label for="foto-min" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Autorizzo l'utilizzo di <strong class="text-gray-700">foto e video</strong> del minore per finalità associative, pubblicazioni sul sito e social del gruppo.</label>
+                </div>
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+                  <input type="checkbox" id="uscite-min" name="consenso_uscite" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+                  <label for="uscite-min" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Autorizzo la partecipazione del minore alle <strong class="text-gray-700">attività, uscite e campi</strong> organizzati dal Gruppo Scout AGESCI Brescia 7.</label>
+                </div>
+                <!-- Firma minorenne -->
+                <div>
+                  <label class="form-label">Firma del genitore/tutore *</label>
+                  <div class="border-2 border-dashed border-gray-200 rounded-xl p-1.5 bg-gray-50">
+                    <canvas id="sig-canvas-min" width="500" height="130"
+                      class="w-full rounded-lg bg-white border border-gray-100 cursor-crosshair touch-none block"></canvas>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma con il mouse o il dito</p>
+                    <button type="button" onclick="clearSig('sig-canvas-min')" class="text-xs text-scout hover:underline">Cancella</button>
+                  </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+                  <i class="fas fa-info-circle mr-1"></i> Riceverai il PDF compilato e firmato via email. La quota va versata tramite <strong>bonifico bancario</strong>.
+                </div>
+                <button type="button" onclick="submitForm()"
+                  class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg hover:shadow-xl">
+                  <i class="fas fa-file-pdf mr-2"></i>Invia e genera PDF
+                </button>
+              </div>
+            </div>
+            <div class="step-panel" id="panel-mag-4">
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+                  <input type="checkbox" id="privacy-mag" name="privacy" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+                  <label for="privacy-mag" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Acconsento al <strong class="text-gray-700">trattamento dei dati personali</strong> ai sensi del GDPR (UE 2016/679) per le finalità associative di AGESCI Brescia 7.</label>
+                </div>
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+                  <input type="checkbox" id="foto-mag" name="consenso_foto" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+                  <label for="foto-mag" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* Autorizzo l'utilizzo di <strong class="text-gray-700">foto e video</strong> per finalità associative, pubblicazioni sul sito e social del gruppo.</label>
+                </div>
+                <!-- Firma maggiorenne -->
+                <div>
+                  <label class="form-label">Firma *</label>
+                  <div class="border-2 border-dashed border-gray-200 rounded-xl p-1.5 bg-gray-50">
+                    <canvas id="sig-canvas-mag" width="500" height="130"
+                      class="w-full rounded-lg bg-white border border-gray-100 cursor-crosshair touch-none block"></canvas>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma con il mouse o il dito</p>
+                    <button type="button" onclick="clearSig('sig-canvas-mag')" class="text-xs text-scout hover:underline">Cancella</button>
+                  </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+                  <i class="fas fa-info-circle mr-1"></i> Riceverai il PDF compilato e firmato via email. La quota va versata tramite <strong>bonifico bancario</strong>.
+                </div>
+                <button type="button" onclick="submitForm()"
+                  class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg hover:shadow-xl">
+                  <i class="fas fa-file-pdf mr-2"></i>Invia e genera PDF
+                </button>
+              </div>
+            </div>
+
+          </form><!-- end form -->
+
+          <!-- Nav buttons -->
+          <div class="flex justify-between mt-6" id="form-nav">
+            <button onclick="prevStep()" id="btn-prev"
+              class="hidden px-6 py-2.5 rounded-xl border-2 border-scout text-scout font-bold text-sm hover:bg-scout hover:text-white transition">
+              <i class="fas fa-arrow-left mr-1"></i> Indietro
+            </button>
+            <div></div>
+            <button onclick="nextStep()" id="btn-next"
+              class="px-6 py-2.5 rounded-xl bg-scout text-white font-bold text-sm hover:bg-scout-dark transition">
+              Avanti <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+
+          <!-- Successo -->
+          <div id="form-success" class="hidden text-center py-10">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-check text-green-600 text-2xl"></i>
+            </div>
+            <h4 class="text-2xl font-black text-scout mb-2">Iscrizione inviata!</h4>
+            <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Ti abbiamo inviato una copia via email. Buona strada! 🌿</p>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 text-left mb-4">
+              <i class="fas fa-university mr-1"></i> Ricorda di effettuare il <strong>bonifico bancario</strong> a:<br>
+              <span class="font-mono font-bold">IT 70 Y 08575 11201 000000184420</span><br>
+              Intestato a: <strong>AGESCI GRUPPO BRESCIA 7</strong><br>
+              Causale: <strong>COGNOME NOME – BRANCA</strong>
+            </div>
+            <button onclick="resetForm()" class="mt-2 text-scout underline text-sm font-semibold">Nuova iscrizione</button>
+          </div>
+
+        </div><!-- end p-8 -->
+      </div><!-- end form-container -->
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<footer id="contatti" class="bg-gray-950 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-5">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="logo.png" alt="BS7" class="h-16 brightness-0 invert opacity-60">
+                    <div>
+                        <div class="font-black text-xl">BRESCIA 7</div>
+                        <div class="text-gray-500 text-xs uppercase tracking-widest">Gruppo Scout AGESCI</div>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                    Dal 1977 educhiamo giovani nel quartiere di San Polo secondo i valori dello scautismo: avventura, servizio e fede.
+                </p>
+                <div class="flex gap-3">
+                    <a href="https://www.instagram.com/agesci_brescia7" target="_blank"
+                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </a>
+                    <a href="#" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fab fa-facebook text-lg"></i>
+                    </a>
+                    <a href="mailto:info@agescibrescia7.com"
+                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fas fa-envelope text-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:col-span-3">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="index.html#storia"  class="hover:text-white transition">Chi siamo</a></li>
+                    <li><a href="index.html#branche" class="hover:text-white transition">Le Unità</a></li>
+                    <li><a href="area-soci.html"     class="hover:text-white transition">Area Soci</a></li>
+                    <li><a href="documenti.html"     class="hover:text-white transition">Modulistica</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-4">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Dove siamo</h4>
+                <div class="text-gray-400 text-sm space-y-4">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-church text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <span>Parrocchia S. Angela Merici</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <span>Via Cimabue, 271<br>25134 – Brescia (BS)</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-envelope text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-phone text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
+            <div class="flex items-center gap-4">
+                <a href="admin.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
+                <span class="font-scout text-xl text-gold/50 italic">Semel Scout, Semper Scout</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
+<script>
+    // ── Mobile menu ──────────────────────────────────────────────
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+        const isOpen = !menu.classList.contains('hidden');
+        menu.classList.toggle('hidden');
+        icon.className = isOpen ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+    }
+
+    // ── Navbar shadow on scroll ──────────────────────────────────
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('shadow-lg', window.scrollY > 40);
+    });
+
+    // ── Multi-step form logic ────────────────────────────────────
+    let currentTipo = 'minorenne';
+    let currentStep = 1;
+    const totalSteps = 4;
+    const stepLabels = {
+        minorenne: ['Dati del ragazzo/a','Dati genitori/tutori','Dati sanitari','Consensi e invio'],
+        maggiorenne: ['Dati personali','Contatto emergenza','Dati sanitari','Consensi e invio']
+    };
+
+    function setTipo(tipo) {
+        currentTipo = tipo;
+        currentStep = 1;
+        document.getElementById('tab-min').classList.toggle('active', tipo === 'minorenne');
+        document.getElementById('tab-mag').classList.toggle('active', tipo === 'maggiorenne');
+        document.getElementById('tab-min').classList.toggle('text-gray-400', tipo !== 'minorenne');
+        document.getElementById('tab-mag').classList.toggle('text-gray-400', tipo !== 'maggiorenne');
+        updateFormView();
+    }
+
+    function updateFormView() {
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+        const panelId = `panel-${currentTipo === 'minorenne' ? 'min' : 'mag'}-${currentStep}`;
+        const panel = document.getElementById(panelId);
+        if (panel) panel.classList.add('active');
+
+        for (let i = 1; i <= totalSteps; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            const line = document.getElementById(`line-${i}`);
+            dot.className = 'step-dot ' + (i < currentStep ? 'done' : i === currentStep ? 'current' : 'todo');
+            if (line) line.style.background = i < currentStep ? '#003366' : '#e5e7eb';
+        }
+
+        document.getElementById('step-label').textContent =
+            `Step ${currentStep} di ${totalSteps} — ${stepLabels[currentTipo][currentStep - 1]}`;
+
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        btnPrev.classList.toggle('hidden', currentStep === 1);
+        btnNext.classList.toggle('hidden', currentStep === totalSteps);
+    }
+
+    function nextStep() {
+        const panelId = `panel-${currentTipo === 'minorenne' ? 'min' : 'mag'}-${currentStep}`;
+        const panel = document.getElementById(panelId);
+        const required = panel.querySelectorAll('[required]');
+        let valid = true;
+        required.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#ef4444';
+                valid = false;
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+        if (!valid) return;
+        if (currentStep < totalSteps) { currentStep++; updateFormView(); }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) { currentStep--; updateFormView(); }
+    }
+
+    function submitForm() {
+        const panelId = `panel-${currentTipo === 'minorenne' ? 'min' : 'mag'}-4`;
+        const panel = document.getElementById(panelId);
+        const checks = panel.querySelectorAll('input[type="checkbox"][required]');
+        let valid = true;
+        checks.forEach(c => { if (!c.checked) { c.style.outline = '2px solid #ef4444'; valid = false; } else { c.style.outline = ''; } });
+        if (!valid) { alert('Accetta tutti i consensi obbligatori per procedere.'); return; }
+
+        const prefix = currentTipo === 'minorenne' ? 'min' : 'mag';
+        const activePanels = document.querySelectorAll(`[id^="panel-${prefix}-"]`);
+        const data = {};
+        activePanels.forEach(panel => {
+            panel.querySelectorAll('input, select, textarea').forEach(el => {
+                if (!el.name) return;
+                if (el.type === 'checkbox') { data[el.name] = el.checked ? 'si' : ''; }
+                else { data[el.name] = el.value; }
+            });
+        });
+        const submission = {
+            tipo: currentTipo,
+            dati: data,
+            timestamp: new Date().toISOString(),
+            letta: false,
+            stato: 'nuova'
+        };
+
+        window.db.collection('iscrizioni').add(submission)
+            .then(function() {
+                try { generateAndDownloadPDF(submission); } catch(e) { console.warn('PDF error:', e); }
+                sendConfirmationEmail(submission);
+                var form = document.getElementById('contact-form');
+                var els = ['form-nav','steps-indicator','step-label'];
+                form.classList.add('hidden');
+                els.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+                var ok = document.getElementById('form-success');
+                if(ok) ok.classList.remove('hidden');
+            }, function(err) {
+                console.error('Errore Firestore:', err);
+                alert('Errore salvataggio: ' + (err.code || err.message || err));
+            });
+    }
+
+    function resetForm() {
+        document.getElementById('contact-form').reset();
+        document.getElementById('contact-form').classList.remove('hidden');
+        document.getElementById('form-nav').classList.remove('hidden');
+        document.getElementById('steps-indicator').classList.remove('hidden');
+        document.getElementById('step-label').classList.remove('hidden');
+        document.getElementById('form-success').classList.add('hidden');
+        currentStep = 1;
+        updateFormView();
+    }
+
+    // Init
+    updateFormView();
+
+    // ── Signature pad ─────────────────────────────────────────────
+    function initSig(id) {
+        const c = document.getElementById(id); if (!c) return;
+        const ctx = c.getContext('2d'); let drawing = false;
+        function pos(e) {
+            const r = c.getBoundingClientRect(), sx = c.width/r.width, sy = c.height/r.height;
+            const src = e.touches ? e.touches[0] : e;
+            return { x: (src.clientX - r.left)*sx, y: (src.clientY - r.top)*sy };
+        }
+        c.addEventListener('mousedown',  e => { drawing=true; ctx.beginPath(); const p=pos(e); ctx.moveTo(p.x,p.y); });
+        c.addEventListener('mousemove',  e => { if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#003366'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); });
+        c.addEventListener('mouseup',    () => drawing=false);
+        c.addEventListener('mouseleave', () => drawing=false);
+        c.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; ctx.beginPath(); const p=pos(e); ctx.moveTo(p.x,p.y); }, {passive:false});
+        c.addEventListener('touchmove',  e => { e.preventDefault(); if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#003366'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke(); }, {passive:false});
+        c.addEventListener('touchend',   () => drawing=false);
+    }
+    window.clearSig = id => { const c=document.getElementById(id); if(c) c.getContext('2d').clearRect(0,0,c.width,c.height); };
+    function sigEmpty(id) {
+        const c=document.getElementById(id); if(!c) return true;
+        return !c.getContext('2d').getImageData(0,0,c.width,c.height).data.some((v,i)=>i%4===3&&v>0);
+    }
+    const _origUpdateFormView = updateFormView;
+    updateFormView = function() {
+        _origUpdateFormView();
+        if (currentStep === 4) {
+            initSig('sig-canvas-min');
+            initSig('sig-canvas-mag');
+        }
+    };
+
+    // ── PDF generation ────────────────────────────────────────────
+    window.generateAndDownloadPDF = function(submission) {
+        if (!window.jspdf) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit:'mm', format:'a4' });
+        const d   = submission.dati || {};
+        const tipo = submission.tipo;
+        const W = 210, M = 15;
+
+        doc.setFillColor(0,51,102);
+        doc.rect(0,0,W,38,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
+        doc.text('AGESCI BRESCIA 7', M, 14);
+        doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.text('Gruppo Scout San Polo – Parrocchia S. Angela Merici, Via Cimabue 271, Brescia', M, 21);
+        doc.setFontSize(11); doc.setFont('helvetica','bold');
+        doc.text('MODULO ISCRIZIONE ' + tipo.toUpperCase(), M, 30);
+        doc.setFontSize(8); doc.setTextColor(200,220,255);
+        doc.text(new Date().toLocaleDateString('it-IT'), W-M, 30, {align:'right'});
+
+        let y = 48;
+        doc.setTextColor(0);
+
+        function sec(title) {
+            doc.setFillColor(0,51,102);
+            doc.rect(M, y, W-2*M, 7, 'F');
+            doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','bold');
+            doc.text(title.toUpperCase(), M+3, y+5);
+            doc.setTextColor(0); doc.setFont('helvetica','normal');
+            y += 11;
+        }
+        function row(label, value) {
+            if (y > 268) { doc.addPage(); y = 20; }
+            doc.setFontSize(8); doc.setFont('helvetica','bold');
+            doc.setTextColor(100); doc.text(label, M, y);
+            doc.setFont('helvetica','normal'); doc.setTextColor(0);
+            doc.text(String(value||'—'), M+65, y);
+            doc.setDrawColor(220); doc.line(M, y+2, W-M, y+2);
+            y += 8;
+        }
+
+        if (tipo === 'minorenne') {
+            sec('Dati del ragazzo/a');
+            row('Nome', d.nome);            row('Cognome', d.cognome);
+            row('Data di nascita', d.data_nascita);  row('Luogo di nascita', d.luogo_nascita);
+            row('Codice Fiscale', d.cf);    row('Indirizzo', d.indirizzo);
+            row('Unità', d.unita);
+            y += 3; sec('Genitori / Tutori');
+            row('Genitore 1 – Nome', d.gen1_nome);    row('Genitore 1 – Cognome', d.gen1_cognome);
+            row('Genitore 1 – Telefono', d.gen1_tel); row('Genitore 1 – Email', d.gen1_email);
+            if (d.gen2_nome) {
+                row('Genitore 2 – Nome', d.gen2_nome);    row('Genitore 2 – Cognome', d.gen2_cognome);
+                row('Genitore 2 – Telefono', d.gen2_tel);
+            }
+            y += 3; sec('Dati Sanitari');
+            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
+            row('Allergie', d.allergie);           row('Farmaci', d.farmaci);
+            row('Patologie', d.patologie);         row('Note mediche', d.note_sanitarie);
+        } else {
+            sec('Dati personali');
+            row('Nome', d.nome);                   row('Cognome', d.cognome);
+            row('Data di nascita', d.data_nascita); row('Luogo di nascita', d.luogo_nascita);
+            row('Codice Fiscale', d.cf);           row('Indirizzo', d.indirizzo);
+            row('Telefono', d.telefono);           row('Email', d.email);
+            row('Ruolo', d.ruolo);
+            y += 3; sec('Contatto di emergenza');
+            row('Nome', d.emerg_nome);             row('Cognome', d.emerg_cognome);
+            row('Telefono', d.emerg_tel);          row('Relazione', d.emerg_relazione);
+            y += 3; sec('Dati Sanitari');
+            row('Medico curante', d.medico);       row('Gruppo sanguigno', d.gruppo_sangue);
+            row('Allergie', d.allergie);
+        }
+
+        y += 3; sec('Consensi');
+        row('Trattamento dati', d.privacy ? '✓ Sì' : '✗ No');
+        row('Foto/Video', d.consenso_foto ? '✓ Sì' : '✗ No');
+        if (tipo === 'minorenne') row('Uscite e campi', d.consenso_uscite ? '✓ Sì' : '✗ No');
+
+        y += 3; sec('Firma');
+        const sigId = tipo === 'minorenne' ? 'sig-canvas-min' : 'sig-canvas-mag';
+        if (!sigEmpty(sigId)) {
+            const img = document.getElementById(sigId).toDataURL('image/png');
+            doc.addImage(img, 'PNG', M, y, 80, 28);
+            y += 32;
+        } else {
+            doc.setDrawColor(180); doc.rect(M, y, 85, 28);
+            doc.setFontSize(7); doc.setTextColor(150);
+            doc.text('(firma non inserita)', M+3, y+15);
+            doc.setTextColor(0); y += 32;
+        }
+        row('Luogo e data', 'Brescia, ' + new Date().toLocaleDateString('it-IT'));
+
+        doc.setFillColor(0,51,102);
+        doc.rect(0, 285, W, 12, 'F');
+        doc.setFontSize(7); doc.setTextColor(200,220,255); doc.setFont('helvetica','normal');
+        doc.text('AGESCI Brescia 7 – info@agescibrescia7.com – agescibrescia7.com', W/2, 292, {align:'center'});
+
+        const nome = (d.nome||'') + '_' + (d.cognome||'');
+        doc.save('Iscrizione_' + nome + '_BS7.pdf');
+        return doc;
+    };
+
+    // ── Email via EmailJS ─────────────────────────────────────────
+    const EMAILJS_SERVICE  = 'service_rtxg48l';
+    const EMAILJS_TEMPLATE = 'template_fc1c77j';
+    const EMAILJS_KEY      = '2-7fs3VQpyEDJMonD';
+
+    window.sendConfirmationEmail = function(submission) {
+        const d = submission.dati || {};
+        const toEmail = d.email || d.gen1_email || '';
+        console.log('[EmailJS] emailjs loaded:', !!window.emailjs, '| toEmail:', toEmail);
+        if (!window.emailjs) { alert('EmailJS non caricato'); return; }
+        if (!toEmail) { alert('Email destinatario non trovata nei dati: ' + JSON.stringify(Object.keys(d))); return; }
+        window.emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+            to_email:   toEmail,
+            nome:       (d.nome || '') + ' ' + (d.cognome || ''),
+            tipo:       submission.tipo,
+            timestamp:  new Date().toLocaleDateString('it-IT'),
+            iban:       'IT 70 Y 08575 11201 000000184420',
+        }).then(() => {
+            console.log('[EmailJS] inviata a', toEmail);
+        }).catch(e => {
+            console.error('[EmailJS] errore:', e);
+            alert('Errore email: ' + JSON.stringify(e));
+        });
+    };
+</script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>window.addEventListener('load', function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+    firebase.initializeApp({
+        apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
+        authDomain: "agescibrescia7-508b0.firebaseapp.com",
+        projectId: "agescibrescia7-508b0",
+        storageBucket: "agescibrescia7-508b0.firebasestorage.app",
+        messagingSenderId: "738190317173",
+        appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
+    });
+    window.db = firebase.firestore();
+</script>
+</body>
+</html>

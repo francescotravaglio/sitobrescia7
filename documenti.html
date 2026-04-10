@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documenti – AGESCI Brescia 7</title>
+    <meta name="description" content="Modulistica e documenti ufficiali del Gruppo Scout AGESCI Brescia 7.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'scout': '#003366',
+                        'scout-dark': '#001a3d',
+                        'scout-mid': '#1a5276',
+                        'gold': '#fcc400',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        scout: ['Patrick Hand', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+
+        .nav-link { position: relative; padding-bottom: 3px; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: #fcc400;
+            transition: width .3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+        .section-tag::before, .section-tag::after {
+            content: '';
+            display: block;
+            width: 2rem;
+            height: 2px;
+            background: #fcc400;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp .8s ease both; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+<!-- ── TOP BAR ─────────────────────────────────────────────────── -->
+<div class="bg-scout text-white text-xs py-2 hidden md:block">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <span class="opacity-70"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</span>
+        <div class="flex gap-6 opacity-80">
+            <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
+            <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
+        </div>
+    </div>
+</div>
+
+<!-- ── NAVIGATION ────────────────────────────────────────────────── -->
+<nav id="navbar" class="bg-white sticky top-0 z-50 border-b border-gray-100 transition-shadow">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
+                <div class="hidden sm:block leading-tight">
+                    <div class="font-black text-scout text-lg">BRESCIA 7</div>
+                    <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-7 text-sm font-semibold text-gray-600">
+                <a href="index.html#storia"  class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="index.html#branche" class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="area-soci.html"     class="nav-link hover:text-scout transition">Area Soci</a>
+                <a href="documenti.html"     class="nav-link hover:text-scout transition text-scout">Documenti</a>
+                <a href="index.html#contatti"class="nav-link hover:text-scout transition">Contatti</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="area-soci.html" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
+                    <i class="fas fa-star text-xs"></i> ISCRIVITI
+                </a>
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
+        <div class="px-6 py-6 flex flex-col gap-1">
+            <a href="index.html#storia"  onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="index.html#branche" onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
+            <a href="documenti.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
+            <a href="index.html#contatti"onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Contatti</a>
+            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── MINI HERO ─────────────────────────────────────────────────── -->
+<div class="bg-gradient-to-r from-scout-dark to-scout py-16 px-6 text-white text-center">
+    <div class="max-w-3xl mx-auto fade-up">
+        <div class="inline-flex items-center gap-2 bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
+            <i class="fas fa-folder-open text-xs"></i> Documenti ufficiali
+        </div>
+        <h1 class="text-5xl md:text-6xl font-black mb-3">Modu<span class="text-gold">listica</span></h1>
+        <p class="text-white/70 text-base">Tutta la documentazione ufficiale del Gruppo Scout AGESCI Brescia 7</p>
+    </div>
+</div>
+
+<!-- ── MODULISTICA ────────────────────────────────────────────────── -->
+<section id="modulistica" class="py-20">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <div class="section-tag justify-center">Documenti ufficiali</div>
+            <h2 class="text-4xl font-black text-scout">Modulistica</h2>
+            <p class="text-gray-400 mt-3 text-sm">Scarica i documenti ufficiali dell'associazione</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <a href="https://www.agesci.it/download/statuto_patto_associativo_e_regolamenti/Patto-associativo-1999.pdf" target="_blank" rel="noopener" class="flex items-center gap-5 p-6 hover:bg-blue-50 transition group border-b border-gray-100">
+                <div class="bg-blue-100 p-3.5 rounded-2xl flex-shrink-0 group-hover:scale-110 transition">
+                    <i class="fas fa-book-open text-blue-500 text-xl"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-bold text-scout">Patto Associativo AGESCI</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Il documento fondante della nostra associazione</div>
+                </div>
+                <i class="fas fa-download text-gray-300 group-hover:text-scout transition text-lg"></i>
+            </a>
+
+            <a href="area-soci.html" class="flex items-center gap-5 p-6 hover:bg-amber-50 transition group">
+                <div class="bg-amber-100 p-3.5 rounded-2xl flex-shrink-0 group-hover:scale-110 transition">
+                    <i class="fas fa-file-signature text-amber-500 text-xl"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-bold text-scout">Modulo di Iscrizione</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Compila e invia il modulo ufficiale AGESCI online – ricevi il PDF via email</div>
+                </div>
+                <i class="fas fa-arrow-right text-gray-300 group-hover:text-scout transition text-lg"></i>
+            </a>
+        </div>
+
+        <div class="mt-10 bg-blue-50 rounded-2xl p-6 text-sm text-gray-600">
+            <p class="font-bold text-scout mb-2"><i class="fas fa-info-circle mr-2 text-gold"></i>Hai bisogno di altri documenti?</p>
+            <p>Per richiedere ulteriore documentazione o informazioni, contattaci a
+                <a href="mailto:info@agescibrescia7.com" class="text-scout font-semibold hover:underline">info@agescibrescia7.com</a>
+                oppure chiama il <a href="tel:+393408740678" class="text-scout font-semibold hover:underline">+39 340 874 0678</a>.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<footer id="contatti" class="bg-gray-950 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-5">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="logo.png" alt="BS7" class="h-16 brightness-0 invert opacity-60">
+                    <div>
+                        <div class="font-black text-xl">BRESCIA 7</div>
+                        <div class="text-gray-500 text-xs uppercase tracking-widest">Gruppo Scout AGESCI</div>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                    Dal 1977 educhiamo giovani nel quartiere di San Polo secondo i valori dello scautismo: avventura, servizio e fede.
+                </p>
+                <div class="flex gap-3">
+                    <a href="https://www.instagram.com/agesci_brescia7" target="_blank"
+                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </a>
+                    <a href="#" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fab fa-facebook text-lg"></i>
+                    </a>
+                    <a href="mailto:info@agescibrescia7.com"
+                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
+                        <i class="fas fa-envelope text-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:col-span-3">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="index.html#storia"  class="hover:text-white transition">Chi siamo</a></li>
+                    <li><a href="index.html#branche" class="hover:text-white transition">Le Unità</a></li>
+                    <li><a href="area-soci.html"     class="hover:text-white transition">Area Soci</a></li>
+                    <li><a href="documenti.html"     class="hover:text-white transition">Modulistica</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-4">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Dove siamo</h4>
+                <div class="text-gray-400 text-sm space-y-4">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-church text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <span>Parrocchia S. Angela Merici</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <span>Via Cimabue, 271<br>25134 – Brescia (BS)</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-envelope text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-phone text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
+                        <a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
+            <div class="flex items-center gap-4">
+                <a href="admin.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
+                <span class="font-scout text-xl text-gold/50 italic">Semel Scout, Semper Scout</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
+<script>
+    // ── Mobile menu ──────────────────────────────────────────────
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+        const isOpen = !menu.classList.contains('hidden');
+        menu.classList.toggle('hidden');
+        icon.className = isOpen ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+    }
+
+    // ── Navbar shadow on scroll ──────────────────────────────────
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('shadow-load', window.scrollY > 40);
+    });
+</script>
+</body>
+</html>
