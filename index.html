@@ -1247,17 +1247,23 @@
     const EMAILJS_KEY      = '2-7fs3VQpyEDJMonD';
 
     window.sendConfirmationEmail = function(submission) {
-        if (!window.emailjs || EMAILJS_KEY === 'YOUR_PUBLIC_KEY') return;
         const d = submission.dati || {};
         const toEmail = d.email || d.gen1_email || '';
-        if (!toEmail) return;
+        console.log('[EmailJS] emailjs loaded:', !!window.emailjs, '| toEmail:', toEmail);
+        if (!window.emailjs) { alert('EmailJS non caricato'); return; }
+        if (!toEmail) { alert('Email destinatario non trovata nei dati: ' + JSON.stringify(Object.keys(d))); return; }
         window.emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
             to_email:   toEmail,
             nome:       (d.nome || '') + ' ' + (d.cognome || ''),
             tipo:       submission.tipo,
             timestamp:  new Date().toLocaleDateString('it-IT'),
             iban:       'IT 70 Y 08575 11201 000000184420',
-        }).catch(e => console.warn('EmailJS:', e));
+        }).then(() => {
+            console.log('[EmailJS] inviata a', toEmail);
+        }).catch(e => {
+            console.error('[EmailJS] errore:', e);
+            alert('Errore email: ' + JSON.stringify(e));
+        });
     };
 
 </script>
