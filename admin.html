@@ -608,7 +608,7 @@ function doLogin() {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('app').classList.remove('hidden');
         document.getElementById('app').classList.add('flex');
-        refreshAll();
+        setupFirestoreListener();
     } else {
         document.getElementById('login-error').classList.remove('hidden');
         document.getElementById('login-pw').value = '';
@@ -637,6 +637,7 @@ if (get(KEYS.logged)) {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('app').classList.remove('hidden');
         document.getElementById('app').classList.add('flex');
+        setupFirestoreListener();
         refreshAll();
     });
 }
@@ -683,11 +684,11 @@ function refreshAll() {
 
 // ── DASHBOARD ────────────────────────────────────────────────────
 function renderDashboard() {
-    const richieste = get(KEYS.richieste) || [];
+    const richieste = window.richiesteCache || [];
     const eventi    = get(KEYS.eventi)    || [];
     const now       = new Date();
     const unread    = richieste.filter(r => !r.letta).length;
-    const iscrizioni = richieste.filter(r => r.dati?.tipo === 'iscrizione').length;
+    const iscrizioni = richieste.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne').length;
     const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
 
     document.getElementById('stat-total').textContent    = richieste.length;
@@ -716,7 +717,7 @@ function renderDashboard() {
 }
 
 function updateBadge() {
-    const richieste = get(KEYS.richieste) || [];
+    const richieste = window.richiesteCache || [];
     const n = richieste.filter(r => !r.letta).length;
     const b = document.getElementById('badge-unread');
     if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
@@ -735,10 +736,10 @@ function filterRichieste(f) {
 }
 
 function renderRichieste(filtro) {
-    const all = get(KEYS.richieste) || [];
+    const all = window.richiesteCache || [];
     let list = all;
     if (filtro === 'nuove')       list = all.filter(r => !r.letta);
-    if (filtro === 'iscrizione')  list = all.filter(r => r.dati?.tipo === 'iscrizione');
+    if (filtro === 'iscrizione')  list = all.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne');
     if (filtro === 'informazioni')list = all.filter(r => r.dati?.tipo === 'informazioni');
 
     const el = document.getElementById('richieste-table');
@@ -769,9 +770,10 @@ function richiestaRow(r, compact) {
     const statoBadge = r.letta
         ? '<span class="badge badge-read">Letta</span>'
         : '<span class="badge badge-new">Nuova</span>';
-    const tipoBadge = r.dati?.tipo === 'iscrizione'
-        ? '<span class="badge badge-iscrizione">Iscrizione</span>'
-        : '<span class="badge badge-info">' + tipoLabel(r.dati?.tipo) + '</span>';
+    const tipoVal = r.tipo || r.dati?.tipo || '';
+    const tipoBadge = (tipoVal === 'minorenne' || tipoVal === 'maggiorenne')
+        ? `<span class="badge badge-iscrizione">Iscrizione ${tipoVal}</span>`
+        : '<span class="badge badge-info">' + tipoLabel(tipoVal) + '</span>';
 
     if (compact) {
         return `<div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 table-row">
@@ -780,7 +782,7 @@ function richiestaRow(r, compact) {
                 <div class="text-xs text-gray-400">${fmtDatetime(r.timestamp)}</div>
             </div>
             ${statoBadge}
-            <button onclick="openRichiesta(${r.id})" class="text-scout text-xs font-bold hover:underline">Apri</button>
+            <button onclick="openRichiesta('${r.id}')" class="text-scout text-xs font-bold hover:underline">Apri</button>
         </div>`;
     }
 
@@ -792,8 +794,8 @@ function richiestaRow(r, compact) {
         <td class="px-6 py-4">${statoBadge}</td>
         <td class="px-6 py-4 text-right">
             <div class="flex gap-2 justify-end">
-                <button onclick="openRichiesta(${r.id})" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
-                <button onclick="deleteRichiesta(${r.id})" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
+                <button onclick="openRichiesta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
+                <button onclick="deleteRichiesta('${r.id}')" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -802,15 +804,14 @@ function richiestaRow(r, compact) {
 }
 
 function openRichiesta(id) {
-    const all = get(KEYS.richieste) || [];
-    const r = all.find(x => x.id === id);
+    const r = (window.richiesteCache || []).find(x => x.id === id);
     if (!r) return;
 
-    // Marca come letta
-    r.letta = true;
-    set(KEYS.richieste, all);
-    updateBadge();
-    renderRichieste(currentFilter);
+    // Marca come letta in Firestore
+    if (!r.letta) {
+        window.firestoreDb.collection('iscrizioni').doc(id).update({ letta: true })
+            .catch(err => console.error('Errore update letta:', err));
+    }
 
     const d = r.dati || {};
     document.getElementById('modal-body').innerHTML = `
@@ -847,7 +848,7 @@ function openRichiesta(id) {
                    class="flex items-center gap-2 bg-scout text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
                     <i class="fas fa-reply"></i> Rispondi per email
                 </a>
-                <button onclick="deleteRichiesta(${id}); closeModal()"
+                <button onclick="deleteRichiesta('${id}'); closeModal()"
                         class="flex items-center gap-2 text-red-400 font-bold text-sm border border-red-200 px-4 py-2.5 rounded-xl hover:bg-red-50 transition">
                     <i class="fas fa-trash"></i> Elimina
                 </button>
@@ -864,21 +865,20 @@ function closeModal(e) {
 
 function deleteRichiesta(id) {
     if (!confirm('Eliminare questa richiesta?')) return;
-    const all = (get(KEYS.richieste) || []).filter(r => r.id !== id);
-    set(KEYS.richieste, all);
-    renderRichieste(currentFilter);
-    renderDashboard();
-    updateBadge();
-    toast('Richiesta eliminata.');
+    window.firestoreDb.collection('iscrizioni').doc(id).delete()
+        .then(() => toast('Richiesta eliminata.'))
+        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
 }
 
 function clearAllRichieste() {
     if (!confirm('Eliminare TUTTE le richieste? Operazione irreversibile.')) return;
-    set(KEYS.richieste, []);
-    renderRichieste('tutte');
-    renderDashboard();
-    updateBadge();
-    toast('Archivio svuotato.');
+    const db = window.firestoreDb;
+    db.collection('iscrizioni').get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    }).then(() => toast('Archivio svuotato.'))
+      .catch(err => { console.error(err); toast('Errore.', false); });
 }
 
 // ── EVENTI ────────────────────────────────────────────────────────
@@ -1090,7 +1090,7 @@ function changePw() {
 
 function exportData() {
     const data = {
-        richieste: get(KEYS.richieste) || [],
+        richieste: window.richiesteCache || [],
         eventi:    get(KEYS.eventi)    || [],
         annunci:   get(KEYS.annunci)   || [],
         esportato: new Date().toISOString(),
@@ -1107,11 +1107,45 @@ function exportData() {
 
 function resetAll() {
     if (!confirm('⚠️ Eliminare TUTTI i dati (richieste, eventi, annunci)? Operazione irreversibile!')) return;
-    [KEYS.richieste, KEYS.eventi, KEYS.annunci].forEach(k => localStorage.removeItem(k));
-    refreshAll();
+    [KEYS.eventi, KEYS.annunci].forEach(k => localStorage.removeItem(k));
+    // Elimina tutte le iscrizioni da Firestore
+    const db = window.firestoreDb;
+    if (db) {
+        db.collection('iscrizioni').get().then(snap => {
+            const batch = db.batch();
+            snap.docs.forEach(d => batch.delete(d.ref));
+            return batch.commit();
+        }).then(() => toast('Tutti i dati eliminati.'));
+    }
     renderEventi();
     renderAnnunci();
-    toast('Tutti i dati eliminati.');
+}
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+    apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
+    authDomain: "agescibrescia7-508b0.firebaseapp.com",
+    projectId: "agescibrescia7-508b0",
+    storageBucket: "agescibrescia7-508b0.firebasestorage.app",
+    messagingSenderId: "738190317173",
+    appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
+});
+window.firestoreDb = firebase.firestore();
+window.richiesteCache = [];
+window.unsubscribeRichieste = null;
+
+function setupFirestoreListener() {
+    if (window.unsubscribeRichieste) window.unsubscribeRichieste();
+    window.unsubscribeRichieste = window.firestoreDb.collection('iscrizioni')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            window.richiesteCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            refreshAll();
+        }, err => console.error('Firestore listener error:', err));
 }
 </script>
 </body>

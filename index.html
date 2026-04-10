@@ -895,7 +895,6 @@
         const form = document.getElementById('contact-form');
         const data = new FormData(form);
         const submission = {
-            id: Date.now(),
             tipo: currentTipo,
             dati: Object.fromEntries(data),
             timestamp: new Date().toISOString(),
@@ -903,17 +902,19 @@
             stato: 'nuova'
         };
 
-        // Salva in localStorage
-        const all = JSON.parse(localStorage.getItem('bs7_richieste') || '[]');
-        all.unshift(submission);
-        localStorage.setItem('bs7_richieste', JSON.stringify(all));
-
-        // Mostra successo
-        form.classList.add('hidden');
-        document.getElementById('form-nav').classList.add('hidden');
-        document.getElementById('steps-indicator').classList.add('hidden');
-        document.getElementById('step-label').classList.add('hidden');
-        document.getElementById('form-success').classList.remove('hidden');
+        // Salva in Firestore
+        window.db.collection('iscrizioni').add(submission)
+            .then(() => {
+                form.classList.add('hidden');
+                document.getElementById('form-nav').classList.add('hidden');
+                document.getElementById('steps-indicator').classList.add('hidden');
+                document.getElementById('step-label').classList.add('hidden');
+                document.getElementById('form-success').classList.remove('hidden');
+            })
+            .catch(err => {
+                console.error('Errore Firestore:', err);
+                alert('Errore durante l\'invio. Riprova tra qualche secondo.');
+            });
     }
 
     function resetForm() {
@@ -962,6 +963,21 @@
         });
     }
     loadEvents();
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+    firebase.initializeApp({
+        apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
+        authDomain: "agescibrescia7-508b0.firebaseapp.com",
+        projectId: "agescibrescia7-508b0",
+        storageBucket: "agescibrescia7-508b0.firebasestorage.app",
+        messagingSenderId: "738190317173",
+        appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
+    });
+    window.db = firebase.firestore();
 </script>
 </body>
 </html>
