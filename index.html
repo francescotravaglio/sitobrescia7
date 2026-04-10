@@ -1001,23 +1001,23 @@
             stato: 'nuova'
         };
 
-        // Salva in Firestore + genera PDF + invia email
+        // Salva in Firestore
         window.db.collection('iscrizioni').add(submission)
-            .then(() => {
-                // Genera e scarica PDF
+            .then(function() {
+                // Genera PDF (errori non bloccanti)
                 try { generateAndDownloadPDF(submission); } catch(e) { console.warn('PDF error:', e); }
-                // Invia email (se EmailJS configurato)
-                try { sendConfirmationEmail(submission); } catch(e) { console.warn('Email error:', e); }
+                // Invia email
+                sendConfirmationEmail(submission);
                 // Mostra successo
+                var els = ['form-nav','steps-indicator','step-label'];
                 form.classList.add('hidden');
-                document.getElementById('form-nav').classList.add('hidden');
-                document.getElementById('steps-indicator').classList.add('hidden');
-                document.getElementById('step-label').classList.add('hidden');
-                document.getElementById('form-success').classList.remove('hidden');
-            })
-            .catch(err => {
+                els.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+                var ok = document.getElementById('form-success');
+                if(ok) ok.classList.remove('hidden');
+            }, function(err) {
+                // Solo errori Firestore finiscono qui
                 console.error('Errore Firestore:', err);
-                alert('Errore durante l\'invio. Riprova tra qualche secondo.');
+                alert('Errore salvataggio: ' + (err.code || err.message || err));
             });
     }
 
