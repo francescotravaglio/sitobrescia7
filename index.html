@@ -34,6 +34,12 @@
             background: linear-gradient(160deg, rgba(0,26,61,0.88) 0%, rgba(0,51,102,0.75) 100%),
                         url('images/montagna.jpg') center/cover no-repeat fixed;
         }
+        @media (max-width: 768px) {
+            .hero-bg {
+                background: linear-gradient(160deg, rgba(0,26,61,0.88) 0%, rgba(0,51,102,0.75) 100%),
+                            url('images/montagna.jpg') center/cover no-repeat scroll;
+            }
+        }
 
         .nav-link { position: relative; padding-bottom: 3px; }
         .nav-link::after {
