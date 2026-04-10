@@ -213,6 +213,58 @@
   </div>
 </div>
 
+<!-- ── MODAL CONTATTO ────────────────────────────────────────────── -->
+<div id="modal-contatto" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closeModalContatto()">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10">
+    <button onclick="closeModalContatto()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">×</button>
+    <div class="text-center mb-6">
+      <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+        <i class="fas fa-envelope text-scout text-2xl"></i>
+      </div>
+      <h3 class="text-2xl font-black text-scout">Chiedi informazioni</h3>
+      <p class="text-gray-500 text-sm mt-1">Ti risponderemo entro 24 ore</p>
+    </div>
+    <div id="contatto-form-wrap">
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">Nome *</label>
+            <input id="cnt-nome" type="text" placeholder="Mario" class="input-field" required>
+          </div>
+          <div>
+            <label class="form-label">Cognome *</label>
+            <input id="cnt-cognome" type="text" placeholder="Rossi" class="input-field" required>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Email *</label>
+          <input id="cnt-email" type="email" placeholder="mario@email.com" class="input-field" required>
+        </div>
+        <div>
+          <label class="form-label">Telefono</label>
+          <input id="cnt-tel" type="tel" placeholder="+39 340 123 4567" class="input-field">
+        </div>
+        <div>
+          <label class="form-label">Messaggio *</label>
+          <textarea id="cnt-msg" rows="3" placeholder="Vorrei sapere di più sulle attività scout per mio figlio..." class="input-field resize-none"></textarea>
+        </div>
+      </div>
+      <button onclick="submitContatto()" class="mt-5 w-full bg-scout text-white font-black py-3.5 rounded-2xl hover:bg-scout-dark transition flex items-center justify-center gap-2">
+        <i class="fas fa-paper-plane"></i> Invia messaggio
+      </button>
+      <p class="text-xs text-gray-400 text-center mt-3">oppure chiamaci al <a href="tel:+393408740678" class="text-scout font-bold hover:underline">+39 340 874 0678</a></p>
+    </div>
+    <div id="contatto-success" class="hidden text-center py-6">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-green-500 text-2xl"></i>
+      </div>
+      <h4 class="font-black text-scout text-xl mb-2">Messaggio inviato!</h4>
+      <p class="text-gray-500 text-sm">Ti risponderemo presto all'indirizzo indicato.</p>
+    </div>
+  </div>
+</div>
+
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
 <header class="hero-bg min-h-[90vh] flex items-center justify-center relative overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/5 pointer-events-none"></div>
@@ -228,11 +280,11 @@
             <strong class="font-semibold">Gruppo Brescia 7 – Parrocchia S. Angela Merici</strong>
         </p>
         <div class="fade-up delay-3 flex flex-wrap justify-center gap-4">
-            <button onclick="openPreIscrizione()" class="bg-gold text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
-                <i class="fas fa-feather-alt mr-2"></i>Unisciti a noi
+            <button onclick="openModalContatto()" class="bg-gold text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
+                <i class="fas fa-envelope mr-2"></i>Chiedi informazioni
             </button>
-            <a href="#branche" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
-                Scopri le unità <i class="fas fa-arrow-right ml-2 text-sm"></i>
+            <a href="tel:+393408740678" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
+                <i class="fas fa-phone mr-2"></i>Contattaci
             </a>
         </div>
     </div>
@@ -462,6 +514,34 @@
     window.openPreIscrizione = function() {
         document.getElementById('modal-pre').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+    };
+
+    // ── Modal Contatto ────────────────────────────────────────────
+    window.openModalContatto = function() {
+        document.getElementById('modal-contatto').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+    window.closeModalContatto = function() {
+        document.getElementById('modal-contatto').classList.add('hidden');
+        document.body.style.overflow = '';
+    };
+    window.submitContatto = function() {
+        const nome  = document.getElementById('cnt-nome').value.trim();
+        const email = document.getElementById('cnt-email').value.trim();
+        const msg   = document.getElementById('cnt-msg').value.trim();
+        if (!nome || !email || !msg) { alert('Compila i campi obbligatori (nome, email, messaggio).'); return; }
+        const db = window.db || firebase.firestore();
+        db.collection('informazioni').add({
+            nome, cognome: document.getElementById('cnt-cognome').value.trim(),
+            email, telefono: document.getElementById('cnt-tel').value.trim(),
+            messaggio: msg,
+            timestamp: new Date().toISOString(), letta: false
+        }).then(function() {
+            document.getElementById('contatto-form-wrap').classList.add('hidden');
+            document.getElementById('contatto-success').classList.remove('hidden');
+        }).catch(function() {
+            alert('Errore nell\'invio. Riprova o chiamaci al +39 340 874 0678.');
+        });
     };
     window.closePreIscrizione = function() {
         document.getElementById('modal-pre').classList.add('hidden');
