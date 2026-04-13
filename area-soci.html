@@ -533,9 +533,14 @@
                   <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
                 </select>
               </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Tessera sanitaria</label><input type="text" name="tessera_sanitaria" placeholder="Numero TS" class="input-field"></div>
+                <div><label class="form-label">Antitetanica (ultima dose)</label><input type="text" name="antitetanica" placeholder="Es. 2020" class="input-field"></div>
+              </div>
               <div class="mb-4"><label class="form-label">Allergie / intolleranze alimentari</label><textarea name="allergie" rows="2" placeholder="Es. arachidi, glutine, lattosio..." class="input-field resize-none"></textarea></div>
               <div class="mb-4"><label class="form-label">Farmaci abituali</label><textarea name="farmaci" rows="2" placeholder="Nome del farmaco, dosaggio, orario..." class="input-field resize-none"></textarea></div>
               <div class="mb-4"><label class="form-label">Patologie / condizioni particolari</label><textarea name="patologie" rows="2" placeholder="Es. asma, diabete, epilessia..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Profilassi in corso</label><textarea name="profilassi" rows="2" placeholder="Es. terapie o profilassi attive..." class="input-field resize-none"></textarea></div>
               <div class="mb-4"><label class="form-label">Note per i capi</label><textarea name="note_sanitarie" rows="2" placeholder="Qualsiasi informazione utile..." class="input-field resize-none"></textarea></div>
             </div>
             <div class="step-panel" id="panel-mag-3">
@@ -989,6 +994,15 @@
             const bytes = await resp.arrayBuffer();
             return doc.embedPng(bytes);
         }
+        // Intestazione gruppo: copre il pre-stampato con bianco e ridisegna i dati
+        function fillHeader(page, font) {
+            page.drawRectangle({ x: 255, y: 706, width: 292, height: 130, color: PDFLib.rgb(1,1,1) });
+            draw(page, font, 320, 816, 'Brescia 7',                             218, 9);
+            draw(page, font, 320, 799, '98139210177',                           218, 9);
+            draw(page, font, 320, 782, 'Via Cimabue, 271 - 25124 - Brescia',    218, 9);
+            draw(page, font, 320, 765, 'brescia7@lombardia.agesci.it',           218, 9);
+            draw(page, font, 320, 748, 'www.agescibrescia7.com',                218, 9);
+        }
 
         // ── Try official PDF filling ─────────────────────────────────
         try {
@@ -1051,12 +1065,10 @@
                 // Nome gruppo
                 draw(mp1, f1, 194, 95, 'AGESCI BRESCIA 7', 223);
 
-                // ── Intestazione gruppo (header in alto a destra) ───────────────
-                draw(mp1, f1, 318, 799, 'Brescia 7', 220, 9);
-                draw(mp1, f1, 268, 782, '98139210177', 230, 9);
-                draw(mp1, f1, 268, 765, 'Via Cimabue, 271 - 25124 - Brescia', 270, 9);
-                draw(mp1, f1, 268, 748, 'brescia7@lombardia.agesci.it', 270, 9);
-                draw(mp1, f1, 268, 731, 'www.agescibrescia7.com', 270, 9);
+                // ── Intestazione gruppo (header in alto a destra) – tutte le pagine ─
+                fillHeader(mp1, f1);
+                fillHeader(mp2, f1);
+                fillHeader(mp3, f1);
 
                 // Page 2 – Minore
                 draw(mp2, f1, 136, 644, (d.nome||'') + ' ' + (d.cognome||''), 321);
@@ -1110,6 +1122,10 @@
             const [sp1, sp2] = doc2.getPages();
 
             if (tipo === 'minorenne') {
+                // Intestazione gruppo su scheda sanitaria
+                fillHeader(sp1, f2);
+                fillHeader(sp2, f2);
+
                 // Scheda page 1 - Genitore 1
                 draw(sp1, f2, 174, 567, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 277);
                 draw(sp1, f2, 455, 567, d.gen1_sesso || '', 82);
@@ -1142,6 +1158,17 @@
                 draw(sp2, f2, 195, 499, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 156);
                 draw(sp2, f2, 355, 499, d.gen1_tel || '', 176);
 
+                // Medico curante
+                draw(sp2, f2, 68,  481, d.medico_nome || '', 230, 8);
+                draw(sp2, f2, 360, 481, d.medico_tel  || '', 170, 8);
+
+                // Gruppo sanguigno + Tessera sanitaria
+                draw(sp2, f2, 68,  463, d.gruppo_sangue     || '', 130, 8);
+                draw(sp2, f2, 320, 463, d.tessera_sanitaria || '', 210, 8);
+
+                // Antitetanica (ultima dose)
+                draw(sp2, f2, 68,  445, d.antitetanica || '', 463, 8);
+
                 // Condizioni / patologie
                 const cond = [d.patologie, d.farmaci].filter(Boolean).join(' | ');
                 if (cond) {
@@ -1154,8 +1181,14 @@
                     draw(sp2, f2, 68, 346, all, 463);
                     if (all.length > 85) draw(sp2, f2, 68, 328, all.substring(85), 463);
                 }
+                // Profilassi in corso
+                const prof = d.profilassi || '';
+                if (prof) {
+                    draw(sp2, f2, 68, 317, prof, 463, 8);
+                    if (prof.length > 85) draw(sp2, f2, 68, 299, prof.substring(85), 463, 8);
+                }
                 // Note sanitarie
-                const note = [d.note_sanitarie, d.medico_nome ? 'Medico: ' + d.medico_nome : ''].filter(Boolean).join(' – ');
+                const note = d.note_sanitarie || '';
                 if (note) {
                     draw(sp2, f2, 215, 287, note, 316);
                     if (note.length > 65) draw(sp2, f2, 68, 269, note.substring(65), 463);
