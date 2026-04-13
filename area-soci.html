@@ -228,6 +228,12 @@
 <!-- ── AREA SOCI CONTENT (shown after login) ──────────────────────── -->
 <div id="area-soci-content" class="hidden">
 
+<!-- ── WELCOME BAR ─────────────────────────────────────────────── -->
+<div id="soci-welcome-bar" class="bg-scout-dark text-white text-sm py-3 px-6 flex items-center justify-between">
+    <span><i class="fas fa-user-circle mr-2 text-gold"></i>Benvenuto/a <strong id="welcome-nome" class="text-gold"></strong> — Codice censimento: <strong id="welcome-codice" class="text-gold"></strong></span>
+    <button onclick="sociLogout()" class="text-xs text-white/60 hover:text-white transition"><i class="fas fa-sign-out-alt mr-1"></i>Esci</button>
+</div>
+
 <!-- ── MINI HERO ─────────────────────────────────────────────────── -->
 <div class="bg-gradient-to-r from-scout-dark to-scout py-16 px-6 text-white text-center">
     <div class="max-w-3xl mx-auto fade-up">
@@ -272,10 +278,6 @@
               <p class="text-gray-500 text-sm">Bonifico a: <strong class="text-gray-700">AGESCI GRUPPO BRESCIA 7</strong><br>IT 70 Y 08575 11201 000000184420<br>Causale: COGNOME NOME – BRANCA</p></div>
           </div>
         </div>
-        <div class="flex gap-3 mt-10">
-          <a href="https://www.instagram.com/agesci_brescia7" target="_blank" class="flex items-center gap-2 bg-gradient-to-tr from-purple-600 to-pink-500 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform shadow-md"><i class="fab fa-instagram"></i> Instagram</a>
-          <a href="#" class="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform shadow-md"><i class="fab fa-facebook"></i> Facebook</a>
-        </div>
       </div>
 
       <!-- Form colonna destra -->
@@ -313,12 +315,27 @@
                 <div><label class="form-label">Nome *</label><input type="text" name="nome" required placeholder="Mario" class="input-field"></div>
                 <div><label class="form-label">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="input-field"></div>
               </div>
-              <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="grid grid-cols-3 gap-4 mb-4">
                 <div><label class="form-label">Data di nascita *</label><input type="date" name="data_nascita" required class="input-field"></div>
                 <div><label class="form-label">Luogo di nascita *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Sesso *</label>
+                  <select name="sesso" required class="input-field bg-white">
+                    <option value="">M/F</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                  </select>
+                </div>
               </div>
               <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="cf" required placeholder="RSSMRA10A01B157Z" maxlength="16" class="input-field uppercase"></div>
-              <div class="mb-4"><label class="form-label">Indirizzo di residenza *</label><input type="text" name="indirizzo" required placeholder="Via Roma 1, 25100 Brescia" class="input-field"></div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="col-span-2"><label class="form-label">Via/Piazza *</label><input type="text" name="indirizzo" required placeholder="Via Roma" class="input-field"></div>
+                <div><label class="form-label">N. civico</label><input type="text" name="n_civico" placeholder="1" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="col-span-1"><label class="form-label">Città *</label><input type="text" name="citta" required placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Prov.</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="input-field uppercase"></div>
+                <div><label class="form-label">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="input-field"></div>
+              </div>
               <div class="mb-4">
                 <label class="form-label">Unità *</label>
                 <select name="unita" required class="input-field bg-white">
@@ -366,15 +383,54 @@
                 <div><label class="form-label">Nome *</label><input type="text" name="gen1_nome" required placeholder="Giuseppe" class="input-field"></div>
                 <div><label class="form-label">Cognome *</label><input type="text" name="gen1_cognome" required placeholder="Rossi" class="input-field"></div>
               </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Sesso *</label>
+                  <select name="gen1_sesso" required class="input-field bg-white">
+                    <option value="">M/F</option><option value="M">M</option><option value="F">F</option>
+                  </select>
+                </div>
+                <div><label class="form-label">Nato/a a *</label><input type="text" name="gen1_luogo_nascita" required placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Data nascita *</label><input type="date" name="gen1_data_nascita" required class="input-field"></div>
+              </div>
+              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="gen1_cf" required placeholder="RSSGPP65A01B157X" maxlength="16" class="input-field uppercase"></div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="col-span-2"><label class="form-label">Via/Piazza *</label><input type="text" name="gen1_indirizzo" required placeholder="Via Roma" class="input-field"></div>
+                <div><label class="form-label">N. civico</label><input type="text" name="gen1_n_civico" placeholder="1" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Città *</label><input type="text" name="gen1_citta" required placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Prov.</label><input type="text" name="gen1_provincia" maxlength="2" placeholder="BS" class="input-field uppercase"></div>
+                <div><label class="form-label">CAP</label><input type="text" name="gen1_cap" maxlength="5" placeholder="25100" class="input-field"></div>
+              </div>
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><label class="form-label">Telefono *</label><input type="tel" name="gen1_tel" required placeholder="+39 340 000 0000" class="input-field"></div>
                 <div><label class="form-label">Email *</label><input type="email" name="gen1_email" required placeholder="giuseppe@email.com" class="input-field"></div>
               </div>
+
               <hr class="my-5 border-gray-100">
               <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Genitore / Tutore 2 <span class="font-normal">(facoltativo)</span></p>
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><label class="form-label">Nome</label><input type="text" name="gen2_nome" placeholder="Anna" class="input-field"></div>
                 <div><label class="form-label">Cognome</label><input type="text" name="gen2_cognome" placeholder="Verdi" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Sesso</label>
+                  <select name="gen2_sesso" class="input-field bg-white">
+                    <option value="">M/F</option><option value="M">M</option><option value="F">F</option>
+                  </select>
+                </div>
+                <div><label class="form-label">Nato/a a</label><input type="text" name="gen2_luogo_nascita" placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Data nascita</label><input type="date" name="gen2_data_nascita" class="input-field"></div>
+              </div>
+              <div class="mb-4"><label class="form-label">Codice Fiscale</label><input type="text" name="gen2_cf" maxlength="16" placeholder="VRDNNA70A41B157Y" class="input-field uppercase"></div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="col-span-2"><label class="form-label">Via/Piazza</label><input type="text" name="gen2_indirizzo" placeholder="Via Roma" class="input-field"></div>
+                <div><label class="form-label">N. civico</label><input type="text" name="gen2_n_civico" placeholder="1" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Città</label><input type="text" name="gen2_citta" placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Prov.</label><input type="text" name="gen2_provincia" maxlength="2" placeholder="BS" class="input-field uppercase"></div>
+                <div><label class="form-label">CAP</label><input type="text" name="gen2_cap" maxlength="5" placeholder="25100" class="input-field"></div>
               </div>
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><label class="form-label">Telefono</label><input type="tel" name="gen2_tel" placeholder="+39 340 000 0001" class="input-field"></div>
@@ -460,6 +516,18 @@
                   <div class="flex justify-between mt-1">
                     <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma con il mouse o il dito</p>
                     <button type="button" onclick="clearSig('sig-canvas-min')" class="text-xs text-scout hover:underline">Cancella</button>
+                  </div>
+                </div>
+                <!-- Firma genitore 2 (se presente) -->
+                <div id="sig2-section" class="hidden">
+                  <label class="form-label">Firma Genitore/Tutore 2</label>
+                  <div class="border-2 border-dashed border-gray-200 rounded-xl p-1.5 bg-gray-50">
+                    <canvas id="sig-canvas-min2" width="500" height="130"
+                      class="w-full rounded-lg bg-white border border-gray-100 cursor-crosshair touch-none block"></canvas>
+                  </div>
+                  <div class="flex justify-between mt-1">
+                    <p class="text-xs text-gray-400"><i class="fas fa-pen-nib mr-1"></i>Firma genitore 2</p>
+                    <button type="button" onclick="clearSig('sig-canvas-min2')" class="text-xs text-scout hover:underline">Cancella</button>
                   </div>
                 </div>
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
@@ -777,6 +845,15 @@
             initSig('sig-canvas-min');
             initSig('sig-canvas-mag');
         }
+        // Show/hide gen2 signature
+        var gen2Input = document.querySelector('[name="gen2_nome"]');
+        var sig2 = document.getElementById('sig2-section');
+        if (sig2 && gen2Input && gen2Input.value.trim()) {
+            sig2.classList.remove('hidden');
+            initSig('sig-canvas-min2');
+        } else if (sig2) {
+            sig2.classList.add('hidden');
+        }
     };
 
     // ── PDF generation – riempie i moduli ufficiali AGESCI ──────────
@@ -784,6 +861,11 @@
         const d    = submission.dati || {};
         const tipo = submission.tipo;
         const today = new Date().toLocaleDateString('it-IT');
+
+        // Get codice socio from session
+        var session = {};
+        try { session = JSON.parse(sessionStorage.getItem('soci_session') || '{}'); } catch(e) {}
+        const codiceSocio = session.codiceSocio || '';
 
         // ── helpers ─────────────────────────────────────────────────
         function clip(text, maxWidth, size) {
@@ -834,13 +916,31 @@
             if (tipo === 'minorenne') {
                 // Page 1 – Genitore 1
                 draw(mp1, f1, 174, 567, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 277);
+                draw(mp1, f1, 455, 567, d.gen1_sesso || '', 82);
+                draw(mp1, f1, 175, 544, d.gen1_luogo_nascita || '', 202);
+                draw(mp1, f1, 455, 544, d.gen1_data_nascita || '', 82);
+                draw(mp1, f1, 175, 521, d.gen1_cf || '', 296);
                 draw(mp1, f1, 475, 521, d.gen1_tel || '', 62);
+                draw(mp1, f1, 108, 497, d.gen1_indirizzo || '', 316);
+                draw(mp1, f1, 474, 497, d.gen1_n_civico || '', 63);
+                draw(mp1, f1, 108, 474, d.gen1_citta || '', 289);
+                draw(mp1, f1, 401, 474, d.gen1_cap || '', 23);
+                draw(mp1, f1, 468, 474, d.gen1_provincia || '', 69);
                 draw(mp1, f1, 127, 451, d.gen1_email || '', 230);
                 draw(mp1, f1, 399, 451, d.gen1_tel || '', 138);
                 // Genitore 2
                 if (d.gen2_nome) {
                     draw(mp1, f1, 174, 424, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 277);
+                    draw(mp1, f1, 455, 424, d.gen2_sesso || '', 82);
+                    draw(mp1, f1, 175, 401, d.gen2_luogo_nascita || '', 202);
+                    draw(mp1, f1, 455, 401, d.gen2_data_nascita || '', 82);
+                    draw(mp1, f1, 175, 378, d.gen2_cf || '', 296);
                     draw(mp1, f1, 475, 378, d.gen2_tel || '', 62);
+                    draw(mp1, f1, 108, 354, d.gen2_indirizzo || '', 316);
+                    draw(mp1, f1, 474, 354, d.gen2_n_civico || '', 63);
+                    draw(mp1, f1, 108, 331, d.gen2_citta || '', 289);
+                    draw(mp1, f1, 401, 331, d.gen2_cap || '', 23);
+                    draw(mp1, f1, 468, 331, d.gen2_provincia || '', 69);
                     draw(mp1, f1, 127, 308, d.gen2_email || '', 230);
                     draw(mp1, f1, 399, 308, d.gen2_tel || '', 138);
                 }
@@ -849,11 +949,17 @@
 
                 // Page 2 – Minore
                 draw(mp2, f1, 136, 644, (d.nome||'') + ' ' + (d.cognome||''), 321);
+                draw(mp2, f1, 461, 644, d.sesso || '', 76);
                 draw(mp2, f1, 181, 621, d.luogo_nascita || '', 203);
                 draw(mp2, f1, 461, 621, d.data_nascita || '', 76);
                 draw(mp2, f1, 155, 597, d.cf || '', 328);
                 draw(mp2, f1, 241, 574, d.indirizzo || '', 190);
+                draw(mp2, f1, 487, 574, d.n_civico || '', 50);
+                draw(mp2, f1, 114, 551, d.citta || '', 280);
+                draw(mp2, f1, 398, 551, d.cap || '', 32);
+                draw(mp2, f1, 474, 551, d.provincia || '', 64);
                 draw(mp2, f1, 120, 528, d.gen1_email || '', 234);
+                draw(mp2, f1, 397, 528, d.gen1_tel || '', 140);
 
                 // Page 3 – Firme
                 draw(mp3, f1, 341, 195, 'Brescia', 183);
@@ -864,6 +970,13 @@
                 // Signature on page 3
                 const sig1 = await sigImage(doc1, 'sig-canvas-min');
                 if (sig1) mp3.drawImage(sig1, { x: 67, y: 125, width: 130, height: 28 });
+                // Gen2 signature on page 3 (second firma line)
+                const sig1b = await sigImage(doc1, 'sig-canvas-min2');
+                if (sig1b) mp3.drawImage(sig1b, { x: 67, y: 95, width: 130, height: 28 });
+                if (d.gen2_nome) {
+                    draw(mp3, f1, 67, 128, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 224);
+                    draw(mp3, f1, 307, 128, 'Genitore/Tutore', 224);
+                }
 
             } else {
                 // Maggiorenne: fill page 2 fields with adult data
@@ -886,13 +999,26 @@
             const [sp1, sp2] = doc2.getPages();
 
             if (tipo === 'minorenne') {
-                // Page 1 – Genitore 1 (stessa struttura del modulo)
+                // Scheda page 1 - Genitore 1
                 draw(sp1, f2, 174, 567, (d.gen1_nome||'') + ' ' + (d.gen1_cognome||''), 277);
+                draw(sp1, f2, 455, 567, d.gen1_sesso || '', 82);
+                draw(sp1, f2, 175, 544, d.gen1_luogo_nascita || '', 202);
+                draw(sp1, f2, 455, 544, d.gen1_data_nascita || '', 82);
+                draw(sp1, f2, 175, 521, d.gen1_cf || '', 296);
                 draw(sp1, f2, 475, 521, d.gen1_tel || '', 62);
+                draw(sp1, f2, 108, 497, d.gen1_indirizzo || '', 316);
+                draw(sp1, f2, 108, 474, d.gen1_citta || '', 289);
                 draw(sp1, f2, 127, 451, d.gen1_email || '', 230);
                 if (d.gen2_nome) {
                     draw(sp1, f2, 174, 424, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 277);
+                    draw(sp1, f2, 455, 424, d.gen2_sesso || '', 82);
+                    draw(sp1, f2, 175, 401, d.gen2_luogo_nascita || '', 202);
+                    draw(sp1, f2, 455, 401, d.gen2_data_nascita || '', 82);
+                    draw(sp1, f2, 175, 378, d.gen2_cf || '', 296);
                     draw(sp1, f2, 475, 378, d.gen2_tel || '', 62);
+                    draw(sp1, f2, 108, 354, d.gen2_indirizzo || '', 316);
+                    draw(sp1, f2, 108, 331, d.gen2_citta || '', 289);
+                    draw(sp1, f2, 127, 308, d.gen2_email || '', 230);
                 }
 
                 // Page 2 – Dati minore
@@ -932,6 +1058,12 @@
 
                 const sig2 = await sigImage(doc2, 'sig-canvas-min');
                 if (sig2) sp2.drawImage(sig2, { x: 67, y: 138, width: 130, height: 28 });
+                const sig2b = await sigImage(doc2, 'sig-canvas-min2');
+                if (sig2b) sp2.drawImage(sig2b, { x: 67, y: 108, width: 130, height: 28 });
+                if (d.gen2_nome) {
+                    draw(sp2, f2, 67, 128, (d.gen2_nome||'') + ' ' + (d.gen2_cognome||''), 224);
+                    draw(sp2, f2, 307, 128, 'Genitore/Tutore', 224);
+                }
             }
 
             // ── Merge: doc1 + doc2 + doc3 ───────────────────────────
@@ -1053,6 +1185,18 @@
         document.getElementById('area-soci-content').classList.remove('hidden');
         var btn = document.getElementById('btn-logout-nav');
         if (btn) { btn.classList.remove('hidden'); btn.classList.add('flex'); }
+        // Populate welcome bar
+        var session = JSON.parse(sessionStorage.getItem('soci_session') || '{}');
+        var codice = session.codiceSocio || '';
+        document.getElementById('welcome-codice').textContent = codice;
+        // Try to find name from Excel data in localStorage
+        var nome = '';
+        try {
+            var excelData = JSON.parse(localStorage.getItem('soci_excel_data') || '[]');
+            var row = excelData.find(function(r) { return String(r.CodiceSocio||r.codiceSocio||r['Codice Socio']||'') === String(codice); });
+            if (row) nome = (row.Nome||'') + ' ' + (row.Cognome||'');
+        } catch(e) {}
+        document.getElementById('welcome-nome').textContent = nome.trim() || 'Socio';
     }
     function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
 

@@ -339,10 +339,34 @@
                 </div>
             </div>
             <div class="relative">
-                <img src="https://agescibrescia7.com/wp-content/uploads/2016/06/gruppo-300x200.jpg"
-                     alt="Gruppo AGESCI Brescia 7"
-                     class="w-full rounded-3xl shadow-2xl object-cover">
-                <div class="absolute -bottom-8 -left-8 bg-gold text-scout p-6 rounded-2xl shadow-xl font-black text-center">
+                <!-- Carousel -->
+                <div id="storia-carousel" class="w-full rounded-3xl shadow-2xl overflow-hidden aspect-[4/3]">
+                    <div id="carousel-track" class="flex h-full transition-transform duration-700 ease-in-out">
+                        <div class="min-w-full h-full bg-gradient-to-br from-scout to-scout-mid flex items-center justify-center text-white text-center p-10">
+                            <div><div class="text-6xl mb-4">⚜️</div><p class="font-black text-xl">Il nostro Reparto</p><p class="text-white/60 text-sm mt-2">Esploratori e Guide in cammino</p></div>
+                        </div>
+                        <div class="min-w-full h-full bg-gradient-to-br from-emerald-700 to-green-600 flex items-center justify-center text-white text-center p-10">
+                            <div><div class="text-6xl mb-4">🐞</div><p class="font-black text-xl">Il nostro Cerchio</p><p class="text-white/60 text-sm mt-2">Coccinelle e Lupetti in gioco</p></div>
+                        </div>
+                        <div class="min-w-full h-full bg-gradient-to-br from-amber-600 to-orange-500 flex items-center justify-center text-white text-center p-10">
+                            <div><div class="text-6xl mb-4">🔥</div><p class="font-black text-xl">Il nostro Clan</p><p class="text-white/60 text-sm mt-2">Rover e Scolte al servizio</p></div>
+                        </div>
+                        <div class="min-w-full h-full bg-gradient-to-br from-scout-dark to-scout flex items-center justify-center text-white text-center p-10">
+                            <div><div class="text-6xl mb-4">🧣</div><p class="font-black text-xl">Dal 1977</p><p class="text-white/60 text-sm mt-2">Semel Scout, Semper Scout</p></div>
+                        </div>
+                    </div>
+                    <!-- Dots -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                        <button onclick="goSlide(0)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition" data-idx="0"></button>
+                        <button onclick="goSlide(1)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition" data-idx="1"></button>
+                        <button onclick="goSlide(2)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition" data-idx="2"></button>
+                        <button onclick="goSlide(3)" class="carousel-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white transition" data-idx="3"></button>
+                    </div>
+                    <!-- Arrows -->
+                    <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fas fa-chevron-left text-sm"></i></button>
+                    <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fas fa-chevron-right text-sm"></i></button>
+                </div>
+                <div class="absolute -bottom-8 -left-8 bg-gold text-scout p-6 rounded-2xl shadow-xl font-black text-center z-10">
                     <div class="font-scout text-2xl">BS7</div>
                     <div class="text-xs uppercase tracking-wider mt-1">Semel Scout</div>
                     <div class="text-xs uppercase tracking-wider">Semper Scout</div>
@@ -590,6 +614,25 @@
         appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
     });
     window.db = firebase.firestore();
+</script>
+<script>
+(function() {
+    var current = 0;
+    var total = 4;
+    var timer;
+    function updateCarousel() {
+        document.getElementById('carousel-track').style.transform = 'translateX(-' + (current * 100) + '%)';
+        document.querySelectorAll('.carousel-dot').forEach(function(d, i) {
+            d.style.background = i === current ? 'white' : 'rgba(255,255,255,0.5)';
+        });
+    }
+    window.goSlide = function(n) { current = n; updateCarousel(); resetTimer(); };
+    window.nextSlide = function() { current = (current + 1) % total; updateCarousel(); resetTimer(); };
+    window.prevSlide = function() { current = (current - 1 + total) % total; updateCarousel(); resetTimer(); };
+    function resetTimer() { clearInterval(timer); timer = setInterval(window.nextSlide, 4000); }
+    updateCarousel();
+    resetTimer();
+})();
 </script>
 </body>
 </html>
