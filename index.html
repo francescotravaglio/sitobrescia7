@@ -625,11 +625,13 @@
             document.getElementById('pre-success').classList.remove('hidden');
             // Notifica admin
             const tel = document.getElementById('pre-tel').value.trim();
+            const dataStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
+            // 1) Notifica admin → poi conferma famiglia
             emailjs.send('service_rtxg48l', 'template_fc1c77j', {
                 to_email:  'brescia7@lombardia.agesci.it',
                 nome:      'Nuova pre-iscrizione ricevuta',
                 tipo:      'Pre-iscrizione',
-                timestamp: new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}),
+                timestamp: dataStr,
                 iban:      'Bambino: ' + bimboNome + '\n' +
                            'Data di nascita: ' + nascita + '\n\n' +
                            'Genitore: ' + genNome + ' ' + genCognome + '\n' +
@@ -637,23 +639,21 @@
                            'Telefono: ' + (tel || '—')
             }).then(() => {
                 console.log('[EmailJS] Notifica admin inviata');
-            }).catch(e => {
-                console.error('[EmailJS] Errore invio admin:', JSON.stringify(e));
-            });
-            // Conferma alla famiglia
-            emailjs.send('service_rtxg48l', 'template_fc1c77j', {
-                to_email:  email,
-                nome:      'Ciao ' + genNome + ' ' + genCognome + '!',
-                tipo:      'Conferma pre-iscrizione ricevuta',
-                timestamp: new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}),
-                iban:      'Abbiamo ricevuto con successo la tua richiesta di pre-iscrizione per ' + bimboNome + '.\n\n' +
-                           'A ridosso delle date di iscrizione ti ricontatteremo con tutte le informazioni e le modalità per completare l\'iscrizione ufficiale.\n\n' +
-                           'Nel frattempo, per qualsiasi domanda puoi scriverci a info@agescibrescia7.com o chiamarci al +39 340 874 0678.\n\n' +
-                           'Buona strada!\nIl Gruppo Scout AGESCI Brescia 7'
+                // 2) Conferma alla famiglia (dopo che la prima è andata)
+                return emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                    to_email:  email,
+                    nome:      'Ciao ' + genNome + ' ' + genCognome + '!',
+                    tipo:      'Conferma pre-iscrizione ricevuta',
+                    timestamp: dataStr,
+                    iban:      'Abbiamo ricevuto con successo la tua richiesta di pre-iscrizione per ' + bimboNome + '.\n\n' +
+                               'A ridosso delle date di iscrizione ti ricontatteremo con tutte le informazioni e le modalità per completare l\'iscrizione ufficiale.\n\n' +
+                               'Per qualsiasi domanda: info@agescibrescia7.com · +39 340 874 0678\n\n' +
+                               'Buona strada!\nGruppo Scout AGESCI Brescia 7'
+                });
             }).then(() => {
                 console.log('[EmailJS] Conferma famiglia inviata a', email);
             }).catch(e => {
-                console.error('[EmailJS] Errore conferma famiglia:', JSON.stringify(e));
+                console.error('[EmailJS] Errore email:', JSON.stringify(e));
             });
         }).catch(err => { console.error(err); alert('Errore. Riprova.'); });
     };
