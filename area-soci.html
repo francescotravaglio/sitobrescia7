@@ -130,9 +130,6 @@
                 <button id="btn-logout-nav" onclick="sociLogout()" class="hidden items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-500 transition border border-gray-200 px-4 py-2 rounded-xl hover:border-red-300">
                     <i class="fas fa-sign-out-alt text-xs"></i> Esci
                 </button>
-                <a href="area-soci.html" class="hidden sm:flex items-center gap-2 bg-gold text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
-                    <i class="fas fa-star text-xs"></i> ISCRIVITI
-                </a>
                 <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
                     <i class="fas fa-bars text-xl" id="menu-icon"></i>
                 </button>
@@ -148,7 +145,6 @@
             <a href="index.html#contatti"onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Contatti</a>
             <a href="documenti.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
             <a href="area-soci.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
-            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
         </div>
     </div>
 </nav>
@@ -235,54 +231,74 @@
 </div>
 
 <!-- ── MINI HERO ─────────────────────────────────────────────────── -->
-<div class="bg-gradient-to-r from-scout-dark to-scout py-16 px-6 text-white text-center">
+<div class="bg-gradient-to-r from-scout-dark to-scout py-12 px-6 text-white text-center">
     <div class="max-w-3xl mx-auto fade-up">
-        <div class="inline-flex items-center gap-2 bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
-            <i class="fas fa-star text-xs"></i> Modulo ufficiale AGESCI
+        <div class="h-20 w-20 rounded-full overflow-hidden bg-white flex items-center justify-center mx-auto mb-5 shadow-lg">
+            <img src="logo.png" alt="AGESCI Brescia 7" class="h-18 w-18 object-contain">
         </div>
-        <h1 class="text-5xl md:text-6xl font-black mb-3">Area <span class="text-gold">Soci</span></h1>
-        <p class="text-white/70 text-base">Compila il modulo di iscrizione – riceverai il PDF firmato via email</p>
+        <h1 class="text-4xl md:text-5xl font-black mb-2">Ciao, <span class="text-gold" id="hero-nome">Socio</span>!</h1>
+        <p class="text-white/60 text-sm">Gruppo Scout AGESCI Brescia 7 · San Polo</p>
     </div>
 </div>
 
-<!-- ── ISCRIZIONE ─────────────────────────────────────────────────── -->
-<section id="area-soci" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="grid lg:grid-cols-2 gap-20 items-start">
+<!-- ── CARDS AZIONI ───────────────────────────────────────────────── -->
+<section class="py-14 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-6 mb-14">
 
-      <!-- Info colonna sinistra -->
-      <div>
-        <div class="section-tag">Informazioni utili</div>
-        <h2 class="text-4xl font-black text-scout mb-6 leading-tight">
-          Iscriviti al<br><span class="text-gold" style="text-shadow:0 2px 8px rgba(252,196,0,.3)">Gruppo BS7</span>
-        </h2>
-        <p class="text-gray-600 leading-relaxed mb-10 text-lg">
-          Compila il modulo ufficiale di iscrizione AGESCI. Al termine riceverai il PDF compilato e firmato via email da conservare.
-        </p>
-        <div class="space-y-6">
-          <div class="flex items-start gap-4">
-            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-map-marker-alt text-scout text-lg w-5 text-center"></i></div>
-            <div><div class="font-bold text-scout mb-0.5">Sede</div><p class="text-gray-500 text-sm">Parrocchia S. Angela Merici<br>Via Cimabue, 271 – 25134 Brescia (BS)</p></div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-envelope text-scout text-lg w-5 text-center"></i></div>
-            <div><div class="font-bold text-scout mb-0.5">Email</div><a href="mailto:info@agescibrescia7.com" class="text-gray-500 text-sm hover:text-scout transition">info@agescibrescia7.com</a></div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-phone text-scout text-lg w-5 text-center"></i></div>
-            <div><div class="font-bold text-scout mb-0.5">Telefono</div><a href="tel:+393408740678" class="text-gray-500 text-sm hover:text-scout transition">+39 340 874 0678</a></div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="bg-amber-100 p-3 rounded-xl flex-shrink-0"><i class="fas fa-university text-scout text-lg w-5 text-center"></i></div>
-            <div><div class="font-bold text-scout mb-0.5">Quota associativa</div>
-              <p class="text-gray-500 text-sm">Bonifico a: <strong class="text-gray-700">AGESCI GRUPPO BRESCIA 7</strong><br>IT 70 Y 08575 11201 000000184420<br>Causale: COGNOME NOME – BRANCA</p></div>
-          </div>
+      <!-- Card 1: Scheda iscrizione -->
+      <button onclick="toggleFormIscrizione()" class="group bg-white rounded-3xl shadow-md border border-gray-100 p-8 text-left hover:shadow-xl hover:border-scout/20 transition-all duration-300 hover:-translate-y-1 w-full">
+        <div class="w-14 h-14 bg-scout rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <i class="fas fa-file-alt text-white text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-black text-scout mb-2">Compila la scheda di iscrizione</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Compila il modulo ufficiale AGESCI. Riceverai il PDF compilato via email.</p>
+        <div class="mt-5 flex items-center gap-2 text-scout text-sm font-bold">
+          Inizia <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </div>
+      </button>
+
+      <!-- Card 2: Paga quota -->
+      <button onclick="togglePagamento()" class="group bg-white rounded-3xl shadow-md border border-gray-100 p-8 text-left hover:shadow-xl hover:border-gold/40 transition-all duration-300 hover:-translate-y-1 w-full">
+        <div class="w-14 h-14 bg-gold rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <i class="fas fa-university text-scout text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-black text-scout mb-2">Paga la quota di gruppo</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Visualizza le coordinate bancarie per il bonifico della quota associativa.</p>
+        <div class="mt-5 flex items-center gap-2 text-gold text-sm font-bold">
+          Vedi IBAN <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </div>
+      </button>
+    </div>
+
+    <!-- Pannello pagamento (nascosto) -->
+    <div id="pannello-pagamento" class="hidden mb-14 bg-white rounded-3xl shadow-md border border-gray-100 p-8">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-gold rounded-xl flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-university text-scout"></i>
+        </div>
+        <h3 class="text-xl font-black text-scout">Quota associativa</h3>
+      </div>
+      <div class="bg-gray-50 rounded-2xl p-6 space-y-3 text-sm">
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-gray-500 w-28 flex-shrink-0">Intestatario</span>
+          <span class="font-bold text-scout">AGESCI GRUPPO BRESCIA 7</span>
+        </div>
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-gray-500 w-28 flex-shrink-0">IBAN</span>
+          <span class="font-mono font-bold text-gray-800 bg-white border border-gray-200 rounded-lg px-3 py-1 text-xs tracking-wider select-all">IT 70 Y 08575 11201 000000184420</span>
+        </div>
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-gray-500 w-28 flex-shrink-0">Causale</span>
+          <span class="font-semibold text-gray-700">COGNOME NOME – BRANCA</span>
         </div>
       </div>
+      <p class="text-xs text-gray-400 mt-4"><i class="fas fa-info-circle mr-1"></i>Effettua il bonifico prima o contestualmente alla consegna della scheda di iscrizione.</p>
+    </div>
 
-      <!-- Form colonna destra -->
-      <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden" id="form-container">
-
+    <!-- Pannello form iscrizione (nascosto) -->
+    <div id="pannello-iscrizione" class="hidden">
+      <div class="bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden" id="form-container">
         <!-- Tipo iscrizione tabs -->
         <div class="flex border-b border-gray-100">
           <button onclick="setTipo('minorenne')" id="tab-min" class="tab-type active flex-1 py-4 text-sm font-black uppercase tracking-widest border-r border-gray-100">
@@ -292,7 +308,6 @@
             <i class="fas fa-user mr-2"></i>Maggiorenne
           </button>
         </div>
-
         <div class="p-8 md:p-10">
           <!-- Progress steps -->
           <div class="flex items-center mb-8" id="steps-indicator">
@@ -604,6 +619,28 @@
 
         </div><!-- end p-8 -->
       </div><!-- end form-container -->
+    </div><!-- end pannello-iscrizione -->
+
+  </div>
+</section>
+
+<!-- ── AREA FOTO ───────────────────────────────────────────────────── -->
+<section class="py-14 bg-white">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-10">
+      <div class="section-tag mx-auto w-fit">Le nostre foto</div>
+      <h2 class="text-3xl font-black text-scout mt-2">La vita del <span class="text-gold">Gruppo</span></h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+        <img src="images/cerchio.jpg" alt="Cerchio Ali di Speranza" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+      </div>
+      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+        <img src="images/reparto.jpg" alt="Reparto Alce Mite Val Brandet" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+      </div>
+      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md col-span-2 md:col-span-1">
+        <img src="images/clan.jpg" alt="Clan Azimuth" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+      </div>
     </div>
   </div>
 </section>
@@ -812,6 +849,25 @@
         currentStep = 1;
         updateFormView();
     }
+
+    window.toggleFormIscrizione = function() {
+        var el = document.getElementById('pannello-iscrizione');
+        var pay = document.getElementById('pannello-pagamento');
+        if (pay) pay.classList.add('hidden');
+        if (el) {
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) el.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+    };
+    window.togglePagamento = function() {
+        var el = document.getElementById('pannello-pagamento');
+        var iscr = document.getElementById('pannello-iscrizione');
+        if (iscr) iscr.classList.add('hidden');
+        if (el) {
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) el.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+    };
 
     // Init
     updateFormView();
@@ -1196,7 +1252,10 @@
             var row = excelData.find(function(r) { return String(r.CodiceSocio||r.codiceSocio||r['Codice Socio']||'') === String(codice); });
             if (row) nome = (row.Nome||'') + ' ' + (row.Cognome||'');
         } catch(e) {}
-        document.getElementById('welcome-nome').textContent = nome.trim() || 'Socio';
+        var nomeDisplay = nome.trim() || 'Socio';
+        document.getElementById('welcome-nome').textContent = nomeDisplay;
+        var heroNome = document.getElementById('hero-nome');
+        if (heroNome) heroNome.textContent = nomeDisplay;
     }
     function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
 
