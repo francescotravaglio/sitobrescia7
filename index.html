@@ -101,6 +101,10 @@
             box-shadow: 0 0 0 3px rgba(0,51,102,.1);
         }
         .form-label { display:block; font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+        @media (max-width:639px) {
+            #modal-pre .input-field { padding:.45rem .75rem; font-size:.8rem; }
+            #modal-pre .form-label  { margin-bottom:2px; font-size:10px; }
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -167,39 +171,45 @@
 <!-- ── MODAL PRE-ISCRIZIONE ──────────────────────────────────────── -->
 <div id="modal-pre" class="fixed inset-0 z-[9000] flex items-end sm:items-center justify-center overflow-y-auto hidden" onclick="if(event.target===this)closePreIscrizione()">
   <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md sm:my-4 p-5 sm:p-8 z-10 max-h-[92dvh] overflow-y-auto">
-    <button onclick="closePreIscrizione()" class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
-      <i class="fas fa-times"></i>
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md sm:my-4 p-4 sm:p-8 z-10 max-h-[95dvh] overflow-y-auto">
+    <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+      <i class="fas fa-times text-sm"></i>
     </button>
-    <div class="text-center mb-6">
-      <div class="w-14 h-14 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-3">
-        <i class="fas fa-feather-alt text-scout text-2xl"></i>
+    <!-- Header compatto -->
+    <div class="flex items-center gap-3 mb-3 sm:block sm:text-center sm:mb-6">
+      <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gold rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-3">
+        <i class="fas fa-feather-alt text-scout text-lg sm:text-2xl"></i>
       </div>
-      <h3 class="text-2xl font-black text-scout">Unisciti a noi</h3>
-      <p class="text-gray-400 text-sm mt-1">Pre-iscrizione rapida – ti ricontatteremo presto</p>
+      <div>
+        <h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Unisciti a noi</h3>
+        <p class="text-gray-400 text-xs sm:text-sm">Pre-iscrizione rapida</p>
+      </div>
     </div>
-    <div class="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-4 text-xs text-amber-800 leading-relaxed">
+    <!-- Info box collassato su mobile -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug">
       <i class="fas fa-info-circle mr-1 text-amber-500"></i>
-      Il modulo online che stai per compilare serve unicamente per creare una lista di interesse e riceverai, a ridosso delle date, maggiori informazioni e le date per l'iscrizione ufficiale. Compilarlo non ti vincola ad alcuna iscrizione finale, ma ci aiuta ad organizzare al meglio le nostre attività e ad accogliervi al meglio.
+      Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione, ci aiuta a organizzare l'accoglienza.
     </div>
-    <form id="form-pre" novalidate class="space-y-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
         <div>
-          <label class="form-label">Nome genitore *</label>
+          <label class="form-label">Nome *</label>
           <input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field">
         </div>
         <div>
-          <label class="form-label">Cognome genitore *</label>
+          <label class="form-label">Cognome *</label>
           <input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field">
         </div>
       </div>
-      <div>
-        <label class="form-label">Nome del bambino/a *</label>
-        <input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field">
-      </div>
-      <div>
-        <label class="form-label">Data di nascita del bambino/a *</label>
-        <input type="date" id="pre-bimbo-nascita" required class="input-field">
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div>
+          <label class="form-label">Nome bambino/a *</label>
+          <input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field">
+        </div>
+        <div>
+          <label class="form-label">Data di nascita *</label>
+          <input type="date" id="pre-bimbo-nascita" required class="input-field">
+        </div>
       </div>
       <div>
         <label class="form-label">Email genitore *</label>
@@ -211,7 +221,7 @@
       </div>
       <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
       <button type="button" onclick="submitPreIscrizione()"
-        class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg">
+        class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg">
         <i class="fas fa-paper-plane mr-2"></i>Invia pre-iscrizione
       </button>
     </form>
