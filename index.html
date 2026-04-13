@@ -628,8 +628,8 @@
             emailjs.send('service_rtxg48l', 'template_fc1c77j', {
                 to_email:  'brescia7@lombardia.agesci.it',
                 nome:      'Nuova pre-iscrizione ricevuta',
-                tipo:      new Date().toLocaleDateString('it-IT'),
-                timestamp: new Date().toLocaleDateString('it-IT'),
+                tipo:      'Pre-iscrizione',
+                timestamp: new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}),
                 iban:      'Bambino: ' + bimboNome + '\n' +
                            'Data di nascita: ' + nascita + '\n\n' +
                            'Genitore: ' + genNome + ' ' + genCognome + '\n' +
