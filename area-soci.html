@@ -353,7 +353,16 @@
                   </select>
                 </div>
               </div>
-              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="cf" required placeholder="RSSMRA10A01B157Z" maxlength="16" class="input-field uppercase"></div>
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="form-label mb-0">Codice Fiscale *</label>
+                  <button type="button" onclick="autoCalcCF(this,'nome','cognome','data_nascita','luogo_nascita','sesso')"
+                    class="text-xs text-scout font-bold hover:underline flex items-center gap-1">
+                    <i class="fas fa-magic text-xs"></i> Auto-calcola
+                  </button>
+                </div>
+                <input type="text" name="cf" required placeholder="RSSMRA10A01B157Z" maxlength="16" class="input-field uppercase">
+              </div>
               <div class="grid grid-cols-3 gap-4 mb-4">
                 <div class="col-span-2"><label class="form-label">Via/Piazza *</label><input type="text" name="indirizzo" required placeholder="Via Roma" class="input-field"></div>
                 <div><label class="form-label">N. civico</label><input type="text" name="n_civico" placeholder="1" class="input-field"></div>
@@ -384,7 +393,16 @@
                 <div><label class="form-label">Data di nascita *</label><input type="date" name="data_nascita" required class="input-field"></div>
                 <div><label class="form-label">Luogo di nascita *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
               </div>
-              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="cf" required placeholder="RSSMRA85A01B157Z" maxlength="16" class="input-field uppercase"></div>
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="form-label mb-0">Codice Fiscale *</label>
+                  <button type="button" onclick="autoCalcCF(this,'nome','cognome','data_nascita','luogo_nascita','')"
+                    class="text-xs text-scout font-bold hover:underline flex items-center gap-1">
+                    <i class="fas fa-magic text-xs"></i> Auto-calcola
+                  </button>
+                </div>
+                <input type="text" name="cf" required placeholder="RSSMRA85A01B157Z" maxlength="16" class="input-field uppercase">
+              </div>
               <div class="mb-4"><label class="form-label">Indirizzo di residenza *</label><input type="text" name="indirizzo" required placeholder="Via Roma 1, 25100 Brescia" class="input-field"></div>
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><label class="form-label">Telefono *</label><input type="tel" name="telefono" required placeholder="+39 340 123 4567" class="input-field"></div>
@@ -419,7 +437,16 @@
                 <div><label class="form-label">Nato/a a *</label><input type="text" name="gen1_luogo_nascita" required placeholder="Brescia" class="input-field"></div>
                 <div><label class="form-label">Data nascita *</label><input type="date" name="gen1_data_nascita" required class="input-field"></div>
               </div>
-              <div class="mb-4"><label class="form-label">Codice Fiscale *</label><input type="text" name="gen1_cf" required placeholder="RSSGPP65A01B157X" maxlength="16" class="input-field uppercase"></div>
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="form-label mb-0">Codice Fiscale *</label>
+                  <button type="button" onclick="autoCalcCF(this,'gen1_nome','gen1_cognome','gen1_data_nascita','gen1_luogo_nascita','gen1_sesso')"
+                    class="text-xs text-scout font-bold hover:underline flex items-center gap-1">
+                    <i class="fas fa-magic text-xs"></i> Auto-calcola
+                  </button>
+                </div>
+                <input type="text" name="gen1_cf" required placeholder="RSSGPP65A01B157X" maxlength="16" class="input-field uppercase">
+              </div>
               <div class="grid grid-cols-3 gap-4 mb-4">
                 <div class="col-span-2"><label class="form-label">Via/Piazza *</label><input type="text" name="gen1_indirizzo" required placeholder="Via Roma" class="input-field"></div>
                 <div><label class="form-label">N. civico</label><input type="text" name="gen1_n_civico" placeholder="1" class="input-field"></div>
@@ -449,7 +476,16 @@
                 <div><label class="form-label">Nato/a a</label><input type="text" name="gen2_luogo_nascita" placeholder="Brescia" class="input-field"></div>
                 <div><label class="form-label">Data nascita</label><input type="date" name="gen2_data_nascita" class="input-field"></div>
               </div>
-              <div class="mb-4"><label class="form-label">Codice Fiscale</label><input type="text" name="gen2_cf" maxlength="16" placeholder="VRDNNA70A41B157Y" class="input-field uppercase"></div>
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="form-label mb-0">Codice Fiscale</label>
+                  <button type="button" onclick="autoCalcCF(this,'gen2_nome','gen2_cognome','gen2_data_nascita','gen2_luogo_nascita','gen2_sesso')"
+                    class="text-xs text-scout font-bold hover:underline flex items-center gap-1">
+                    <i class="fas fa-magic text-xs"></i> Auto-calcola
+                  </button>
+                </div>
+                <input type="text" name="gen2_cf" maxlength="16" placeholder="VRDNNA70A41B157Y" class="input-field uppercase">
+              </div>
               <div class="grid grid-cols-3 gap-4 mb-4">
                 <div class="col-span-2"><label class="form-label">Via/Piazza</label><input type="text" name="gen2_indirizzo" placeholder="Via Roma" class="input-field"></div>
                 <div><label class="form-label">N. civico</label><input type="text" name="gen2_n_civico" placeholder="1" class="input-field"></div>
@@ -1015,6 +1051,13 @@
                 // Nome gruppo
                 draw(mp1, f1, 194, 95, 'AGESCI BRESCIA 7', 223);
 
+                // ── Intestazione gruppo (header in alto a destra) ───────────────
+                draw(mp1, f1, 318, 799, 'Brescia 7', 220, 9);
+                draw(mp1, f1, 268, 782, '98139210177', 230, 9);
+                draw(mp1, f1, 268, 765, 'Via Cimabue, 271 - 25124 - Brescia', 270, 9);
+                draw(mp1, f1, 268, 748, 'brescia7@lombardia.agesci.it', 270, 9);
+                draw(mp1, f1, 268, 731, 'www.agescibrescia7.com', 270, 9);
+
                 // Page 2 – Minore
                 draw(mp2, f1, 136, 644, (d.nome||'') + ' ' + (d.cognome||''), 321);
                 draw(mp2, f1, 461, 644, d.sesso || '', 76);
@@ -1411,6 +1454,160 @@
             hideContent();
         }
     });
+})();
+
+// ── CODICE FISCALE AUTO-CALC ──────────────────────────────────────
+(function() {
+    const MESI = 'ABCDEHLMPRST';
+    const COMUNI = {
+        'BRESCIA':'B157','BERGAMO':'A794','CREMONA':'D142','MANTOVA':'E897',
+        'LECCO':'E507','COMO':'C933','VARESE':'L682','MONZA':'F704',
+        'MILANO':'F205','TORINO':'L219','GENOVA':'D969','BOLOGNA':'A944',
+        'FIRENZE':'D612','ROMA':'H501','NAPOLI':'F839','BARI':'A662',
+        'PALERMO':'G273','CATANIA':'C351','VENEZIA':'L736','VERONA':'L781',
+        'PADOVA':'G224','TRIESTE':'L424','TARANTO':'L049','MESSINA':'F158',
+        'PERUGIA':'G478','ANCONA':'A271','CAGLIARI':'B354','TRENTO':'L378',
+        'BOLZANO':'A952','REGGIO CALABRIA':'H224','REGGIO EMILIA':'H223',
+        'MODENA':'F257','PARMA':'G337','PIACENZA':'G535','FERRARA':'D548',
+        'RAVENNA':'H199','RIMINI':'H294','CESENA':'C573','FORLÌ':'D704',
+        'SIENA':'I726','AREZZO':'A390','PISA':'G702','LIVORNO':'E625',
+        'LUCCA':'E715','PISTOIA':'G713','PRATO':'G999','GROSSETO':'E202',
+        'PESCARA':'G482','CHIETI':'C632','LAQUILA':'A345','TERAMO':'L103',
+        'CAMPOBASSO':'B519','POTENZA':'G942','MATERA':'F052','COSENZA':'D086',
+        'CATANZARO':'C352','REGGIO DI CALABRIA':'H224','CROTONE':'D122',
+        'VIBO VALENTIA':'F537','FOGGIA':'D643','BRINDISI':'B180',
+        'LECCE':'E506','ANDRIA':'A285','BARLETTA':'A669',
+        'TRANI':'L328','SALERNO':'H703','AVELLINO':'A509','BENEVENTO':'A783',
+        'CASERTA':'B963','POZZUOLI':'G964','TORRE DEL GRECO':'L259',
+        'SASSARI':'I452','NUORO':'F979','ORISTANO':'G113',
+        'UDINE':'L483','PORDENONE':'G888','GORIZIA':'E098',
+        'AOSTA':'A326','CUNEO':'D205','ASTI':'A479','ALESSANDRIA':'A182',
+        'NOVARA':'F952','VERCELLI':'L750','BIELLA':'A859','VERBANIA':'L746',
+        // Brescia province
+        'ADRO':'A060','AGNOSINE':'A080','ALFIANELLO':'A189','ANFO':'A288',
+        'ANGOLO TERME':'A293','ARTOGNE':'A451','AZZANO MELLA':'A528',
+        'BAGNOLO MELLA':'A573','BARGHE':'A660','BASSANO BRESCIANO':'A704',
+        'BEDIZZOLE':'A728','BERLINGO':'A799','BORGOSATOLLO':'B030',
+        'BORNO':'B054','BOTTICINO':'B091','BOVEGNO':'B101','BOVEZZO':'B102',
+        'BRANDICO':'B119','BRENO':'B149','BROZZO':'B207','BUFFALORA':'B247',
+        'CAINO':'B368','CALCINATO':'B394','CALVISANO':'B452',
+        'CAPRIOLO':'B712','CARPENEDOLO':'B820','CASTEGNATO':'C055',
+        'CASTELCOVATI':'C072','CASTENEDOLO':'C293','CASTREZZATO':'C332',
+        'CAZZAGO SAN MARTINO':'C408','CEDEGOLO':'C418','CELLATICA':'C439',
+        'CERVENO':'C549','CHIARI':'C618','CIGOLE':'C681','CIMBERGO':'C691',
+        'COCCAGLIO':'C806','COLLEBEATO':'C850','COLOGNE':'C893',
+        'COMEZZANO CIZZAGO':'C925','CONCESIO':'C948','CORTE FRANCA':'D058',
+        'CORTENO GOLGI':'D064','CORZANO':'D082','DARFO BOARIO TERME':'D251',
+        'DELLO':'D270','DESENZANO DEL GARDA':'D284','EDOLO':'E280',
+        'ERBUSCO':'D421','ESINE':'D434','FIESSE':'D575','FLERO':'D634',
+        'GAMBARA':'D895','GARDONE RIVIERA':'D917','GARDONE VAL TROMPIA':'D920',
+        'GARGNANO':'D924','GAVARDO':'D940','GHEDI':'D999','GIANICO':'E009',
+        'GOTTOLENGO':'E116','GUSSAGO':'E271','IDRO':'E280','INCUDINE':'E297',
+        'IRMA':'E323','ISORELLA':'E364','LAVENONE':'E497','LENO':'E525',
+        'LIMONE SUL GARDA':'E596','LODRINO':'E652','LONATO DEL GARDA':'E675',
+        'LONGHENA':'E676','LOSINE':'E699','LOZIO':'E706','LUMEZZANE':'E743',
+        'MACLODIO':'E789','MAGASA':'E799','MAIRANO':'E840','MANERBIO':'E858',
+        'MARCHENO':'E928','MARMENTINO':'E961','MARONE':'E967','MAZZANO':'F065',
+        'MILZANO':'F216','MONIGA DEL GARDA':'F373','MONTE ISOLA':'F532',
+        'MONTICELLI BRUSATI':'F672','MONTICHIARI':'F471','MONTIRONE':'F680',
+        'MURA':'F806','MUSCOLINE':'F820','NAVE':'F851','NIARDO':'F884',
+        'NUVOLENTO':'F989','NUVOLERA':'F990','ODOLO':'G000','OFFLAGA':'G006',
+        'OME':'G061','ONO SAN PIETRO':'G074','ORZINUOVI':'G149',
+        'ORZIVECCHI':'G150','OSPITALETTO':'G170','OSSIMO':'G178',
+        'PADENGHE SUL GARDA':'G213','PADERNO FRANCIACORTA':'G217',
+        'PALAZZOLO SULLOGLIO':'G264','PARATICO':'G327','PASSIRANO':'G358',
+        'PAVONE DEL MELLA':'G392','PIAN CAMUNO':'G546','PIANCOGNO':'G548',
+        'PISOGNE':'G710','POLAVENO':'G779','PONTEVICO':'G859','PONTOGLIO':'G869',
+        'POZZOLENGO':'G961','PRALBOINO':'G977','PRESEGLIE':'H043',
+        'PREVALLE':'H055','PROVAGLIO DISEO':'H078','PROVAGLIO VAL SABBIA':'H079',
+        'QUINZANO DOLIO':'H140','REMEDELLO':'H229','ROE VOLCIANO':'H484',
+        'RONCADELLE':'H524','ROVATO':'H598','RUDIANO':'H630','SABBIO CHIESE':'H650',
+        'SALE MARASINO':'H699','SALO':'H717','SAN FELICE DEL BENACO':'H836',
+        'SAN GERVASIO BRESCIANO':'H865','SAN PAOLO':'I073','SAN ZENO NAVIGLIO':'I412',
+        'SAREZZO':'I433','SAVIORE DELLADALELLO':'I476','SELLERO':'I588',
+        'SENIGA':'I608','SERLE':'I629','SIRMIONE':'I633','SOIANO DEL LAGO':'I782',
+        'SONICO':'I828','SULZANO':'L002','TAVERNOLE SUL MELLA':'L073',
+        'TEMU':'L094','TIGNALE':'L169','TIMOLINE':'L173','TORBOLE CASAGLIA':'L210',
+        'TOSCOLANO MADERNO':'L312','TRAVAGLIATO':'L339','TREMOSINE SUL GARDA':'L372',
+        'TRENZANO':'L381','TREVISO BRESCIANO':'L406','URAGO DOLGIO':'L494',
+        'VALLIO TERME':'L655','VALVESTINO':'L468','VEROLANUOVA':'L779',
+        'VEROLAVECCHIA':'L780','VESTONE':'L812','VEZZA DOLIGO':'L816',
+        'VILLA CARCINA':'L912','VILLACHIARA':'L923','VILLANUOVA SUL CLISI':'L995',
+        'VIONE':'M065','VISANO':'M063','VOBARNO':'M104','ZONE':'M188',
+    };
+
+    function normCity(s) { return s.toUpperCase().trim().replace(/\s+/g,' ').replace(/[''`]/g,"'"); }
+
+    function getCodComune(luogo) {
+        const k = normCity(luogo);
+        if (COMUNI[k]) return COMUNI[k];
+        // Try partial match
+        for (const [name, cod] of Object.entries(COMUNI)) {
+            if (k.startsWith(name) || name.startsWith(k)) return cod;
+        }
+        return '????';
+    }
+
+    function cfCognome(cog) {
+        cog = cog.toUpperCase().replace(/[^A-Z]/g,'');
+        const cons = cog.split('').filter(c=>!'AEIOU'.includes(c));
+        const voc  = cog.split('').filter(c=> 'AEIOU'.includes(c));
+        return ([...cons,...voc,'X','X','X']).join('').substring(0,3);
+    }
+
+    function cfNome(nom) {
+        nom = nom.toUpperCase().replace(/[^A-Z]/g,'');
+        const cons = nom.split('').filter(c=>!'AEIOU'.includes(c));
+        const voc  = nom.split('').filter(c=> 'AEIOU'.includes(c));
+        if (cons.length >= 4) return cons[0]+cons[2]+cons[3];
+        return ([...cons,...voc,'X','X','X']).join('').substring(0,3);
+    }
+
+    function cfData(dataNascita, sesso) {
+        const d = new Date(dataNascita);
+        if (isNaN(d)) return '??????';
+        const yy  = d.getFullYear().toString().slice(-2);
+        const mm  = MESI[d.getMonth()];
+        const gg  = sesso.toUpperCase()==='F' ? (d.getDate()+40).toString().padStart(2,'0') : d.getDate().toString().padStart(2,'0');
+        return yy+mm+gg;
+    }
+
+    function cfChecksum(cf15) {
+        const ODD  = {0:1,1:0,2:5,3:7,4:9,5:13,6:15,7:17,8:19,9:21,A:1,B:0,C:5,D:7,E:9,F:13,G:15,H:17,I:19,J:21,K:2,L:4,M:18,N:20,O:11,P:3,Q:6,R:8,S:12,T:14,U:16,V:10,W:22,X:25,Y:24,Z:23};
+        const EVEN = {0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,A:0,B:1,C:2,D:3,E:4,F:5,G:6,H:7,I:8,J:9,K:10,L:11,M:12,N:13,O:14,P:15,Q:16,R:17,S:18,T:19,U:20,V:21,W:22,X:23,Y:24,Z:25};
+        let sum = 0;
+        for (let i=0;i<15;i++) { const c=cf15[i]; sum += i%2===0 ? (ODD[c]??0) : (EVEN[c]??0); }
+        return String.fromCharCode(65+(sum%26));
+    }
+
+    window.autoCalcCF = function(btn, nomeN, cognomeN, nascitaN, luogoN, sessoN) {
+        const panel = btn.closest('.step-panel') || btn.closest('form');
+        const inp   = btn.closest('.mb-4').querySelector('input[type="text"]');
+        const g = n => (panel.querySelector(`[name="${n}"]`)?.value || '').trim();
+        const nome = g(nomeN), cognome = g(cognomeN), nascita = g(nascitaN), luogo = g(luogoN);
+        let sesso = g(sessoN);
+
+        if (!nome||!cognome||!nascita||!luogo) {
+            alert('Compila prima: Nome, Cognome, Data di nascita e Luogo di nascita.'); return;
+        }
+        if (!sesso) {
+            sesso = prompt('Sesso (M o F)?', 'M');
+            if (!sesso) return;
+        }
+        const c15 = cfCognome(cognome) + cfNome(nome) + cfData(nascita,sesso) + getCodComune(luogo);
+        if (c15.includes('????')) {
+            const full = c15 + cfChecksum(c15.replace('????','A000'));
+            inp.value = full;
+            inp.style.borderColor = '#f59e0b';
+            inp.title = 'Comune "'+luogo+'" non trovato: verifica manualmente il codice catastale (ultime 4 cifre prima del carattere di controllo)';
+            alert('Comune "'+luogo+'" non trovato nel database.\nIl CF è parzialmente calcolato — verifica le ultime 5 cifre (codice comune + carattere di controllo).');
+        } else {
+            const cf = c15 + cfChecksum(c15);
+            inp.value = cf;
+            inp.style.borderColor = '#22c55e';
+            inp.title = 'CF calcolato automaticamente — verifica prima di inviare';
+        }
+    };
 })();
 </script>
 </body>
