@@ -169,9 +169,11 @@
 </nav>
 
 <!-- ── MODAL PRE-ISCRIZIONE ──────────────────────────────────────── -->
-<div id="modal-pre" class="fixed inset-0 z-[9000] flex items-end sm:items-center justify-center overflow-y-auto hidden" onclick="if(event.target===this)closePreIscrizione()">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md sm:my-4 p-4 sm:p-8 z-10 max-h-[95dvh] overflow-y-auto">
+<div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreIscrizione()"></div>
+  <!-- mobile: sheet dal basso | desktop: centrato -->
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-4 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
     <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
       <i class="fas fa-times text-sm"></i>
     </button>
@@ -231,6 +233,7 @@
       <p class="text-gray-500 text-sm">Ti ricontatteremo presto con tutte le informazioni.<br>Buona strada!</p>
       <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
     </div>
+  </div>
   </div>
 </div>
 
