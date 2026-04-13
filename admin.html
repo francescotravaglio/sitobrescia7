@@ -1308,6 +1308,16 @@ function importSoci(input) {
             localStorage.setItem('soci_lista', JSON.stringify(rows));
             sociFiltered = [...sociData];
             renderSoci();
+            // Salva su Firestore (batch write, doc ID = CodiceSocio)
+            const batch = window.firestoreDb.batch();
+            rows.forEach(row => {
+                const codice = String(row['CodiceSocio'] || '').trim();
+                if (codice) {
+                    const ref = window.firestoreDb.collection('soci_lista').doc(codice);
+                    batch.set(ref, row);
+                }
+            });
+            batch.commit().catch(e => console.error('Firestore soci_lista error:', e));
             const msg = document.getElementById('soci-import-msg');
             msg.textContent = '✅ Importati ' + rows.length + ' soci.';
             msg.className = 'text-xs mt-3 font-semibold text-green-600';

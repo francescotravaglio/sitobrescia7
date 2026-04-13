@@ -1237,25 +1237,34 @@
     // ── Helpers ──────────────────────────────────────────────────
     function showWall()    { document.getElementById('soci-login-wall').classList.remove('hidden'); }
     function hideWall()    { document.getElementById('soci-login-wall').classList.add('hidden'); }
+    function setNomeUI(nome) {
+        var nomeDisplay = (nome || '').trim() || 'Socio';
+        document.getElementById('welcome-nome').textContent = nomeDisplay;
+        var heroNome = document.getElementById('hero-nome');
+        if (heroNome) heroNome.textContent = nomeDisplay;
+    }
     function showContent() {
         document.getElementById('area-soci-content').classList.remove('hidden');
         var btn = document.getElementById('btn-logout-nav');
         if (btn) { btn.classList.remove('hidden'); btn.classList.add('flex'); }
-        // Populate welcome bar
         var session = JSON.parse(sessionStorage.getItem('soci_session') || '{}');
         var codice = session.codiceSocio || '';
         document.getElementById('welcome-codice').textContent = codice;
-        // Try to find name from Excel data in localStorage
-        var nome = '';
-        try {
-            var excelData = JSON.parse(localStorage.getItem('soci_excel_data') || '[]');
-            var row = excelData.find(function(r) { return String(r.CodiceSocio||r.codiceSocio||r['Codice Socio']||'') === String(codice); });
-            if (row) nome = (row.Nome||'') + ' ' + (row.Cognome||'');
-        } catch(e) {}
-        var nomeDisplay = nome.trim() || 'Socio';
-        document.getElementById('welcome-nome').textContent = nomeDisplay;
-        var heroNome = document.getElementById('hero-nome');
-        if (heroNome) heroNome.textContent = nomeDisplay;
+        // Legge nome da Firestore soci_lista
+        if (codice && window.db) {
+            window.db.collection('soci_lista').doc(String(codice)).get()
+                .then(function(doc) {
+                    if (doc.exists) {
+                        var d = doc.data();
+                        setNomeUI((d.Nome || '') + ' ' + (d.Cognome || ''));
+                    } else {
+                        setNomeUI('');
+                    }
+                })
+                .catch(function() { setNomeUI(''); });
+        } else {
+            setNomeUI('');
+        }
     }
     function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
 
