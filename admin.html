@@ -604,6 +604,7 @@
                                     <th onclick="sortSoci('StatusSocio')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Stato <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-StatusSocio"></i></th>
                                     <th onclick="sortSoci('DataNascita')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Data Nascita <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-DataNascita"></i></th>
                                     <th onclick="sortSoci('Cellulare')"     class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Cellulare <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Cellulare"></i></th>
+                                    <th class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Account</th>
                                 </tr>
                             </thead>
                             <tbody id="soci-tbody">
@@ -1376,7 +1377,7 @@ function renderSoci() {
     const tbody = document.getElementById('soci-tbody');
     const count = document.getElementById('soci-count');
     if (!sociFiltered.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-12 text-center text-gray-400">Nessun socio trovato.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="px-6 py-12 text-center text-gray-400">Nessun socio trovato.</td></tr>';
         count.textContent = '(0)';
         return;
     }
@@ -1405,8 +1406,29 @@ function renderSoci() {
             <td class="px-4 py-3"><span class="badge ${statusClass}">${row['StatusSocio'] || '—'}</span></td>
             <td class="px-4 py-3 text-xs whitespace-nowrap">${dnStr}</td>
             <td class="px-4 py-3 text-xs">${row['Cellulare'] || '—'}</td>
+            <td class="px-4 py-3">
+                <button onclick="deleteAccountSocio('${String(row['CodiceSocio']||'').replace(/'/g,"\\'")}','${(row['Nome']||'').replace(/'/g,"\\'")} ${(row['Cognome']||'').replace(/'/g,"\\'")}')"
+                    class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1 rounded-lg hover:bg-red-50 transition flex items-center gap-1">
+                    <i class="fas fa-user-slash"></i> Elimina
+                </button>
+            </td>
         </tr>`;
     }).join('');
+}
+
+function deleteAccountSocio(codice, nome) {
+    if (!confirm('Eliminare l\'account di ' + nome + ' (codice ' + codice + ')?\nIl socio non potrà più accedere all\'area riservata.')) return;
+    window.firestoreDb.collection('soci_auth')
+        .where('codiceSocio', '==', codice)
+        .get()
+        .then(snap => {
+            if (snap.empty) { toast('Nessun account trovato per questo socio.', false); return; }
+            const batch = window.firestoreDb.batch();
+            snap.forEach(doc => batch.delete(doc.ref));
+            return batch.commit();
+        })
+        .then(() => { toast('Account di ' + nome + ' eliminato.'); })
+        .catch(e => { console.error(e); toast('Errore eliminazione account.', false); });
 }
 
 // Load persisted soci on page load
