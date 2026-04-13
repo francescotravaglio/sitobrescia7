@@ -162,6 +162,10 @@
             <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
                 <i class="fas fa-cog"></i> Impostazioni
             </div>
+            <div onclick="showTab('pre-iscrizioni')" class="sidebar-link" id="nav-pre-iscrizioni">
+                <i class="fas fa-child"></i> Pre-iscrizioni
+                <span id="badge-pre" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
             <div onclick="showTab('soci')" class="sidebar-link" id="nav-soci">
                 <i class="fas fa-users"></i> Soci
             </div>
@@ -232,6 +236,14 @@
                     </div>
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
+                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Pre-iscrizioni</span>
+                        </div>
+                        <div class="text-3xl font-black text-amber-500" id="stat-pre">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste pre-iscrizione</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
                             <div class="bg-purple-50 p-2.5 rounded-xl"><i class="fas fa-calendar text-purple-600"></i></div>
                             <span class="text-xs text-gray-400 font-semibold">Prossimi</span>
                         </div>
@@ -281,6 +293,22 @@
                 <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                     <div id="richieste-table">
                         <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── PRE-ISCRIZIONI ─────────── -->
+            <section id="tab-pre-iscrizioni" class="tab-panel space-y-6">
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex gap-2">
+                        <button onclick="filterPreIscrizioni('tutte')"  class="tab-btn active" id="pf-tutte">Tutte</button>
+                        <button onclick="filterPreIscrizioni('nuove')"  class="tab-btn" id="pf-nuove">Non lette</button>
+                    </div>
+                    <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div id="pre-iscrizioni-table">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione.</div>
                     </div>
                 </div>
             </section>
@@ -707,6 +735,7 @@ const TAB_META = {
     'calendario-google': { title: 'Google Calendar', sub: 'Configurazione calendario integrato' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
     soci:              { title: 'Elenco Soci',        sub: 'Importa e gestisci la lista dei soci' },
+    'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
 };
 
 function showTab(name) {
@@ -723,13 +752,15 @@ function showTab(name) {
     if (name === 'eventi')      renderEventi();
     if (name === 'annunci')     renderAnnunci();
     if (name === 'dashboard')   renderDashboard();
-    if (name === 'soci')        renderSoci();
+    if (name === 'soci')            renderSoci();
+    if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
 }
 
 // ── Refresh globale ───────────────────────────────────────────────
 function refreshAll() {
     renderDashboard();
     updateBadge();
+    updatePreBadge();
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────────
@@ -745,6 +776,7 @@ function renderDashboard() {
     document.getElementById('stat-unread').textContent   = unread;
     document.getElementById('stat-iscrizioni').textContent = iscrizioni;
     document.getElementById('stat-eventi').textContent   = prossimi;
+    document.getElementById('stat-pre').textContent      = (window.preIscrizioniCache || []).length;
 
     // Ultime 5 richieste
     const recEl = document.getElementById('dashboard-recent');
@@ -772,6 +804,84 @@ function updateBadge() {
     const b = document.getElementById('badge-unread');
     if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
     else b.classList.add('hidden');
+}
+
+function updatePreBadge() {
+    const pre = window.preIscrizioniCache || [];
+    const n = pre.filter(r => !r.letta).length;
+    const b = document.getElementById('badge-pre');
+    if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
+    else b.classList.add('hidden');
+}
+
+// ── PRE-ISCRIZIONI ───────────────────────────────────────────────
+let currentPreFilter = 'tutte';
+
+function filterPreIscrizioni(f) {
+    currentPreFilter = f;
+    ['tutte','nuove'].forEach(k => {
+        document.getElementById('pf-' + k)?.classList.toggle('active', k === f);
+    });
+    renderPreIscrizioni(f);
+}
+
+function renderPreIscrizioni(filtro) {
+    filtro = filtro || currentPreFilter;
+    let all = window.preIscrizioniCache || [];
+    if (filtro === 'nuove') all = all.filter(r => !r.letta);
+
+    const lbl = document.getElementById('pre-count-label');
+    if (lbl) lbl.textContent = all.length + ' richiesta' + (all.length !== 1 ? 'e' : '');
+
+    const el = document.getElementById('pre-iscrizioni-table');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione in questa categoria.</div>';
+        return;
+    }
+    el.innerHTML = `
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Bambino/a</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Genitore</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Telefono</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data invio</th>
+                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                ${all.map(r => preIscrizioneRow(r)).join('')}
+            </tbody>
+        </table>`;
+}
+
+function preIscrizioneRow(r) {
+    const bimbo = r.bambino_nome || '—';
+    const genitore = ((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—';
+    const email = r.email || '—';
+    const tel = r.telefono || '—';
+    const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
+    const stato = r.letta
+        ? '<span class="badge badge-read">Letta</span>'
+        : '<span class="badge badge-new">Nuova</span>';
+    return `<tr class="table-row">
+        <td class="px-6 py-4 font-semibold text-gray-800">${bimbo}</td>
+        <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${genitore}</td>
+        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
+        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell">${tel}</td>
+        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${data}</td>
+        <td class="px-6 py-4">${stato}</td>
+        <td class="px-6 py-4 text-right">
+            ${!r.letta ? `<button onclick="markPreLetta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
+        </td>
+    </tr>`;
+}
+
+function markPreLetta(id) {
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ letta: true })
+        .catch(e => console.error('Errore markPreLetta:', e));
 }
 
 // ── RICHIESTE ────────────────────────────────────────────────────
@@ -1315,7 +1425,9 @@ firebase.initializeApp({
 });
 window.firestoreDb = firebase.firestore();
 window.richiesteCache = [];
+window.preIscrizioniCache = [];
 window.unsubscribeRichieste = null;
+window.unsubscribePreIscrizioni = null;
 
 function setupFirestoreListener() {
     if (window.unsubscribeRichieste) window.unsubscribeRichieste();
@@ -1325,6 +1437,18 @@ function setupFirestoreListener() {
             window.richiesteCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             refreshAll();
         }, err => console.error('Firestore listener error:', err));
+
+    if (window.unsubscribePreIscrizioni) window.unsubscribePreIscrizioni();
+    window.unsubscribePreIscrizioni = window.firestoreDb.collection('pre_iscrizioni')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            window.preIscrizioniCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            refreshAll();
+            // se il tab è aperto, aggiorna la tabella
+            if (document.getElementById('tab-pre-iscrizioni')?.classList.contains('active')) {
+                renderPreIscrizioni(currentPreFilter);
+            }
+        }, err => console.error('Firestore pre-iscrizioni listener error:', err));
 }
 </script>
 </body>
