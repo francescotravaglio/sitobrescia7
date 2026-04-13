@@ -6,6 +6,14 @@
     <title>agescibrescia7.com</title>
     <meta name="description" content="Gruppo Scout AGESCI Brescia 7 – San Polo, Brescia. Avventura, servizio e fede dal 1977.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NJR3QFZP7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4NJR3QFZP7');
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
@@ -638,6 +646,13 @@
         }).then(() => {
             document.getElementById('form-pre').classList.add('hidden');
             document.getElementById('pre-success').classList.remove('hidden');
+            // Evento conversione GA4
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'generate_lead', {
+                    event_category: 'pre_iscrizione',
+                    event_label: 'form_inviato'
+                });
+            }
             // Notifica admin
             const tel = document.getElementById('pre-tel').value.trim();
             const dataStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
