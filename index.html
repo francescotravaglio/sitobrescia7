@@ -6,6 +6,8 @@
     <title>AGESCI Brescia 7 – Gruppo Scout San Polo</title>
     <meta name="description" content="Gruppo Scout AGESCI Brescia 7 – San Polo, Brescia. Avventura, servizio e fede dal 1977.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -170,6 +172,10 @@
       </div>
       <h3 class="text-2xl font-black text-scout">Unisciti a noi</h3>
       <p class="text-gray-400 text-sm mt-1">Pre-iscrizione rapida – ti ricontatteremo presto</p>
+    </div>
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-4 text-xs text-amber-800 leading-relaxed">
+      <i class="fas fa-info-circle mr-1 text-amber-500"></i>
+      Il modulo online che stai per compilare serve unicamente per creare una lista di interesse e riceverai, a ridosso delle date, maggiori informazioni e le date per l'iscrizione ufficiale. Compilarlo non ti vincola ad alcuna iscrizione finale, ma ci aiuta ad organizzare al meglio le nostre attività e ad accogliervi al meglio.
     </div>
     <form id="form-pre" novalidate class="space-y-4">
       <div class="grid grid-cols-2 gap-3">
@@ -342,17 +348,73 @@
                 <!-- Carousel -->
                 <div id="storia-carousel" class="w-full rounded-3xl shadow-2xl overflow-hidden aspect-[4/3]">
                     <div id="carousel-track" class="flex h-full transition-transform duration-700 ease-in-out">
-                        <div class="min-w-full h-full bg-gradient-to-br from-scout to-scout-mid flex items-center justify-center text-white text-center p-10">
-                            <div><div class="text-6xl mb-4">⚜️</div><p class="font-black text-xl">Il nostro Reparto</p><p class="text-white/60 text-sm mt-2">Esploratori e Guide in cammino</p></div>
+                        <!-- Slide 1: Cerchio -->
+                        <div class="min-w-full h-full relative overflow-hidden">
+                            <img src="images/cerchio.jpg" alt="Cerchio Ali di Speranza" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent flex items-end p-8">
+                                <div class="text-white">
+                                    <p class="text-xs uppercase tracking-widest font-bold mb-1" style="color:#fcc400">8 – 11 anni</p>
+                                    <p class="font-black text-2xl drop-shadow">Cerchio</p>
+                                    <p class="text-sm mt-1 text-white/75 italic">"Ali di Speranza"</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="min-w-full h-full bg-gradient-to-br from-emerald-700 to-green-600 flex items-center justify-center text-white text-center p-10">
-                            <div><div class="text-6xl mb-4">🐞</div><p class="font-black text-xl">Il nostro Cerchio</p><p class="text-white/60 text-sm mt-2">Coccinelle e Lupetti in gioco</p></div>
+                        <!-- Slide 2: Clan Fuoco -->
+                        <div class="min-w-full h-full relative overflow-hidden">
+                            <img src="images/clan.jpg" alt="Clan Fuoco Azimuth" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent flex items-end p-8">
+                                <div class="text-white">
+                                    <p class="text-xs uppercase tracking-widest font-bold mb-1" style="color:#fcc400">16 – 21 anni</p>
+                                    <p class="font-black text-2xl drop-shadow">Clan Fuoco</p>
+                                    <p class="text-sm mt-1 text-white/75 italic">"Azimuth"</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="min-w-full h-full bg-gradient-to-br from-amber-600 to-orange-500 flex items-center justify-center text-white text-center p-10">
-                            <div><div class="text-6xl mb-4">🔥</div><p class="font-black text-xl">Il nostro Clan</p><p class="text-white/60 text-sm mt-2">Rover e Scolte al servizio</p></div>
+                        <!-- Slide 3: Reparto -->
+                        <div class="min-w-full h-full relative overflow-hidden">
+                            <img src="images/reparto.jpg" alt="Reparto Alce Mite Val Brandet" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent flex items-end p-8">
+                                <div class="text-white">
+                                    <p class="text-xs uppercase tracking-widest font-bold mb-1" style="color:#fcc400">12 – 16 anni</p>
+                                    <p class="font-black text-2xl drop-shadow">Reparto</p>
+                                    <p class="text-sm mt-1 text-white/75 italic">"Alce Mite Val Brandet"</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="min-w-full h-full bg-gradient-to-br from-scout-dark to-scout flex items-center justify-center text-white text-center p-10">
-                            <div><div class="text-6xl mb-4">🧣</div><p class="font-black text-xl">Dal 1977</p><p class="text-white/60 text-sm mt-2">Semel Scout, Semper Scout</p></div>
+                        <!-- Slide 4: Dal 1977 – foulard stilizzato -->
+                        <div class="min-w-full h-full flex flex-col items-center justify-center text-white text-center p-8" style="background: linear-gradient(135deg,#001a3d 0%,#003366 60%,#1a5276 100%)">
+                            <!-- SVG Foulard stilizzato -->
+                            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" class="w-64 mb-6 drop-shadow-2xl" aria-label="Foulard Brescia 7">
+                                <defs>
+                                    <clipPath id="fc">
+                                        <rect x="10" y="70" width="300" height="82" rx="41"/>
+                                    </clipPath>
+                                    <filter id="shadow" x="-10%" y="-20%" width="120%" height="160%">
+                                        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+                                    </filter>
+                                </defs>
+                                <!-- Corpo foulard -->
+                                <rect x="10" y="70" width="300" height="82" rx="41" fill="#002255" filter="url(#shadow)"/>
+                                <!-- Strisce bianche diagonali -->
+                                <g clip-path="url(#fc)">
+                                    <line x1="-20" y1="60" x2="80" y2="175" stroke="white" stroke-width="20" opacity="0.55"/>
+                                    <line x1="50" y1="60" x2="150" y2="175" stroke="white" stroke-width="20" opacity="0.55"/>
+                                    <line x1="120" y1="60" x2="220" y2="175" stroke="white" stroke-width="20" opacity="0.55"/>
+                                    <line x1="190" y1="60" x2="290" y2="175" stroke="white" stroke-width="20" opacity="0.55"/>
+                                    <line x1="260" y1="60" x2="360" y2="175" stroke="white" stroke-width="20" opacity="0.55"/>
+                                </g>
+                                <!-- Bordo foulard -->
+                                <rect x="10" y="70" width="300" height="82" rx="41" fill="none" stroke="white" stroke-width="1.5" opacity="0.2"/>
+                                <!-- Passafoulard – anello in pelle -->
+                                <ellipse cx="160" cy="111" rx="26" ry="41" fill="#7B4A1E" filter="url(#shadow)"/>
+                                <ellipse cx="160" cy="111" rx="18" ry="33" fill="none" stroke="#fcc400" stroke-width="2"/>
+                                <ellipse cx="160" cy="111" rx="26" ry="41" fill="none" stroke="#a06030" stroke-width="2"/>
+                                <!-- Incisione Brescia 7 sul passafoulard -->
+                                <text x="160" y="108" text-anchor="middle" fill="#fcc400" font-size="9" font-family="Montserrat,sans-serif" font-weight="900" opacity="0.9">BS</text>
+                                <text x="160" y="120" text-anchor="middle" fill="#fcc400" font-size="9" font-family="Montserrat,sans-serif" font-weight="900" opacity="0.9">7</text>
+                            </svg>
+                            <p class="font-black text-3xl tracking-tight drop-shadow">Dal <span style="color:#fcc400">1977</span></p>
+                            <p class="text-white/60 text-sm mt-2 tracking-widest uppercase">Semel Scout · Semper Scout</p>
                         </div>
                     </div>
                     <!-- Dots -->
@@ -597,6 +659,17 @@
         }).then(() => {
             document.getElementById('form-pre').classList.add('hidden');
             document.getElementById('pre-success').classList.remove('hidden');
+            // Notifica admin
+            const tel = document.getElementById('pre-tel').value.trim();
+            if (window.emailjs) {
+                window.emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                    to_email: 'brescia7@lombardia.agesci.it',
+                    nome: genNome + ' ' + genCognome,
+                    tipo: 'Pre-iscrizione',
+                    timestamp: new Date().toLocaleDateString('it-IT'),
+                    iban: 'Bambino: ' + bimboNome + '\nData nascita: ' + nascita + '\nTelefono: ' + tel + '\nEmail: ' + email
+                }).catch(e => console.warn('Email admin error:', e));
+            }
         }).catch(err => { console.error(err); alert('Errore. Riprova.'); });
     };
 </script>
