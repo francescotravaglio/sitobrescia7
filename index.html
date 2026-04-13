@@ -165,9 +165,9 @@
 </nav>
 
 <!-- ── MODAL PRE-ISCRIZIONE ──────────────────────────────────────── -->
-<div id="modal-pre" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closePreIscrizione()">
+<div id="modal-pre" class="fixed inset-0 z-[9000] flex items-end sm:items-center justify-center overflow-y-auto hidden" onclick="if(event.target===this)closePreIscrizione()">
   <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md sm:my-4 p-5 sm:p-8 z-10 max-h-[92dvh] overflow-y-auto">
     <button onclick="closePreIscrizione()" class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
       <i class="fas fa-times"></i>
     </button>
@@ -183,7 +183,7 @@
       Il modulo online che stai per compilare serve unicamente per creare una lista di interesse e riceverai, a ridosso delle date, maggiori informazioni e le date per l'iscrizione ufficiale. Compilarlo non ti vincola ad alcuna iscrizione finale, ma ci aiuta ad organizzare al meglio le nostre attività e ad accogliervi al meglio.
     </div>
     <form id="form-pre" novalidate class="space-y-4">
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="form-label">Nome genitore *</label>
           <input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field">
