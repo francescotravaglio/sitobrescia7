@@ -620,17 +620,16 @@
             document.getElementById('pre-success').classList.remove('hidden');
             // Notifica admin
             const tel = document.getElementById('pre-tel').value.trim();
-            const corpo = 'Genitore: ' + genNome + ' ' + genCognome +
-                          ' | Bambino: ' + bimboNome +
-                          ' | Nato il: ' + nascita +
-                          ' | Tel: ' + (tel || '—') +
-                          ' | Email: ' + email;
             emailjs.send('service_rtxg48l', 'template_fc1c77j', {
                 to_email:  'brescia7@lombardia.agesci.it',
-                nome:      genNome + ' ' + genCognome,
-                tipo:      'Nuova pre-iscrizione ricevuta',
+                nome:      'Nuova pre-iscrizione ricevuta',
+                tipo:      new Date().toLocaleDateString('it-IT'),
                 timestamp: new Date().toLocaleDateString('it-IT'),
-                iban:      corpo
+                iban:      'Bambino: ' + bimboNome + '\n' +
+                           'Data di nascita: ' + nascita + '\n\n' +
+                           'Genitore: ' + genNome + ' ' + genCognome + '\n' +
+                           'Email: ' + email + '\n' +
+                           'Telefono: ' + (tel || '—')
             }).then(() => {
                 console.log('[EmailJS] Notifica admin inviata');
             }).catch(e => {
