@@ -446,20 +446,74 @@
                         </div>
                     </div>
 
-                    <!-- Input ID -->
-                    <div class="flex gap-3 items-end">
-                        <div class="flex-1">
-                            <label>ID Calendario Google *</label>
-                            <input type="text" id="gcal-id"
-                                   placeholder="es. gruppobs7@gmail.com oppure abc123@group.calendar.google.com">
+                    <!-- 3 branch calendars -->
+                    <div class="space-y-4">
+                        <!-- Cerchio -->
+                        <div class="bg-blue-50 rounded-2xl p-4">
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    <label class="flex items-center gap-2 mb-2">
+                                        <span class="w-6 h-6 rounded-full bg-blue-400 flex items-center justify-center flex-shrink-0"><i class="fas fa-circle text-white text-xs"></i></span>
+                                        <span class="font-black text-scout text-sm">Cerchio</span>
+                                        <span class="text-xs text-gray-500">(Lupetti/Coccinelle)</span>
+                                    </label>
+                                    <input type="text" id="gcal-cerchio"
+                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
+                                           placeholder="abc123@group.calendar.google.com">
+                                </div>
+                                <button onclick="saveCalendarIds()" class="bg-scout text-white font-black px-5 py-2 rounded-xl text-sm hover:bg-scout-dark transition flex-shrink-0">
+                                    <i class="fas fa-save mr-1"></i>Salva
+                                </button>
+                            </div>
                         </div>
-                        <button onclick="saveCalendarId()"
-                                class="bg-scout text-white font-black px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition flex-shrink-0">
-                            <i class="fas fa-save mr-2"></i>Salva
-                        </button>
+                        <!-- Reparto -->
+                        <div class="bg-green-50 rounded-2xl p-4">
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    <label class="flex items-center gap-2 mb-2">
+                                        <span class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0"><i class="fas fa-campground text-white text-xs"></i></span>
+                                        <span class="font-black text-scout text-sm">Reparto</span>
+                                        <span class="text-xs text-gray-500">(Esploratori/Guide)</span>
+                                    </label>
+                                    <input type="text" id="gcal-reparto"
+                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
+                                           placeholder="abc123@group.calendar.google.com">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Clan -->
+                        <div class="bg-orange-50 rounded-2xl p-4">
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    <label class="flex items-center gap-2 mb-2">
+                                        <span class="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0"><i class="fas fa-mountain text-white text-xs"></i></span>
+                                        <span class="font-black text-scout text-sm">Clan</span>
+                                        <span class="text-xs text-gray-500">(Rover/Scolte)</span>
+                                    </label>
+                                    <input type="text" id="gcal-clan"
+                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
+                                           placeholder="abc123@group.calendar.google.com">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Calendario principale sito pubblico -->
+                        <div class="bg-gray-50 rounded-2xl p-4">
+                            <div class="flex gap-3 items-end">
+                                <div class="flex-1">
+                                    <label class="flex items-center gap-2 mb-2">
+                                        <span class="w-6 h-6 rounded-full bg-scout flex items-center justify-center flex-shrink-0"><i class="fas fa-globe text-white text-xs"></i></span>
+                                        <span class="font-black text-scout text-sm">Sito pubblico</span>
+                                        <span class="text-xs text-gray-500">(sezione Calendario su index.html)</span>
+                                    </label>
+                                    <input type="text" id="gcal-id"
+                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
+                                           placeholder="info@agescibrescia7.com">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p id="gcal-saved-msg" class="text-green-600 text-xs mt-2 hidden font-semibold">
-                        <i class="fas fa-check mr-1"></i> Salvato! Il calendario apparirà automaticamente nella sezione Calendario del sito.
+                    <p id="gcal-saved-msg" class="text-green-600 text-xs mt-3 hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Calendari salvati!
                     </p>
                 </div>
 
@@ -1199,6 +1253,9 @@ function loadCalendarId() {
         .then(doc => {
             if (!doc.exists) return;
             const data = doc.data();
+            if (data.gcalCerchio) document.getElementById('gcal-cerchio').value = data.gcalCerchio;
+            if (data.gcalReparto) document.getElementById('gcal-reparto').value = data.gcalReparto;
+            if (data.gcalClan)    document.getElementById('gcal-clan').value    = data.gcalClan;
             if (data.gcalId) {
                 document.getElementById('gcal-id').value = data.gcalId;
                 showCalendarPreview(data.gcalId);
@@ -1211,17 +1268,23 @@ function loadCalendarId() {
         .catch(e => console.error('loadCalendarId:', e));
 }
 
-function saveCalendarId() {
-    const id = document.getElementById('gcal-id').value.trim();
-    if (!id) { toast('Inserisci un ID calendario.', false); return; }
-    window.firestoreDb.collection('config').doc('site').set({ gcalId: id }, { merge: true })
-        .then(() => {
-            showCalendarPreview(id);
-            document.getElementById('gcal-saved-msg').classList.remove('hidden');
-            toast('ID calendario salvato! Il calendario apparirà automaticamente sul sito.');
-        })
-        .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
+function saveCalendarIds() {
+    const cerchio = document.getElementById('gcal-cerchio').value.trim();
+    const reparto = document.getElementById('gcal-reparto').value.trim();
+    const clan    = document.getElementById('gcal-clan').value.trim();
+    const pub     = document.getElementById('gcal-id').value.trim();
+    window.firestoreDb.collection('config').doc('site').set(
+        { gcalCerchio: cerchio, gcalReparto: reparto, gcalClan: clan, gcalId: pub },
+        { merge: true }
+    ).then(() => {
+        document.getElementById('gcal-saved-msg').classList.remove('hidden');
+        setTimeout(() => document.getElementById('gcal-saved-msg').classList.add('hidden'), 3000);
+        if (pub) showCalendarPreview(pub);
+        toast('Calendari salvati!');
+    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
 }
+// keep old name as alias for any residual calls
+function saveCalendarId() { saveCalendarIds(); }
 
 function savePhotosUrl() {
     const url = document.getElementById('photos-url').value.trim();
@@ -1229,6 +1292,7 @@ function savePhotosUrl() {
     window.firestoreDb.collection('config').doc('site').set({ photosUrl: url }, { merge: true })
         .then(() => {
             document.getElementById('photos-saved-msg').classList.remove('hidden');
+            setTimeout(() => document.getElementById('photos-saved-msg').classList.add('hidden'), 3000);
             toast('Link galleria salvato!');
         })
         .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
