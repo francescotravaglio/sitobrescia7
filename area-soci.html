@@ -746,7 +746,7 @@
     <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
       <button onclick="switchCal('cerchio')" id="cal-tab-cerchio"
         class="cal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
-        <i class="fas fa-circle text-xs mr-1.5"></i>Cerchio
+        🐞 Cerchio
       </button>
       <button onclick="switchCal('reparto')" id="cal-tab-reparto"
         class="cal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
@@ -842,7 +842,7 @@
 </script>
 
 <!-- ── GALLERIA FOTO ────────────────────────────────────────────────── -->
-<section class="py-14 bg-gray-50" id="soci-gallery-section">
+<section class="py-14 bg-gray-50 hidden" id="soci-gallery-section">
   <div class="max-w-4xl mx-auto px-6">
     <div class="flex items-center gap-3 mb-8">
       <div class="w-10 h-10 bg-gold rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -853,12 +853,7 @@
         <h2 class="text-2xl font-black text-scout leading-tight">Le nostre foto</h2>
       </div>
     </div>
-    <div id="gallery-container">
-      <div class="bg-white rounded-3xl border border-gray-100 shadow-md p-10 text-center text-gray-400" id="gallery-placeholder">
-        <i class="fas fa-camera text-4xl mb-4 opacity-30"></i>
-        <p class="font-semibold">La galleria sarà disponibile a breve.</p>
-      </div>
-    </div>
+    <div id="gallery-container"></div>
   </div>
 </section>
 
@@ -1990,31 +1985,51 @@
         if (!window.db) { setTimeout(loadGallery, 400); return; }
         window.db.collection('config').doc('site').get().then(function(doc) {
             if (!doc.exists) return;
-            var url = doc.data().photosUrl || '';
+            var url = (doc.data().photosUrl || '').trim();
             if (!url) return;
+
+            // Reveal section
+            var section = document.getElementById('soci-gallery-section');
+            if (section) section.classList.remove('hidden');
+
             var container = document.getElementById('gallery-container');
             if (!container) return;
-            // Build embed: Google Drive folder or Photos album
-            var html = '';
-            if (url.includes('drive.google.com') || url.includes('photos.google.com')) {
-                html = '<div class="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">' +
-                    '<iframe src="' + url.replace('/view','/preview').replace('?usp=sharing','') + '" ' +
-                    'width="100%" height="520" frameborder="0" allow="autoplay" ' +
-                    'style="border:0" loading="lazy"></iframe>' +
-                    '</div>' +
-                    '<div class="mt-4 text-center">' +
-                    '<a href="' + url + '" target="_blank" rel="noopener" ' +
-                    'class="inline-flex items-center gap-2 text-sm font-bold text-scout hover:underline">' +
-                    '<i class="fab fa-google-drive text-[#4285F4]"></i>Apri su Google Drive</a>' +
-                    '</div>';
+
+            var isPhotos = url.includes('photos.google.com') || url.includes('photos.app.goo.gl');
+            var isDrive  = url.includes('drive.google.com');
+
+            var icon, label, bg, iconColor;
+            if (isPhotos) {
+                icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-10 h-10"><path fill="#EA4335" d="M24 22a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/><path fill="#4285F4" d="M36 22h-6a6 6 0 0 0-6 6v6h12V22z" opacity=".7"/><path fill="#FBBC05" d="M12 22h6a6 6 0 0 1 6 6v6H12V22z" opacity=".7"/><path fill="#34A853" d="M18 34h12a6 6 0 0 1-6 6 6 6 0 0 1-6-6z" opacity=".7"/></svg>';
+                label = 'Apri su Google Photos';
+                bg = 'from-white to-gray-50';
+            } else if (isDrive) {
+                icon = '<i class="fab fa-google-drive text-5xl" style="color:#4285F4"></i>';
+                label = 'Apri su Google Drive';
+                bg = 'from-white to-blue-50';
             } else {
-                html = '<div class="text-center">' +
-                    '<a href="' + url + '" target="_blank" rel="noopener" ' +
-                    'class="inline-flex items-center gap-3 bg-scout text-white font-black px-8 py-4 rounded-2xl hover:bg-scout-dark transition-all hover:shadow-lg hover:-translate-y-0.5">' +
-                    '<i class="fas fa-images text-gold"></i>Vedi la galleria fotografica</a>' +
-                    '</div>';
+                icon = '<i class="fas fa-images text-5xl text-gold"></i>';
+                label = 'Vedi la galleria';
+                bg = 'from-white to-yellow-50';
             }
-            container.innerHTML = html;
+
+            container.innerHTML =
+                '<a href="' + url + '" target="_blank" rel="noopener" ' +
+                'class="group flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-br ' + bg + ' ' +
+                'border border-gray-100 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-8 no-underline">' +
+                    '<div class="flex-shrink-0 w-20 h-20 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center">' +
+                        icon +
+                    '</div>' +
+                    '<div class="flex-1 text-center sm:text-left">' +
+                        '<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Album fotografico</p>' +
+                        '<p class="text-xl font-black text-scout mb-1">Le nostre foto</p>' +
+                        '<p class="text-sm text-gray-500">Clicca per aprire la galleria del gruppo</p>' +
+                    '</div>' +
+                    '<div class="flex-shrink-0 flex items-center gap-2 bg-scout group-hover:bg-scout-dark text-white font-black text-sm px-6 py-3 rounded-2xl transition-all">' +
+                        '<i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>' +
+                        label +
+                    '</div>' +
+                '</a>';
         }).catch(function() {});
     }
     document.addEventListener('DOMContentLoaded', loadGallery);
