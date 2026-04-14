@@ -410,111 +410,56 @@
 
             <!-- ──────────────────── GOOGLE CALENDAR ─────────────── -->
             <section id="tab-calendario-google" class="tab-panel space-y-6">
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-2">Configura Google Calendar</h3>
-                    <p class="text-gray-500 text-sm mb-6">Collega il Google Calendar del gruppo al sito.</p>
-
-                    <!-- Steps -->
-                    <div class="space-y-4 mb-8">
-                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
-                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
-                            <div>
-                                <div class="font-bold text-scout text-sm mb-1">Crea il calendario</div>
-                                <p class="text-gray-600 text-xs leading-relaxed">Vai su <strong>calendar.google.com</strong>, crea un nuovo calendario per il gruppo (es. "Eventi BS7").</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
-                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
-                            <div>
-                                <div class="font-bold text-scout text-sm mb-1">Rendilo pubblico</div>
-                                <p class="text-gray-600 text-xs leading-relaxed">Impostazioni del calendario → <strong>"Accesso alle autorizzazioni"</strong> → spunta "Rendi disponibile al pubblico".</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 items-start bg-blue-50 rounded-2xl p-5">
-                            <div class="bg-scout text-white font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
-                            <div>
-                                <div class="font-bold text-scout text-sm mb-1">Copia l'ID calendario</div>
-                                <p class="text-gray-600 text-xs leading-relaxed">In fondo alle Impostazioni trovi <strong>"ID calendario"</strong> (es. <code class="bg-white px-1 rounded">abc123@group.calendar.google.com</code>). Copialo.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4 items-start bg-amber-50 rounded-2xl p-5">
-                            <div class="bg-gold text-scout font-black w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-sm">4</div>
-                            <div>
-                                <div class="font-bold text-scout text-sm mb-1">Incolla qui sotto e salva</div>
-                                <p class="text-gray-600 text-xs leading-relaxed">Il sito aggiorna automaticamente il calendario incorporato nel iframe della pagina principale.</p>
-                            </div>
-                        </div>
+                <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-6">
+                    <div>
+                        <h3 class="font-black text-scout mb-1">Calendari Google</h3>
+                        <p class="text-gray-500 text-sm">Incolla l'<strong>ID del calendario</strong> Google per ogni unità. L'ID si trova in Google Calendar → Impostazioni del calendario → in fondo alla pagina, voce <em>"ID calendario"</em> (es. <code class="bg-gray-100 px-1 rounded text-xs">nome@gmail.com</code> oppure <code class="bg-gray-100 px-1 rounded text-xs">abc123@group.calendar.google.com</code>).</p>
+                        <a href="https://calendar.google.com" target="_blank" class="inline-flex items-center gap-2 mt-3 text-xs font-bold text-blue-600 hover:underline"><i class="fab fa-google"></i> Apri Google Calendar</a>
                     </div>
 
-                    <!-- 3 branch calendars -->
-                    <div class="space-y-4">
-                        <!-- Cerchio -->
-                        <div class="bg-blue-50 rounded-2xl p-4">
-                            <div class="flex gap-3 items-end">
-                                <div class="flex-1">
-                                    <label class="flex items-center gap-2 mb-2">
-                                        <span class="text-lg">🐞</span>
-                                        <span class="font-black text-scout text-sm">Cerchio</span>
-                                        <span class="text-xs text-gray-500">(Lupetti/Coccinelle)</span>
-                                    </label>
-                                    <input type="text" id="gcal-cerchio"
-                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
-                                           placeholder="abc123@group.calendar.google.com">
-                                </div>
-                                <button onclick="saveCalendarIds()" class="bg-scout text-white font-black px-5 py-2 rounded-xl text-sm hover:bg-scout-dark transition flex-shrink-0">
-                                    <i class="fas fa-save mr-1"></i>Salva
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Reparto -->
-                        <div class="bg-green-50 rounded-2xl p-4">
-                            <div class="flex gap-3 items-end">
-                                <div class="flex-1">
-                                    <label class="flex items-center gap-2 mb-2">
-                                        <span class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0"><i class="fas fa-campground text-white text-xs"></i></span>
-                                        <span class="font-black text-scout text-sm">Reparto</span>
-                                        <span class="text-xs text-gray-500">(Esploratori/Guide)</span>
-                                    </label>
-                                    <input type="text" id="gcal-reparto"
-                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
-                                           placeholder="abc123@group.calendar.google.com">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Clan -->
-                        <div class="bg-orange-50 rounded-2xl p-4">
-                            <div class="flex gap-3 items-end">
-                                <div class="flex-1">
-                                    <label class="flex items-center gap-2 mb-2">
-                                        <span class="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0"><i class="fas fa-mountain text-white text-xs"></i></span>
-                                        <span class="font-black text-scout text-sm">Clan</span>
-                                        <span class="text-xs text-gray-500">(Rover/Scolte)</span>
-                                    </label>
-                                    <input type="text" id="gcal-clan"
-                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
-                                           placeholder="abc123@group.calendar.google.com">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Calendario principale sito pubblico -->
-                        <div class="bg-gray-50 rounded-2xl p-4">
-                            <div class="flex gap-3 items-end">
-                                <div class="flex-1">
-                                    <label class="flex items-center gap-2 mb-2">
-                                        <span class="w-6 h-6 rounded-full bg-scout flex items-center justify-center flex-shrink-0"><i class="fas fa-globe text-white text-xs"></i></span>
-                                        <span class="font-black text-scout text-sm">Sito pubblico</span>
-                                        <span class="text-xs text-gray-500">(sezione Calendario su index.html)</span>
-                                    </label>
-                                    <input type="text" id="gcal-id"
-                                           class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
-                                           placeholder="info@agescibrescia7.com">
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Principale (sito pubblico) -->
+                    <div class="bg-scout/5 border border-scout/20 rounded-2xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <i class="fas fa-globe text-scout"></i> Calendario principale
+                            <span class="text-xs font-normal text-gray-500 ml-1">— usato dal sito pubblico e come default per le tab</span>
+                        </label>
+                        <input type="text" id="gcal-id"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
+                               placeholder="info@agescibrescia7.com">
+                        <p class="text-xs text-gray-400 mt-1">Se non hai calendari separati per branca, basta questo campo.</p>
                     </div>
-                    <p id="gcal-saved-msg" class="text-green-600 text-xs mt-3 hidden font-semibold">
-                        <i class="fas fa-check mr-1"></i> Calendari salvati!
-                    </p>
+
+                    <!-- Calendari per branca (opzionali) -->
+                    <details class="group">
+                        <summary class="cursor-pointer flex items-center gap-2 text-sm font-bold text-scout select-none">
+                            <i class="fas fa-chevron-right group-open:rotate-90 transition-transform text-xs"></i>
+                            Calendari separati per branca <span class="font-normal text-gray-400">(opzionale)</span>
+                        </summary>
+                        <div class="mt-4 space-y-3">
+                            <p class="text-xs text-gray-500">Se hai un calendario diverso per ogni unità, incollalo qui. Altrimenti lascia vuoto: verrà usato il calendario principale.</p>
+                            <div class="bg-amber-50 rounded-xl p-3">
+                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout">🐞 Cerchio</label>
+                                <input type="text" id="gcal-cerchio" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-3">
+                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout"><i class="fas fa-campground text-green-500 text-xs"></i> Reparto</label>
+                                <input type="text" id="gcal-reparto" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
+                            </div>
+                            <div class="bg-red-50 rounded-xl p-3">
+                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout"><i class="fas fa-mountain text-red-500 text-xs"></i> Clan</label>
+                                <input type="text" id="gcal-clan" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="saveCalendarIds()" class="bg-scout text-white font-black px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
+                            <i class="fas fa-save mr-2"></i>Salva calendari
+                        </button>
+                        <p id="gcal-saved-msg" class="text-green-600 text-sm hidden font-semibold">
+                            <i class="fas fa-check mr-1"></i> Salvato!
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Galleria Foto -->

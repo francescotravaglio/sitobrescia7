@@ -702,26 +702,6 @@
   </div>
 </section>
 
-<!-- ── AREA FOTO ───────────────────────────────────────────────────── -->
-<section class="py-14 bg-white">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="text-center mb-10">
-      <div class="section-tag mx-auto w-fit">Le nostre foto</div>
-      <h2 class="text-3xl font-black text-scout mt-2">La vita del <span class="text-gold">Gruppo</span></h2>
-    </div>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
-        <img src="images/cerchio.jpg" alt="Cerchio Ali di Speranza" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-      </div>
-      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
-        <img src="images/reparto.jpg" alt="Reparto Alce Mite Val Brandet" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-      </div>
-      <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md col-span-2 md:col-span-1">
-        <img src="images/clan.jpg" alt="Clan Azimuth" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ── CALENDARIO ──────────────────────────────────────────────────── -->
 <section class="py-14 bg-white">
@@ -827,12 +807,11 @@
     function loadIds() {
         if (!window.db) { setTimeout(loadIds, 400); return; }
         window.db.collection('config').doc('site').get().then(function(doc) {
-            if (doc.exists) {
-                var d = doc.data();
-                _ids.cerchio = d.gcalCerchio || d.gcalId || '';
-                _ids.reparto = d.gcalReparto || '';
-                _ids.clan    = d.gcalClan    || '';
-            }
+            var d = doc.exists ? doc.data() : {};
+            var main = d.gcalId || 'info@agescibrescia7.com';
+            _ids.cerchio = d.gcalCerchio || main;
+            _ids.reparto = d.gcalReparto || main;
+            _ids.clan    = d.gcalClan    || main;
             applyIds();
         }).catch(function() { applyIds(); });
     }
