@@ -287,17 +287,20 @@
       </button>
     </div>
 
-    <!-- Calendar frames (one per branch, lazy-loaded) -->
-    <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-gray-50" id="cal-frames-wrap">
-      <div id="cal-loading" class="flex items-center justify-center h-64 text-gray-400">
-        <i class="fas fa-spinner fa-spin mr-2"></i>Caricamento calendario…
-      </div>
-      <iframe id="cal-frame-cerchio" src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Cerchio" loading="lazy"></iframe>
-      <iframe id="cal-frame-reparto" src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Reparto" loading="lazy"></iframe>
-      <iframe id="cal-frame-clan"    src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Clan" loading="lazy"></iframe>
+    <!-- Calendar frames -->
+    <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-gray-50">
+      <iframe id="cal-frame-cerchio"
+        src="https://calendar.google.com/calendar/embed?src=c_6f390cf973466667456acb91328e14c158b7346c5cdfba6bbee3b3bb6e7c25ae%40group.calendar.google.com&ctz=Europe%2FRome"
+        style="border:0" width="100%" height="520" frameborder="0" scrolling="no"
+        title="Calendario Cerchio"></iframe>
+      <iframe id="cal-frame-reparto"
+        src="https://calendar.google.com/calendar/embed?src=c_5c8985e1162c40f9e637cc0ff332d93d3ae99ff13d0f41128cddda100c1fd326%40group.calendar.google.com&ctz=Europe%2FRome"
+        style="border:0;display:none" width="100%" height="520" frameborder="0" scrolling="no"
+        title="Calendario Reparto"></iframe>
+      <iframe id="cal-frame-clan"
+        src="https://calendar.google.com/calendar/embed?src=c_38df47c1cd0878afbce2958c7ef24a4a73993052557a8db61021e6ad2a1c6be6%40group.calendar.google.com&ctz=Europe%2FRome"
+        style="border:0;display:none" width="100%" height="520" frameborder="0" scrolling="no"
+        title="Calendario Clan"></iframe>
     </div>
   </div>
 </section>
@@ -309,63 +312,19 @@
 
 <script>
 (function() {
-    /* Maps branch key → { gcalField, openLink } */
-    var CAL_FIELDS = {
-        cerchio: 'gcalCerchio',
-        reparto: 'gcalReparto',
-        clan:    'gcalClan'
+    var _openLinks = {
+        cerchio: 'https://calendar.google.com/calendar/embed?src=c_6f390cf973466667456acb91328e14c158b7346c5cdfba6bbee3b3bb6e7c25ae%40group.calendar.google.com&ctz=Europe%2FRome',
+        reparto: 'https://calendar.google.com/calendar/embed?src=c_5c8985e1162c40f9e637cc0ff332d93d3ae99ff13d0f41128cddda100c1fd326%40group.calendar.google.com&ctz=Europe%2FRome',
+        clan:    'https://calendar.google.com/calendar/embed?src=c_38df47c1cd0878afbce2958c7ef24a4a73993052557a8db61021e6ad2a1c6be6%40group.calendar.google.com&ctz=Europe%2FRome'
     };
-    var _ids    = { cerchio: '', reparto: '', clan: '' };
-    var _active = 'cerchio';
-
-    function calSrc(id) {
-        if (!id) return '';
-        return 'https://calendar.google.com/calendar/embed?src=' +
-               encodeURIComponent(id) +
-               '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff';
-    }
-    function openLink(id) {
-        return id ? 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(id) : 'https://calendar.google.com';
-    }
 
     window.switchCal = function(branch) {
-        _active = branch;
-        // Update tabs
         ['cerchio','reparto','clan'].forEach(function(b) {
             document.getElementById('cal-tab-' + b).classList.toggle('active', b === branch);
+            document.getElementById('cal-frame-' + b).style.display = (b === branch) ? 'block' : 'none';
         });
-        // Show active frame, hide others
-        var hasId = !!_ids[branch];
-        document.getElementById('cal-loading').style.display = hasId ? 'none' : 'flex';
-        ['cerchio','reparto','clan'].forEach(function(b) {
-            var fr = document.getElementById('cal-frame-' + b);
-            fr.style.display = (b === branch && hasId) ? 'block' : 'none';
-        });
-        // Update open link
-        document.getElementById('cal-open-link').href = openLink(_ids[branch]);
+        document.getElementById('cal-open-link').href = _openLinks[branch];
     };
-
-    function applyIds() {
-        ['cerchio','reparto','clan'].forEach(function(b) {
-            var fr = document.getElementById('cal-frame-' + b);
-            if (_ids[b] && !fr.src) fr.src = calSrc(_ids[b]);
-        });
-        switchCal(_active);
-    }
-
-    function loadIds() {
-        if (!window.db) { setTimeout(loadIds, 400); return; }
-        window.db.collection('config').doc('site').get().then(function(doc) {
-            var d = doc.exists ? doc.data() : {};
-            var main = d.gcalId || 'info@agescibrescia7.com';
-            _ids.cerchio = d.gcalCerchio || main;
-            _ids.reparto = d.gcalReparto || main;
-            _ids.clan    = d.gcalClan    || main;
-            applyIds();
-        }).catch(function() { applyIds(); });
-    }
-
-    document.addEventListener('DOMContentLoaded', loadIds);
 })();
 </script>
 
