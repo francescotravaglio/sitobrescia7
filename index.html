@@ -505,16 +505,20 @@
             <h2 class="text-5xl font-black text-scout">Calendario</h2>
             <p class="text-gray-500 mt-3 max-w-xl mx-auto">Tutti gli appuntamenti, le uscite e i campi del Gruppo AGESCI Brescia 7.</p>
         </div>
-        <div id="cal-wrapper" class="rounded-3xl overflow-hidden shadow-xl border border-gray-100" style="display:none">
+        <div id="cal-wrapper" class="rounded-3xl overflow-hidden shadow-xl border border-gray-100">
             <div class="bg-scout px-6 py-4 flex items-center gap-3">
                 <i class="fas fa-calendar-alt text-gold text-xl"></i>
                 <span class="text-white font-black text-lg">AGESCI Brescia 7</span>
+                <a href="https://calendar.google.com/calendar/r?cid=info%40agescibrescia7.com"
+                   target="_blank" rel="noopener"
+                   class="ml-auto text-xs text-white/70 hover:text-gold transition flex items-center gap-1">
+                    <i class="fas fa-external-link-alt text-xs"></i> Apri in Google Calendar
+                </a>
             </div>
-            <div id="cal-frame" class="bg-white"></div>
-        </div>
-        <div id="cal-placeholder" class="text-center py-16 text-gray-400">
-            <i class="fas fa-calendar-times text-4xl mb-3 opacity-30 block"></i>
-            <p class="text-sm">Calendario in arrivo.</p>
+            <div id="cal-frame" class="bg-white">
+                <iframe src="https://calendar.google.com/calendar/embed?src=info%40agescibrescia7.com&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff"
+                        style="border:0" width="100%" height="560" frameborder="0" scrolling="no"></iframe>
+            </div>
         </div>
     </div>
 </section>
@@ -727,17 +731,13 @@
     });
     window.db = firebase.firestore();
 
-    // Carica il calendario Google dalla configurazione su Firestore
+    // Se l'admin ha salvato un ID calendario diverso su Firestore, aggiorna l'iframe
     window.db.collection('config').doc('site').get().then(function(doc) {
-        if (doc.exists && doc.data().gcalId) {
-            var id  = doc.data().gcalId;
-            var enc = encodeURIComponent(id);
-            document.getElementById('cal-frame').innerHTML =
-                '<iframe src="https://calendar.google.com/calendar/embed?src=' + enc +
-                '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&mode=MONTH&bgcolor=%23ffffff"' +
-                ' style="border:0" width="100%" height="560" frameborder="0" scrolling="no"></iframe>';
-            document.getElementById('cal-wrapper').style.display = 'block';
-            document.getElementById('cal-placeholder').style.display = 'none';
+        if (doc.exists && doc.data().gcalId && doc.data().gcalId !== 'info@agescibrescia7.com') {
+            var enc = encodeURIComponent(doc.data().gcalId);
+            var iframe = document.querySelector('#cal-frame iframe');
+            if (iframe) iframe.src = 'https://calendar.google.com/calendar/embed?src=' + enc +
+                '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff';
         }
     }).catch(function() {});
 </script>
