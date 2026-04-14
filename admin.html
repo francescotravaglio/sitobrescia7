@@ -463,6 +463,26 @@
                     </p>
                 </div>
 
+                <!-- Galleria Foto -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+                    <h3 class="font-black text-scout mb-1"><i class="fas fa-images text-gold mr-2"></i>Galleria fotografica (Area Soci)</h3>
+                    <p class="text-gray-500 text-sm">Incolla il link pubblico di una cartella Google Drive o album Google Photos. Verrà mostrato nell'Area Soci.</p>
+                    <div class="flex gap-3 items-end">
+                        <div class="flex-1">
+                            <label>URL Google Drive / Google Photos</label>
+                            <input type="url" id="photos-url"
+                                   placeholder="https://drive.google.com/drive/folders/... oppure https://photos.google.com/share/...">
+                        </div>
+                        <button onclick="savePhotosUrl()"
+                                class="bg-gold text-scout font-black px-6 py-2.5 rounded-xl text-sm hover:bg-yellow-400 transition flex-shrink-0">
+                            <i class="fas fa-save mr-2"></i>Salva
+                        </button>
+                    </div>
+                    <p id="photos-saved-msg" class="text-green-600 text-xs hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Link galleria salvato! Apparirà nell'Area Soci.
+                    </p>
+                </div>
+
                 <!-- Anteprima -->
                 <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100">
@@ -1177,9 +1197,15 @@ function loadCalendarId() {
     if (!window.firestoreDb) return;
     window.firestoreDb.collection('config').doc('site').get()
         .then(doc => {
-            if (doc.exists && doc.data().gcalId) {
-                document.getElementById('gcal-id').value = doc.data().gcalId;
-                showCalendarPreview(doc.data().gcalId);
+            if (!doc.exists) return;
+            const data = doc.data();
+            if (data.gcalId) {
+                document.getElementById('gcal-id').value = data.gcalId;
+                showCalendarPreview(data.gcalId);
+            }
+            if (data.photosUrl) {
+                const el = document.getElementById('photos-url');
+                if (el) el.value = data.photosUrl;
             }
         })
         .catch(e => console.error('loadCalendarId:', e));
@@ -1193,6 +1219,17 @@ function saveCalendarId() {
             showCalendarPreview(id);
             document.getElementById('gcal-saved-msg').classList.remove('hidden');
             toast('ID calendario salvato! Il calendario apparirà automaticamente sul sito.');
+        })
+        .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
+}
+
+function savePhotosUrl() {
+    const url = document.getElementById('photos-url').value.trim();
+    if (!url) { toast('Inserisci un URL.', false); return; }
+    window.firestoreDb.collection('config').doc('site').set({ photosUrl: url }, { merge: true })
+        .then(() => {
+            document.getElementById('photos-saved-msg').classList.remove('hidden');
+            toast('Link galleria salvato!');
         })
         .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
 }

@@ -2,9 +2,20 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Area Soci – AGESCI Brescia 7</title>
-    <meta name="description" content="Iscriviti al Gruppo Scout AGESCI Brescia 7 – Compila il modulo ufficiale di iscrizione online.">
+    <meta name="description" content="Area riservata soci – Gruppo Scout AGESCI Brescia 7">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a3a5c">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Brescia 7">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -707,6 +718,52 @@
       </div>
       <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md col-span-2 md:col-span-1">
         <img src="images/clan.jpg" alt="Clan Azimuth" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CALENDARIO ──────────────────────────────────────────────────── -->
+<section class="py-14 bg-white">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 bg-scout rounded-2xl flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-calendar-alt text-gold text-lg"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Gruppo Scout AGESCI Brescia 7</p>
+        <h2 class="text-2xl font-black text-scout leading-tight">Calendario attività</h2>
+      </div>
+      <a href="https://calendar.google.com/calendar/r?cid=info%40agescibrescia7.com" target="_blank" rel="noopener"
+         class="ml-auto text-xs font-bold text-scout bg-gray-100 hover:bg-scout hover:text-white px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
+        <i class="fas fa-external-link-alt text-xs"></i>Apri
+      </a>
+    </div>
+    <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+      <iframe
+        src="https://calendar.google.com/calendar/embed?src=info%40agescibrescia7.com&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff"
+        style="border:0" width="100%" height="520" frameborder="0" scrolling="no"
+        title="Calendario AGESCI Brescia 7" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERIA FOTO ────────────────────────────────────────────────── -->
+<section class="py-14 bg-gray-50" id="soci-gallery-section">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 bg-gold rounded-2xl flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-images text-scout text-lg"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Album fotografico</p>
+        <h2 class="text-2xl font-black text-scout leading-tight">Le nostre foto</h2>
+      </div>
+    </div>
+    <div id="gallery-container">
+      <div class="bg-white rounded-3xl border border-gray-100 shadow-md p-10 text-center text-gray-400" id="gallery-placeholder">
+        <i class="fas fa-camera text-4xl mb-4 opacity-30"></i>
+        <p class="font-semibold">La galleria sarà disponibile a breve.</p>
       </div>
     </div>
   </div>
@@ -1497,25 +1554,55 @@
         var session = JSON.parse(sessionStorage.getItem('soci_session') || '{}');
         var codice = session.codiceSocio || '';
         document.getElementById('welcome-codice').textContent = codice;
-        // Legge nome da Firestore soci_lista
-        if (codice && window.db) {
+
+        // Helper: extract name from a Firestore doc data object
+        function nomeFromData(d) {
+            var nome    = d.Nome    || d.nome    || d.NOME    || '';
+            var cognome = d.Cognome || d.cognome || d.COGNOME || '';
+            return (nome + ' ' + cognome).trim();
+        }
+
+        if (!codice) { setNomeUI(''); return; }
+
+        function doLookup() {
+            if (!window.db) { setTimeout(doLookup, 300); return; }
+            // 1. Try direct doc lookup (doc ID = codiceSocio)
             window.db.collection('soci_lista').doc(String(codice)).get()
                 .then(function(doc) {
-                    console.log('[soci_lista] doc exists:', doc.exists, '| codice:', codice);
                     if (doc.exists) {
-                        var d = doc.data();
-                        console.log('[soci_lista] data:', JSON.stringify(d));
-                        setNomeUI((d.Nome || '') + ' ' + (d.Cognome || ''));
-                    } else {
-                        console.warn('[soci_lista] nessun documento per codice:', codice);
-                        setNomeUI('');
+                        var n = nomeFromData(doc.data());
+                        if (n) { setNomeUI(n); return; }
                     }
+                    // 2. Fallback: query by CodiceSocio field
+                    return window.db.collection('soci_lista')
+                        .where('CodiceSocio', '==', codice)
+                        .limit(1).get()
+                        .then(function(snap) {
+                            if (!snap.empty) {
+                                var n2 = nomeFromData(snap.docs[0].data());
+                                if (n2) { setNomeUI(n2); return; }
+                            }
+                            // 3. Try numeric codice
+                            var numCodice = Number(codice);
+                            if (!isNaN(numCodice) && numCodice !== 0) {
+                                return window.db.collection('soci_lista')
+                                    .where('CodiceSocio', '==', numCodice)
+                                    .limit(1).get()
+                                    .then(function(snap2) {
+                                        if (!snap2.empty) {
+                                            var n3 = nomeFromData(snap2.docs[0].data());
+                                            setNomeUI(n3 || codice);
+                                        } else {
+                                            setNomeUI(codice); // show codice as fallback
+                                        }
+                                    });
+                            }
+                            setNomeUI(codice); // show codice as fallback
+                        });
                 })
-                .catch(function(e) { console.error('[soci_lista] errore:', e); setNomeUI(''); });
-        } else {
-            console.warn('[soci_lista] db non pronto o codice vuoto:', codice);
-            setNomeUI('');
+                .catch(function(e) { console.error('[soci_lista]', e); setNomeUI(codice); });
         }
+        doLookup();
     }
     function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
 
@@ -1801,6 +1888,54 @@
         }
     };
 })();
+</script>
+
+<!-- ── GALLERY FROM FIRESTORE ────────────────────────────────────── -->
+<script>
+(function() {
+    function loadGallery() {
+        if (!window.db) { setTimeout(loadGallery, 400); return; }
+        window.db.collection('config').doc('site').get().then(function(doc) {
+            if (!doc.exists) return;
+            var url = doc.data().photosUrl || '';
+            if (!url) return;
+            var container = document.getElementById('gallery-container');
+            if (!container) return;
+            // Build embed: Google Drive folder or Photos album
+            var html = '';
+            if (url.includes('drive.google.com') || url.includes('photos.google.com')) {
+                html = '<div class="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">' +
+                    '<iframe src="' + url.replace('/view','/preview').replace('?usp=sharing','') + '" ' +
+                    'width="100%" height="520" frameborder="0" allow="autoplay" ' +
+                    'style="border:0" loading="lazy"></iframe>' +
+                    '</div>' +
+                    '<div class="mt-4 text-center">' +
+                    '<a href="' + url + '" target="_blank" rel="noopener" ' +
+                    'class="inline-flex items-center gap-2 text-sm font-bold text-scout hover:underline">' +
+                    '<i class="fab fa-google-drive text-[#4285F4]"></i>Apri su Google Drive</a>' +
+                    '</div>';
+            } else {
+                html = '<div class="text-center">' +
+                    '<a href="' + url + '" target="_blank" rel="noopener" ' +
+                    'class="inline-flex items-center gap-3 bg-scout text-white font-black px-8 py-4 rounded-2xl hover:bg-scout-dark transition-all hover:shadow-lg hover:-translate-y-0.5">' +
+                    '<i class="fas fa-images text-gold"></i>Vedi la galleria fotografica</a>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }).catch(function() {});
+    }
+    document.addEventListener('DOMContentLoaded', loadGallery);
+})();
+</script>
+
+<!-- ── SERVICE WORKER ─────────────────────────────────────────────── -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js')
+            .catch(function(err) { console.warn('SW registration failed:', err); });
+    });
+}
 </script>
 </body>
 </html>

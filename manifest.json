@@ -1,0 +1,20 @@
+{
+  "name": "AGESCI Brescia 7",
+  "short_name": "Brescia 7",
+  "description": "Area riservata soci – Gruppo Scout AGESCI Brescia 7",
+  "start_url": "./area-soci.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a3a5c",
+  "theme_color": "#1a3a5c",
+  "lang": "it",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "categories": ["lifestyle", "social"]
+}
