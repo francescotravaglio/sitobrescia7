@@ -459,7 +459,7 @@
                         </button>
                     </div>
                     <p id="gcal-saved-msg" class="text-green-600 text-xs mt-2 hidden font-semibold">
-                        <i class="fas fa-check mr-1"></i> Salvato! Aggiorna il file index.html con l'ID indicato nell'iframe del calendario.
+                        <i class="fas fa-check mr-1"></i> Salvato! Il calendario apparirà automaticamente nella sezione Calendario del sito.
                     </p>
                 </div>
 
@@ -724,7 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') doLogin();
     });
     loadConfig();
-    loadCalendarId();
 });
 
 // ── Tab navigation ───────────────────────────────────────────────
@@ -767,7 +766,7 @@ function refreshAll() {
 // ── DASHBOARD ────────────────────────────────────────────────────
 function renderDashboard() {
     const richieste = window.richiesteCache || [];
-    const eventi    = get(KEYS.eventi)    || [];
+    const eventi    = window.eventiCache   || [];
     const now       = new Date();
     const unread    = richieste.filter(r => !r.letta).length;
     const iscrizioni = richieste.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne').length;
@@ -1053,31 +1052,23 @@ function addEvento() {
     const titolo = document.getElementById('ev-titolo').value.trim();
     const data   = document.getElementById('ev-data').value;
     if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
-
-    const ev = {
-        id:          Date.now(),
-        titolo,
-        data,
+    const id = Date.now();
+    const ev = { id, titolo, data,
         unita:       document.getElementById('ev-unita').value,
         luogo:       document.getElementById('ev-luogo').value.trim(),
         descrizione: document.getElementById('ev-descr').value.trim(),
     };
-
-    const all = get(KEYS.eventi) || [];
-    all.push(ev);
-    set(KEYS.eventi, all);
-
-    // Reset form
-    ['ev-titolo','ev-data','ev-luogo','ev-descr'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('ev-unita').selectedIndex = 0;
-
-    renderEventi();
-    renderDashboard();
-    toast('Evento aggiunto!');
+    window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
+        .then(() => {
+            ['ev-titolo','ev-data','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
+            document.getElementById('ev-unita').selectedIndex = 0;
+            toast('Evento aggiunto!');
+        })
+        .catch(e => { console.error(e); toast('Errore salvataggio evento.', false); });
 }
 
 function renderEventi() {
-    const all = (get(KEYS.eventi) || []).sort((a,b) => new Date(a.data)-new Date(b.data));
+    const all = (window.eventiCache || []).slice().sort((a,b) => new Date(a.data)-new Date(b.data));
     const el  = document.getElementById('eventi-list');
     if (!all.length) {
         el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>';
@@ -1115,10 +1106,9 @@ function eventRow(ev) {
 
 function deleteEvento(id) {
     if (!confirm('Eliminare questo evento?')) return;
-    set(KEYS.eventi, (get(KEYS.eventi)||[]).filter(e => e.id !== id));
-    renderEventi();
-    renderDashboard();
-    toast('Evento eliminato.');
+    window.firestoreDb.collection('eventi').doc(String(id)).delete()
+        .then(() => toast('Evento eliminato.'))
+        .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
 }
 
 // ── ANNUNCI ───────────────────────────────────────────────────────
@@ -1126,28 +1116,23 @@ function addAnnuncio() {
     const titolo = document.getElementById('ann-titolo').value.trim();
     const testo  = document.getElementById('ann-testo').value.trim();
     if (!titolo || !testo) { toast('Titolo e testo sono obbligatori.', false); return; }
-
-    const ann = {
-        id:        Date.now(),
-        titolo,
-        testo,
+    const id = Date.now();
+    const ann = { id, titolo, testo,
         categoria: document.getElementById('ann-cat').value,
         scadenza:  document.getElementById('ann-scad').value || null,
         timestamp: new Date().toISOString(),
     };
-
-    const all = get(KEYS.annunci) || [];
-    all.unshift(ann);
-    set(KEYS.annunci, all);
-
-    ['ann-titolo','ann-testo','ann-scad'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('ann-cat').selectedIndex = 0;
-    renderAnnunci();
-    toast('Annuncio pubblicato!');
+    window.firestoreDb.collection('annunci').doc(String(id)).set(ann)
+        .then(() => {
+            ['ann-titolo','ann-testo','ann-scad'].forEach(i => document.getElementById(i).value = '');
+            document.getElementById('ann-cat').selectedIndex = 0;
+            toast('Annuncio pubblicato!');
+        })
+        .catch(e => { console.error(e); toast('Errore pubblicazione annuncio.', false); });
 }
 
 function renderAnnunci() {
-    const all = get(KEYS.annunci) || [];
+    const all = (window.annunciCache || []).slice().sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
     const el  = document.getElementById('annunci-list');
     if (!all.length) {
         el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio pubblicato.</div>';
@@ -1175,30 +1160,41 @@ function renderAnnunci() {
 
 function deleteAnnuncio(id) {
     if (!confirm('Eliminare questo annuncio?')) return;
-    set(KEYS.annunci, (get(KEYS.annunci)||[]).filter(a => a.id !== id));
-    renderAnnunci();
-    toast('Annuncio eliminato.');
+    window.firestoreDb.collection('annunci').doc(String(id)).delete()
+        .then(() => toast('Annuncio eliminato.'))
+        .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
 }
 
 // ── GOOGLE CALENDAR ───────────────────────────────────────────────
+function showCalendarPreview(id) {
+    const encoded = encodeURIComponent(id);
+    document.getElementById('gcal-preview').innerHTML = `
+        <iframe src="https://calendar.google.com/calendar/embed?src=${encoded}&ctz=Europe%2FRome&showTitle=0&showNav=1&mode=MONTH"
+                style="border:0" width="100%" height="500" frameborder="0" scrolling="no" class="rounded-xl"></iframe>`;
+}
+
 function loadCalendarId() {
-    const id = get(KEYS.gcal);
-    if (id) document.getElementById('gcal-id').value = id;
+    if (!window.firestoreDb) return;
+    window.firestoreDb.collection('config').doc('site').get()
+        .then(doc => {
+            if (doc.exists && doc.data().gcalId) {
+                document.getElementById('gcal-id').value = doc.data().gcalId;
+                showCalendarPreview(doc.data().gcalId);
+            }
+        })
+        .catch(e => console.error('loadCalendarId:', e));
 }
 
 function saveCalendarId() {
     const id = document.getElementById('gcal-id').value.trim();
     if (!id) { toast('Inserisci un ID calendario.', false); return; }
-    set(KEYS.gcal, id);
-
-    // Preview
-    const encoded = encodeURIComponent(id);
-    document.getElementById('gcal-preview').innerHTML = `
-        <iframe src="https://calendar.google.com/calendar/embed?src=${encoded}&ctz=Europe%2FRome&showTitle=0&showNav=1&mode=MONTH"
-                style="border:0" width="100%" height="500" frameborder="0" scrolling="no" class="rounded-xl"></iframe>`;
-
-    document.getElementById('gcal-saved-msg').classList.remove('hidden');
-    toast('ID calendario salvato!');
+    window.firestoreDb.collection('config').doc('site').set({ gcalId: id }, { merge: true })
+        .then(() => {
+            showCalendarPreview(id);
+            document.getElementById('gcal-saved-msg').classList.remove('hidden');
+            toast('ID calendario salvato! Il calendario apparirà automaticamente sul sito.');
+        })
+        .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
 }
 
 // ── IMPOSTAZIONI ─────────────────────────────────────────────────
@@ -1274,18 +1270,19 @@ function exportData() {
 
 function resetAll() {
     if (!confirm('⚠️ Eliminare TUTTI i dati (richieste, eventi, annunci)? Operazione irreversibile!')) return;
-    [KEYS.eventi, KEYS.annunci].forEach(k => localStorage.removeItem(k));
-    // Elimina tutte le iscrizioni da Firestore
     const db = window.firestoreDb;
-    if (db) {
-        db.collection('iscrizioni').get().then(snap => {
-            const batch = db.batch();
-            snap.docs.forEach(d => batch.delete(d.ref));
-            return batch.commit();
-        }).then(() => toast('Tutti i dati eliminati.'));
-    }
-    renderEventi();
-    renderAnnunci();
+    if (!db) return;
+    const deleteCollection = col => db.collection(col).get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    });
+    Promise.all([
+        deleteCollection('iscrizioni'),
+        deleteCollection('eventi'),
+        deleteCollection('annunci'),
+    ]).then(() => toast('Tutti i dati eliminati.'))
+      .catch(e => { console.error(e); toast('Errore durante il reset.', false); });
 }
 
 // ── SOCI ─────────────────────────────────────────────────────────
@@ -1458,8 +1455,12 @@ firebase.initializeApp({
 window.firestoreDb = firebase.firestore();
 window.richiesteCache = [];
 window.preIscrizioniCache = [];
+window.eventiCache = [];
+window.annunciCache = [];
 window.unsubscribeRichieste = null;
 window.unsubscribePreIscrizioni = null;
+window.unsubscribeEventi = null;
+window.unsubscribeAnnunci = null;
 
 function setupFirestoreListener() {
     if (window.unsubscribeRichieste) window.unsubscribeRichieste();
@@ -1476,11 +1477,28 @@ function setupFirestoreListener() {
         .onSnapshot(snap => {
             window.preIscrizioniCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             refreshAll();
-            // se il tab è aperto, aggiorna la tabella
             if (document.getElementById('tab-pre-iscrizioni')?.classList.contains('active')) {
                 renderPreIscrizioni(currentPreFilter);
             }
         }, err => console.error('Firestore pre-iscrizioni listener error:', err));
+
+    if (window.unsubscribeEventi) window.unsubscribeEventi();
+    window.unsubscribeEventi = window.firestoreDb.collection('eventi')
+        .onSnapshot(snap => {
+            window.eventiCache = snap.docs.map(d => d.data());
+            renderDashboard();
+            if (document.getElementById('tab-eventi')?.classList.contains('active')) renderEventi();
+        }, err => console.error('Firestore eventi listener error:', err));
+
+    if (window.unsubscribeAnnunci) window.unsubscribeAnnunci();
+    window.unsubscribeAnnunci = window.firestoreDb.collection('annunci')
+        .onSnapshot(snap => {
+            window.annunciCache = snap.docs.map(d => d.data());
+            if (document.getElementById('tab-annunci')?.classList.contains('active')) renderAnnunci();
+        }, err => console.error('Firestore annunci listener error:', err));
+
+    // Carica ID calendario
+    loadCalendarId();
 }
 </script>
 </body>
