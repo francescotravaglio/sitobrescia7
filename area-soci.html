@@ -252,6 +252,169 @@
     </div>
 </div>
 
+<!-- ── CALENDARIO ──────────────────────────────────────────────────── -->
+<section class="py-14 bg-white">
+  <div class="max-w-4xl mx-auto px-6">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 bg-scout rounded-2xl flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-calendar-alt text-gold text-lg"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Gruppo Scout AGESCI Brescia 7</p>
+        <h2 class="text-2xl font-black text-scout leading-tight">Calendario attività</h2>
+      </div>
+      <a id="cal-open-link" href="https://calendar.google.com" target="_blank" rel="noopener"
+         class="ml-auto text-xs font-bold text-scout bg-gray-100 hover:bg-scout hover:text-white px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
+        <i class="fas fa-external-link-alt text-xs"></i>Apri
+      </a>
+    </div>
+
+    <!-- Branch tabs -->
+    <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
+      <button onclick="switchCal('cerchio')" id="cal-tab-cerchio"
+        class="cal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
+        🐞 Cerchio
+      </button>
+      <button onclick="switchCal('reparto')" id="cal-tab-reparto"
+        class="cal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-campground text-xs mr-1.5"></i>Reparto
+      </button>
+      <button onclick="switchCal('clan')" id="cal-tab-clan"
+        class="cal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-mountain text-xs mr-1.5"></i>Clan
+      </button>
+    </div>
+
+    <!-- Calendar frames (one per branch, lazy-loaded) -->
+    <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-gray-50" id="cal-frames-wrap">
+      <div id="cal-loading" class="flex items-center justify-center h-64 text-gray-400">
+        <i class="fas fa-spinner fa-spin mr-2"></i>Caricamento calendario…
+      </div>
+      <iframe id="cal-frame-cerchio" src="" style="border:0;display:none" width="100%" height="520"
+        frameborder="0" scrolling="no" title="Calendario Cerchio" loading="lazy"></iframe>
+      <iframe id="cal-frame-reparto" src="" style="border:0;display:none" width="100%" height="520"
+        frameborder="0" scrolling="no" title="Calendario Reparto" loading="lazy"></iframe>
+      <iframe id="cal-frame-clan"    src="" style="border:0;display:none" width="100%" height="520"
+        frameborder="0" scrolling="no" title="Calendario Clan" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cal-branch-tab { color: #6b7280; }
+  .cal-branch-tab.active { background: #003366; color: #fff; box-shadow: 0 2px 8px rgba(0,51,102,.25); }
+</style>
+
+<script>
+(function() {
+    /* Maps branch key → { gcalField, openLink } */
+    var CAL_FIELDS = {
+        cerchio: 'gcalCerchio',
+        reparto: 'gcalReparto',
+        clan:    'gcalClan'
+    };
+    var _ids    = { cerchio: '', reparto: '', clan: '' };
+    var _active = 'cerchio';
+
+    function calSrc(id) {
+        if (!id) return '';
+        return 'https://calendar.google.com/calendar/embed?src=' +
+               encodeURIComponent(id) +
+               '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff';
+    }
+    function openLink(id) {
+        return id ? 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(id) : 'https://calendar.google.com';
+    }
+
+    window.switchCal = function(branch) {
+        _active = branch;
+        // Update tabs
+        ['cerchio','reparto','clan'].forEach(function(b) {
+            document.getElementById('cal-tab-' + b).classList.toggle('active', b === branch);
+        });
+        // Show active frame, hide others
+        var hasId = !!_ids[branch];
+        document.getElementById('cal-loading').style.display = hasId ? 'none' : 'flex';
+        ['cerchio','reparto','clan'].forEach(function(b) {
+            var fr = document.getElementById('cal-frame-' + b);
+            fr.style.display = (b === branch && hasId) ? 'block' : 'none';
+        });
+        // Update open link
+        document.getElementById('cal-open-link').href = openLink(_ids[branch]);
+    };
+
+    function applyIds() {
+        ['cerchio','reparto','clan'].forEach(function(b) {
+            var fr = document.getElementById('cal-frame-' + b);
+            if (_ids[b] && !fr.src) fr.src = calSrc(_ids[b]);
+        });
+        switchCal(_active);
+    }
+
+    function loadIds() {
+        if (!window.db) { setTimeout(loadIds, 400); return; }
+        window.db.collection('config').doc('site').get().then(function(doc) {
+            var d = doc.exists ? doc.data() : {};
+            var main = d.gcalId || 'info@agescibrescia7.com';
+            _ids.cerchio = d.gcalCerchio || main;
+            _ids.reparto = d.gcalReparto || main;
+            _ids.clan    = d.gcalClan    || main;
+            applyIds();
+        }).catch(function() { applyIds(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadIds);
+})();
+</script>
+
+<!-- ── GALLERIA FOTO ────────────────────────────────────────────────── -->
+<section class="py-14 bg-gray-50 hidden" id="soci-gallery-section">
+  <div class="max-w-4xl mx-auto px-6">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 bg-gold rounded-2xl flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-images text-scout text-lg"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Album fotografico</p>
+        <h2 class="text-2xl font-black text-scout leading-tight">Le nostre foto</h2>
+      </div>
+      <a id="gallery-open-link" href="#" target="_blank" rel="noopener"
+         class="ml-auto text-xs font-bold text-scout bg-white border border-gray-200 hover:bg-scout hover:text-white hover:border-scout px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
+        <i class="fas fa-external-link-alt text-xs"></i>Apri
+      </a>
+    </div>
+
+    <!-- Branch tabs -->
+    <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
+      <button onclick="switchGallery('cerchio')" id="gal-tab-cerchio"
+        class="gal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
+        🐞 Cerchio
+      </button>
+      <button onclick="switchGallery('reparto')" id="gal-tab-reparto"
+        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-campground text-xs mr-1.5"></i>Reparto
+      </button>
+      <button onclick="switchGallery('clan')" id="gal-tab-clan"
+        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-mountain text-xs mr-1.5"></i>Clan
+      </button>
+    </div>
+
+    <!-- Card area -->
+    <div id="gallery-container"></div>
+  </div>
+</section>
+
+<style>
+  .gal-branch-tab { color: #6b7280; }
+  .gal-branch-tab.active { background: #003366; color: #fff; box-shadow: 0 2px 8px rgba(0,51,102,.25); }
+</style>
+
+
 <!-- ── CARDS AZIONI ───────────────────────────────────────────────── -->
 <section class="py-14 bg-gray-50">
   <div class="max-w-4xl mx-auto px-6">
@@ -702,168 +865,6 @@
   </div>
 </section>
 
-
-<!-- ── CALENDARIO ──────────────────────────────────────────────────── -->
-<section class="py-14 bg-white">
-  <div class="max-w-4xl mx-auto px-6">
-
-    <!-- Header -->
-    <div class="flex items-center gap-3 mb-6">
-      <div class="w-10 h-10 bg-scout rounded-2xl flex items-center justify-center flex-shrink-0">
-        <i class="fas fa-calendar-alt text-gold text-lg"></i>
-      </div>
-      <div>
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Gruppo Scout AGESCI Brescia 7</p>
-        <h2 class="text-2xl font-black text-scout leading-tight">Calendario attività</h2>
-      </div>
-      <a id="cal-open-link" href="https://calendar.google.com" target="_blank" rel="noopener"
-         class="ml-auto text-xs font-bold text-scout bg-gray-100 hover:bg-scout hover:text-white px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
-        <i class="fas fa-external-link-alt text-xs"></i>Apri
-      </a>
-    </div>
-
-    <!-- Branch tabs -->
-    <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
-      <button onclick="switchCal('cerchio')" id="cal-tab-cerchio"
-        class="cal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
-        🐞 Cerchio
-      </button>
-      <button onclick="switchCal('reparto')" id="cal-tab-reparto"
-        class="cal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
-        <i class="fas fa-campground text-xs mr-1.5"></i>Reparto
-      </button>
-      <button onclick="switchCal('clan')" id="cal-tab-clan"
-        class="cal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
-        <i class="fas fa-mountain text-xs mr-1.5"></i>Clan
-      </button>
-    </div>
-
-    <!-- Calendar frames (one per branch, lazy-loaded) -->
-    <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100 bg-gray-50" id="cal-frames-wrap">
-      <div id="cal-loading" class="flex items-center justify-center h-64 text-gray-400">
-        <i class="fas fa-spinner fa-spin mr-2"></i>Caricamento calendario…
-      </div>
-      <iframe id="cal-frame-cerchio" src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Cerchio" loading="lazy"></iframe>
-      <iframe id="cal-frame-reparto" src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Reparto" loading="lazy"></iframe>
-      <iframe id="cal-frame-clan"    src="" style="border:0;display:none" width="100%" height="520"
-        frameborder="0" scrolling="no" title="Calendario Clan" loading="lazy"></iframe>
-    </div>
-  </div>
-</section>
-
-<style>
-  .cal-branch-tab { color: #6b7280; }
-  .cal-branch-tab.active { background: #003366; color: #fff; box-shadow: 0 2px 8px rgba(0,51,102,.25); }
-</style>
-
-<script>
-(function() {
-    /* Maps branch key → { gcalField, openLink } */
-    var CAL_FIELDS = {
-        cerchio: 'gcalCerchio',
-        reparto: 'gcalReparto',
-        clan:    'gcalClan'
-    };
-    var _ids    = { cerchio: '', reparto: '', clan: '' };
-    var _active = 'cerchio';
-
-    function calSrc(id) {
-        if (!id) return '';
-        return 'https://calendar.google.com/calendar/embed?src=' +
-               encodeURIComponent(id) +
-               '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff';
-    }
-    function openLink(id) {
-        return id ? 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(id) : 'https://calendar.google.com';
-    }
-
-    window.switchCal = function(branch) {
-        _active = branch;
-        // Update tabs
-        ['cerchio','reparto','clan'].forEach(function(b) {
-            document.getElementById('cal-tab-' + b).classList.toggle('active', b === branch);
-        });
-        // Show active frame, hide others
-        var hasId = !!_ids[branch];
-        document.getElementById('cal-loading').style.display = hasId ? 'none' : 'flex';
-        ['cerchio','reparto','clan'].forEach(function(b) {
-            var fr = document.getElementById('cal-frame-' + b);
-            fr.style.display = (b === branch && hasId) ? 'block' : 'none';
-        });
-        // Update open link
-        document.getElementById('cal-open-link').href = openLink(_ids[branch]);
-    };
-
-    function applyIds() {
-        ['cerchio','reparto','clan'].forEach(function(b) {
-            var fr = document.getElementById('cal-frame-' + b);
-            if (_ids[b] && !fr.src) fr.src = calSrc(_ids[b]);
-        });
-        switchCal(_active);
-    }
-
-    function loadIds() {
-        if (!window.db) { setTimeout(loadIds, 400); return; }
-        window.db.collection('config').doc('site').get().then(function(doc) {
-            var d = doc.exists ? doc.data() : {};
-            var main = d.gcalId || 'info@agescibrescia7.com';
-            _ids.cerchio = d.gcalCerchio || main;
-            _ids.reparto = d.gcalReparto || main;
-            _ids.clan    = d.gcalClan    || main;
-            applyIds();
-        }).catch(function() { applyIds(); });
-    }
-
-    document.addEventListener('DOMContentLoaded', loadIds);
-})();
-</script>
-
-<!-- ── GALLERIA FOTO ────────────────────────────────────────────────── -->
-<section class="py-14 bg-gray-50 hidden" id="soci-gallery-section">
-  <div class="max-w-4xl mx-auto px-6">
-
-    <!-- Header -->
-    <div class="flex items-center gap-3 mb-6">
-      <div class="w-10 h-10 bg-gold rounded-2xl flex items-center justify-center flex-shrink-0">
-        <i class="fas fa-images text-scout text-lg"></i>
-      </div>
-      <div>
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Album fotografico</p>
-        <h2 class="text-2xl font-black text-scout leading-tight">Le nostre foto</h2>
-      </div>
-      <a id="gallery-open-link" href="#" target="_blank" rel="noopener"
-         class="ml-auto text-xs font-bold text-scout bg-white border border-gray-200 hover:bg-scout hover:text-white hover:border-scout px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
-        <i class="fas fa-external-link-alt text-xs"></i>Apri
-      </a>
-    </div>
-
-    <!-- Branch tabs -->
-    <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
-      <button onclick="switchGallery('cerchio')" id="gal-tab-cerchio"
-        class="gal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
-        🐞 Cerchio
-      </button>
-      <button onclick="switchGallery('reparto')" id="gal-tab-reparto"
-        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
-        <i class="fas fa-campground text-xs mr-1.5"></i>Reparto
-      </button>
-      <button onclick="switchGallery('clan')" id="gal-tab-clan"
-        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
-        <i class="fas fa-mountain text-xs mr-1.5"></i>Clan
-      </button>
-    </div>
-
-    <!-- Card area -->
-    <div id="gallery-container"></div>
-  </div>
-</section>
-
-<style>
-  .gal-branch-tab { color: #6b7280; }
-  .gal-branch-tab.active { background: #003366; color: #fff; box-shadow: 0 2px 8px rgba(0,51,102,.25); }
-</style>
 
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
 <footer id="contatti" class="bg-gray-950 text-white">
