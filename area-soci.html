@@ -844,7 +844,9 @@
 <!-- ── GALLERIA FOTO ────────────────────────────────────────────────── -->
 <section class="py-14 bg-gray-50 hidden" id="soci-gallery-section">
   <div class="max-w-4xl mx-auto px-6">
-    <div class="flex items-center gap-3 mb-8">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
       <div class="w-10 h-10 bg-gold rounded-2xl flex items-center justify-center flex-shrink-0">
         <i class="fas fa-images text-scout text-lg"></i>
       </div>
@@ -852,10 +854,37 @@
         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Album fotografico</p>
         <h2 class="text-2xl font-black text-scout leading-tight">Le nostre foto</h2>
       </div>
+      <a id="gallery-open-link" href="#" target="_blank" rel="noopener"
+         class="ml-auto text-xs font-bold text-scout bg-white border border-gray-200 hover:bg-scout hover:text-white hover:border-scout px-4 py-2 rounded-xl transition-all flex items-center gap-2 flex-shrink-0">
+        <i class="fas fa-external-link-alt text-xs"></i>Apri
+      </a>
     </div>
+
+    <!-- Branch tabs -->
+    <div class="flex gap-2 mb-4 p-1 bg-gray-100 rounded-2xl w-fit">
+      <button onclick="switchGallery('cerchio')" id="gal-tab-cerchio"
+        class="gal-branch-tab active px-5 py-2 rounded-xl text-sm font-black transition-all">
+        🐞 Cerchio
+      </button>
+      <button onclick="switchGallery('reparto')" id="gal-tab-reparto"
+        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-campground text-xs mr-1.5"></i>Reparto
+      </button>
+      <button onclick="switchGallery('clan')" id="gal-tab-clan"
+        class="gal-branch-tab px-5 py-2 rounded-xl text-sm font-black transition-all">
+        <i class="fas fa-mountain text-xs mr-1.5"></i>Clan
+      </button>
+    </div>
+
+    <!-- Card area -->
     <div id="gallery-container"></div>
   </div>
 </section>
+
+<style>
+  .gal-branch-tab { color: #6b7280; }
+  .gal-branch-tab.active { background: #003366; color: #fff; box-shadow: 0 2px 8px rgba(0,51,102,.25); }
+</style>
 
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
 <footer id="contatti" class="bg-gray-950 text-white">
@@ -1981,55 +2010,87 @@
 <!-- ── GALLERY FROM FIRESTORE ────────────────────────────────────── -->
 <script>
 (function() {
+    var PHOTOS_DEFAULT = {
+        cerchio: 'https://photos.app.goo.gl/sN1x9evdZCDMPzhR8',
+        reparto: '',
+        clan:    ''
+    };
+    var _urls   = { cerchio: '', reparto: '', clan: '' };
+    var _galActive = 'cerchio';
+
+    var BRANCH_LABELS = { cerchio: '🐞 Cerchio', reparto: 'Reparto', clan: 'Clan' };
+
+    function photoIcon(url) {
+        if (!url) return '<i class="fas fa-images text-5xl text-gray-300"></i>';
+        if (url.includes('photos.google.com') || url.includes('photos.app.goo.gl')) {
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:40px;height:40px"><path fill="#EA4335" d="M24 22a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/><path fill="#4285F4" d="M36 22h-6a6 6 0 0 0-6 6v6h12V22z" opacity=".7"/><path fill="#FBBC05" d="M12 22h6a6 6 0 0 1 6 6v6H12V22z" opacity=".7"/><path fill="#34A853" d="M18 34h12a6 6 0 0 1-6 6 6 6 0 0 1-6-6z" opacity=".7"/></svg>';
+        }
+        if (url.includes('drive.google.com')) {
+            return '<i class="fab fa-google-drive text-5xl" style="color:#4285F4"></i>';
+        }
+        return '<i class="fas fa-images text-5xl text-gold"></i>';
+    }
+
+    function photoLabel(url) {
+        if (!url) return '';
+        if (url.includes('photos.google.com') || url.includes('photos.app.goo.gl')) return 'Apri su Google Photos';
+        if (url.includes('drive.google.com')) return 'Apri su Google Drive';
+        return 'Vedi la galleria';
+    }
+
+    window.switchGallery = function(branch) {
+        _galActive = branch;
+        ['cerchio','reparto','clan'].forEach(function(b) {
+            document.getElementById('gal-tab-' + b).classList.toggle('active', b === branch);
+        });
+        var url = _urls[branch];
+        var container = document.getElementById('gallery-container');
+        var openLink  = document.getElementById('gallery-open-link');
+        if (openLink) {
+            openLink.href = url || '#';
+            openLink.style.display = url ? '' : 'none';
+        }
+        if (!url) {
+            container.innerHTML =
+                '<div class="bg-white rounded-3xl border border-dashed border-gray-200 p-12 text-center text-gray-400">' +
+                '<i class="fas fa-camera text-4xl mb-4 opacity-20 block"></i>' +
+                '<p class="font-semibold text-sm">Nessun album configurato per ' + BRANCH_LABELS[branch] + '</p>' +
+                '</div>';
+            return;
+        }
+        container.innerHTML =
+            '<a href="' + url + '" target="_blank" rel="noopener" ' +
+            'class="group flex flex-col sm:flex-row items-center gap-6 bg-white ' +
+            'border border-gray-100 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-8">' +
+                '<div class="flex-shrink-0 w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">' +
+                    photoIcon(url) +
+                '</div>' +
+                '<div class="flex-1 text-center sm:text-left">' +
+                    '<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Album ' + BRANCH_LABELS[branch] + '</p>' +
+                    '<p class="text-xl font-black text-scout mb-1">Le nostre foto</p>' +
+                    '<p class="text-sm text-gray-500">Tocca per aprire la galleria fotografica</p>' +
+                '</div>' +
+                '<div class="flex-shrink-0 flex items-center gap-2 bg-scout group-hover:bg-scout-dark text-white font-black text-sm px-6 py-3 rounded-2xl transition-all">' +
+                    '<i class="fas fa-arrow-right"></i> ' + photoLabel(url) +
+                '</div>' +
+            '</a>';
+    };
+
     function loadGallery() {
         if (!window.db) { setTimeout(loadGallery, 400); return; }
         window.db.collection('config').doc('site').get().then(function(doc) {
-            if (!doc.exists) return;
-            var url = (doc.data().photosUrl || '').trim();
-            if (!url) return;
+            var data = doc.exists ? doc.data() : {};
+            _urls.cerchio = (data.photosUrlCerchio || PHOTOS_DEFAULT.cerchio).trim();
+            _urls.reparto = (data.photosUrlReparto || PHOTOS_DEFAULT.reparto).trim();
+            _urls.clan    = (data.photosUrlClan    || PHOTOS_DEFAULT.clan   ).trim();
 
-            // Reveal section
-            var section = document.getElementById('soci-gallery-section');
-            if (section) section.classList.remove('hidden');
-
-            var container = document.getElementById('gallery-container');
-            if (!container) return;
-
-            var isPhotos = url.includes('photos.google.com') || url.includes('photos.app.goo.gl');
-            var isDrive  = url.includes('drive.google.com');
-
-            var icon, label, bg, iconColor;
-            if (isPhotos) {
-                icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-10 h-10"><path fill="#EA4335" d="M24 22a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/><path fill="#4285F4" d="M36 22h-6a6 6 0 0 0-6 6v6h12V22z" opacity=".7"/><path fill="#FBBC05" d="M12 22h6a6 6 0 0 1 6 6v6H12V22z" opacity=".7"/><path fill="#34A853" d="M18 34h12a6 6 0 0 1-6 6 6 6 0 0 1-6-6z" opacity=".7"/></svg>';
-                label = 'Apri su Google Photos';
-                bg = 'from-white to-gray-50';
-            } else if (isDrive) {
-                icon = '<i class="fab fa-google-drive text-5xl" style="color:#4285F4"></i>';
-                label = 'Apri su Google Drive';
-                bg = 'from-white to-blue-50';
-            } else {
-                icon = '<i class="fas fa-images text-5xl text-gold"></i>';
-                label = 'Vedi la galleria';
-                bg = 'from-white to-yellow-50';
+            // Show section only if at least one URL exists
+            var anyUrl = _urls.cerchio || _urls.reparto || _urls.clan;
+            if (anyUrl) {
+                var section = document.getElementById('soci-gallery-section');
+                if (section) section.classList.remove('hidden');
             }
-
-            container.innerHTML =
-                '<a href="' + url + '" target="_blank" rel="noopener" ' +
-                'class="group flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-br ' + bg + ' ' +
-                'border border-gray-100 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-8 no-underline">' +
-                    '<div class="flex-shrink-0 w-20 h-20 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center">' +
-                        icon +
-                    '</div>' +
-                    '<div class="flex-1 text-center sm:text-left">' +
-                        '<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Album fotografico</p>' +
-                        '<p class="text-xl font-black text-scout mb-1">Le nostre foto</p>' +
-                        '<p class="text-sm text-gray-500">Clicca per aprire la galleria del gruppo</p>' +
-                    '</div>' +
-                    '<div class="flex-shrink-0 flex items-center gap-2 bg-scout group-hover:bg-scout-dark text-white font-black text-sm px-6 py-3 rounded-2xl transition-all">' +
-                        '<i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>' +
-                        label +
-                    '</div>' +
-                '</a>';
+            switchGallery(_galActive);
         }).catch(function() {});
     }
     document.addEventListener('DOMContentLoaded', loadGallery);

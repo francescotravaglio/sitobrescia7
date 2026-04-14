@@ -519,21 +519,43 @@
 
                 <!-- Galleria Foto -->
                 <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-                    <h3 class="font-black text-scout mb-1"><i class="fas fa-images text-gold mr-2"></i>Galleria fotografica (Area Soci)</h3>
-                    <p class="text-gray-500 text-sm">Incolla il link pubblico di una cartella Google Drive o album Google Photos. Verrà mostrato nell'Area Soci.</p>
-                    <div class="flex gap-3 items-end">
-                        <div class="flex-1">
-                            <label>URL Google Drive / Google Photos</label>
-                            <input type="url" id="photos-url"
-                                   placeholder="https://drive.google.com/drive/folders/... oppure https://photos.google.com/share/...">
-                        </div>
-                        <button onclick="savePhotosUrl()"
-                                class="bg-gold text-scout font-black px-6 py-2.5 rounded-xl text-sm hover:bg-yellow-400 transition flex-shrink-0">
-                            <i class="fas fa-save mr-2"></i>Salva
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-black text-scout"><i class="fas fa-images text-gold mr-2"></i>Galleria fotografica (Area Soci)</h3>
+                        <button onclick="savePhotosUrls()"
+                                class="bg-gold text-scout font-black px-5 py-2 rounded-xl text-sm hover:bg-yellow-400 transition flex-shrink-0">
+                            <i class="fas fa-save mr-1"></i>Salva tutto
                         </button>
                     </div>
+                    <p class="text-gray-500 text-xs">Incolla il link condivisibile di un album Google Photos per ogni unità. Lascia vuoto se non disponibile.</p>
+                    <!-- Cerchio -->
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <span>🐞</span> Cerchio <span class="text-xs font-normal text-gray-500">(Lupetti/Coccinelle)</span>
+                        </label>
+                        <input type="url" id="photos-url-cerchio"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
+                    <!-- Reparto -->
+                    <div class="bg-green-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <i class="fas fa-campground text-green-500"></i> Reparto <span class="text-xs font-normal text-gray-500">(Esploratori/Guide)</span>
+                        </label>
+                        <input type="url" id="photos-url-reparto"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
+                    <!-- Clan -->
+                    <div class="bg-orange-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <i class="fas fa-mountain text-orange-500"></i> Clan <span class="text-xs font-normal text-gray-500">(Rover/Scolte)</span>
+                        </label>
+                        <input type="url" id="photos-url-clan"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
                     <p id="photos-saved-msg" class="text-green-600 text-xs hidden font-semibold">
-                        <i class="fas fa-check mr-1"></i> Link galleria salvato! Apparirà nell'Area Soci.
+                        <i class="fas fa-check mr-1"></i> Link gallerie salvati!
                     </p>
                 </div>
 
@@ -1260,10 +1282,9 @@ function loadCalendarId() {
                 document.getElementById('gcal-id').value = data.gcalId;
                 showCalendarPreview(data.gcalId);
             }
-            if (data.photosUrl) {
-                const el = document.getElementById('photos-url');
-                if (el) el.value = data.photosUrl;
-            }
+            if (data.photosUrlCerchio) { const el = document.getElementById('photos-url-cerchio'); if (el) el.value = data.photosUrlCerchio; }
+            if (data.photosUrlReparto) { const el = document.getElementById('photos-url-reparto'); if (el) el.value = data.photosUrlReparto; }
+            if (data.photosUrlClan)    { const el = document.getElementById('photos-url-clan');    if (el) el.value = data.photosUrlClan;    }
         })
         .catch(e => console.error('loadCalendarId:', e));
 }
@@ -1286,17 +1307,20 @@ function saveCalendarIds() {
 // keep old name as alias for any residual calls
 function saveCalendarId() { saveCalendarIds(); }
 
-function savePhotosUrl() {
-    const url = document.getElementById('photos-url').value.trim();
-    if (!url) { toast('Inserisci un URL.', false); return; }
-    window.firestoreDb.collection('config').doc('site').set({ photosUrl: url }, { merge: true })
-        .then(() => {
-            document.getElementById('photos-saved-msg').classList.remove('hidden');
-            setTimeout(() => document.getElementById('photos-saved-msg').classList.add('hidden'), 3000);
-            toast('Link galleria salvato!');
-        })
-        .catch(e => { console.error(e); toast('Errore salvataggio.', false); });
+function savePhotosUrls() {
+    const cerchio = document.getElementById('photos-url-cerchio').value.trim();
+    const reparto = document.getElementById('photos-url-reparto').value.trim();
+    const clan    = document.getElementById('photos-url-clan').value.trim();
+    window.firestoreDb.collection('config').doc('site').set(
+        { photosUrlCerchio: cerchio, photosUrlReparto: reparto, photosUrlClan: clan },
+        { merge: true }
+    ).then(() => {
+        document.getElementById('photos-saved-msg').classList.remove('hidden');
+        setTimeout(() => document.getElementById('photos-saved-msg').classList.add('hidden'), 3000);
+        toast('Link gallerie salvati!');
+    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
 }
+function savePhotosUrl() { savePhotosUrls(); }
 
 // ── IMPOSTAZIONI ─────────────────────────────────────────────────
 function loadConfig() {
