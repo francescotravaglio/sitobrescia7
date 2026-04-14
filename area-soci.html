@@ -389,35 +389,37 @@
                 <div><label class="form-label">Nome *</label><input type="text" name="nome" required placeholder="Mario" class="input-field"></div>
                 <div><label class="form-label">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="input-field"></div>
               </div>
-              <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Sesso *</label>
+                  <select name="sesso" required class="input-field bg-white">
+                    <option value="">M/F</option><option value="M">M</option><option value="F">F</option>
+                  </select>
+                </div>
+                <div><label class="form-label">Nato/a a *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
                 <div><label class="form-label">Data di nascita *</label><input type="date" name="data_nascita" required class="input-field"></div>
-                <div><label class="form-label">Luogo di nascita *</label><input type="text" name="luogo_nascita" required placeholder="Brescia" class="input-field"></div>
               </div>
               <div class="mb-4">
                 <div class="flex items-center justify-between mb-1">
                   <label class="form-label mb-0">Codice Fiscale *</label>
-                  <button type="button" onclick="autoCalcCF(this,'nome','cognome','data_nascita','luogo_nascita','')"
+                  <button type="button" onclick="autoCalcCF(this,'nome','cognome','data_nascita','luogo_nascita','sesso')"
                     class="text-xs text-scout font-bold hover:underline flex items-center gap-1">
                     <i class="fas fa-magic text-xs"></i> Auto-calcola
                   </button>
                 </div>
                 <input type="text" name="cf" required placeholder="RSSMRA85A01B157Z" maxlength="16" class="input-field uppercase">
               </div>
-              <div class="mb-4"><label class="form-label">Indirizzo di residenza *</label><input type="text" name="indirizzo" required placeholder="Via Roma 1, 25100 Brescia" class="input-field"></div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="col-span-2"><label class="form-label">Via/Piazza *</label><input type="text" name="indirizzo" required placeholder="Via Roma" class="input-field"></div>
+                <div><label class="form-label">N. civico</label><input type="text" name="n_civico" placeholder="1" class="input-field"></div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div><label class="form-label">Città *</label><input type="text" name="citta" required placeholder="Brescia" class="input-field"></div>
+                <div><label class="form-label">Prov.</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="input-field uppercase"></div>
+                <div><label class="form-label">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="input-field"></div>
+              </div>
               <div class="grid grid-cols-2 gap-4 mb-4">
                 <div><label class="form-label">Telefono *</label><input type="tel" name="telefono" required placeholder="+39 340 123 4567" class="input-field"></div>
                 <div><label class="form-label">Email *</label><input type="email" name="email" required placeholder="mario@email.com" class="input-field"></div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Ruolo/Unità *</label>
-                <select name="unita" required class="input-field bg-white">
-                  <option value="">Seleziona...</option>
-                  <option value="capo-branco">Capo Branco/Cerchio</option>
-                  <option value="capo-reparto">Capo Reparto</option>
-                  <option value="capo-clan">Capo Clan/Fuoco</option>
-                  <option value="clan">🔥 Clan/Fuoco – Rover/Scolte (17-21 anni)</option>
-                  <option value="comitato">Comitato di Gruppo</option>
-                </select>
               </div>
             </div>
 
@@ -556,7 +558,19 @@
                   <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
                 </select>
               </div>
-              <div class="mb-4"><label class="form-label">Allergie / patologie</label><textarea name="allergie" rows="3" placeholder="Es. allergie, patologie croniche..." class="input-field resize-none"></textarea></div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="form-label">Tessera sanitaria</label><input type="text" name="tessera_sanitaria" placeholder="Numero TS" class="input-field"></div>
+                <div><label class="form-label">Antitetanica</label>
+                  <select name="antitetanica" class="input-field bg-white">
+                    <option value="">Non specificato</option>
+                    <option value="SI">Sì</option>
+                    <option value="NO">No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-4"><label class="form-label">Allergie / patologie</label><textarea name="allergie" rows="2" placeholder="Es. allergie, patologie croniche..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Profilassi in corso</label><textarea name="profilassi" rows="2" placeholder="Es. terapie o profilassi attive..." class="input-field resize-none"></textarea></div>
+              <div class="mb-4"><label class="form-label">Note sanitarie</label><textarea name="note_sanitarie" rows="2" placeholder="Qualsiasi informazione utile..." class="input-field resize-none"></textarea></div>
             </div>
 
             <!-- ─── STEP 4 (entrambi): Consensi ─── -->
@@ -1009,6 +1023,151 @@
             if (typeof PDFLib === 'undefined') throw new Error('pdf-lib non caricato');
 
             const { PDFDocument, StandardFonts } = PDFLib;
+
+            // ── MAGGIORENNE: moduli adulti ───────────────────────────────
+            if (tipo === 'maggiorenne') {
+                const [b_r, b_s, b_g] = await Promise.all([
+                    fetch('documents/richiesta-adesione-maggiorenne.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+                    fetch('documents/scheda-sanitaria-maggiorenne.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+                    fetch('documents/informativa-gdpr-adulti.pdf').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }),
+                ]);
+                const [doc_r, doc_s, doc_g] = await Promise.all([
+                    PDFDocument.load(b_r),
+                    PDFDocument.load(b_s),
+                    PDFDocument.load(b_g),
+                ]);
+                const [fr, fs, fg] = await Promise.all([
+                    doc_r.embedFont(StandardFonts.Helvetica),
+                    doc_s.embedFont(StandardFonts.Helvetica),
+                    doc_g.embedFont(StandardFonts.Helvetica),
+                ]);
+
+                const rPages = doc_r.getPages();
+                const sPages = doc_s.getPages();
+                const gPages = doc_g.getPages();
+                const [rp1, rp2] = rPages;
+                const [sp1_m, sp2_m] = sPages;
+                const gp4 = gPages[3]; // pagina 4 del GDPR adulti (0-indexed)
+
+                // ── Intestazione gruppo su tutte le pagine ───────────────
+                rPages.forEach(p => fillHeader(p, fr));
+                sPages.forEach(p => fillHeader(p, fs));
+
+                // ── Richiesta adesione – pagina 1 ────────────────────────
+                // Dati personali
+                draw(rp1, fr, 136, 643, (d.nome||'') + ' ' + (d.cognome||''), 406);
+                draw(rp1, fr, 68,  620, d.sesso || '', 30);
+                draw(rp1, fr, 175, 620, d.luogo_nascita || '', 200);
+                draw(rp1, fr, 455, 620, d.data_nascita || '', 87);
+                draw(rp1, fr, 136, 597, d.cf || '', 406);
+                draw(rp1, fr, 108, 574, d.indirizzo || '', 330);
+                draw(rp1, fr, 480, 574, d.n_civico || '', 62);
+                draw(rp1, fr, 68,  551, d.citta || '', 272);
+                draw(rp1, fr, 400, 551, d.cap || '', 40);
+                draw(rp1, fr, 460, 551, d.provincia || '', 80);
+                draw(rp1, fr, 68,  528, d.email || '', 244);
+                draw(rp1, fr, 365, 528, d.telefono || '', 177);
+                // Nome gruppo (CHIEDE la qualifica di socio ad AGESCI Gruppo ___)
+                draw(rp1, fr, 408, 488, 'Brescia 7', 134);
+
+                // ── Richiesta adesione – pagina 2 (firme) ────────────────
+                draw(rp2, fr, 68,  168, today, 120);
+                draw(rp2, fr, 264, 168, 'Brescia', 278);
+                const sig_r = await sigImage(doc_r, 'sig-canvas-mag');
+                if (sig_r) rp2.drawImage(sig_r, { x: 68, y: 100, width: 130, height: 28 });
+
+                // ── Scheda sanitaria – pagina 1 (dati personali) ─────────
+                draw(sp1_m, fs, 136, 643, (d.nome||'') + ' ' + (d.cognome||''), 406);
+                draw(sp1_m, fs, 68,  620, d.sesso || '', 30);
+                draw(sp1_m, fs, 175, 620, d.luogo_nascita || '', 200);
+                draw(sp1_m, fs, 455, 620, d.data_nascita || '', 87);
+                draw(sp1_m, fs, 136, 597, d.cf || '', 406);
+                draw(sp1_m, fs, 108, 574, d.indirizzo || '', 330);
+                draw(sp1_m, fs, 480, 574, d.n_civico || '', 62);
+                draw(sp1_m, fs, 68,  551, d.citta || '', 272);
+                draw(sp1_m, fs, 400, 551, d.cap || '', 40);
+                draw(sp1_m, fs, 460, 551, d.provincia || '', 80);
+                draw(sp1_m, fs, 68,  528, d.email || '', 244);
+                draw(sp1_m, fs, 365, 528, d.telefono || '', 177);
+
+                // Scheda sanitaria – sezione SCHEDA SANITARIA (metà inferiore pag.1)
+                draw(sp1_m, fs, 68,  328, d.cognome || '', 200, 8);
+                draw(sp1_m, fs, 340, 328, d.nome    || '', 193, 8);
+                draw(sp1_m, fs, 68,  310, d.luogo_nascita || '', 220, 8);
+                draw(sp1_m, fs, 380, 310, d.data_nascita  || '', 160, 8);
+                draw(sp1_m, fs, 68,  292, d.cf || '', 200, 8);
+                draw(sp1_m, fs, 340, 292, d.tessera_sanitaria || '', 193, 8);
+                // Reperibilità per emergenze
+                draw(sp1_m, fs, 68,  274, (d.emerg_nome||'') + ' ' + (d.emerg_cognome||''), 240, 8);
+                draw(sp1_m, fs, 365, 274, d.emerg_tel || '', 168, 8);
+                // Antitetanica SI/NO (checkboxes – scrivi X nella casella corretta)
+                if (d.antitetanica === 'SI') draw(sp1_m, fs, 97,  258, 'X', 15, 9);
+                if (d.antitetanica === 'NO') draw(sp1_m, fs, 147, 258, 'X', 15, 9);
+                // Allergie
+                const all_m = d.allergie || '';
+                if (all_m) {
+                    draw(sp1_m, fs, 68, 225, all_m, 463, 8);
+                    if (all_m.length > 90) draw(sp1_m, fs, 68, 207, all_m.substring(90), 463, 8);
+                }
+                // Profilassi
+                const prof_m = d.profilassi || '';
+                if (prof_m) {
+                    draw(sp1_m, fs, 68, 163, prof_m, 463, 8);
+                    if (prof_m.length > 90) draw(sp1_m, fs, 68, 145, prof_m.substring(90), 463, 8);
+                }
+
+                // ── Scheda sanitaria – pagina 2 (note e firma) ───────────
+                const note_m = d.note_sanitarie || '';
+                if (note_m) {
+                    draw(sp2_m, fs, 68, 795, note_m, 463, 8);
+                    if (note_m.length > 90) draw(sp2_m, fs, 68, 777, note_m.substring(90), 463, 8);
+                }
+                draw(sp2_m, fs, 107, 742, today, 77);
+                draw(sp2_m, fs, 227, 742, 'Brescia', 303);
+                const sig_s = await sigImage(doc_s, 'sig-canvas-mag');
+                if (sig_s) sp2_m.drawImage(sig_s, { x: 68, y: 700, width: 130, height: 28 });
+
+                // ── GDPR adulti – pagina 4 (modulo consenso) ─────────────
+                if (codiceSocio) draw(gp4, fg, 430, 740, codiceSocio, 110);
+                draw(gp4, fg, 210, 653, (d.nome||'') + ' ' + (d.cognome||''), 330);
+                draw(gp4, fg, 68,  629, d.luogo_nascita || '', 200);
+                draw(gp4, fg, 296, 629, d.data_nascita || '', 95);
+                draw(gp4, fg, 413, 629, d.cf || '', 127);
+                draw(gp4, fg, 68,  605, d.citta || '', 90);
+                draw(gp4, fg, 193, 605, d.indirizzo || '', 258);
+                draw(gp4, fg, 487, 605, d.n_civico || '', 52);
+                draw(gp4, fg, 40,  581, d.cap || '', 60);
+                draw(gp4, fg, 143, 581, d.email || '', 236);
+                draw(gp4, fg, 408, 581, d.telefono || '', 132);
+                // Tre blocchi data (ACCONSENTO, DICHIARO, ACCONSENTO c)
+                draw(gp4, fg, 68,  484, today, 120);
+                draw(gp4, fg, 68,  344, today, 120);
+                draw(gp4, fg, 68,  152, today, 120);
+
+                // ── Merge e download ─────────────────────────────────────
+                const merged_m = await PDFDocument.create();
+                const cpr = await merged_m.copyPages(doc_r, doc_r.getPageIndices());
+                cpr.forEach(p => merged_m.addPage(p));
+                const cps = await merged_m.copyPages(doc_s, doc_s.getPageIndices());
+                cps.forEach(p => merged_m.addPage(p));
+                const cpg = await merged_m.copyPages(doc_g, doc_g.getPageIndices());
+                cpg.forEach(p => merged_m.addPage(p));
+
+                merged_m.setTitle('Iscrizione AGESCI BS7 – ' + (d.nome||'') + ' ' + (d.cognome||''));
+                merged_m.setAuthor('AGESCI Brescia 7');
+
+                const bytes_m = await merged_m.save();
+                const blob_m  = new Blob([bytes_m], { type: 'application/pdf' });
+                const url_m   = URL.createObjectURL(blob_m);
+                const a_m     = document.createElement('a');
+                a_m.href = url_m;
+                a_m.download = 'Iscrizione_' + (d.nome||'') + '_' + (d.cognome||'') + '_BS7.pdf';
+                document.body.appendChild(a_m);
+                a_m.click();
+                document.body.removeChild(a_m);
+                URL.revokeObjectURL(url_m);
+                return; // ← esce prima del codice minorenne
+            }
 
             // Fetch the 3 official PDFs in parallel
             const [b1, b2, b3] = await Promise.all([
