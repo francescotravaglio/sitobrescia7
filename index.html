@@ -453,33 +453,68 @@
     </svg>
   </div>
 
-  <!-- ③ TENDA + FUOCO (centrata, di lato) -->
-  <div class="absolute pointer-events-none" style="z-index:4;bottom:30px;left:calc(50% + 170px)">
-    <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-      <!-- luce interna tenda (glow animato) -->
-      <ellipse cx="60" cy="105" rx="28" ry="7" fill="rgba(255,200,80,.18)" style="animation:glowpulse 2s ease-in-out infinite"/>
-      <!-- corpo tenda -->
-      <polygon points="60,8 5,108 115,108" fill="#0c0c0c"/>
-      <polygon points="60,8 5,108 115,108" fill="rgba(0,0,0,.4)"/>
-      <!-- porta illuminata -->
-      <ellipse cx="60" cy="100" rx="16" ry="20" fill="rgba(255,190,60,.45)" style="animation:tentglow 1.8s ease-in-out infinite"/>
-      <ellipse cx="60" cy="100" rx="10" ry="13" fill="rgba(255,160,40,.7)"  style="animation:tentglow 1.3s ease-in-out infinite"/>
-      <!-- picchetti -->
-      <line x1="5"   y1="108" x2="-8"  y2="118" stroke="#333" stroke-width="1.5"/>
-      <line x1="115" y1="108" x2="128" y2="118" stroke="#333" stroke-width="1.5"/>
+  <!-- ③ TENDA + FUOCO -->
+  <style>
+    @keyframes fl1{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}33%{transform:scaleX(.88) scaleY(1.18) translateY(-4px);}66%{transform:scaleX(1.1) scaleY(.92) translateY(1px);}}
+    @keyframes fl2{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}40%{transform:scaleX(1.15) scaleY(1.22) translateY(-6px);}70%{transform:scaleX(.85) scaleY(.9) translateY(2px);}}
+    @keyframes fl3{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}25%{transform:scaleX(.9) scaleY(1.3) translateY(-8px);}60%{transform:scaleX(1.12) scaleY(.85) translateY(1px);}}
+    @keyframes ember{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) scale(0);opacity:0;}}
+    @keyframes tglow{0%,100%{opacity:.55;}50%{opacity:.95;}}
+  </style>
+
+  <!-- FUOCO CAMPEGGIO -->
+  <div class="absolute pointer-events-none" style="z-index:6;bottom:42px;right:calc(22% + 110px)">
+    <!-- alone a terra -->
+    <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:110px;height:22px;background:radial-gradient(ellipse,rgba(255,120,0,.35),transparent 70%);filter:blur(6px);border-radius:50%"></div>
+    <!-- tronchi -->
+    <svg width="70" height="22" viewBox="0 0 70 22" style="display:block;margin:0 auto;position:relative;z-index:2">
+      <rect x="5"  y="12" width="60" height="8" rx="4" fill="#1a0800" transform="rotate(-12,35,16)"/>
+      <rect x="5"  y="12" width="60" height="8" rx="4" fill="#120600" transform="rotate(12,35,16)"/>
+      <ellipse cx="35" cy="18" rx="20" ry="5" fill="rgba(255,60,0,.55)" style="filter:blur(2px)"/>
     </svg>
-    <!-- fuoco a terra -->
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%)">
-      <!-- fiamma -->
-      <div style="position:relative;width:22px;height:26px;margin:0 auto">
-        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,#ff6600,#ffcc00 40%,transparent 80%);border-radius:50% 50% 30% 30%;animation:fireflicker 1.2s ease-in-out infinite;filter:blur(1px)"></div>
-        <div style="position:absolute;bottom:0;left:25%;width:50%;height:60%;background:radial-gradient(ellipse at 50% 100%,#fff5c0,#ffdd00 50%,transparent 90%);border-radius:50%;animation:fireflicker 0.9s ease-in-out infinite reverse;filter:blur(0.5px)"></div>
-      </div>
-      <!-- brace -->
-      <div style="width:30px;height:5px;background:radial-gradient(ellipse,rgba(255,80,0,.8),transparent 80%);border-radius:50%;filter:blur(3px);margin:0 auto"></div>
-      <!-- alone luminoso a terra -->
-      <div style="width:80px;height:20px;background:radial-gradient(ellipse,rgba(255,140,0,.25),transparent 70%);border-radius:50%;margin:-4px auto 0;filter:blur(4px)"></div>
+    <!-- fiamme -->
+    <div style="position:relative;width:70px;height:90px;margin:0 auto">
+      <!-- fiamma sx -->
+      <div style="position:absolute;bottom:0;left:8px;width:22px;height:55px;background:linear-gradient(0deg,#ff2200,#ff6600 40%,#ffaa00 75%,rgba(255,200,0,.3) 100%);border-radius:50% 50% 30% 30%/60% 60% 40% 40%;transform-origin:bottom center;animation:fl1 1.1s ease-in-out infinite;filter:blur(.5px)"></div>
+      <!-- fiamma dx -->
+      <div style="position:absolute;bottom:0;right:8px;width:22px;height:52px;background:linear-gradient(0deg,#ff2200,#ff5500 40%,#ff9900 75%,rgba(255,180,0,.3) 100%);border-radius:50% 50% 30% 30%/60% 60% 40% 40%;transform-origin:bottom center;animation:fl2 1.35s ease-in-out infinite;filter:blur(.5px)"></div>
+      <!-- fiamma centrale (alta) -->
+      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:30px;height:80px;background:linear-gradient(0deg,#ff1100,#ff5500 30%,#ffaa00 60%,#ffee88 85%,rgba(255,255,200,.2) 100%);border-radius:50% 50% 25% 25%/55% 55% 45% 45%;transform-origin:bottom center;animation:fl3 .9s ease-in-out infinite;filter:blur(.3px)"></div>
+      <!-- cuore bianco -->
+      <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:14px;height:28px;background:linear-gradient(0deg,#fff8e0,rgba(255,255,220,.6),transparent);border-radius:50%;filter:blur(1px);animation:fl2 .7s ease-in-out infinite"></div>
+      <!-- scintille -->
+      <div style="position:absolute;bottom:55px;left:28px;width:4px;height:4px;border-radius:50%;background:#ffcc00;--ex:-12px;--ey:-30px;animation:ember 1.8s ease-out 0s infinite;opacity:0"></div>
+      <div style="position:absolute;bottom:50px;left:38px;width:3px;height:3px;border-radius:50%;background:#ff8800;--ex:15px;--ey:-25px;animation:ember 1.5s ease-out .6s infinite;opacity:0"></div>
+      <div style="position:absolute;bottom:60px;left:32px;width:3px;height:3px;border-radius:50%;background:#ffdd00;--ex:-8px;--ey:-35px;animation:ember 2s ease-out 1.1s infinite;opacity:0"></div>
     </div>
+  </div>
+
+  <!-- TENDA -->
+  <div class="absolute pointer-events-none" style="z-index:5;bottom:36px;right:22%">
+    <svg width="200" height="175" viewBox="0 0 200 175" xmlns="http://www.w3.org/2000/svg">
+      <!-- ombra tenda a terra -->
+      <ellipse cx="100" cy="168" rx="75" ry="10" fill="rgba(0,0,0,.5)"/>
+      <!-- alone luce porta (dietro) -->
+      <ellipse cx="100" cy="148" rx="32" ry="36" fill="rgba(255,170,50,.25)" style="filter:blur(4px);animation:tglow 2s ease-in-out infinite"/>
+      <!-- corpo tenda (triangolo) -->
+      <polygon points="100,6 6,162 194,162" fill="#080808"/>
+      <!-- lato sinistro leggermente più chiaro -->
+      <polygon points="100,6 6,162 100,162" fill="#0e0e0e"/>
+      <!-- bordatura cresta -->
+      <line x1="100" y1="6" x2="6"   y2="162" stroke="#181818" stroke-width="1.5"/>
+      <line x1="100" y1="6" x2="194" y2="162" stroke="#181818" stroke-width="1.5"/>
+      <!-- porta: cerchi concentrici di luce -->
+      <ellipse cx="100" cy="145" rx="28" ry="34" fill="rgba(255,180,60,.35)" style="animation:tglow 2.2s ease-in-out infinite"/>
+      <ellipse cx="100" cy="145" rx="20" ry="25" fill="rgba(255,195,75,.55)" style="animation:tglow 1.7s ease-in-out infinite"/>
+      <ellipse cx="100" cy="145" rx="13" ry="17" fill="rgba(255,215,100,.78)" style="animation:tglow 1.3s ease-in-out infinite"/>
+      <ellipse cx="100" cy="145" rx="7"  ry="9"  fill="rgba(255,240,170,.95)"/>
+      <!-- picchetti -->
+      <line x1="6"   y1="162" x2="-10" y2="175" stroke="#252525" stroke-width="2"/>
+      <line x1="194" y1="162" x2="210" y2="175" stroke="#252525" stroke-width="2"/>
+      <!-- corde tenda -->
+      <line x1="100" y1="6" x2="40"  y2="155" stroke="#1c1c1c" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="100" y1="6" x2="160" y2="155" stroke="#1c1c1c" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
   </div>
 
   <!-- ④ OVERLAY sfumatura per leggibilità testo -->
