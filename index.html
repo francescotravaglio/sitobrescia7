@@ -453,69 +453,8 @@
     </svg>
   </div>
 
-  <!-- ③ TENDA + FUOCO -->
-  <style>
-    @keyframes fl1{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}33%{transform:scaleX(.88) scaleY(1.18) translateY(-4px);}66%{transform:scaleX(1.1) scaleY(.92) translateY(1px);}}
-    @keyframes fl2{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}40%{transform:scaleX(1.15) scaleY(1.22) translateY(-6px);}70%{transform:scaleX(.85) scaleY(.9) translateY(2px);}}
-    @keyframes fl3{0%,100%{transform:scaleX(1)   scaleY(1)   translateY(0);}25%{transform:scaleX(.9) scaleY(1.3) translateY(-8px);}60%{transform:scaleX(1.12) scaleY(.85) translateY(1px);}}
-    @keyframes ember{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--ex),var(--ey)) scale(0);opacity:0;}}
-    @keyframes tglow{0%,100%{opacity:.55;}50%{opacity:.95;}}
-  </style>
-
-  <!-- FUOCO CAMPEGGIO -->
-  <div class="absolute pointer-events-none" style="z-index:6;bottom:42px;right:calc(22% + 110px)">
-    <!-- alone a terra -->
-    <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:110px;height:22px;background:radial-gradient(ellipse,rgba(255,120,0,.35),transparent 70%);filter:blur(6px);border-radius:50%"></div>
-    <!-- tronchi -->
-    <svg width="70" height="22" viewBox="0 0 70 22" style="display:block;margin:0 auto;position:relative;z-index:2">
-      <rect x="5"  y="12" width="60" height="8" rx="4" fill="#1a0800" transform="rotate(-12,35,16)"/>
-      <rect x="5"  y="12" width="60" height="8" rx="4" fill="#120600" transform="rotate(12,35,16)"/>
-      <ellipse cx="35" cy="18" rx="20" ry="5" fill="rgba(255,60,0,.55)" style="filter:blur(2px)"/>
-    </svg>
-    <!-- fiamme -->
-    <div style="position:relative;width:70px;height:90px;margin:0 auto">
-      <!-- fiamma sx -->
-      <div style="position:absolute;bottom:0;left:8px;width:22px;height:55px;background:linear-gradient(0deg,#ff2200,#ff6600 40%,#ffaa00 75%,rgba(255,200,0,.3) 100%);border-radius:50% 50% 30% 30%/60% 60% 40% 40%;transform-origin:bottom center;animation:fl1 1.1s ease-in-out infinite;filter:blur(.5px)"></div>
-      <!-- fiamma dx -->
-      <div style="position:absolute;bottom:0;right:8px;width:22px;height:52px;background:linear-gradient(0deg,#ff2200,#ff5500 40%,#ff9900 75%,rgba(255,180,0,.3) 100%);border-radius:50% 50% 30% 30%/60% 60% 40% 40%;transform-origin:bottom center;animation:fl2 1.35s ease-in-out infinite;filter:blur(.5px)"></div>
-      <!-- fiamma centrale (alta) -->
-      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:30px;height:80px;background:linear-gradient(0deg,#ff1100,#ff5500 30%,#ffaa00 60%,#ffee88 85%,rgba(255,255,200,.2) 100%);border-radius:50% 50% 25% 25%/55% 55% 45% 45%;transform-origin:bottom center;animation:fl3 .9s ease-in-out infinite;filter:blur(.3px)"></div>
-      <!-- cuore bianco -->
-      <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:14px;height:28px;background:linear-gradient(0deg,#fff8e0,rgba(255,255,220,.6),transparent);border-radius:50%;filter:blur(1px);animation:fl2 .7s ease-in-out infinite"></div>
-      <!-- scintille -->
-      <div style="position:absolute;bottom:55px;left:28px;width:4px;height:4px;border-radius:50%;background:#ffcc00;--ex:-12px;--ey:-30px;animation:ember 1.8s ease-out 0s infinite;opacity:0"></div>
-      <div style="position:absolute;bottom:50px;left:38px;width:3px;height:3px;border-radius:50%;background:#ff8800;--ex:15px;--ey:-25px;animation:ember 1.5s ease-out .6s infinite;opacity:0"></div>
-      <div style="position:absolute;bottom:60px;left:32px;width:3px;height:3px;border-radius:50%;background:#ffdd00;--ex:-8px;--ey:-35px;animation:ember 2s ease-out 1.1s infinite;opacity:0"></div>
-    </div>
-  </div>
-
-  <!-- TENDA -->
-  <div class="absolute pointer-events-none" style="z-index:5;bottom:36px;right:22%">
-    <svg width="200" height="175" viewBox="0 0 200 175" xmlns="http://www.w3.org/2000/svg">
-      <!-- ombra tenda a terra -->
-      <ellipse cx="100" cy="168" rx="75" ry="10" fill="rgba(0,0,0,.5)"/>
-      <!-- alone luce porta (dietro) -->
-      <ellipse cx="100" cy="148" rx="32" ry="36" fill="rgba(255,170,50,.25)" style="filter:blur(4px);animation:tglow 2s ease-in-out infinite"/>
-      <!-- corpo tenda (triangolo) -->
-      <polygon points="100,6 6,162 194,162" fill="#080808"/>
-      <!-- lato sinistro leggermente più chiaro -->
-      <polygon points="100,6 6,162 100,162" fill="#0e0e0e"/>
-      <!-- bordatura cresta -->
-      <line x1="100" y1="6" x2="6"   y2="162" stroke="#181818" stroke-width="1.5"/>
-      <line x1="100" y1="6" x2="194" y2="162" stroke="#181818" stroke-width="1.5"/>
-      <!-- porta: cerchi concentrici di luce -->
-      <ellipse cx="100" cy="145" rx="28" ry="34" fill="rgba(255,180,60,.35)" style="animation:tglow 2.2s ease-in-out infinite"/>
-      <ellipse cx="100" cy="145" rx="20" ry="25" fill="rgba(255,195,75,.55)" style="animation:tglow 1.7s ease-in-out infinite"/>
-      <ellipse cx="100" cy="145" rx="13" ry="17" fill="rgba(255,215,100,.78)" style="animation:tglow 1.3s ease-in-out infinite"/>
-      <ellipse cx="100" cy="145" rx="7"  ry="9"  fill="rgba(255,240,170,.95)"/>
-      <!-- picchetti -->
-      <line x1="6"   y1="162" x2="-10" y2="175" stroke="#252525" stroke-width="2"/>
-      <line x1="194" y1="162" x2="210" y2="175" stroke="#252525" stroke-width="2"/>
-      <!-- corde tenda -->
-      <line x1="100" y1="6" x2="40"  y2="155" stroke="#1c1c1c" stroke-width="1" stroke-dasharray="4,3"/>
-      <line x1="100" y1="6" x2="160" y2="155" stroke="#1c1c1c" stroke-width="1" stroke-dasharray="4,3"/>
-    </svg>
-  </div>
+  <!-- ③ TENDA + FUOCO su canvas dedicato -->
+  <canvas id="camp-canvas" class="absolute pointer-events-none" style="z-index:5;bottom:0;right:0;height:240px;width:520px;max-width:55vw"></canvas>
 
   <!-- ④ OVERLAY sfumatura per leggibilità testo -->
   <div class="absolute inset-0 pointer-events-none" style="z-index:2;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,0,0,.1) 0%,rgba(0,0,0,.35) 100%)"></div>
@@ -656,6 +595,205 @@
   setTimeout(spawnShooter, 600);
   setTimeout(spawnShooter,1800);
   setInterval(()=>{ if(Math.random()<.7) spawnShooter(); }, 3000);
+})();
+
+// ── CAMPFIRE SCENE (canvas dedicato) ──────────────────────────────
+(function(){
+  const cv = document.getElementById('camp-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = 520, H = 240;
+  cv.width = W; cv.height = H;
+
+  // coordinate scena
+  const GROUND = H - 38;      // linea terra
+  const FX = 185, FY = GROUND; // centro fuoco
+  const TX = 340, TY = GROUND; // centro base tenda
+
+  let particles = [], embers = [];
+  let glowPhase = 0;
+
+  /* ---- PARTICELLA FUOCO ---- */
+  function spawnFire(){
+    const spread = 12;
+    particles.push({
+      x: FX + (Math.random()-.5)*spread,
+      y: FY - 8,
+      vx:(Math.random()-.5)*1.0,
+      vy:-(Math.random()*3.2 + 2.2),
+      size: Math.random()*11 + 7,
+      life:0,
+      maxLife: Math.floor(Math.random()*28 + 22)
+    });
+  }
+  function spawnEmber(){
+    embers.push({
+      x: FX + (Math.random()-.5)*18,
+      y: FY - 14,
+      vx:(Math.random()-.5)*2.5,
+      vy:-(Math.random()*5 + 3),
+      size: Math.random()*2+1,
+      life:0,
+      maxLife: Math.floor(Math.random()*45+30)
+    });
+  }
+
+  /* ---- TENDA ---- */
+  function drawTent(){
+    const apex={x:TX, y:TY-105};
+    const bl  ={x:TX-85, y:TY};
+    const br  ={x:TX+85, y:TY};
+
+    // alone luce porta
+    const gp = glowPhase;
+    const glowR = ctx.createRadialGradient(TX, TY-18, 2, TX, TY-18, 48);
+    glowR.addColorStop(0,  `rgba(255,210,90,${.55+Math.sin(gp)*.12})`);
+    glowR.addColorStop(.4, `rgba(255,140,30,${.28+Math.sin(gp)*.08})`);
+    glowR.addColorStop(1,  'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.ellipse(TX, TY-14, 38, 50, 0, 0, Math.PI*2);
+    ctx.fillStyle = glowR;
+    ctx.fill();
+
+    // corpo tenda — lato sx (più scuro)
+    ctx.beginPath();
+    ctx.moveTo(apex.x, apex.y);
+    ctx.lineTo(bl.x, bl.y);
+    ctx.lineTo(TX, TY);
+    ctx.closePath();
+    ctx.fillStyle = '#0a0a0c';
+    ctx.fill();
+
+    // corpo tenda — lato dx
+    ctx.beginPath();
+    ctx.moveTo(apex.x, apex.y);
+    ctx.lineTo(TX, TY);
+    ctx.lineTo(br.x, br.y);
+    ctx.closePath();
+    ctx.fillStyle = '#101012';
+    ctx.fill();
+
+    // porta con luce interna
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(TX, TY-10, 22, 30, 0, 0, Math.PI*2);
+    ctx.clip();
+    const door = ctx.createRadialGradient(TX, TY+5, 1, TX, TY-5, 28);
+    door.addColorStop(0,   `rgba(255,245,180,${.92+Math.sin(gp*.7)*.06})`);
+    door.addColorStop(.3,  `rgba(255,200,80, ${.75+Math.sin(gp*.9)*.1})`);
+    door.addColorStop(.7,  `rgba(255,130,30, .5)`);
+    door.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = door;
+    ctx.fillRect(TX-30, TY-42, 60, 50);
+    ctx.restore();
+
+    // cresta e bordi
+    ctx.strokeStyle = '#1e1e22';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(apex.x,apex.y); ctx.lineTo(bl.x,bl.y);
+    ctx.moveTo(apex.x,apex.y); ctx.lineTo(br.x,br.y);
+    ctx.stroke();
+
+    // corde tiranti (tratteggiate)
+    ctx.strokeStyle = 'rgba(120,120,130,.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,5]);
+    ctx.beginPath(); ctx.moveTo(apex.x,apex.y); ctx.lineTo(bl.x-20,TY+12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(apex.x,apex.y); ctx.lineTo(br.x+20,TY+12); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // picchetti
+    ctx.strokeStyle='#2a2a2a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(bl.x-20,TY+12); ctx.lineTo(bl.x-24,TY+22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(br.x+20,TY+12); ctx.lineTo(br.x+24,TY+22); ctx.stroke();
+  }
+
+  /* ---- TRONCHI ---- */
+  function drawLogs(){
+    ctx.save();
+    ctx.lineCap='round'; ctx.lineWidth=7;
+    ctx.strokeStyle='#1f0c00';
+    ctx.beginPath(); ctx.moveTo(FX-28,FY-2); ctx.lineTo(FX+28,FY-12); ctx.stroke();
+    ctx.strokeStyle='#140800';
+    ctx.beginPath(); ctx.moveTo(FX-24,FY-10); ctx.lineTo(FX+30,FY);    ctx.stroke();
+    // brace luminosa
+    const br2 = ctx.createRadialGradient(FX,FY-6,0,FX,FY-4,24);
+    br2.addColorStop(0,'rgba(255,90,0,.85)');
+    br2.addColorStop(.5,'rgba(200,40,0,.4)');
+    br2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(FX,FY-5,22,8,0,0,Math.PI*2);
+    ctx.fillStyle=br2; ctx.fill();
+    ctx.restore();
+  }
+
+  /* ---- ALONE TERRA ---- */
+  function drawGround(){
+    const gr = ctx.createRadialGradient(FX,FY+4,0,FX,FY+4,72);
+    gr.addColorStop(0,`rgba(255,110,0,${.22+Math.sin(glowPhase*.8)*.06})`);
+    gr.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(FX,FY+6,72,18,0,0,Math.PI*2);
+    ctx.fillStyle=gr; ctx.fill();
+  }
+
+  /* ---- LOOP ---- */
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    glowPhase += 0.055;
+
+    // spawn particelle
+    for(let i=0;i<4;i++) spawnFire();
+    if(Math.random()<.18) spawnEmber();
+
+    drawGround();
+    drawLogs();
+
+    // particelle fuoco
+    particles = particles.filter(p=>p.life<p.maxLife);
+    particles.forEach(p=>{
+      p.life++;
+      p.x += p.vx + (Math.random()-.5)*.45;
+      p.y += p.vy;
+      p.vy *= .987;
+      p.size *= .965;
+      const t = p.life/p.maxLife;
+      // colore: bianco-giallo → arancio → rosso → fumo
+      let r=255,g,b,a;
+      if(t<.18){       g=255;          b=Math.floor(220*(1-t*5.5)); a=t*5; }
+      else if(t<.42){  g=Math.floor(255-t*320); b=0; a=1; }
+      else if(t<.70){  g=Math.floor(120-t*120); b=0; a=1-t*.5; }
+      else{             r=180; g=30; b=0; a=(1-t)*1.4; }
+      g=Math.max(0,Math.min(255,g));
+      ctx.save();
+      ctx.globalAlpha = Math.max(0,Math.min(1,a));
+      const fg = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size);
+      fg.addColorStop(0,   `rgb(${r},${g},${b})`);
+      fg.addColorStop(.45, `rgba(${r},${Math.floor(g*.5)},0,.7)`);
+      fg.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fillStyle=fg; ctx.fill();
+      ctx.restore();
+    });
+
+    // embers
+    embers = embers.filter(e=>e.life<e.maxLife);
+    embers.forEach(e=>{
+      e.life++;
+      e.x+=e.vx; e.y+=e.vy;
+      e.vy+=.08; e.vx*=.97;
+      const a = Math.max(0, 1-e.life/e.maxLife);
+      ctx.save();
+      ctx.globalAlpha=a;
+      ctx.shadowColor='#ff7700'; ctx.shadowBlur=8;
+      ctx.fillStyle=`hsl(${40+Math.random()*20},100%,${55+Math.random()*25}%)`;
+      ctx.beginPath(); ctx.arc(e.x,e.y,e.size,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+
+    drawTent();
+    requestAnimationFrame(frame);
+  }
+  frame();
 })();
 </script>
 
