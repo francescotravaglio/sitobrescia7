@@ -231,12 +231,20 @@ const PRIORITY_COLORS = { urgente:'bg-red-50 border-red-200 text-red-700', impor
 const PRIORITY_LABELS = { urgente:'Urgente', importante:'Importante', info:'Info', normale:'Avviso' };
 const PRIORITY_ICONS  = { urgente:'fas fa-exclamation-triangle', importante:'fas fa-star', info:'fas fa-info-circle', normale:'fas fa-bell' };
 
-window.db.collection('annunci').where('pubblicato','==',true).orderBy('data_creazione','desc').get().then(snap => {
+// Carica tutti gli annunci, filtra e ordina lato client (evita indice composito Firestore)
+window.db.collection('annunci').get().then(snap => {
     document.getElementById('annunci-loading').remove();
     const container = document.getElementById('annunci-container');
-    if (snap.empty) { document.getElementById('annunci-empty').classList.remove('hidden'); return; }
-    snap.forEach(doc => {
-        const d = doc.data();
+    // filtra pubblicati e ordina per data decrescente
+    const docs = [];
+    snap.forEach(doc => { const d = doc.data(); if (d.pubblicato !== false) docs.push({id: doc.id, ...d}); });
+    docs.sort((a, b) => {
+        const ta = a.data_creazione?.toDate ? a.data_creazione.toDate().getTime() : 0;
+        const tb = b.data_creazione?.toDate ? b.data_creazione.toDate().getTime() : 0;
+        return tb - ta;
+    });
+    if (docs.length === 0) { document.getElementById('annunci-empty').classList.remove('hidden'); return; }
+    docs.forEach(d => {
         const prio = d.priorita || 'normale';
         const cls  = PRIORITY_COLORS[prio] || PRIORITY_COLORS.normale;
         const lbl  = PRIORITY_LABELS[prio] || 'Avviso';
