@@ -164,6 +164,13 @@
                 background: linear-gradient(160deg, rgba(0,26,61,0.88) 0%, rgba(0,51,102,0.75) 100%),
                             url('images/montagna.jpg') center/cover no-repeat scroll;
             }
+            /* Fuoco/tenda: sposta a sinistra su mobile così non copre i bottoni */
+            #camp-canvas {
+                right: auto !important;
+                left: 0 !important;
+                max-width: 48vw !important;
+                opacity: 0.7;
+            }
         }
 
         .nav-link { position: relative; padding-bottom: 3px; }
@@ -259,11 +266,12 @@
             </a>
 
             <div class="hidden lg:flex items-center gap-7 text-sm font-semibold text-gray-600">
-                <a href="chi-siamo.html"  class="nav-link hover:text-scout transition">Chi siamo</a>
-                <a href="unita.html"      class="nav-link hover:text-scout transition">Le Unità</a>
-                <a href="bacheca.html"    class="nav-link hover:text-scout transition">Bacheca</a>
-                <a href="calendario.html" class="nav-link hover:text-scout transition">Calendario</a>
-                <a href="faq.html"        class="nav-link hover:text-scout transition">FAQ</a>
+                <a href="chi-siamo.html"        class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="unita.html"            class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="bacheca.html"          class="nav-link hover:text-scout transition">Bacheca</a>
+                <a href="calendario.html"       class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="faq.html"              class="nav-link hover:text-scout transition">FAQ</a>
+                <a href="rassegna-stampa.html"  class="nav-link hover:text-scout transition">Stampa</a>
                 <a href="documenti.html"  class="nav-link hover:text-scout transition">Documenti</a>
                 <a href="area-soci.html"  class="nav-link hover:text-scout transition">Area Soci</a>
             </div>
@@ -282,11 +290,12 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
         <div class="px-6 py-6 flex flex-col gap-1">
-            <a href="chi-siamo.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
-            <a href="unita.html"      class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
-            <a href="bacheca.html"    class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Bacheca</a>
-            <a href="calendario.html" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
-            <a href="faq.html"    class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
+            <a href="chi-siamo.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="unita.html"            class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="bacheca.html"          class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Bacheca</a>
+            <a href="calendario.html"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="faq.html"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
+            <a href="rassegna-stampa.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Stampa</a>
             <a href="documenti.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
             <a href="area-soci.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
             <button onclick="toggleMobileMenu(); openPreIscrizione();" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center w-full"><i class="fas fa-child mr-2"></i>Iscriviti ora</button>
@@ -864,6 +873,15 @@
                 <div class="mt-5 flex items-center gap-2 text-scout font-bold text-sm group-hover:gap-3 transition-all"><span>Leggi</span><i class="fas fa-arrow-right text-xs"></i></div>
             </a>
 
+            <a href="rassegna-stampa.html" class="group bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-scout transition-colors duration-300">
+                    <i class="fas fa-newspaper text-amber-500 text-xl group-hover:text-white transition-colors"></i>
+                </div>
+                <h3 class="text-xl font-black text-scout mb-2">Parlano di noi</h3>
+                <p class="text-gray-500 text-sm leading-relaxed flex-1">Giornali e media bresciani che hanno raccontato il nostro gruppo. Incluso Antonio Bertoli, Alfiere della Repubblica 2026.</p>
+                <div class="mt-5 flex items-center gap-2 text-scout font-bold text-sm group-hover:gap-3 transition-all"><span>Rassegna stampa</span><i class="fas fa-arrow-right text-xs"></i></div>
+            </a>
+
             <div class="group bg-scout rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col cursor-pointer" onclick="openPreIscrizione()">
                 <div class="w-14 h-14 bg-gold rounded-2xl flex items-center justify-center mb-5">
                     <i class="fas fa-feather-alt text-scout text-xl"></i>
@@ -914,12 +932,14 @@
             <div class="md:col-span-3">
                 <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
                 <ul class="space-y-3 text-sm text-gray-400">
-                    <li><a href="chi-siamo.html"   class="hover:text-white transition">Chi siamo</a></li>
-                    <li><a href="unita.html"        class="hover:text-white transition">Le Unità</a></li>
-                    <li><a href="bacheca.html"      class="hover:text-white transition">Bacheca</a></li>
-                    <li><a href="calendario.html"   class="hover:text-white transition">Calendario</a></li>
-                    <li><a href="area-soci.html"    class="hover:text-white transition">Area Soci</a></li>
-                    <li><a href="documenti.html"    class="hover:text-white transition">Modulistica</a></li>
+                    <li><a href="chi-siamo.html"        class="hover:text-white transition">Chi siamo</a></li>
+                    <li><a href="unita.html"            class="hover:text-white transition">Le Unità</a></li>
+                    <li><a href="bacheca.html"          class="hover:text-white transition">Bacheca</a></li>
+                    <li><a href="calendario.html"       class="hover:text-white transition">Calendario</a></li>
+                    <li><a href="faq.html"              class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="rassegna-stampa.html"  class="hover:text-white transition">Rassegna stampa</a></li>
+                    <li><a href="area-soci.html"        class="hover:text-white transition">Area Soci</a></li>
+                    <li><a href="documenti.html"        class="hover:text-white transition">Modulistica</a></li>
                 </ul>
             </div>
 
