@@ -497,6 +497,20 @@
     </div>
 </section>
 
+<!-- ── COMUNICAZIONI ──────────────────────────────────────────── -->
+<section id="comunicazioni" class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <div class="section-tag justify-center">Notizie e comunicazioni</div>
+            <h2 class="text-4xl md:text-5xl font-black text-scout">Bacheca</h2>
+            <p class="text-gray-500 mt-3 max-w-xl mx-auto text-sm">Aggiornamenti e comunicazioni del Gruppo Scout AGESCI Brescia 7.</p>
+        </div>
+        <div id="annunci-pubblici">
+            <!-- caricati da Firestore -->
+        </div>
+    </div>
+</section>
+
 <!-- ── CALENDARIO ─────────────────────────────────────────────── -->
 <section id="calendario" class="py-24 bg-gray-50">
     <div class="max-w-5xl mx-auto px-6">
@@ -730,6 +744,64 @@
         appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
     });
     window.db = firebase.firestore();
+
+    // ── Carica annunci pubblici ────────────────────────────────────
+    (function loadAnnunciPubblici() {
+        var BADGE = {
+            news:     'bg-blue-100 text-blue-700',
+            urgente:  'bg-red-100 text-red-700',
+            evento:   'bg-emerald-100 text-emerald-700',
+            info:     'bg-amber-100 text-amber-700'
+        };
+        var ICON = {
+            news:    'fa-newspaper',
+            urgente: 'fa-exclamation-triangle',
+            evento:  'fa-calendar-check',
+            info:    'fa-info-circle'
+        };
+        window.db.collection('annunci')
+            .orderBy('timestamp', 'desc')
+            .get()
+            .then(function(snap) {
+                var now = new Date();
+                var all = snap.docs.map(function(d) { return d.data(); })
+                    .filter(function(a) { return !a.scadenza || new Date(a.scadenza) >= now; });
+                var el = document.getElementById('annunci-pubblici');
+                var section = document.getElementById('comunicazioni');
+                if (!el) return;
+                if (!all.length) {
+                    // Nasconde la sezione se non ci sono annunci
+                    if (section) section.style.display = 'none';
+                    return;
+                }
+                el.innerHTML = '<div class="space-y-4">' + all.map(function(a) {
+                    var cat   = a.categoria || 'news';
+                    var badge = BADGE[cat] || BADGE.news;
+                    var icon  = ICON[cat]  || ICON.news;
+                    var data  = a.timestamp
+                        ? new Date(a.timestamp).toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'})
+                        : '';
+                    var scad  = a.scadenza
+                        ? '<span class="text-xs text-gray-400 ml-2"><i class="fas fa-clock mr-1"></i>Scade il ' + new Date(a.scadenza).toLocaleDateString('it-IT') + '</span>'
+                        : '';
+                    var testo = (a.testo || '').replace(/\n/g, '<br>');
+                    return '<div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow">'
+                        + '<div class="flex items-start gap-4">'
+                        + '<div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ' + badge + ' bg-opacity-60">'
+                        + '<i class="fas ' + icon + '"></i></div>'
+                        + '<div class="flex-1 min-w-0">'
+                        + '<div class="flex flex-wrap items-center gap-2 mb-2">'
+                        + '<span class="text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-full ' + badge + '">'
+                        + cat.charAt(0).toUpperCase() + cat.slice(1) + '</span>'
+                        + '<span class="text-xs text-gray-400">' + data + '</span>' + scad
+                        + '</div>'
+                        + '<h3 class="font-black text-scout text-lg mb-1">' + (a.titolo || '') + '</h3>'
+                        + '<p class="text-gray-600 text-sm leading-relaxed">' + testo + '</p>'
+                        + '</div></div></div>';
+                }).join('') + '</div>';
+            })
+            .catch(function(e) { console.warn('annunci:', e); });
+    })();
 
     // Se l'admin ha salvato un ID calendario diverso su Firestore, aggiorna l'iframe
     window.db.collection('config').doc('site').get().then(function(doc) {
