@@ -80,6 +80,37 @@
           "name": "AGESCI Brescia 7",
           "publisher": { "@id": "https://agescibrescia7.com/#organization" },
           "inLanguage": "it-IT"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://agescibrescia7.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Come posso iscrivere mio figlio/a agli scout a Brescia?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Basta compilare la pre-iscrizione sul sito agescibrescia7.com oppure contattarci al +39 340 874 0678 o via email a info@agescibrescia7.com." }
+            },
+            {
+              "@type": "Question",
+              "name": "Che età bisogna avere per partecipare alle attività scout?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Il Gruppo Scout AGESCI Brescia 7 accoglie ragazzi dai 6 ai 21 anni: Cerchio (6-11 anni), Reparto (11-16 anni), Clan (16-21 anni)." }
+            },
+            {
+              "@type": "Question",
+              "name": "Dove si trovano gli scout di Brescia 7?",
+              "acceptedAnswer": { "@type": "Answer", "text": "La sede è alla Parrocchia S. Angela Merici, Via Cimabue 271, Brescia (quartiere San Polo). Le riunioni si tengono il sabato." }
+            },
+            {
+              "@type": "Question",
+              "name": "Quanto costano le attività scout a Brescia?",
+              "acceptedAnswer": { "@type": "Answer", "text": "La quota associativa annuale AGESCI comprende iscrizione, assicurazione e tessera nazionale. Contattarci per informazioni dettagliate." }
+            },
+            {
+              "@type": "Question",
+              "name": "Cosa fanno i ragazzi nelle attività scout di Brescia?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Uscite in natura, campeggio, orientamento, servizio alla comunità, giochi di squadra e attività manuali, secondo il metodo Baden-Powell." }
+            }
+          ]
         }
       ]
     }
@@ -386,13 +417,13 @@
         <div class="fade-up inline-block bg-gold text-scout text-xs font-black px-5 py-2 rounded-full uppercase tracking-widest mb-8">
             Dal 1977 · San Polo · Brescia
         </div>
-        <h1 class="fade-up delay-1 font-scout text-7xl md:text-9xl font-bold leading-none drop-shadow-2xl mb-4">
+        <div class="fade-up delay-1 font-scout text-7xl md:text-9xl font-bold leading-none drop-shadow-2xl mb-4" aria-hidden="true">
             Buona<br><span class="text-gold">Strada</span>
+        </div>
+        <h1 class="fade-up delay-2 text-xl md:text-2xl font-light opacity-90 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Gruppo Scout AGESCI Brescia 7 — San Polo, Brescia<br>
+            <strong class="font-semibold">Attività scout per ragazzi dai 6 ai 21 anni</strong>
         </h1>
-        <p class="fade-up delay-2 text-xl md:text-2xl font-light opacity-90 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Associazione Guide e Scout Cattolici Italiani<br>
-            <strong class="font-semibold">Gruppo Brescia 7 – Parrocchia S. Angela Merici</strong>
-        </p>
         <div class="fade-up delay-3 flex flex-wrap justify-center gap-4">
             <button onclick="openPreIscrizione()" class="bg-gold text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
                 <i class="fas fa-child mr-2"></i>Iscriviti ora
@@ -613,6 +644,54 @@
                 <iframe src="https://calendar.google.com/calendar/embed?src=info%40agescibrescia7.com&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff"
                         style="border:0" width="100%" height="560" frameborder="0" scrolling="no"></iframe>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── FAQ ────────────────────────────────────────────────────────── -->
+<section id="faq" class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <div class="section-tag justify-center">Domande frequenti</div>
+            <h2 class="text-4xl font-black text-scout">Tutto quello che vuoi sapere<br>sugli scout a Brescia</h2>
+        </div>
+        <div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <h3 class="font-black text-scout text-lg mb-2" itemprop="name">Come posso iscrivere mio figlio/a agli scout a Brescia?</h3>
+                <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600 text-sm leading-relaxed" itemprop="text">Basta compilare la pre-iscrizione sul nostro sito oppure contattarci al <a href="tel:+393408740678" class="text-scout font-semibold">+39 340 874 0678</a> o via email a <a href="mailto:info@agescibrescia7.com" class="text-scout font-semibold">info@agescibrescia7.com</a>. Vi ricontatteremo per presentarvi il gruppo e spiegare come funziona l'iscrizione ad AGESCI Brescia 7.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <h3 class="font-black text-scout text-lg mb-2" itemprop="name">Che età bisogna avere per partecipare alle attività scout?</h3>
+                <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600 text-sm leading-relaxed" itemprop="text">Il Gruppo Scout AGESCI Brescia 7 accoglie ragazzi dai 6 ai 21 anni. Il <strong>Cerchio</strong> è riservato ai bambini dai 6 agli 11 anni, il <strong>Reparto</strong> agli adolescenti dagli 11 ai 16 anni, il <strong>Clan</strong> ai giovani dai 16 ai 21 anni.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <h3 class="font-black text-scout text-lg mb-2" itemprop="name">Dove si trovano gli scout di Brescia 7? Quando ci si incontra?</h3>
+                <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600 text-sm leading-relaxed" itemprop="text">La nostra sede è alla <strong>Parrocchia S. Angela Merici, Via Cimabue 271, Brescia</strong> (quartiere San Polo). Le riunioni si tengono il sabato. Durante l'anno organizziamo anche uscite in natura, campi estivi e attività di servizio alla comunità.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <h3 class="font-black text-scout text-lg mb-2" itemprop="name">Quanto costano le attività scout a Brescia?</h3>
+                <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600 text-sm leading-relaxed" itemprop="text">La quota associativa annuale AGESCI comprende l'iscrizione al gruppo, l'assicurazione e la tessera nazionale. I costi sono accessibili e non escludono nessuno: per informazioni dettagliate sulla quota del Gruppo Brescia 7 contattaci direttamente.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <h3 class="font-black text-scout text-lg mb-2" itemprop="name">Cosa fanno i ragazzi nelle attività scout di Brescia?</h3>
+                <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600 text-sm leading-relaxed" itemprop="text">Le attività scout includono uscite in natura e campeggio, tecniche di orientamento e sopravvivenza, servizio alla comunità, giochi di squadra, attività manuali e molto altro. L'obiettivo è la crescita integrale del ragazzo attraverso l'avventura, la fede e il servizio agli altri, secondo il metodo Baden-Powell.</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
