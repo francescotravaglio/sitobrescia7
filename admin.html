@@ -304,7 +304,15 @@
                         <button onclick="filterPreIscrizioni('tutte')"  class="tab-btn active" id="pf-tutte">Tutte</button>
                         <button onclick="filterPreIscrizioni('nuove')"  class="tab-btn" id="pf-nuove">Non lette</button>
                     </div>
-                    <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
+                        <button onclick="markAllPreLette()" class="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition font-semibold">
+                            <i class="fas fa-check-double mr-1"></i>Segna tutte lette
+                        </button>
+                        <button onclick="clearAllPreIscrizioni()" class="text-xs text-red-400 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition font-semibold">
+                            <i class="fas fa-trash mr-1"></i>Elimina tutte
+                        </button>
+                    </div>
                 </div>
                 <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                     <div id="pre-iscrizioni-table">
@@ -660,6 +668,17 @@
     </main>
 </div><!-- /app -->
 
+<!-- ── MODAL DETTAGLIO PRE-ISCRIZIONE ───────────────────────────── -->
+<div id="modal-pre-iscrizione" class="modal-overlay hidden" onclick="if(event.target===this)closePreModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Pre-iscrizione</h3>
+            <button onclick="closePreModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-pre-body"></div>
+    </div>
+</div>
+
 <!-- ── MODAL DETTAGLIO RICHIESTA ─────────────────────────────────── -->
 <div id="modal-richiesta" class="modal-overlay hidden" onclick="closeModal(event)">
     <div class="modal-box" onclick="event.stopPropagation()">
@@ -907,15 +926,20 @@ function preIscrizioneRow(r) {
     const stato = r.letta
         ? '<span class="badge badge-read">Letta</span>'
         : '<span class="badge badge-new">Nuova</span>';
-    return `<tr class="table-row">
+    return `<tr class="table-row cursor-pointer" onclick="openPreIscrizione('${r.id}')">
         <td class="px-6 py-4 font-semibold text-gray-800">${bimbo}</td>
         <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${genitore}</td>
         <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
         <td class="px-6 py-4 text-gray-500 hidden lg:table-cell">${tel}</td>
         <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${data}</td>
         <td class="px-6 py-4">${stato}</td>
-        <td class="px-6 py-4 text-right">
-            ${!r.letta ? `<button onclick="markPreLetta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
+        <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+            <div class="flex gap-2 items-center justify-end">
+                ${!r.letta ? `<button onclick="markPreLetta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
+                <button onclick="deletePreIscrizione('${r.id}')" class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 font-bold px-2 py-1.5 rounded-lg transition" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
         </td>
     </tr>`;
 }
@@ -923,6 +947,84 @@ function preIscrizioneRow(r) {
 function markPreLetta(id) {
     window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ letta: true })
         .catch(e => console.error('Errore markPreLetta:', e));
+}
+
+function openPreIscrizione(id) {
+    const r = (window.preIscrizioniCache || []).find(x => x.id === id);
+    if (!r) return;
+    if (!r.letta) markPreLetta(id);
+    const nascita = r.data_nascita ? fmtDate(r.data_nascita) : '—';
+    const genitore = ((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—';
+    document.getElementById('modal-pre-body').innerHTML = `
+        <div class="space-y-3 text-sm">
+            <div class="bg-amber-50 rounded-xl p-4">
+                <div class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">Bambino/a</div>
+                <div class="font-black text-lg text-scout">${r.bambino_nome || '—'}</div>
+                <div class="text-xs text-gray-500 mt-0.5">Nato/a il: <strong>${nascita}</strong></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Genitore</div>
+                    <div class="font-semibold">${genitore}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Inviata il</div>
+                    <div class="font-semibold">${r.timestamp ? fmtDatetime(r.timestamp) : '—'}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${r.email || ''}" class="font-semibold text-scout hover:underline">${r.email || '—'}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <a href="tel:${r.telefono || ''}" class="font-semibold">${r.telefono || '—'}</a>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <a href="mailto:${r.email || ''}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
+                    <i class="fas fa-envelope mr-2"></i>Rispondi
+                </a>
+                <button onclick="deletePreIscrizione('${r.id}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-pre-iscrizione').classList.remove('hidden');
+}
+
+function closePreModal() {
+    document.getElementById('modal-pre-iscrizione').classList.add('hidden');
+}
+
+function deletePreIscrizione(id) {
+    if (!confirm('Eliminare questa pre-iscrizione?')) return;
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).delete()
+        .then(() => toast('Pre-iscrizione eliminata.'))
+        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
+}
+
+function clearAllPreIscrizioni() {
+    const all = window.preIscrizioniCache || [];
+    if (!all.length) { toast('Nessuna pre-iscrizione da eliminare.'); return; }
+    if (!confirm('Eliminare TUTTE le ' + all.length + ' pre-iscrizioni? Operazione irreversibile.')) return;
+    const db = window.firestoreDb;
+    db.collection('pre_iscrizioni').get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    }).then(() => toast('Tutte le pre-iscrizioni eliminate.'))
+      .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+function markAllPreLette() {
+    const nonLette = (window.preIscrizioniCache || []).filter(r => !r.letta);
+    if (!nonLette.length) { toast('Nessuna nuova da segnare.'); return; }
+    const db = window.firestoreDb;
+    const batch = db.batch();
+    nonLette.forEach(r => batch.update(db.collection('pre_iscrizioni').doc(r.id), { letta: true }));
+    batch.commit()
+        .then(() => toast(nonLette.length + ' pre-iscrizioni segnate lette.'))
+        .catch(err => { console.error(err); toast('Errore.', false); });
 }
 
 // ── RICHIESTE ────────────────────────────────────────────────────
