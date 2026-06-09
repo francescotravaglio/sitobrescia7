@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina non trovata | AGESCI Brescia 7</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>tailwind.config={theme:{extend:{colors:{'scout':'#003366','gold':'#fcc400'},fontFamily:{sans:['Montserrat','sans-serif'],scout:['Patrick Hand','cursive']}}}}</script>
+    <style>
+        body { background: linear-gradient(180deg,#00010a 0%,#020d1e 30%,#041528 65%,#061c0e 90%); min-height:100vh; }
+        @keyframes twinkle { 0%,100%{opacity:.2;} 50%{opacity:1;} }
+    </style>
+</head>
+<body class="font-sans text-white flex flex-col items-center justify-center min-h-screen px-6 overflow-hidden relative">
+
+<canvas id="c" class="absolute inset-0 w-full h-full" style="pointer-events:none"></canvas>
+
+<div class="relative z-10 text-center max-w-lg">
+    <!-- Logo -->
+    <a href="index.html" class="inline-block mb-8">
+        <img src="logo.png" alt="AGESCI Brescia 7" class="h-16 w-auto mx-auto opacity-80">
+    </a>
+
+    <!-- 404 grande -->
+    <div class="font-scout text-[10rem] leading-none font-bold text-gold opacity-20 select-none absolute top-0 left-1/2 -translate-x-1/2 -translate-y-8 pointer-events-none">404</div>
+
+    <!-- Icona -->
+    <div class="text-7xl mb-6">🔦</div>
+
+    <h1 class="text-3xl md:text-4xl font-black mb-4">Sentiero non trovato</h1>
+    <p class="text-white/60 text-lg mb-3">Questa pagina si è persa nel bosco.</p>
+    <p class="text-white/40 text-sm mb-10">L'URL cercato non esiste o è stato spostato. Usa la bussola per tornare sulla strada giusta.</p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="index.html" class="bg-gold text-scout font-black px-8 py-4 rounded-full hover:scale-105 transition-transform shadow-xl">
+            <i class="fas fa-home mr-2"></i>Torna alla home
+        </a>
+        <a href="chi-siamo.html" class="bg-white/10 border border-white/20 text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition">
+            <i class="fas fa-compass mr-2"></i>Chi siamo
+        </a>
+    </div>
+
+    <p class="mt-12 text-white/25 text-xs">
+        <span class="font-scout text-lg text-gold/30 italic">Buona Strada</span><br>
+        Gruppo Scout AGESCI Brescia 7
+    </p>
+</div>
+
+<script>
+(function(){
+    const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+    let W,H,stars=[];
+    function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; stars=[]; const n=Math.floor(W*H/3000); for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,a:Math.random(),da:(.004+Math.random()*.01)*(Math.random()<.5?1:-1)}); }
+    function draw(){ ctx.clearRect(0,0,W,H); stars.forEach(s=>{ s.a+=s.da; if(s.a>1||s.a<.08)s.da*=-1; ctx.save();ctx.globalAlpha=s.a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.restore(); }); requestAnimationFrame(draw); }
+    window.addEventListener('resize',resize); resize(); draw();
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -66,6 +66,7 @@
                 <a href="unita.html"      class="nav-link hover:text-scout transition">Le Unità</a>
                 <a href="bacheca.html"    class="nav-link active text-scout transition">Bacheca</a>
                 <a href="calendario.html" class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="faq.html" class="nav-link hover:text-scout transition">FAQ</a>
                 <a href="documenti.html"  class="nav-link hover:text-scout transition">Documenti</a>
                 <a href="area-soci.html"  class="nav-link hover:text-scout transition">Area Soci</a>
             </div>
@@ -85,6 +86,7 @@
             <a href="unita.html"      class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
             <a href="bacheca.html"    class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Bacheca</a>
             <a href="calendario.html" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="faq.html"    class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
             <a href="documenti.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
             <a href="area-soci.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Area Soci</a>
             <button onclick="toggleMobileMenu(); openPreIscrizione();" class="mt-4 bg-gold text-scout font-black py-3 rounded-full text-center w-full"><i class="fas fa-child mr-2"></i>Iscriviti ora</button>
@@ -313,6 +315,18 @@ window.submitPreIscrizione = function() {
     .then(()=>{ document.getElementById('form-pre').classList.add('hidden'); document.getElementById('pre-success').classList.remove('hidden'); })
     .catch(err=>{ console.error(err); alert('Errore. Riprova.'); });
 };
+</script>
+
+<!-- TORNA SU -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
+  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
+  <i class="fas fa-chevron-up text-sm"></i>
+</button>
+<script>
+(function(){
+  var b=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){ if(window.scrollY>400){b.classList.remove('opacity-0','pointer-events-none');}else{b.classList.add('opacity-0','pointer-events-none');} });
+})();
 </script>
 </body>
 </html>

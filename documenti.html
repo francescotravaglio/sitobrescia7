@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -299,6 +299,18 @@
     window.addEventListener('scroll', () => {
         document.getElementById('navbar').classList.toggle('shadow-load', window.scrollY > 40);
     });
+</script>
+
+<!-- TORNA SU -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
+  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
+  <i class="fas fa-chevron-up text-sm"></i>
+</button>
+<script>
+(function(){
+  var b=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){ if(window.scrollY>400){b.classList.remove('opacity-0','pointer-events-none');}else{b.classList.add('opacity-0','pointer-events-none');} });
+})();
 </script>
 </body>
 </html>
