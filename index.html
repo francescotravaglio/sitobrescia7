@@ -619,22 +619,22 @@
     particles.push({
       x: FX + (Math.random()-.5)*spread,
       y: FY - 8,
-      vx:(Math.random()-.5)*1.0,
-      vy:-(Math.random()*3.2 + 2.2),
+      vx:(Math.random()-.5)*0.35,
+      vy:-(Math.random()*1.2 + 0.7),
       size: Math.random()*11 + 7,
       life:0,
-      maxLife: Math.floor(Math.random()*28 + 22)
+      maxLife: Math.floor(Math.random()*55 + 45)
     });
   }
   function spawnEmber(){
     embers.push({
       x: FX + (Math.random()-.5)*18,
       y: FY - 14,
-      vx:(Math.random()-.5)*2.5,
-      vy:-(Math.random()*5 + 3),
+      vx:(Math.random()-.5)*1.2,
+      vy:-(Math.random()*2.2 + 1.2),
       size: Math.random()*2+1,
       life:0,
-      maxLife: Math.floor(Math.random()*45+30)
+      maxLife: Math.floor(Math.random()*70+50)
     });
   }
 
@@ -742,8 +742,8 @@
     glowPhase += 0.055;
 
     // spawn particelle
-    for(let i=0;i<4;i++) spawnFire();
-    if(Math.random()<.18) spawnEmber();
+    for(let i=0;i<2;i++) spawnFire();
+    if(Math.random()<.08) spawnEmber();
 
     drawGround();
     drawLogs();
@@ -752,10 +752,10 @@
     particles = particles.filter(p=>p.life<p.maxLife);
     particles.forEach(p=>{
       p.life++;
-      p.x += p.vx + (Math.random()-.5)*.45;
+      p.x += p.vx + (Math.random()-.5)*.18;
       p.y += p.vy;
-      p.vy *= .987;
-      p.size *= .965;
+      p.vy *= .994;
+      p.size *= .983;
       const t = p.life/p.maxLife;
       // colore: bianco-giallo → arancio → rosso → fumo
       let r=255,g,b,a;
@@ -780,7 +780,7 @@
     embers.forEach(e=>{
       e.life++;
       e.x+=e.vx; e.y+=e.vy;
-      e.vy+=.08; e.vx*=.97;
+      e.vy+=.03; e.vx*=.98;
       const a = Math.max(0, 1-e.life/e.maxLife);
       ctx.save();
       ctx.globalAlpha=a;
