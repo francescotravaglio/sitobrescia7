@@ -1,0 +1,66 @@
+<!-- TOP BAR -->
+<div class="bg-scout text-white text-xs py-2 hidden md:block">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <span class="opacity-70"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</span>
+        <div class="flex items-center gap-6 opacity-80">
+            <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
+            <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
+            <div class="flex gap-3 border-l border-white/20 pl-6">
+                <a href="https://www.instagram.com/agesci_brescia7" target="_blank" aria-label="Instagram AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-instagram text-base"></i></a>
+                <a href="https://www.facebook.com/scoutbrescia7" target="_blank" aria-label="Facebook AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-facebook text-base"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar" class="bg-white sticky top-0 z-50 border-b border-gray-100 transition-shadow">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
+                <div class="hidden sm:block leading-tight">
+                    <div class="font-black text-scout text-lg">BRESCIA 7</div>
+                    <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
+                </div>
+            </a>
+            <div class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-600">
+                <a href="chi-siamo.html"        class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="unita.html"            class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="bacheca.html"          class="nav-link hover:text-scout transition">Bacheca</a>
+                <a href="calendario.html"       class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="faq.html"              class="nav-link hover:text-scout transition">FAQ</a>
+                <a href="rassegna-stampa.html"  class="nav-link hover:text-scout transition">Stampa</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="area-soci.html" class="hidden lg:flex items-center gap-2 bg-scout text-white font-black px-5 py-2.5 rounded-full text-sm hover:bg-scout-dark transition shadow-md border border-scout/30">
+                    <i class="fas fa-lock text-xs"></i> Area Soci
+                </a>
+                <button onclick="toggleMobileMenu()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
+        <div class="px-6 py-6 flex flex-col gap-1">
+            <a href="chi-siamo.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="unita.html"            class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="bacheca.html"          class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Bacheca</a>
+            <a href="calendario.html"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="faq.html"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
+            <a href="rassegna-stampa.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Stampa</a>
+            <a href="area-soci.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold flex items-center gap-2"><i class="fas fa-lock text-xs"></i> Area Soci</a>
+        </div>
+    </div>
+</nav>
+<style>.nav-link.active{color:#003366}.nav-link.active::after{width:100%}</style>
+<script>
+// evidenzia il link della pagina corrente
+(function(){
+    var page = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('#navbar a.nav-link').forEach(function(a){
+        if (a.getAttribute('href') === page) a.classList.add('active');
+    });
+})();
+</script>

@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagina non trovata | AGESCI Brescia 7</title>
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/tailwind.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script>tailwind.config={theme:{extend:{colors:{'scout':'#003366','gold':'#fcc400'},fontFamily:{sans:['Montserrat','sans-serif'],scout:['Patrick Hand','cursive']}}}}</script>
+    <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
         body { background: linear-gradient(180deg,#00010a 0%,#020d1e 30%,#041528 65%,#061c0e 90%); min-height:100vh; }
         @keyframes twinkle { 0%,100%{opacity:.2;} 50%{opacity:1;} }
@@ -17,6 +17,19 @@
 <body class="font-sans text-white flex flex-col items-center justify-center min-h-screen px-6 overflow-hidden relative">
 
 <canvas id="c" class="absolute inset-0 w-full h-full" style="pointer-events:none"></canvas>
+
+<!-- MINI NAV -->
+<nav class="absolute top-0 inset-x-0 z-20">
+    <div class="max-w-5xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-white/60">
+        <a href="index.html" class="hover:text-gold transition"><i class="fas fa-home mr-1.5"></i>Home</a>
+        <a href="chi-siamo.html" class="hover:text-gold transition">Chi siamo</a>
+        <a href="unita.html" class="hover:text-gold transition">Le Unità</a>
+        <a href="bacheca.html" class="hover:text-gold transition">Bacheca</a>
+        <a href="calendario.html" class="hover:text-gold transition">Calendario</a>
+        <a href="faq.html" class="hover:text-gold transition">FAQ</a>
+        <a href="rassegna-stampa.html" class="hover:text-gold transition">Stampa</a>
+    </div>
+</nav>
 
 <div class="relative z-10 text-center max-w-lg">
     <!-- Logo -->
@@ -54,8 +67,10 @@
     const cv=document.getElementById('c'),ctx=cv.getContext('2d');
     let W,H,stars=[];
     function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; stars=[]; const n=Math.floor(W*H/3000); for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,a:Math.random(),da:(.004+Math.random()*.01)*(Math.random()<.5?1:-1)}); }
-    function draw(){ ctx.clearRect(0,0,W,H); stars.forEach(s=>{ s.a+=s.da; if(s.a>1||s.a<.08)s.da*=-1; ctx.save();ctx.globalAlpha=s.a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.restore(); }); requestAnimationFrame(draw); }
-    window.addEventListener('resize',resize); resize(); draw();
+    function draw(){ ctx.clearRect(0,0,W,H); stars.forEach(s=>{ s.a+=s.da; if(s.a>1||s.a<.08)s.da*=-1; ctx.save();ctx.globalAlpha=s.a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.restore(); }); if(!document.hidden) requestAnimationFrame(draw); }
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) requestAnimationFrame(draw); });
+    window.addEventListener('resize',resize); resize();
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ ctx.clearRect(0,0,W,H); stars.forEach(s=>{ ctx.save();ctx.globalAlpha=s.a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.restore(); }); } else { draw(); }
 })();
 </script>
 </body>

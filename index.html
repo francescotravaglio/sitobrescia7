@@ -128,30 +128,13 @@
         gtag('js', new Date());
         gtag('config', 'G-Y1FFJ9ND0T');
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/tailwind.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'scout': '#003366',
-                        'scout-dark': '#001a3d',
-                        'scout-mid': '#1a5276',
-                        'gold': '#fcc400',
-                    },
-                    fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                        scout: ['Patrick Hand', 'cursive'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
         html { scroll-behavior: smooth; }
 
@@ -238,7 +221,8 @@
 </head>
 <body class="bg-white text-gray-800 font-sans">
 
-<!-- ── TOP BAR ─────────────────────────────────────────────────── -->
+<!-- SITE-HEADER:START (generato da build.js — modificare partials/header.html) -->
+<!-- TOP BAR -->
 <div class="bg-scout text-white text-xs py-2 hidden md:block">
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <span class="opacity-70"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</span>
@@ -246,47 +230,42 @@
             <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
             <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
             <div class="flex gap-3 border-l border-white/20 pl-6">
-                <a href="https://www.instagram.com/agesci_brescia7" target="_blank" class="hover:text-gold transition"><i class="fab fa-instagram text-base"></i></a>
-                <a href="https://www.facebook.com/scoutbrescia7" target="_blank" class="hover:text-gold transition"><i class="fab fa-facebook text-base"></i></a>
+                <a href="https://www.instagram.com/agesci_brescia7" target="_blank" aria-label="Instagram AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-instagram text-base"></i></a>
+                <a href="https://www.facebook.com/scoutbrescia7" target="_blank" aria-label="Facebook AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-facebook text-base"></i></a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ── NAVIGATION ────────────────────────────────────────────────── -->
+<!-- NAV -->
 <nav id="navbar" class="bg-white sticky top-0 z-50 border-b border-gray-100 transition-shadow">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between items-center h-20">
-            <a href="index.html" class="flex items-center gap-3 group">
+            <a href="index.html" class="flex items-center gap-3">
                 <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
                 <div class="hidden sm:block leading-tight">
                     <div class="font-black text-scout text-lg">BRESCIA 7</div>
                     <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
                 </div>
             </a>
-
-            <div class="hidden lg:flex items-center gap-7 text-sm font-semibold text-gray-600">
+            <div class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-600">
                 <a href="chi-siamo.html"        class="nav-link hover:text-scout transition">Chi siamo</a>
                 <a href="unita.html"            class="nav-link hover:text-scout transition">Le Unità</a>
                 <a href="bacheca.html"          class="nav-link hover:text-scout transition">Bacheca</a>
                 <a href="calendario.html"       class="nav-link hover:text-scout transition">Calendario</a>
                 <a href="faq.html"              class="nav-link hover:text-scout transition">FAQ</a>
                 <a href="rassegna-stampa.html"  class="nav-link hover:text-scout transition">Stampa</a>
-                <a href="documenti.html"  class="nav-link hover:text-scout transition">Documenti</a>
-                </div>
-
+            </div>
             <div class="flex items-center gap-3">
                 <a href="area-soci.html" class="hidden lg:flex items-center gap-2 bg-scout text-white font-black px-5 py-2.5 rounded-full text-sm hover:bg-scout-dark transition shadow-md border border-scout/30">
                     <i class="fas fa-lock text-xs"></i> Area Soci
                 </a>
-                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
+                <button onclick="toggleMobileMenu()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
                     <i class="fas fa-bars text-xl" id="menu-icon"></i>
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
         <div class="px-6 py-6 flex flex-col gap-1">
             <a href="chi-siamo.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
@@ -295,11 +274,21 @@
             <a href="calendario.html"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
             <a href="faq.html"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
             <a href="rassegna-stampa.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Stampa</a>
-            <a href="documenti.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
-            <a href="area-soci.html" class="py-3 border-b border-white/10 hover:text-gold transition font-semibold flex items-center gap-2"><i class="fas fa-lock text-xs"></i> Area Soci</a>
-            </div>
+            <a href="area-soci.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold flex items-center gap-2"><i class="fas fa-lock text-xs"></i> Area Soci</a>
+        </div>
     </div>
 </nav>
+<style>.nav-link.active{color:#003366}.nav-link.active::after{width:100%}</style>
+<script>
+// evidenzia il link della pagina corrente
+(function(){
+    var page = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('#navbar a.nav-link').forEach(function(a){
+        if (a.getAttribute('href') === page) a.classList.add('active');
+    });
+})();
+</script>
+<!-- SITE-HEADER:END -->
 
 <!-- ── MODAL PRE-ISCRIZIONE ──────────────────────────────────────── -->
 <div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
@@ -326,6 +315,7 @@
       Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione, ci aiuta a organizzare l'accoglienza.
     </div>
     <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
+      <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="grid grid-cols-2 gap-2 sm:gap-3">
         <div>
           <label class="form-label">Nome *</label>
@@ -593,17 +583,30 @@
       ctx.restore();
     });
 
-    requestAnimationFrame(draw);
+    if(!document.hidden) requestAnimationFrame(draw);
   }
+
+  // riprendi quando la tab torna visibile (il loop si ferma da solo quando è nascosta)
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) requestAnimationFrame(draw); });
 
   window.addEventListener('resize',resize);
   resize();
-  draw();
 
-  // stelle cadenti: 2 subito, poi ogni ~3s
-  setTimeout(spawnShooter, 600);
-  setTimeout(spawnShooter,1800);
-  setInterval(()=>{ if(Math.random()<.7) spawnShooter(); }, 3000);
+  // utenti con "riduci animazioni": un solo frame statico, niente loop né stelle cadenti
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    stars.forEach(s=>{ s.da=0; });
+    draw = ()=>{};
+    // disegna un frame statico di sole stelle
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{ ctx.save();ctx.globalAlpha=s.a;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.restore(); });
+  } else {
+    draw();
+    // stelle cadenti: 2 subito, poi ogni ~3s
+    setTimeout(spawnShooter, 600);
+    setTimeout(spawnShooter,1800);
+    setInterval(()=>{ if(Math.random()<.7 && !document.hidden) spawnShooter(); }, 3000);
+  }
 })();
 
 // ── CAMPFIRE SCENE (canvas dedicato) ──────────────────────────────
@@ -800,9 +803,23 @@
     });
 
     drawTent();
-    requestAnimationFrame(frame);
+    if(!document.hidden) requestAnimationFrame(frame);
   }
-  frame();
+
+  // pausa quando la tab è nascosta, riprendi al ritorno
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) requestAnimationFrame(frame); });
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    // niente particelle animate: solo tenda statica con un bagliore fisso
+    ctx.clearRect(0,0,W,H);
+    const glow = ctx.createRadialGradient(FX,FY-14,2,FX,FY-14,60);
+    glow.addColorStop(0,'rgba(255,160,40,.55)');
+    glow.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(FX,FY-14,60,0,Math.PI*2); ctx.fill();
+    drawTent();
+  } else {
+    frame();
+  }
 })();
 </script>
 
@@ -897,36 +914,22 @@
 
 
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
 <footer id="contatti" class="bg-gray-950 text-white">
     <div class="max-w-7xl mx-auto px-6 py-20">
         <div class="grid md:grid-cols-12 gap-12 mb-16">
             <div class="md:col-span-5">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="h-16 w-16 rounded-full overflow-hidden bg-white flex-shrink-0 flex items-center justify-center">
-                        <img src="logo.png" alt="BS7" class="h-14 w-14 object-contain">
-                    </div>
-                    <div>
-                        <div class="font-black text-xl">BRESCIA 7</div>
-                        <div class="text-gray-500 text-xs uppercase tracking-widest">Gruppo Scout AGESCI</div>
-                    </div>
+                    <div class="h-16 w-16 rounded-full overflow-hidden bg-white flex-shrink-0 flex items-center justify-center"><img src="logo.png" alt="BS7" class="h-14 w-14 object-contain"></div>
+                    <div><div class="font-black text-xl">BRESCIA 7</div><div class="text-gray-500 text-xs uppercase tracking-widest">Gruppo Scout AGESCI</div></div>
                 </div>
-                <p class="text-gray-400 text-sm leading-relaxed mb-8">
-                    Dal 1977 educhiamo giovani nel quartiere di San Polo secondo i valori dello scautismo: avventura, servizio e fede.
-                </p>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">Dal 1977 educhiamo giovani nel quartiere di San Polo secondo i valori dello scautismo: avventura, servizio e fede.</p>
                 <div class="flex gap-3">
-                    <a href="https://www.instagram.com/agesci_brescia7" target="_blank"
-                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
-                        <i class="fab fa-instagram text-lg"></i>
-                    </a>
-                    <a href="https://www.facebook.com/scoutbrescia7" target="_blank" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fab fa-facebook text-lg"></i>
-                    </a>
-                    <a href="mailto:info@agescibrescia7.com"
-                       class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white">
-                        <i class="fas fa-envelope text-lg"></i>
-                    </a>
+                    <a href="https://www.instagram.com/agesci_brescia7" target="_blank" aria-label="Instagram AGESCI Brescia 7" rel="noopener" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fab fa-instagram text-lg"></i></a>
+                    <a href="https://www.facebook.com/scoutbrescia7" target="_blank" aria-label="Facebook AGESCI Brescia 7" rel="noopener" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fab fa-facebook text-lg"></i></a>
+                    <a href="mailto:info@agescibrescia7.com" aria-label="Email AGESCI Brescia 7" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fas fa-envelope text-lg"></i></a>
                 </div>
             </div>
-
             <div class="md:col-span-3">
                 <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
                 <ul class="space-y-3 text-sm text-gray-400">
@@ -940,30 +943,16 @@
                     <li><a href="documenti.html"        class="hover:text-white transition">Modulistica</a></li>
                 </ul>
             </div>
-
             <div class="md:col-span-4">
                 <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Dove siamo</h4>
                 <div class="text-gray-400 text-sm space-y-4">
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-church text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
-                        <span>Parrocchia S. Angela Merici</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
-                        <span>Via Cimabue, 271<br>25134 – Brescia (BS)</span>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-envelope text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
-                        <a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-phone text-gold mt-0.5 w-4 text-center flex-shrink-0"></i>
-                        <a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a>
-                    </div>
+                    <div class="flex items-start gap-3"><i class="fas fa-church text-gold mt-0.5 w-4 flex-shrink-0"></i><span>Parrocchia S. Angela Merici</span></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 flex-shrink-0"></i><span>Via Cimabue, 271<br>25134 – Brescia (BS)</span></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-envelope text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-phone text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a></div>
                 </div>
             </div>
         </div>
-
         <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
             <div class="flex items-center gap-4">
@@ -973,6 +962,7 @@
         </div>
     </div>
 </footer>
+<!-- SITE-FOOTER:END -->
 
 <!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
 <script>
@@ -982,6 +972,7 @@
         const icon = document.getElementById('menu-icon');
         const isOpen = !menu.classList.contains('hidden');
         menu.classList.toggle('hidden');
+    var mb=document.getElementById('menu-btn'); if(mb) mb.setAttribute('aria-expanded', String(!isOpen));
         icon.className = isOpen ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
     }
 
@@ -1032,6 +1023,8 @@
         document.getElementById('pre-error').classList.add('hidden');
     };
     window.submitPreIscrizione = function() {
+    var hp = document.getElementById('pre-hp'); if (hp && hp.value) return;
+    var last = +localStorage.getItem('pre_last')||0; if (Date.now()-last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
         const genNome    = document.getElementById('pre-gen-nome').value.trim();
         const genCognome = document.getElementById('pre-gen-cognome').value.trim();
         const bimboNome  = document.getElementById('pre-bimbo-nome').value.trim();
@@ -1048,6 +1041,7 @@
             email, telefono: document.getElementById('pre-tel').value.trim(),
             timestamp: new Date().toISOString(), letta: false
         }).then(() => {
+            localStorage.setItem('pre_last', Date.now());
             document.getElementById('form-pre').classList.add('hidden');
             document.getElementById('pre-success').classList.remove('hidden');
             // Evento conversione GA4
