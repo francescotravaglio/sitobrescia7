@@ -147,6 +147,10 @@
             <div onclick="showTab('annunci')" class="sidebar-link" id="nav-annunci">
                 <i class="fas fa-bullhorn"></i> Annunci
             </div>
+            <div onclick="showTab('testimonianze')" class="sidebar-link" id="nav-testimonianze">
+                <i class="fas fa-quote-left"></i> Testimonianze
+                <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
             <div onclick="showTab('calendario-google')" class="sidebar-link" id="nav-calendario-google">
                 <i class="fab fa-google"></i> Google Calendar
             </div>
@@ -399,6 +403,23 @@
                     </div>
                     <div id="annunci-list">
                         <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────── TESTIMONIANZE ───────────────── -->
+            <section id="tab-testimonianze" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Le frasi inviate dai genitori dal sito arrivano qui. <strong>Solo quelle approvate</strong> compaiono in homepage. Controlla che non ci siano dati sensibili o cognomi completi prima di approvare.
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="font-black text-scout">Testimonianze ricevute</h3>
+                        <button onclick="renderTestimonianze()" class="text-gray-400 hover:text-scout transition text-sm"><i class="fas fa-rotate-right"></i></button>
+                    </div>
+                    <div id="testi-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Caricamento…</div>
                     </div>
                 </div>
             </section>
@@ -783,6 +804,7 @@ const TAB_META = {
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
     soci:              { title: 'Elenco Soci',        sub: 'Importa e gestisci la lista dei soci' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
+    testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
 };
 
 function showTab(name) {
@@ -801,6 +823,65 @@ function showTab(name) {
     if (name === 'dashboard')   renderDashboard();
     if (name === 'soci')            renderSoci();
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
+    if (name === 'testimonianze')   renderTestimonianze();
+}
+
+// ── TESTIMONIANZE ────────────────────────────────────────────────
+function renderTestimonianze() {
+    const list = document.getElementById('testi-list');
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').get().then(snap => {
+        const rows = [];
+        snap.forEach(doc => rows.push({ id: doc.id, ...doc.data() }));
+        rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+
+        const inAttesa = rows.filter(r => !r.approvata).length;
+        const badge = document.getElementById('badge-testi');
+        if (badge) { badge.textContent = inAttesa; badge.classList.toggle('hidden', inAttesa === 0); }
+
+        if (!rows.length) {
+            list.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna testimonianza ricevuta.</div>';
+            return;
+        }
+        list.innerHTML = rows.map(r => {
+            const data = r.timestamp ? new Date(r.timestamp).toLocaleDateString('it-IT') : '—';
+            const stato = r.approvata
+                ? '<span class="bg-green-100 text-green-700 text-xs font-black px-2.5 py-1 rounded-full">PUBBLICATA</span>'
+                : '<span class="bg-amber-100 text-amber-700 text-xs font-black px-2.5 py-1 rounded-full">IN ATTESA</span>';
+            const azione = r.approvata
+                ? `<button onclick="setTestiApprovata('${r.id}', false)" class="text-amber-600 hover:text-amber-800 text-xs font-bold"><i class="fas fa-eye-slash mr-1"></i>Nascondi</button>`
+                : `<button onclick="setTestiApprovata('${r.id}', true)" class="bg-scout text-white text-xs font-black px-4 py-2 rounded-lg hover:bg-scout-dark transition"><i class="fas fa-check mr-1"></i>Approva e pubblica</button>`;
+            return `
+            <div class="px-6 py-5 border-b border-gray-50 last:border-0">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="flex-1 min-w-[240px]">
+                        <p class="text-gray-700 text-sm italic leading-relaxed mb-2">&ldquo;${escapeHtml(r.testo||'')}&rdquo;</p>
+                        <div class="text-xs text-gray-400">— <strong class="text-gray-600">${escapeHtml(r.nome||'')}</strong>${r.ruolo ? ', ' + escapeHtml(r.ruolo) : ''} · ${data}</div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        ${stato}
+                        ${azione}
+                        <button onclick="deleteTestimonianza('${r.id}')" class="text-gray-300 hover:text-red-500 transition" title="Elimina"><i class="fas fa-trash text-sm"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }).catch(err => {
+        console.error(err);
+        list.innerHTML = '<div class="px-6 py-12 text-center text-red-400 text-sm">Errore nel caricamento.</div>';
+    });
+}
+function setTestiApprovata(id, val) {
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').doc(id).update({ approvata: val }).then(renderTestimonianze);
+}
+function deleteTestimonianza(id) {
+    if (!confirm('Eliminare definitivamente questa testimonianza?')) return;
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').doc(id).delete().then(renderTestimonianze);
+}
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // ── Refresh globale ───────────────────────────────────────────────

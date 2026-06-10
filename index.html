@@ -928,6 +928,54 @@
     </div>
 </section>
 
+<!-- ── TESTIMONIANZE GENITORI (visibile solo se ce ne sono di approvate) ── -->
+<section id="sez-testimonianze" class="py-20 bg-gray-50 hidden">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">La parola ai genitori</div>
+            <h2 class="text-3xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
+        </div>
+        <div id="testi-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
+        <div class="text-center">
+            <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
+                <i class="fas fa-pen"></i> Racconta la tua esperienza
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL TESTIMONIANZA -->
+<div id="modal-testi" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTestiModal()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-6 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
+    <button onclick="closeTestiModal()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition" aria-label="Chiudi"><i class="fas fa-times text-sm"></i></button>
+    <div class="text-center mb-5">
+      <div class="w-12 h-12 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-quote-left text-scout text-xl"></i></div>
+      <h3 class="text-xl font-black text-scout">La tua esperienza</h3>
+      <p class="text-gray-400 text-xs mt-1">Verrà pubblicata dopo una rapida verifica dei capi</p>
+    </div>
+    <form id="form-testi" novalidate class="space-y-3">
+      <input type="text" id="testi-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div><label class="form-label">Il tuo nome (basta quello di battesimo) *</label><input type="text" id="testi-nome" required maxlength="40" placeholder="Es. Laura" class="input-field"></div>
+      <div><label class="form-label">Chi sei per noi</label><input type="text" id="testi-ruolo" maxlength="60" placeholder="Es. mamma di un lupetto" class="input-field"></div>
+      <div>
+        <label class="form-label">La tua frase *</label>
+        <textarea id="testi-testo" required maxlength="300" rows="4" placeholder="Cosa è cambiato per tuo figlio o tua figlia da quando fa scoutismo?" class="input-field" oninput="document.getElementById('testi-count').textContent=this.value.length+'/300'"></textarea>
+        <div id="testi-count" class="text-right text-xs text-gray-400 mt-1">0/300</div>
+      </div>
+      <p id="testi-error" class="text-red-500 text-xs hidden">Scrivi il tuo nome e la frase.</p>
+      <button type="button" onclick="submitTestimonianza()" class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia</button>
+    </form>
+    <div id="testi-success" class="hidden text-center py-4">
+      <div class="text-5xl mb-3">💛</div>
+      <h4 class="text-xl font-black text-scout mb-2">Grazie!</h4>
+      <p class="text-gray-500 text-sm">La tua testimonianza è arrivata ai capi:<br>apparirà sul sito dopo l'approvazione.</p>
+      <button onclick="closeTestiModal()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
+    </div>
+  </div></div>
+</div>
+
 <!-- ── PROVA UN SABATO ─────────────────────────────────────────── -->
 <section class="py-24 bg-gradient-to-br from-scout to-scout-mid text-white relative overflow-hidden">
     <div class="absolute inset-0 opacity-10 pointer-events-none" style="background:radial-gradient(circle at 80% 20%, #fcc400 0%, transparent 40%)"></div>

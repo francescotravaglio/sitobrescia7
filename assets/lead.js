@@ -68,3 +68,69 @@ window.trackWhatsApp = function(origine) {
         gtag('event', 'contact_whatsapp', { event_category: 'contatto', event_label: origine || 'generico' });
     }
 };
+
+// ── TESTIMONIANZE (solo dove esiste #sez-testimonianze) ─────────
+(function(){
+    if (!document.getElementById('sez-testimonianze')) return;
+
+    function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // carica e mostra solo le approvate (sezione nascosta se nessuna)
+    window.db.collection('testimonianze').get().then(snap => {
+        const ok = [];
+        snap.forEach(d => { const t = d.data(); if (t.approvata) ok.push(t); });
+        if (!ok.length) return;
+        ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+        document.getElementById('testi-grid').innerHTML = ok.slice(0,6).map(t => `
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col">
+                <i class="fas fa-quote-left text-gold text-2xl mb-4"></i>
+                <p class="text-gray-600 text-sm leading-relaxed italic flex-1">${esc(t.testo)}</p>
+                <div class="mt-5 pt-4 border-t border-gray-100 text-sm">
+                    <span class="font-black text-scout">${esc(t.nome)}</span>
+                    ${t.ruolo ? '<span class="text-gray-400"> · ' + esc(t.ruolo) + '</span>' : ''}
+                </div>
+            </div>`).join('');
+        document.getElementById('sez-testimonianze').classList.remove('hidden');
+    }).catch(e => console.error('[testimonianze]', e));
+
+    window.openTestiModal = function(){ document.getElementById('modal-testi').classList.remove('hidden'); document.body.style.overflow='hidden'; };
+    window.closeTestiModal = function(){
+        document.getElementById('modal-testi').classList.add('hidden'); document.body.style.overflow='';
+        document.getElementById('form-testi').reset();
+        document.getElementById('form-testi').classList.remove('hidden');
+        document.getElementById('testi-success').classList.add('hidden');
+        document.getElementById('testi-count').textContent = '0/300';
+    };
+    window.submitTestimonianza = function(){
+        if (document.getElementById('testi-hp').value) return;
+        var last = +localStorage.getItem('testi_last')||0;
+        if (Date.now()-last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
+
+        const nome  = document.getElementById('testi-nome').value.trim();
+        const ruolo = document.getElementById('testi-ruolo').value.trim();
+        const testo = document.getElementById('testi-testo').value.trim();
+        const errEl = document.getElementById('testi-error');
+        if (!nome || !testo) { errEl.classList.remove('hidden'); return; }
+        errEl.classList.add('hidden');
+
+        window.db.collection('testimonianze').add({
+            nome, ruolo, testo,
+            timestamp: new Date().toISOString(), approvata: false
+        }).then(() => {
+            localStorage.setItem('testi_last', Date.now());
+            document.getElementById('form-testi').classList.add('hidden');
+            document.getElementById('testi-success').classList.remove('hidden');
+            if (typeof gtag !== 'undefined') gtag('event', 'testimonianza_inviata', { event_category: 'engagement' });
+            if (typeof emailjs !== 'undefined') {
+                emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                    to_email:  'brescia7@lombardia.agesci.it',
+                    nome:      'Nuova testimonianza da approvare',
+                    tipo:      'Testimonianza genitore',
+                    timestamp: new Date().toLocaleDateString('it-IT'),
+                    iban:      '"' + testo + '"\n\n— ' + nome + (ruolo ? ' (' + ruolo + ')' : '') +
+                               '\n\nPer approvarla: admin.html → Testimonianze → Approva e pubblica'
+                }).catch(e => console.error('[EmailJS]', e));
+            }
+        }).catch(err => { console.error(err); alert('Errore. Riprova.'); });
+    };
+})();

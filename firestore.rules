@@ -36,6 +36,16 @@ service cloud.firestore {
       allow read, update, delete: if true;                                 // TODO: stringere con auth
     }
 
+    // ── Testimonianze genitori: il pubblico CREA (non approvate), l'admin approva ──
+    match /testimonianze/{doc} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
+        request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
+        request.resource.data.approvata == false;
+      allow update, delete: if true;                                      // TODO: stringere con auth (serve all'admin)
+    }
+
     // ── Area soci ──
     match /soci_lista/{doc}  { allow read: if true; allow write: if false; }  // solo admin da console
     match /soci_auth/{doc}   { allow read, create: if true; allow update, delete: if true; } // TODO: auth
