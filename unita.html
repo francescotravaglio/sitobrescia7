@@ -15,7 +15,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1FFJ9ND0T"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Y1FFJ9ND0T');</script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});gtag('config','G-Y1FFJ9ND0T');</script>
     <link rel="stylesheet" href="assets/tailwind.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
@@ -322,6 +322,7 @@
         <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
             <div class="flex items-center gap-4">
+                <button onclick="if(window.riapriCookie)riapriCookie()" class="text-xs text-gray-700 hover:text-gray-500 transition">Gestisci cookie</button>
                 <a href="admin.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
                 <span class="font-scout text-xl text-gold/50 italic">Semel Scout, Semper Scout</span>
             </div>
@@ -388,5 +389,6 @@ window.db = firebase.firestore();
   els.forEach(function(el){ io.observe(el); });
 })();
 </script><script src="assets/lead.js"></script>
+<script src="assets/cookie-consent.js"></script>
 </body>
 </html>
