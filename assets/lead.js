@@ -75,21 +75,38 @@ window.trackWhatsApp = function(origine) {
 
     function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+    function card(t, extra){
+        return '<div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col ' + (extra||'') + '">' +
+            '<i class="fas fa-quote-left text-gold text-2xl mb-4"></i>' +
+            '<p class="text-gray-600 text-sm leading-relaxed italic flex-1">' + esc(t.testo) + '</p>' +
+            '<div class="mt-5 pt-4 border-t border-gray-100 text-sm">' +
+                '<span class="font-black text-scout">' + esc(t.nome) + '</span>' +
+                (t.ruolo ? '<span class="text-gray-400"> · ' + esc(t.ruolo) + '</span>' : '') +
+            '</div></div>';
+    }
+
     // carica le recensioni approvate; la sezione è sempre visibile (con stato vuoto invitante)
     window.db.collection('testimonianze').get().then(snap => {
         const ok = [];
         snap.forEach(d => { const t = d.data(); if (t.approvata) ok.push(t); });
         if (!ok.length) return;                       // resta lo stato vuoto + bottone
         ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
-        document.getElementById('testi-grid').innerHTML = ok.slice(0,6).map(t => `
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col">
-                <i class="fas fa-quote-left text-gold text-2xl mb-4"></i>
-                <p class="text-gray-600 text-sm leading-relaxed italic flex-1">${esc(t.testo)}</p>
-                <div class="mt-5 pt-4 border-t border-gray-100 text-sm">
-                    <span class="font-black text-scout">${esc(t.nome)}</span>
-                    ${t.ruolo ? '<span class="text-gray-400"> · ' + esc(t.ruolo) + '</span>' : ''}
-                </div>
-            </div>`).join('');
+
+        // GRIGLIA (pagina "Parlano di noi")
+        var grid = document.getElementById('testi-grid');
+        if (grid) grid.innerHTML = ok.slice(0,6).map(t => card(t)).join('');
+
+        // NASTRO SCORREVOLE (homepage): due metà identiche, loop a -50%
+        var track = document.getElementById('testi-track');
+        if (track) {
+            var unit = ok.map(t => card(t, 'flex-shrink-0 w-80 text-left')).join('');
+            var reps = Math.max(2, Math.ceil(8 / ok.length));   // abbastanza card da riempire lo schermo
+            var half = new Array(reps).fill(unit).join('');
+            track.innerHTML = half + half;
+            var mq = document.getElementById('testi-marquee');
+            if (mq) mq.classList.remove('hidden');
+        }
+
         var empty = document.getElementById('testi-empty');
         if (empty) empty.classList.add('hidden');     // nascondi l'invito quando ci sono recensioni
     }).catch(e => console.error('[testimonianze]', e));

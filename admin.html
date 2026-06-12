@@ -72,6 +72,19 @@
                      max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
         /* .hidden (Tailwind statico) deve vincere su .modal-overlay display:flex */
         .modal-overlay.hidden { display: none; }
+
+        /* Sidebar responsive: drawer su mobile, fissa su desktop */
+        @media (max-width: 1023px) {
+            #sidebar {
+                position: fixed; top: 0; left: 0; height: 100vh; z-index: 50;
+                transform: translateX(-100%); transition: transform .3s ease;
+            }
+            #sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+        }
+        @media (min-width: 1024px) {
+            #sidebar { position: sticky; top: 0; height: 100vh; }
+            #sidebar-backdrop { display: none !important; }
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -117,8 +130,11 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <div id="app" class="hidden flex min-h-screen">
 
+    <!-- backdrop sidebar (solo mobile) -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
     <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
-    <aside class="w-60 bg-scout-dark flex-shrink-0 flex flex-col min-h-screen sticky top-0 h-screen overflow-y-auto">
+    <aside id="sidebar" class="w-60 bg-scout-dark flex-shrink-0 flex flex-col overflow-y-auto">
         <!-- Logo -->
         <div class="px-5 py-6 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -179,10 +195,15 @@
     <main class="flex-1 overflow-auto">
 
         <!-- Top bar -->
-        <header class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 z-40">
-            <div>
-                <h1 id="page-title" class="font-black text-scout text-xl">Dashboard</h1>
-                <p id="page-sub" class="text-gray-400 text-xs mt-0.5">Riepilogo generale</p>
+        <header class="bg-white border-b border-gray-100 px-5 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="lg:hidden text-scout p-1 -ml-1" aria-label="Apri menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div>
+                    <h1 id="page-title" class="font-black text-scout text-lg sm:text-xl">Dashboard</h1>
+                    <p id="page-sub" class="text-gray-400 text-xs mt-0.5">Riepilogo generale</p>
+                </div>
             </div>
             <div class="flex items-center gap-3">
                 <a href="index.html" target="_blank"
@@ -809,6 +830,21 @@ const TAB_META = {
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
 };
 
+// Sidebar mobile: apri/chiudi drawer
+function toggleSidebar() {
+    const s = document.getElementById('sidebar');
+    const b = document.getElementById('sidebar-backdrop');
+    const apri = !s.classList.contains('open');
+    s.classList.toggle('open', apri);
+    b.classList.toggle('hidden', !apri);
+}
+function chiudiSidebarMobile() {
+    if (window.innerWidth < 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-backdrop').classList.add('hidden');
+    }
+}
+
 function showTab(name) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
@@ -817,6 +853,7 @@ function showTab(name) {
     const meta = TAB_META[name] || {};
     document.getElementById('page-title').textContent = meta.title || name;
     document.getElementById('page-sub').textContent   = meta.sub   || '';
+    chiudiSidebarMobile();   // su mobile chiudi il drawer dopo la scelta
 
     // Lazy render
     if (name === 'richieste')   renderRichieste('tutte');

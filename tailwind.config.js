@@ -3,7 +3,7 @@
  *  npx tailwindcss -i tw-input.css -o assets/tailwind.css --minify
  */
 module.exports = {
-  content: ["./*.html"],
+  content: ["./*.html", "./assets/*.js"],
   theme: {
     extend: {
       colors: {

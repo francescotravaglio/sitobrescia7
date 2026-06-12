@@ -190,6 +190,28 @@
             background: #fcc400;
         }
 
+        /* Nastro testimonianze scorrevole */
+        .testi-marquee {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+                    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+        }
+        .testi-track {
+            display: flex;
+            gap: 1.5rem;
+            width: max-content;
+            padding: .5rem 1.5rem;
+            animation: testi-scroll 45s linear infinite;
+        }
+        .testi-marquee:hover .testi-track { animation-play-state: paused; }
+        @keyframes testi-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .testi-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
+        }
+
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
@@ -834,6 +856,31 @@
     </div>
 </div>
 
+<!-- ── TESTIMONIANZE GENITORI (marquee scorrevole, sotto la barra blu) ── -->
+<section id="sez-testimonianze" class="py-16 bg-white overflow-hidden">
+    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
+        <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
+        <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
+    </div>
+    <!-- nastro scorrevole: popolato da lead.js, nascosto se non ci sono recensioni -->
+    <div id="testi-marquee" class="testi-marquee hidden mb-10">
+        <div id="testi-track" class="testi-track"></div>
+    </div>
+    <!-- stato vuoto: invito finché non ci sono recensioni approvate -->
+    <div id="testi-empty" class="max-w-xl mx-auto px-6 text-center mb-10">
+        <div class="text-5xl mb-4">💛</div>
+        <p class="text-gray-500 leading-relaxed">
+            Sei una famiglia del Brescia 7? <strong class="text-scout">Sii il primo a raccontare la tua esperienza.</strong><br>
+            Bastano due righe: aiuterai altri genitori a scegliere con serenità.
+        </p>
+    </div>
+    <div class="text-center">
+        <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
+            <i class="fas fa-pen"></i> Racconta la tua esperienza
+        </button>
+    </div>
+</section>
+
 <!-- ── SEZIONI ──────────────────────────────────────────────────── -->
 <section id="sezioni" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-6">
@@ -926,31 +973,6 @@
             uscite in natura, campi estivi e servizio alla comunità secondo il metodo educativo
             di Baden-Powell. Un'alternativa allo sport che fa crescere autonomia, amicizie vere e fiducia in sé.
         </p>
-    </div>
-</section>
-
-<!-- ── TESTIMONIANZE GENITORI ──────────────────────────────────── -->
-<section id="sez-testimonianze" class="py-20 bg-gray-50">
-    <div class="max-w-5xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">La parola ai genitori</div>
-            <h2 class="text-3xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
-        </div>
-        <!-- griglia recensioni approvate (popolata da lead.js) -->
-        <div id="testi-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
-        <!-- stato vuoto: mostrato finché non ci sono recensioni approvate -->
-        <div id="testi-empty" class="max-w-xl mx-auto text-center mb-10">
-            <div class="text-5xl mb-4">💛</div>
-            <p class="text-gray-500 leading-relaxed">
-                Sei una famiglia del Brescia 7? <strong class="text-scout">Sii il primo a raccontare la tua esperienza.</strong><br>
-                Bastano due righe: aiuterai altri genitori a scegliere con serenità.
-            </p>
-        </div>
-        <div class="text-center">
-            <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
-                <i class="fas fa-pen"></i> Racconta la tua esperienza
-            </button>
-        </div>
     </div>
 </section>
 
