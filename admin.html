@@ -70,6 +70,8 @@
                          justify-content: center; padding: 1rem; }
         .modal-box { background: #fff; border-radius: 1.5rem; padding: 2rem;
                      max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        /* .hidden (Tailwind statico) deve vincere su .modal-overlay display:flex */
+        .modal-overlay.hidden { display: none; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
