@@ -240,6 +240,11 @@
             #modal-pre .input-field { padding:.45rem .75rem; font-size:.8rem; }
             #modal-pre .form-label  { margin-bottom:2px; font-size:10px; }
         }
+
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+        .faq-answer.open { max-height: 500px; }
+        .faq-icon { transition: transform .3s; }
+        .faq-icon.open { transform: rotate(45deg); }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -248,7 +253,7 @@
 <!-- TOP BAR -->
 <div class="bg-scout text-white text-xs py-2 hidden md:block">
     <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <span class="opacity-70"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</span>
+        <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="opacity-70 hover:opacity-100 hover:text-gold transition"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</a>
         <div class="flex items-center gap-6 opacity-80">
             <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
             <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
@@ -849,39 +854,64 @@
         <div><div class="text-4xl font-black text-gold">1977</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Fondazione</div></div>
         <div><div class="text-4xl font-black text-gold">~100</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Soci attivi</div></div>
         <div><div class="text-4xl font-black text-gold">3</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Unità scout</div></div>
-        <div><div class="text-4xl font-black text-gold">49</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Anni di storia</div></div>
+        <div>
+            <div class="flex items-center justify-center gap-2 mb-1">
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="text-xl font-black text-green-400">Aperte</span>
+            </div>
+            <div class="text-xs uppercase tracking-widest opacity-60">Iscrizioni</div>
+        </div>
     </div>
 </div>
 
-<!-- ── TESTIMONIANZE GENITORI (marquee scorrevole, sotto la barra blu) ── -->
-<section id="sez-testimonianze" class="py-16 bg-white overflow-hidden">
-    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
-        <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
-        <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
-    </div>
-    <!-- nastro scorrevole: popolato da lead.js, nascosto se non ci sono recensioni -->
-    <div id="testi-marquee" class="testi-marquee hidden mb-10">
-        <div id="testi-track" class="testi-track"></div>
-    </div>
-    <!-- stato vuoto: invito finché non ci sono recensioni approvate -->
-    <div id="testi-empty" class="max-w-xl mx-auto px-6 text-center mb-10">
-        <div class="text-5xl mb-4">💛</div>
-        <p class="text-gray-500 leading-relaxed">
-            Sei una famiglia del Brescia 7? <strong class="text-scout">Sii il primo a raccontare la tua esperienza.</strong><br>
-            Bastano due righe: aiuterai altri genitori a scegliere con serenità.
-        </p>
-    </div>
-    <div class="text-center">
-        <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
-            <i class="fas fa-pen"></i> Racconta la tua esperienza
-        </button>
+<!-- ── LE TRE FASCE D'ETÀ ─────────────────────────────────────────── -->
+<section class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-10">
+            <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">Il percorso scout</div>
+            <h2 class="text-2xl md:text-4xl font-black text-scout">Tuo figlio ha <span class="text-gold">quanti anni?</span></h2>
+            <p class="text-gray-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed">Abbiamo un'unità per ogni fascia d'età, dagli 8 ai 21 anni.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-amber-50 border border-amber-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+                <div class="w-12 h-12 bg-amber-400 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-star text-white text-lg"></i>
+                </div>
+                <div class="text-xs font-black uppercase tracking-widest text-amber-600 mb-1">8 – 11 anni</div>
+                <h3 class="text-xl font-black text-scout mb-2">Cerchio</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Giochi in natura, lavoro di squadra e prime avventure. I più piccoli imparano a esplorare il mondo con curiosità.</p>
+                <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+                <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-compass text-white text-lg"></i>
+                </div>
+                <div class="text-xs font-black uppercase tracking-widest text-emerald-600 mb-1">12 – 16 anni</div>
+                <h3 class="text-xl font-black text-scout mb-2">Reparto</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Uscite in autonomia, orientamento, tecniche di campo e primo soccorso. Responsabilità crescenti in piccoli gruppi.</p>
+                <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
+            </div>
+            <div class="bg-blue-50 border border-blue-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+                <div class="w-12 h-12 bg-scout rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-hands-helping text-white text-lg"></i>
+                </div>
+                <div class="text-xs font-black uppercase tracking-widest text-blue-600 mb-1">17 – 21 anni</div>
+                <h3 class="text-xl font-black text-scout mb-2">Clan</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Servizio alla comunità, grandi spedizioni e scelte di vita. I rover costruiscono la propria strada con autonomia.</p>
+                <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <a href="unita.html" class="inline-flex items-center gap-2 text-scout font-black text-sm border-2 border-scout px-6 py-3 rounded-full hover:bg-scout hover:text-white transition">
+                <i class="fas fa-info-circle"></i> Approfondisci le unità
+            </a>
+        </div>
     </div>
 </section>
 
 <!-- ── SCOUT A BRESCIA (testo + foto reali) ── -->
 <section class="py-20 bg-gray-50 border-t border-gray-100">
     <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-        <!-- Testo -->
         <div>
             <div class="inline-block bg-scout/5 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Scout a Brescia</div>
             <h2 class="text-2xl md:text-4xl font-black text-scout mb-6 leading-tight">Crescere all'aria aperta, dal 1977</h2>
@@ -896,7 +926,6 @@
                 Un'alternativa allo sport che fa crescere <strong>autonomia, amicizie vere e fiducia in sé</strong>.
             </p>
         </div>
-        <!-- Collage foto reali -->
         <div class="grid grid-cols-2 gap-3 sm:gap-4">
             <img src="images/foto-cerchio.webp" alt="Lupetti del Cerchio durante un'attività all'aperto" loading="lazy"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm">
@@ -907,6 +936,92 @@
             <img src="images/foto-comunita.webp" alt="Il distintivo Brescia 7 durante un momento di comunità" loading="lazy"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm mt-6 sm:mt-10">
         </div>
+    </div>
+</section>
+
+<!-- ── DOMANDE FREQUENTI ──────────────────────────────────────────── -->
+<section class="py-20 bg-white border-t border-gray-100">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="text-center mb-10">
+            <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">FAQ</div>
+            <h2 class="text-2xl md:text-4xl font-black text-scout">Le domande più frequenti</h2>
+        </div>
+        <div class="space-y-3">
+            <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    <span class="font-bold text-scout pr-6">A che età si può iniziare?</span>
+                    <i class="fas fa-plus faq-icon text-gold flex-shrink-0 text-sm"></i>
+                </button>
+                <div class="faq-answer">
+                    <div class="px-5 pb-5 text-gray-500 text-sm leading-relaxed">
+                        I bambini entrano nel <strong>Cerchio</strong> a partire dagli <strong>8 anni</strong>. Il percorso continua con il Reparto (12–16) e il Clan (17–21). Chi ha già 12 o più anni entra direttamente nell'unità corrispondente.
+                    </div>
+                </div>
+            </div>
+            <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    <span class="font-bold text-scout pr-6">Quanto costa l'iscrizione?</span>
+                    <i class="fas fa-plus faq-icon text-gold flex-shrink-0 text-sm"></i>
+                </button>
+                <div class="faq-answer">
+                    <div class="px-5 pb-5 text-gray-500 text-sm leading-relaxed">
+                        La quota copre l'intero anno scout: iscrizione, assicurazione AGESCI e attività del sabato. È <strong>inferiore alla maggior parte delle attività sportive</strong>, senza rette mensili. Campi e uscite si pagano a parte. È prevista la rateizzazione per chi ne ha bisogno. <a href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20sapere%20la%20quota%20annuale." target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('faq_home_costi')" class="text-scout font-semibold hover:underline">Chiedici la cifra su WhatsApp.</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    <span class="font-bold text-scout pr-6">Bisogna essere cattolici?</span>
+                    <i class="fas fa-plus faq-icon text-gold flex-shrink-0 text-sm"></i>
+                </button>
+                <div class="faq-answer">
+                    <div class="px-5 pb-5 text-gray-500 text-sm leading-relaxed">
+                        AGESCI è un'associazione cattolica e la proposta educativa cristiana è parte del metodo. Accogliamo tutti con spirito aperto: il modo migliore per capire se fa per voi è venire a una riunione di prova, senza impegno.
+                    </div>
+                </div>
+            </div>
+            <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    <span class="font-bold text-scout pr-6">Quando si svolgono le riunioni?</span>
+                    <i class="fas fa-plus faq-icon text-gold flex-shrink-0 text-sm"></i>
+                </button>
+                <div class="faq-answer">
+                    <div class="px-5 pb-5 text-gray-500 text-sm leading-relaxed">
+                        Il <strong>sabato pomeriggio</strong> alla Parrocchia S. Angela Merici, <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="text-scout font-semibold hover:underline">Via Cimabue 271, San Polo</a>. Ogni unità può avere orari leggermente diversi — <a href="calendario.html" class="text-scout font-semibold hover:underline">vedi il calendario</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <a href="faq.html" class="inline-flex items-center gap-2 text-scout font-bold text-sm hover:underline">
+                Tutte le domande frequenti <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIANZE GENITORI (marquee scorrevole) ── -->
+<section id="sez-testimonianze" class="py-16 bg-gray-50 overflow-hidden border-t border-gray-100">
+    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
+        <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
+        <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
+    </div>
+    <div id="testi-marquee" class="testi-marquee mb-10">
+        <div id="testi-track" class="testi-track">
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
+            <i class="fas fa-pen"></i> Racconta la tua esperienza
+        </button>
     </div>
 </section>
 
@@ -952,7 +1067,7 @@
             Un sabato pomeriggio con noi, <strong class="text-white">senza alcun impegno</strong>: tuo figlio o tua figlia
             partecipa alle attività, tu conosci i capi e ti fai un'idea dal vivo.
         </p>
-        <p class="text-white/50 text-sm mb-10">Ci troviamo il sabato alla Parrocchia S. Angela Merici, Via Cimabue 271 (San Polo).</p>
+        <p class="text-white/50 text-sm mb-10">Ci troviamo il sabato alla Parrocchia S. Angela Merici, <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="underline hover:text-white/80 transition">Via Cimabue 271, San Polo</a>.</p>
         <div class="flex flex-wrap gap-4 justify-center">
             <a href="https://wa.me/393408740678?text=Ciao!%20Vorremmo%20venire%20a%20provare%20un%20sabato%20con%20gli%20scout.%20Quando%20possiamo%20passare%3F"
                target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('prova_sabato')"
@@ -1002,7 +1117,7 @@
                 <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Dove siamo</h4>
                 <div class="text-gray-400 text-sm space-y-4">
                     <div class="flex items-start gap-3"><i class="fas fa-church text-gold mt-0.5 w-4 flex-shrink-0"></i><span>Parrocchia S. Angela Merici</span></div>
-                    <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 flex-shrink-0"></i><span>Via Cimabue, 271<br>25134 – Brescia (BS)</span></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="hover:text-white transition">Via Cimabue, 271<br>25134 – Brescia (BS)</a></div>
                     <div class="flex items-start gap-3"><i class="fas fa-envelope text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a></div>
                     <div class="flex items-start gap-3"><i class="fas fa-phone text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a></div>
                     <div class="flex items-start gap-3"><i class="fab fa-whatsapp text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20informazioni%20sulle%20attivit%C3%A0%20scout%20del%20Brescia%207." target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('footer')" class="hover:text-white transition">Scrivici su WhatsApp</a></div>
@@ -1091,6 +1206,16 @@
         document.getElementById('pre-error').classList.add('hidden');
     };
     /* submitPreIscrizione: vedi assets/lead.js */
+
+    // ── FAQ accordion ────────────────────────────────────────────────
+    function toggleFaq(btn) {
+        const answer = btn.nextElementSibling;
+        const icon   = btn.querySelector('.faq-icon');
+        const isOpen = answer.classList.contains('open');
+        document.querySelectorAll('.faq-answer').forEach(el => el.classList.remove('open'));
+        document.querySelectorAll('.faq-icon').forEach(el => el.classList.remove('open'));
+        if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+    }
 </script>
 
 <!-- Firebase SDK -->
