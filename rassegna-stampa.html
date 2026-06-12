@@ -149,69 +149,79 @@
     <div class="max-w-4xl mx-auto text-center">
         <div class="inline-block bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Media &amp; Stampa</div>
         <h1 class="text-4xl md:text-6xl font-black mb-4">Parlano di noi</h1>
-        <p class="text-white/70 text-lg max-w-2xl mx-auto">Le principali testate giornalistiche bresciane e nazionali che hanno raccontato le storie del nostro gruppo.</p>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto">Le voci delle famiglie e le testate giornalistiche che raccontano il Gruppo Scout Brescia 7.</p>
     </div>
 </div>
 
-<!-- STORIA IN EVIDENZA: ANTONIO BERTOLI -->
-<section class="py-20 bg-amber-50 border-b border-amber-100">
+<!-- ── TESTIMONIANZE GENITORI ──────────────────────────────────── -->
+<section id="sez-testimonianze" class="py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="flex items-center gap-3 mb-10">
+            <div class="w-1.5 h-8 bg-gold rounded-full"></div>
+            <div>
+                <div class="text-xs font-black uppercase tracking-widest text-gold">La parola ai genitori</div>
+                <h2 class="text-2xl md:text-3xl font-black text-scout">Cosa dicono le famiglie</h2>
+            </div>
+        </div>
+        <!-- griglia recensioni approvate (popolata da lead.js) -->
+        <div id="testi-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
+        <!-- stato vuoto: mostrato finché non ci sono recensioni approvate -->
+        <div id="testi-empty" class="max-w-xl mx-auto text-center mb-10">
+            <div class="text-5xl mb-4">💛</div>
+            <p class="text-gray-500 leading-relaxed">
+                Sei una famiglia del Brescia 7? <strong class="text-scout">Sii il primo a raccontare la tua esperienza.</strong><br>
+                Bastano due righe: aiuterai altri genitori a scegliere con serenità.
+            </p>
+        </div>
+        <div class="text-center">
+            <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
+                <i class="fas fa-pen"></i> Racconta la tua esperienza
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL TESTIMONIANZA -->
+<div id="modal-testi" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTestiModal()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-6 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
+    <button onclick="closeTestiModal()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition" aria-label="Chiudi"><i class="fas fa-times text-sm"></i></button>
+    <div class="text-center mb-5">
+      <div class="w-12 h-12 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-quote-left text-scout text-xl"></i></div>
+      <h3 class="text-xl font-black text-scout">La tua esperienza</h3>
+      <p class="text-gray-400 text-xs mt-1">Verrà pubblicata dopo una rapida verifica dei capi</p>
+    </div>
+    <form id="form-testi" novalidate class="space-y-3">
+      <input type="text" id="testi-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div><label class="form-label">Il tuo nome (basta quello di battesimo) *</label><input type="text" id="testi-nome" required maxlength="40" placeholder="Es. Laura" class="input-field"></div>
+      <div><label class="form-label">Chi sei per noi</label><input type="text" id="testi-ruolo" maxlength="60" placeholder="Es. mamma di un lupetto" class="input-field"></div>
+      <div>
+        <label class="form-label">La tua frase *</label>
+        <textarea id="testi-testo" required maxlength="300" rows="4" placeholder="Cosa è cambiato per tuo figlio o tua figlia da quando fa scoutismo?" class="input-field" oninput="document.getElementById('testi-count').textContent=this.value.length+'/300'"></textarea>
+        <div id="testi-count" class="text-right text-xs text-gray-400 mt-1">0/300</div>
+      </div>
+      <p id="testi-error" class="text-red-500 text-xs hidden">Scrivi il tuo nome e la frase.</p>
+      <button type="button" onclick="submitTestimonianza()" class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia</button>
+    </form>
+    <div id="testi-success" class="hidden text-center py-4">
+      <div class="text-5xl mb-3">💛</div>
+      <h4 class="text-xl font-black text-scout mb-2">Grazie!</h4>
+      <p class="text-gray-500 text-sm">La tua testimonianza è arrivata ai capi:<br>apparirà sul sito dopo l'approvazione.</p>
+      <button onclick="closeTestiModal()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ── RASSEGNA STAMPA ─────────────────────────────────────────── -->
+<section class="py-20 bg-gray-50 border-t border-gray-100">
     <div class="max-w-6xl mx-auto px-6">
 
         <div class="flex items-center gap-3 mb-10 reveal">
             <div class="w-1.5 h-8 bg-gold rounded-full"></div>
             <div>
-                <div class="text-xs font-black uppercase tracking-widest text-gold">Storia in evidenza · 2026</div>
-                <h2 class="text-2xl md:text-3xl font-black text-scout">Antonio Bertoli — Alfiere della Repubblica</h2>
-            </div>
-        </div>
-
-        <!-- Card grande evidenza -->
-        <div class="bg-white rounded-3xl shadow-xl overflow-hidden mb-12 reveal">
-            <div class="md:flex">
-                <!-- FOTO HD — da Giornale di Brescia, fallback locale -->
-                <div class="md:w-2/5 relative overflow-hidden min-h-[320px] md:min-h-[420px] bg-scout">
-                    <img id="hero-photo"
-                         src="images/antonio-mattarella.webp"
-                         alt="Antonio Bertoli con il Presidente Mattarella al Quirinale — Alfiere della Repubblica 2026"
-                         class="absolute inset-0 w-full h-full object-cover"
-                         style="object-position: center top;"
-                         onerror="this.src='images/antonio-bertoli.jpg'; this.onerror=function(){this.style.display='none';document.getElementById('photo-fallback').style.display='flex';};">
-                    <div id="photo-fallback" style="display:none" class="absolute inset-0 bg-gradient-to-br from-scout to-scout-mid flex items-center justify-center p-10">
-                        <div class="text-center text-white">
-                            <div class="text-8xl mb-3">🏅</div>
-                            <div class="font-black text-2xl mb-1">Antonio Bertoli</div>
-                            <div class="text-white/60 text-sm">12 anni · Scout Brescia 7</div>
-                        </div>
-                    </div>
-                    <!-- Overlay gradient + badge -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-5 pt-16">
-                        <div class="font-black text-white text-xl leading-tight mb-0.5">Antonio Bertoli</div>
-                        <div class="text-white/65 text-xs mb-3">Scout Brescia 7 · Quirinale, Maggio 2026</div>
-                        <span class="inline-flex items-center gap-1.5 bg-gold text-scout text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wide shadow-lg">
-                            🏅 Alfiere della Repubblica
-                        </span>
-                    </div>
-                    <!-- Credito foto -->
-                    <div class="absolute top-3 right-3 bg-black/40 text-white/60 text-[9px] px-2 py-0.5 rounded-full">
-                        © Il Giorno / Quirinale
-                    </div>
-                </div>
-                <!-- Testo -->
-                <div class="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
-                    <p class="text-gray-600 leading-relaxed mb-6 text-base">
-                        Antonio Bertoli, 12 anni, scout del Gruppo AGESCI Brescia 7, è stato nominato <strong class="text-scout">Alfiere della Repubblica</strong> dal Presidente Sergio Mattarella per il suo straordinario impegno a sostegno dei ragazzi con autismo. Ha partecipato per nove mesi al progetto <em>"Mild Autism – Gruppi per la promozione delle abilità sociali"</em>, dimostrando una solidarietà concreta e continuativa, diventando punto di riferimento per i suoi coetanei.
-                    </p>
-                    <blockquote class="border-l-4 border-gold bg-amber-50 pl-5 py-3 rounded-r-xl mb-6 text-sm text-gray-600 italic">
-                        "Antonio Bertoli: esempio di impegno, servizio e attenzione verso il prossimo."<br>
-                        <span class="text-gray-400 not-italic text-xs mt-1 block">— AGESCI nazionale</span>
-                    </blockquote>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="bg-scout/5 text-scout text-xs font-bold px-3 py-1.5 rounded-full border border-scout/10">Autismo</span>
-                        <span class="bg-scout/5 text-scout text-xs font-bold px-3 py-1.5 rounded-full border border-scout/10">Inclusione</span>
-                        <span class="bg-scout/5 text-scout text-xs font-bold px-3 py-1.5 rounded-full border border-scout/10">Quirinale</span>
-                        <span class="bg-scout/5 text-scout text-xs font-bold px-3 py-1.5 rounded-full border border-scout/10">Servizio</span>
-                    </div>
-                </div>
+                <div class="text-xs font-black uppercase tracking-widest text-gold">Rassegna stampa</div>
+                <h2 class="text-2xl md:text-3xl font-black text-scout">Hanno scritto di noi</h2>
             </div>
         </div>
 
