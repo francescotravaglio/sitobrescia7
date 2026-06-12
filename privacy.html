@@ -1,32 +1,34 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bacheca | Gruppo Scout AGESCI Brescia 7</title>
-    <meta name="description" content="Comunicazioni, avvisi e annunci del Gruppo Scout AGESCI Brescia 7.">
-    <link rel="canonical" href="https://agescibrescia7.com/bacheca.html">
-    <meta name="google-site-verification" content="t87HK9BnKuVXYPXU6CekSgJE78uAteIvuwoTqN3Vxig" />
+    <title>Privacy e Cookie Policy | AGESCI Brescia 7</title>
+    <meta name="description" content="Informativa privacy e cookie del sito del Gruppo Scout AGESCI Brescia 7: quali dati raccogliamo, come li usiamo e i tuoi diritti.">
+    <link rel="canonical" href="https://agescibrescia7.com/privacy.html">
+    <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1FFJ9ND0T"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});gtag('config','G-Y1FFJ9ND0T');</script>
     <link rel="stylesheet" href="assets/tailwind.css">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
         html { scroll-behavior: smooth; }
         .nav-link { position: relative; padding-bottom: 3px; }
         .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #fcc400; transition: width .3s; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .input-field { width: 100%; padding: .75rem 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; font-size: .875rem; transition: box-shadow .2s, border-color .2s; outline: none; font-family: 'Montserrat', sans-serif; }
-        .input-field:focus { border-color: #003366; box-shadow: 0 0 0 3px rgba(0,51,102,.1); }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+        .policy h2 { font-size: 1.25rem; font-weight: 900; color: #003366; margin: 2.5rem 0 .75rem; }
+        .policy h3 { font-size: 1rem; font-weight: 800; color: #1a5276; margin: 1.5rem 0 .5rem; }
+        .policy p, .policy li { color: #4b5563; font-size: .9rem; line-height: 1.7; }
+        .policy ul { list-style: disc; padding-left: 1.4rem; margin: .5rem 0 1rem; }
+        .policy a { color: #003366; font-weight: 600; text-decoration: underline; }
+        .policy table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .82rem; }
+        .policy th, .policy td { border: 1px solid #e5e7eb; padding: .6rem .8rem; text-align: left; vertical-align: top; }
+        .policy th { background: #f8fafc; color: #003366; font-weight: 800; }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -100,69 +102,101 @@
 </script>
 <!-- SITE-HEADER:END -->
 
-<!-- MODAL PRE-ISCRIZIONE -->
-<div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreIscrizione()"></div>
-  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
-  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-4 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
-    <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"><i class="fas fa-times text-sm"></i></button>
-    <div class="flex items-center gap-3 mb-3 sm:block sm:text-center sm:mb-6">
-      <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gold rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-3"><i class="fas fa-feather-alt text-scout text-lg sm:text-2xl"></i></div>
-      <div><h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Unisciti a noi</h3><p class="text-gray-400 text-xs sm:text-sm">Pre-iscrizione rapida</p></div>
-    </div>
-    <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug"><i class="fas fa-info-circle mr-1 text-amber-500"></i>Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione.</div>
-    <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
-      <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="grid grid-cols-2 gap-2 sm:gap-3">
-        <div><label class="form-label">Nome *</label><input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field"></div>
-        <div><label class="form-label">Cognome *</label><input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2 sm:gap-3">
-        <div><label class="form-label">Nome bambino/a *</label><input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field"></div>
-        <div><label class="form-label">Data di nascita *</label><input type="date" id="pre-bimbo-nascita" required class="input-field"></div>
-      </div>
-      <div><label class="form-label">Email genitore *</label><input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field"></div>
-      <div><label class="form-label">Telefono</label><input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field"></div>
-      <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
-      <button type="button" onclick="submitPreIscrizione()" class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia pre-iscrizione</button>
-    </form>
-    <div id="pre-success" class="hidden text-center py-4">
-      <div class="text-5xl mb-3">🎉</div>
-      <h4 class="text-xl font-black text-scout mb-2">Richiesta inviata!</h4>
-      <p class="text-gray-500 text-sm">Ti ricontatteremo presto con tutte le informazioni.<br>Buona strada!</p>
-      <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
-    </div>
-  </div></div>
-</div>
-
-<!-- PAGE HERO -->
+<!-- HERO -->
 <div class="bg-scout text-white py-16 px-6">
-    <div class="max-w-4xl mx-auto text-center">
-        <div class="inline-block bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Comunicazioni</div>
-        <h1 class="text-4xl md:text-6xl font-black mb-4">Bacheca</h1>
-        <p class="text-white/70 text-lg max-w-2xl mx-auto">Tutti gli avvisi, le comunicazioni e le notizie del gruppo.</p>
+    <div class="max-w-3xl mx-auto text-center">
+        <div class="inline-block bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Documento legale</div>
+        <h1 class="text-3xl md:text-5xl font-black mb-3">Privacy e Cookie Policy</h1>
+        <p class="text-white/60 text-sm">Ultimo aggiornamento: 12 giugno 2026</p>
     </div>
 </div>
 
-<!-- ANNUNCI -->
-<section class="py-20">
-    <div class="max-w-4xl mx-auto px-6">
-        <div id="annunci-container" class="space-y-6">
-            <!-- Loading -->
-            <div id="annunci-loading" class="text-center py-20 text-gray-400">
-                <i class="fas fa-spinner fa-spin text-3xl mb-4 text-scout/30"></i>
-                <p>Caricamento comunicazioni…</p>
-            </div>
-        </div>
-        <div id="annunci-empty" class="hidden text-center py-20">
-            <div class="text-6xl mb-4">📋</div>
-            <h3 class="text-xl font-black text-scout mb-2">Nessuna comunicazione</h3>
-            <p class="text-gray-400">Al momento non ci sono annunci pubblicati. Torna presto!</p>
-        </div>
-    </div>
-</section>
+<!-- CONTENUTO -->
+<main class="policy max-w-3xl mx-auto px-6 py-14">
 
-<!-- FOOTER -->
+    <p>La presente informativa descrive come il <strong>Gruppo Scout AGESCI Brescia 7</strong> tratta i dati personali
+    degli utenti che visitano il sito <strong>agescibrescia7.com</strong> e utilizzano i suoi moduli di contatto,
+    in conformità al Regolamento UE 2016/679 (GDPR) e alla normativa italiana vigente.</p>
+
+    <h2>1. Titolare del trattamento</h2>
+    <p>
+        Gruppo Scout AGESCI Brescia 7<br>
+        c/o Parrocchia S. Angela Merici – Via Cimabue, 271 – 25134 Brescia (BS)<br>
+        Email: <a href="mailto:info@agescibrescia7.com">info@agescibrescia7.com</a> · Tel: +39 340 874 0678
+    </p>
+    <p>Il gruppo fa parte dell'<a href="https://www.agesci.it" target="_blank" rel="noopener">AGESCI</a>
+    (Associazione Guide e Scouts Cattolici Italiani).</p>
+
+    <h2>2. Quali dati raccogliamo</h2>
+    <p>Raccogliamo solo i dati che ci fornisci volontariamente compilando i moduli del sito, oltre ad alcuni
+    dati tecnici di navigazione:</p>
+    <table>
+        <thead><tr><th>Modulo / strumento</th><th>Dati raccolti</th><th>Finalità</th></tr></thead>
+        <tbody>
+            <tr><td>Pre-iscrizione</td><td>Nome e cognome del genitore, nome e data di nascita del bambino/ragazzo, email, telefono</td><td>Gestire la richiesta di pre-iscrizione e ricontattare la famiglia</td></tr>
+            <tr><td>Iscrizione (Area Soci)</td><td>Dati anagrafici del socio e del genitore, recapiti</td><td>Perfezionare l'iscrizione al gruppo</td></tr>
+            <tr><td>Testimonianze</td><td>Nome (di battesimo) e testo della recensione</td><td>Pubblicazione sul sito, previa approvazione</td></tr>
+            <tr><td>Contatti (email/WhatsApp)</td><td>I dati che scegli di comunicarci</td><td>Rispondere alle tue domande</td></tr>
+            <tr><td>Google Analytics</td><td>Dati di navigazione anonimizzati (pagine viste, dispositivo, area geografica approssimativa)</td><td>Statistiche aggregate per migliorare il sito — solo previo consenso</td></tr>
+        </tbody>
+    </table>
+
+    <h2>3. Base giuridica e conservazione</h2>
+    <p>Il trattamento si basa sul tuo <strong>consenso</strong> (moduli e cookie analitici) e sul nostro
+    <strong>legittimo interesse</strong> a rispondere alle richieste ricevute. I dati dei moduli sono conservati
+    per il tempo necessario a gestire la richiesta e, in caso di iscrizione, per la durata del rapporto associativo
+    secondo i regolamenti AGESCI. I dati statistici di Analytics sono conservati in forma aggregata.</p>
+
+    <h2>4. A chi comunichiamo i dati</h2>
+    <p>Non vendiamo né cediamo i tuoi dati. Per il funzionamento del sito ci avvaliamo di alcuni fornitori
+    che agiscono come responsabili del trattamento:</p>
+    <ul>
+        <li><strong>Google (Firebase / Firestore)</strong> — archiviazione sicura dei dati inviati dai moduli;</li>
+        <li><strong>Google Analytics</strong> — statistiche di navigazione (solo con consenso);</li>
+        <li><strong>EmailJS</strong> — invio delle email di notifica e conferma;</li>
+        <li><strong>GitHub Pages</strong> — hosting del sito.</li>
+    </ul>
+    <p>Alcuni di questi fornitori hanno sede negli Stati Uniti: il trasferimento avviene nel rispetto delle
+    garanzie previste dal GDPR (clausole contrattuali standard e/o adesione ai framework di adeguatezza vigenti).</p>
+
+    <h2>5. Cookie</h2>
+    <p>Un cookie è un piccolo file salvato sul tuo dispositivo. Questo sito utilizza:</p>
+    <h3>Cookie tecnici (sempre attivi)</h3>
+    <p>Necessari al funzionamento del sito e a ricordare le tue scelte (es. la preferenza sui cookie).
+    Non richiedono consenso e non tracciano la tua attività.</p>
+    <h3>Cookie e strumenti analitici (solo con consenso)</h3>
+    <p>Usiamo <strong>Google Analytics 4</strong> per capire come viene usato il sito. Questi strumenti si attivano
+    <strong>solo dopo il tuo consenso</strong> tramite il banner: fino ad allora, grazie a Google Consent Mode,
+    nessun cookie di tracciamento viene installato.</p>
+    <p>Puoi cambiare idea in qualsiasi momento:</p>
+    <p>
+        <button onclick="if(window.riapriCookie)riapriCookie()" class="inline-flex items-center gap-2 bg-scout text-white font-bold px-5 py-2.5 rounded-full text-sm hover:bg-scout-dark transition no-underline">
+            <i class="fas fa-cookie-bite"></i> Gestisci le preferenze cookie
+        </button>
+    </p>
+
+    <h2>6. Dati dei minori</h2>
+    <p>I dati relativi a bambini e ragazzi sono forniti esclusivamente dai genitori o da chi ne esercita la
+    responsabilità genitoriale, che dichiara di averne titolo. Non raccogliamo direttamente dati dai minori.</p>
+
+    <h2>7. I tuoi diritti</h2>
+    <p>In qualsiasi momento puoi chiederci di <strong>accedere</strong>, <strong>rettificare</strong>,
+    <strong>cancellare</strong> i tuoi dati, oppure di <strong>limitarne</strong> o <strong>opporti</strong> al trattamento,
+    e revocare il consenso prestato. Per esercitare questi diritti scrivi a
+    <a href="mailto:info@agescibrescia7.com">info@agescibrescia7.com</a>. Hai inoltre il diritto di proporre reclamo
+    al <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
+
+    <h2>8. Modifiche</h2>
+    <p>Questa informativa può essere aggiornata nel tempo. La versione in vigore è sempre quella pubblicata su
+    questa pagina, con la data di ultimo aggiornamento indicata in alto.</p>
+
+    <div class="mt-12 pt-8 border-t border-gray-100 text-center">
+        <a href="index.html" class="inline-flex items-center gap-2 text-scout font-bold text-sm no-underline hover:gap-3 transition-all">
+            <i class="fas fa-arrow-left text-xs"></i> Torna alla home
+        </a>
+    </div>
+</main>
+
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
 <footer id="contatti" class="bg-gray-950 text-white">
     <div class="max-w-7xl mx-auto px-6 py-20">
@@ -238,113 +272,7 @@ function toggleMobileMenu() {
 window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('shadow-lg', window.scrollY > 40);
 });
-window.openPreIscrizione = function() { document.getElementById('modal-pre').classList.remove('hidden'); document.body.style.overflow = 'hidden'; };
-window.closePreIscrizione = function() {
-    document.getElementById('modal-pre').classList.add('hidden'); document.body.style.overflow = '';
-    document.getElementById('form-pre').reset();
-    document.getElementById('form-pre').classList.remove('hidden');
-    document.getElementById('pre-success').classList.add('hidden');
-    document.getElementById('pre-error').classList.add('hidden');
-};
 </script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-<script>
-firebase.initializeApp({ apiKey:"AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III", authDomain:"agescibrescia7-508b0.firebaseapp.com", projectId:"agescibrescia7-508b0", storageBucket:"agescibrescia7-508b0.firebasestorage.app", messagingSenderId:"738190317173", appId:"1:738190317173:web:6ee596fc6e09494f04ca3c" });
-window.db = firebase.firestore();
-
-// Mappa categoria (admin) → stile visivo
-const CAT_COLORS = {
-    urgente:  'bg-red-50 border-red-200 text-red-700',
-    news:     'bg-blue-50 border-blue-200 text-blue-700',
-    evento:   'bg-purple-50 border-purple-200 text-purple-700',
-    info:     'bg-amber-50 border-amber-200 text-amber-700',
-};
-const CAT_LABELS = { urgente:'Urgente', news:'Notizia', evento:'Evento', info:'Info' };
-const CAT_ICONS  = { urgente:'fas fa-exclamation-triangle', news:'fas fa-newspaper', evento:'fas fa-calendar-star', info:'fas fa-info-circle' };
-const DEFAULT_CLS = 'bg-gray-50 border-gray-200 text-gray-500';
-
-// Carica annunci da Firestore e ordina per timestamp decrescente
-window.db.collection('annunci').get().then(snap => {
-    document.getElementById('annunci-loading').remove();
-    const container = document.getElementById('annunci-container');
-    const docs = [];
-    snap.forEach(doc => docs.push({ _id: doc.id, ...doc.data() }));
-    // ordina per timestamp ISO decrescente
-    docs.sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
-    if (docs.length === 0) { document.getElementById('annunci-empty').classList.remove('hidden'); return; }
-    let cardIdx = 0;
-    docs.forEach(d => {
-        const cat  = (d.categoria || 'info').toLowerCase();
-        const cls  = CAT_COLORS[cat] || DEFAULT_CLS;
-        const lbl  = CAT_LABELS[cat] || cat;
-        const ico  = CAT_ICONS[cat]  || 'fas fa-bell';
-        // timestamp è stringa ISO es. "2026-06-09T14:30:00.000Z"
-        const data = d.timestamp ? new Date(d.timestamp).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : '';
-        const testo    = (d.testo || '').trim();
-        const LIMIT    = 200;
-        const corto    = testo.length > LIMIT ? testo.substring(0, LIMIT).replace(/\n/g,'<br>') + '…' : testo.replace(/\n/g,'<br>');
-        const lungo    = testo.replace(/\n/g,'<br>');
-        const haMore   = testo.length > LIMIT;
-        const idx      = cardIdx++;
-        const linkHtml = d.link ? `<a href="${d.link}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-scout font-semibold text-sm hover:underline mt-3"><i class="fas fa-external-link-alt text-xs"></i>Approfondisci</a>` : '';
-        container.insertAdjacentHTML('beforeend', `
-          <div class="border rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-            <div class="p-6">
-              <div class="flex items-start justify-between gap-4 flex-wrap mb-4">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${cls} border">
-                    <i class="${ico} text-xs"></i>${lbl}
-                  </span>
-                  ${d.unita ? `<span class="text-xs font-semibold text-scout bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">${d.unita}</span>` : ''}
-                </div>
-                ${data ? `<span class="text-xs text-gray-400 whitespace-nowrap">${data}</span>` : ''}
-              </div>
-              <h3 class="text-xl font-black text-scout mb-3 leading-snug">${d.titolo || '(senza titolo)'}</h3>
-              ${testo ? `
-                <div id="testo-short-${idx}" class="text-gray-600 text-sm leading-relaxed">${corto}</div>
-                <div id="testo-full-${idx}"  class="text-gray-600 text-sm leading-relaxed hidden">${lungo}</div>
-                ${haMore ? `
-                  <button onclick="toggleTesto(${idx})" id="btn-${idx}"
-                    class="mt-3 inline-flex items-center gap-1.5 text-scout font-semibold text-sm hover:underline">
-                    <i class="fas fa-chevron-down text-xs transition-transform" id="ico-${idx}"></i>
-                    <span id="lbl-${idx}">Leggi tutto</span>
-                  </button>` : ''}
-                ${linkHtml}
-              ` : `<p class="text-gray-400 text-sm italic">Nessun testo disponibile.</p>${linkHtml}`}
-            </div>
-          </div>`);
-    });
-    window.toggleTesto = function(idx) {
-        const s = document.getElementById('testo-short-' + idx);
-        const f = document.getElementById('testo-full-'  + idx);
-        const b = document.getElementById('btn-'  + idx);
-        const i = document.getElementById('ico-'  + idx);
-        const l = document.getElementById('lbl-'  + idx);
-        const open = !f.classList.contains('hidden');
-        if (open) { f.classList.add('hidden'); s.classList.remove('hidden'); l.textContent='Leggi tutto'; i.style.transform=''; }
-        else       { s.classList.add('hidden'); f.classList.remove('hidden'); l.textContent='Chiudi'; i.style.transform='rotate(180deg)'; }
-    };
-}).catch(err => {
-    console.error(err);
-    document.getElementById('annunci-loading').innerHTML = '<p class="text-red-400 text-center py-10">Errore nel caricamento degli annunci.</p>';
-});
-
-/* submitPreIscrizione: vedi assets/lead.js */
-</script>
-
-<!-- TORNA SU -->
-<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
-  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
-  <i class="fas fa-chevron-up text-sm"></i>
-</button>
-<script>
-(function(){
-  var b=document.getElementById('top-btn');
-  window.addEventListener('scroll',function(){ if(window.scrollY>400){b.classList.remove('opacity-0','pointer-events-none');}else{b.classList.add('opacity-0','pointer-events-none');} });
-})();
-</script>
-<script src="assets/lead.js"></script>
 <script src="assets/cookie-consent.js"></script>
 </body>
 </html>

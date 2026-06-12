@@ -75,11 +75,11 @@ window.trackWhatsApp = function(origine) {
 
     function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-    // carica e mostra solo le approvate (sezione nascosta se nessuna)
+    // carica le recensioni approvate; la sezione è sempre visibile (con stato vuoto invitante)
     window.db.collection('testimonianze').get().then(snap => {
         const ok = [];
         snap.forEach(d => { const t = d.data(); if (t.approvata) ok.push(t); });
-        if (!ok.length) return;
+        if (!ok.length) return;                       // resta lo stato vuoto + bottone
         ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
         document.getElementById('testi-grid').innerHTML = ok.slice(0,6).map(t => `
             <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col">
@@ -90,7 +90,8 @@ window.trackWhatsApp = function(origine) {
                     ${t.ruolo ? '<span class="text-gray-400"> · ' + esc(t.ruolo) + '</span>' : ''}
                 </div>
             </div>`).join('');
-        document.getElementById('sez-testimonianze').classList.remove('hidden');
+        var empty = document.getElementById('testi-empty');
+        if (empty) empty.classList.add('hidden');     // nascondi l'invito quando ci sono recensioni
     }).catch(e => console.error('[testimonianze]', e));
 
     window.openTestiModal = function(){ document.getElementById('modal-testi').classList.remove('hidden'); document.body.style.overflow='hidden'; };

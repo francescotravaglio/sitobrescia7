@@ -43,7 +43,7 @@
                 '<div style="font-size:1.6rem;line-height:1;flex-shrink:0">🍪</div>' +
                 '<div style="flex:1">' +
                     '<div style="font-weight:900;color:#003366;font-size:.95rem;margin-bottom:.25rem">Rispettiamo la tua privacy</div>' +
-                    '<p style="color:#6b7280;font-size:.8rem;line-height:1.45;margin:0 0 .9rem">Usiamo cookie tecnici (sempre attivi) e, solo col tuo consenso, Google Analytics per capire come migliorare il sito. Puoi cambiare idea quando vuoi.</p>' +
+                    '<p style="color:#6b7280;font-size:.8rem;line-height:1.45;margin:0 0 .9rem">Usiamo cookie tecnici (sempre attivi) e, solo col tuo consenso, Google Analytics per capire come migliorare il sito. Leggi la <a href="privacy.html" style="color:#003366;font-weight:700;text-decoration:underline">Privacy &amp; Cookie Policy</a>.</p>' +
                     '<div style="display:flex;gap:.6rem;flex-wrap:wrap">' +
                         '<button id="cookie-ok" style="background:#003366;color:#fff;font-weight:800;font-size:.8rem;border:none;border-radius:.7rem;padding:.6rem 1.2rem;cursor:pointer">Accetta tutti</button>' +
                         '<button id="cookie-no" style="background:#f3f4f6;color:#374151;font-weight:700;font-size:.8rem;border:none;border-radius:.7rem;padding:.6rem 1.2rem;cursor:pointer">Solo necessari</button>' +
