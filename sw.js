@@ -1,4 +1,4 @@
-const CACHE = 'bs7-v1';
+const CACHE = 'bs7-v2';
 const SHELL = [
     './area-soci.html',
     './index.html',
@@ -7,6 +7,9 @@ const SHELL = [
     './icon-192.png',
     './icon-512.png',
 ];
+
+// admin.html non va mai cachato: deve sempre arrivare fresco dalla rete
+const NO_CACHE = ['admin.html', 'import-soci.html'];
 
 self.addEventListener('install', e => {
     e.waitUntil(
@@ -28,6 +31,8 @@ self.addEventListener('fetch', e => {
     const url = e.request.url;
     if (url.includes('firestore.googleapis') || url.includes('googleapis') ||
         url.includes('calendar.google') || url.includes('gstatic')) return;
+    // pagine riservate: sempre dalla rete, mai dalla cache del SW
+    if (NO_CACHE.some(p => url.includes(p))) return;
 
     e.respondWith(
         caches.match(e.request).then(cached => {
