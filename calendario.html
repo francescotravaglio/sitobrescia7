@@ -158,30 +158,31 @@
         </div>
 
         <!-- Calendario mensile -->
-        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
-            <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-b border-gray-100">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-scout rounded-lg flex items-center justify-center"><i class="fas fa-calendar-alt text-white text-sm"></i></div>
-                    <span class="font-bold text-scout text-sm">Calendario Gruppo Scout AGESCI Brescia 7</span>
+        <div style="background:#fff;border-radius:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;border:1px solid #f3f4f6">
+            <!-- Header -->
+            <div style="background:#f9fafb;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f3f4f6">
+                <div style="display:flex;align-items:center;gap:.75rem">
+                    <div style="width:2rem;height:2rem;background:#003366;border-radius:.5rem;display:flex;align-items:center;justify-content:center"><i class="fas fa-calendar-alt" style="color:#fff;font-size:.75rem"></i></div>
+                    <span style="font-weight:800;color:#003366;font-size:.875rem">Calendario Gruppo Scout AGESCI Brescia 7</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="calPrev()" aria-label="Mese precedente" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 text-gray-500 transition"><i class="fas fa-chevron-left text-xs"></i></button>
-                    <span id="cal-month-label" class="font-black text-scout text-sm w-36 text-center"></span>
-                    <button onclick="calNext()" aria-label="Mese successivo" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 text-gray-500 transition"><i class="fas fa-chevron-right text-xs"></i></button>
+                <div style="display:flex;align-items:center;gap:.5rem">
+                    <button onclick="calPrev()" aria-label="Mese precedente" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-left"></i></button>
+                    <span id="cal-month-label" style="font-weight:900;color:#003366;font-size:.9rem;min-width:9rem;text-align:center"></span>
+                    <button onclick="calNext()" aria-label="Mese successivo" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
             <!-- Intestazioni giorni -->
-            <div class="grid grid-cols-7 border-b border-gray-100 bg-gray-50">
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Lun</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Mar</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Mer</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Gio</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Ven</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2 text-blue-400">Sab</div>
-                <div class="text-center text-xs font-black text-gray-400 uppercase py-2 text-red-400">Dom</div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #f3f4f6;background:#f9fafb">
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Lun</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mar</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mer</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Gio</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Ven</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;padding:.5rem 0">Sab</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#ef4444;text-transform:uppercase;padding:.5rem 0">Dom</div>
             </div>
             <!-- Griglia giorni -->
-            <div id="cal-grid" class="grid grid-cols-7 border-l border-t border-gray-100">
+            <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr)">
                 <!-- Renderizzata via JS -->
             </div>
         </div>
@@ -241,25 +242,30 @@
             evByDate[ev.data].push(ev);
         });
 
+        var cellBase = 'min-height:5rem;padding:6px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;box-sizing:border-box;';
         var html = '';
         for (var i = 0; i < startDow; i++) {
-            html += '<div class="min-h-[4.5rem] p-1 border-b border-r border-gray-100 bg-gray-50/60"></div>';
+            html += '<div style="'+cellBase+'background:#fafafa"></div>';
         }
         for (var d = 1; d <= last.getDate(); d++) {
             var dateStr = year+'-'+pad(month+1)+'-'+pad(d);
             var isToday = dateStr === todayStr;
             var evs = evByDate[dateStr] || [];
-            html += '<div class="min-h-[4.5rem] p-1.5 border-b border-r border-gray-100 '+(isToday?'bg-amber-50':'')+'">';
-            html += '<div class="text-xs font-bold mb-1 '+(isToday?'w-6 h-6 rounded-full bg-scout text-white flex items-center justify-center':'text-gray-400')+'">'+(isToday?'<span>'+d+'</span>':d)+'</div>';
+            html += '<div style="'+cellBase+(isToday?'background:#fffbeb;':'')+'">';
+            if (isToday) {
+                html += '<div style="width:1.5rem;height:1.5rem;border-radius:50%;background:#003366;color:#fff;font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:4px">'+d+'</div>';
+            } else {
+                html += '<div style="font-size:.7rem;font-weight:700;color:#9ca3af;margin-bottom:4px">'+d+'</div>';
+            }
             evs.forEach(function(ev) {
                 var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
-                html += '<div style="background:'+col+'" class="text-white text-[10px] font-semibold px-1.5 py-0.5 rounded mb-0.5 truncate cursor-default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
+                html += '<div style="background:'+col+';color:#fff;font-size:10px;font-weight:600;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
             });
             html += '</div>';
         }
         var total = startDow + last.getDate();
         var rem = total % 7;
-        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div class="min-h-[4.5rem] p-1 border-b border-r border-gray-100 bg-gray-50/60"></div>';
+        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div style="'+cellBase+'background:#fafafa"></div>';
         document.getElementById('cal-grid').innerHTML = html;
     }
 
