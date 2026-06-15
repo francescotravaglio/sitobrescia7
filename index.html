@@ -858,14 +858,6 @@
         <span class="opacity-40 mx-1">·</span>
         <button onclick="openPreIscrizione()" class="text-gold hover:text-white transition underline underline-offset-2">Iscriviti ora</button>
     </div>
-    <div class="py-10">
-        <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div class="text-4xl font-black text-gold">1977</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Fondazione</div></div>
-            <div><div class="text-4xl font-black text-gold">~100</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Soci attivi</div></div>
-            <div><div class="text-4xl font-black text-gold">3</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Unità scout</div></div>
-            <div><div class="text-lg font-black text-gold leading-tight">Ogni<br>sabato</div><div class="text-xs uppercase tracking-widest opacity-60 mt-1">Riunioni settimanali</div></div>
-        </div>
-    </div>
 </div>
 
 <!-- ── LE TRE FASCE D'ETÀ ─────────────────────────────────────────── -->
@@ -891,9 +883,9 @@
                 <p class="text-gray-500 text-sm leading-relaxed">Uscite in autonomia, orientamento, tecniche di campo e primo soccorso. Responsabilità crescenti in piccoli gruppi.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
             </div>
-            <div class="bg-blue-50 border border-blue-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+            <div class="bg-red-50 border border-red-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
                 <img src="images/logo-rs.png" alt="Logo Clan" class="w-14 h-14 object-contain mb-4">
-                <div class="text-xs font-black uppercase tracking-widest text-blue-600 mb-1">17 – 21 anni</div>
+                <div class="text-xs font-black uppercase tracking-widest text-red-600 mb-1">17 – 21 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Clan</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Servizio alla comunità, grandi spedizioni e scelte di vita. I rover costruiscono la propria strada con autonomia.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
@@ -904,6 +896,31 @@
                 <i class="fas fa-info-circle"></i> Approfondisci le unità
             </a>
         </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIANZE GENITORI (marquee scorrevole) ── -->
+<section id="sez-testimonianze" class="py-16 bg-gray-50 overflow-hidden border-t border-gray-100">
+    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
+        <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
+        <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
+    </div>
+    <div id="testi-marquee" class="testi-marquee mb-10">
+        <div id="testi-track" class="testi-track">
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
+            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
+            <i class="fas fa-pen"></i> Racconta la tua esperienza
+        </button>
     </div>
 </section>
 
@@ -995,31 +1012,6 @@
                 Tutte le domande frequenti <i class="fas fa-arrow-right text-xs"></i>
             </a>
         </div>
-    </div>
-</section>
-
-<!-- ── TESTIMONIANZE GENITORI (marquee scorrevole) ── -->
-<section id="sez-testimonianze" class="py-16 bg-gray-50 overflow-hidden border-t border-gray-100">
-    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
-        <div class="inline-block bg-gold/20 text-amber-600 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
-        <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
-    </div>
-    <div id="testi-marquee" class="testi-marquee mb-10">
-        <div id="testi-track" class="testi-track">
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-gold text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
-        </div>
-    </div>
-    <div class="text-center">
-        <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
-            <i class="fas fa-pen"></i> Racconta la tua esperienza
-        </button>
     </div>
 </section>
 
