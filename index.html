@@ -128,9 +128,6 @@
     <!-- Preconnect critici -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://www.gstatic.com">
 
     <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NJR3QFZP7"></script>
@@ -1231,10 +1228,11 @@
     }
 </script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<!-- Firebase SDK: defer per non bloccare il rendering -->
+<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 <script>
+window.addEventListener('load', function() {
     firebase.initializeApp({
         apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
         authDomain: "agescibrescia7-508b0.firebaseapp.com",
@@ -1312,6 +1310,7 @@
                 '&ctz=Europe%2FRome&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=MONTH&bgcolor=%23ffffff';
         }
     }).catch(function() {});
+}); // end window.addEventListener('load')
 </script>
 <script>
 (function() {
@@ -1332,7 +1331,7 @@
     resetTimer();
 })();
 </script>
-<script src="assets/lead.js"></script>
-<script src="assets/cookie-consent.js"></script>
+<script defer src="assets/lead.js"></script>
+<script defer src="assets/cookie-consent.js"></script>
 </body>
 </html>
