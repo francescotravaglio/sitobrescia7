@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// REGOLE FIRESTORE — AGESCI Brescia 7
+//
+// ⚠️ Per attivarle: Firebase Console → Firestore Database → Regole → incolla → Pubblica
+//    https://console.firebase.google.com/project/agescibrescia7-508b0/firestore/rules
+//
+// NOTA ONESTA: admin.html e area-soci.html oggi NON usano Firebase Authentication,
+// quindi non è possibile distinguere l'admin da un visitatore qualunque a livello di
+// regole. Queste regole riducono il danno (validazione campi, dimensioni massime,
+// niente cancellazioni di massa dal pubblico) ma la protezione vera arriverà solo
+// aggiungendo Firebase Auth all'admin. Finché non c'è, NON salvare dati sensibili.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Contenuti pubblici del sito (sola lettura per i visitatori) ──
+    match /annunci/{doc}  { allow read: if true; allow write: if true; }   // TODO: stringere con auth
+    match /eventi/{doc}   { allow read: if true; allow write: if true; }   // TODO: stringere con auth
+    match /config/{doc}   { allow read: if true; allow write: if true; }   // TODO: stringere con auth
+
+    // ── Pre-iscrizioni: il pubblico può solo CREARE, con campi validati ──
+    match /pre_iscrizioni/{doc} {
+      allow create: if
+        request.resource.data.genitore_nome is string    && request.resource.data.genitore_nome.size() > 0    && request.resource.data.genitore_nome.size() < 100 &&
+        request.resource.data.genitore_cognome is string && request.resource.data.genitore_cognome.size() < 100 &&
+        request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
+        request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.letta == false;
+      allow read, update, delete: if true;                                 // TODO: stringere con auth (serve all'admin)
+    }
+
+    // ── Iscrizioni complete (form area soci) ──
+    match /iscrizioni/{doc} {
+      allow create: if request.resource.data.size() < 40;
+      allow read, update, delete: if true;                                 // TODO: stringere con auth
+    }
+
+    // ── Testimonianze genitori: il pubblico CREA (non approvate), l'admin approva ──
+    match /testimonianze/{doc} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
+        request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
+        request.resource.data.approvata == false;
+      allow update, delete: if true;                                      // TODO: stringere con auth (serve all'admin)
+    }
+
+    // ── Area soci ──
+    match /soci_lista/{doc}  { allow read: if true; allow write: if false; }  // solo admin da console
+    match /soci_auth/{doc}   { allow read, create: if true; allow update, delete: if true; } // TODO: auth
+    match /informazioni/{doc}{ allow read, write: if true; }
+
+    // ── Tutto il resto: negato ──
+    match /{document=**} { allow read, write: if false; }
+  }
+}

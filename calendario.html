@@ -1,0 +1,437 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario attività scout a Brescia | AGESCI Brescia 7</title>
+    <meta name="description" content="Il calendario delle attività del Gruppo Scout AGESCI Brescia 7: riunioni, uscite, campi ed eventi.">
+    <link rel="canonical" href="https://agescibrescia7.com/calendario.html">
+    <meta name="google-site-verification" content="t87HK9BnKuVXYPXU6CekSgJE78uAteIvuwoTqN3Vxig" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NJR3QFZP7"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});gtag('config','G-4NJR3QFZP7');</script>
+    <link rel="stylesheet" href="assets/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- tailwind.config ora in tailwind.config.js (build statica) -->
+    <style>
+        html { scroll-behavior: smooth; }
+        .nav-link { position: relative; padding-bottom: 3px; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #fcc400; transition: width .3s; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .input-field { width: 100%; padding: .75rem 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; font-size: .875rem; transition: box-shadow .2s, border-color .2s; outline: none; font-family: 'Montserrat', sans-serif; }
+        .input-field:focus { border-color: #003366; box-shadow: 0 0 0 3px rgba(0,51,102,.1); }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+<!-- SITE-HEADER:START (generato da build.js — modificare partials/header.html) -->
+<!-- TOP BAR -->
+<div class="bg-scout text-white text-xs py-2 hidden md:block">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="opacity-70 hover:opacity-100 hover:text-gold transition"><i class="fas fa-map-marker-alt mr-1.5 text-gold"></i>Parrocchia S. Angela Merici – Via Cimabue 271, Brescia</a>
+        <div class="flex items-center gap-6 opacity-80">
+            <a href="mailto:info@agescibrescia7.com" class="hover:text-gold transition"><i class="fas fa-envelope mr-1.5"></i>info@agescibrescia7.com</a>
+            <a href="tel:+393408740678" class="hover:text-gold transition"><i class="fas fa-phone mr-1.5"></i>+39 340 874 0678</a>
+            <div class="flex gap-3 border-l border-white/20 pl-6">
+                <a href="https://www.instagram.com/agesci_brescia7" target="_blank" aria-label="Instagram AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-instagram text-base"></i></a>
+                <a href="https://www.facebook.com/scoutbrescia7" target="_blank" aria-label="Facebook AGESCI Brescia 7" rel="noopener" class="hover:text-gold transition"><i class="fab fa-facebook text-base"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar" class="bg-white sticky top-0 z-50 border-b border-gray-100 transition-shadow">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
+                <div class="hidden sm:block leading-tight">
+                    <div class="font-black text-scout text-lg">BRESCIA 7</div>
+                    <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
+                </div>
+            </a>
+            <div class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-600">
+                <a href="chi-siamo.html"        class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="unita.html"            class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="bacheca.html"          class="nav-link hover:text-scout transition">Bacheca</a>
+                <a href="calendario.html"       class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="faq.html"              class="nav-link hover:text-scout transition">FAQ</a>
+                <a href="rassegna-stampa.html"  class="nav-link hover:text-scout transition">Parlano di noi</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="area-soci.html" class="hidden lg:flex items-center gap-2 bg-scout text-white font-black px-5 py-2.5 rounded-full text-sm hover:bg-scout-dark transition shadow-md border border-scout/30">
+                    <i class="fas fa-lock text-xs"></i> Area Soci
+                </a>
+                <button onclick="toggleMobileMenu()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
+        <div class="px-6 py-6 flex flex-col gap-1">
+            <a href="chi-siamo.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="unita.html"            class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="bacheca.html"          class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Bacheca</a>
+            <a href="calendario.html"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="faq.html"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
+            <a href="rassegna-stampa.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Parlano di noi</a>
+            <a href="area-soci.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold flex items-center gap-2"><i class="fas fa-lock text-xs"></i> Area Soci</a>
+        </div>
+    </div>
+</nav>
+<style>.nav-link.active{color:#003366}.nav-link.active::after{width:100%}</style>
+<script>
+// evidenzia il link della pagina corrente
+(function(){
+    var page = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('#navbar a.nav-link').forEach(function(a){
+        if (a.getAttribute('href') === page) a.classList.add('active');
+    });
+})();
+</script>
+<!-- SITE-HEADER:END -->
+
+<!-- MODAL PRE-ISCRIZIONE -->
+<div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreIscrizione()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-4 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
+    <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"><i class="fas fa-times text-sm"></i></button>
+    <div class="flex items-center gap-3 mb-3 sm:block sm:text-center sm:mb-6">
+      <div class="w-10 h-10 sm:w-14 sm:h-14 bg-gold rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-3"><i class="fas fa-feather-alt text-scout text-lg sm:text-2xl"></i></div>
+      <div><h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Ricevi tutte le informazioni</h3><p class="text-gray-400 text-xs sm:text-sm">Senza alcun impegno</p></div>
+    </div>
+    <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug"><i class="fas fa-info-circle mr-1 text-amber-500"></i>Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione.</div>
+    <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
+      <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div><label class="form-label">Nome *</label><input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field"></div>
+        <div><label class="form-label">Cognome *</label><input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div><label class="form-label">Nome bambino/a *</label><input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field"></div>
+        <div><label class="form-label">Data di nascita *</label><input type="date" id="pre-bimbo-nascita" required class="input-field"></div>
+      </div>
+      <div><label class="form-label">Email genitore *</label><input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field"></div>
+      <div><label class="form-label">Telefono</label><input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field"></div>
+      <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
+      <button type="button" onclick="submitPreIscrizione()" class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia richiesta</button>
+    </form>
+    <div id="pre-success" class="hidden text-center py-4">
+      <div class="text-5xl mb-3">🎉</div>
+      <h4 class="text-xl font-black text-scout mb-2">Richiesta inviata!</h4>
+      <p class="text-gray-500 text-sm">Ti ricontatteremo presto con tutte le informazioni.<br>Buona strada!</p>
+      <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="bg-scout text-white py-16 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-block bg-gold/20 text-gold text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Attività e appuntamenti</div>
+        <h1 class="text-4xl md:text-6xl font-black mb-4">Calendario</h1>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto">Tutte le riunioni, le uscite, i campi e gli eventi del gruppo in un unico posto.</p>
+    </div>
+</div>
+
+<!-- CALENDARIO -->
+<section class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <!-- Legenda unità -->
+        <div class="flex flex-wrap gap-3 mb-6 justify-center">
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span style="width:12px;height:12px;border-radius:50%;background:#9ca3af;display:inline-block"></span>Tutto il gruppo</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span style="width:12px;height:12px;border-radius:50%;background:#eab308;display:inline-block"></span>Cerchio</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span style="width:12px;height:12px;border-radius:50%;background:#22c55e;display:inline-block"></span>Reparto</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span style="width:12px;height:12px;border-radius:50%;background:#ef4444;display:inline-block"></span>Clan</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span style="width:12px;height:12px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Capi</span>
+        </div>
+
+        <!-- Calendario mensile -->
+        <div style="background:#fff;border-radius:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;border:1px solid #f3f4f6">
+            <!-- Header -->
+            <div style="background:#f9fafb;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f3f4f6">
+                <div style="display:flex;align-items:center;gap:.75rem">
+                    <div style="width:2rem;height:2rem;background:#003366;border-radius:.5rem;display:flex;align-items:center;justify-content:center"><i class="fas fa-calendar-alt" style="color:#fff;font-size:.75rem"></i></div>
+                    <span style="font-weight:800;color:#003366;font-size:.875rem">Calendario Gruppo Scout AGESCI Brescia 7</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:.5rem">
+                    <button onclick="calPrev()" aria-label="Mese precedente" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-left"></i></button>
+                    <span id="cal-month-label" style="font-weight:900;color:#003366;font-size:.9rem;min-width:9rem;text-align:center"></span>
+                    <button onclick="calNext()" aria-label="Mese successivo" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <!-- Intestazioni giorni -->
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #f3f4f6;background:#f9fafb">
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Lun</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mar</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mer</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Gio</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Ven</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;padding:.5rem 0">Sab</div>
+                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#ef4444;text-transform:uppercase;padding:.5rem 0">Dom</div>
+            </div>
+            <!-- Griglia giorni -->
+            <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr)">
+                <!-- Renderizzata via JS -->
+            </div>
+        </div>
+
+        <!-- Prossimi eventi -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-black text-scout mb-6">Prossimi eventi</h2>
+            <div id="eventi-prossimi" class="space-y-3">
+                <div class="text-center text-gray-400 py-12 text-sm">Caricamento eventi…</div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="mt-10 grid md:grid-cols-2 gap-6">
+            <div class="bg-amber-50 rounded-2xl p-6 flex items-start gap-4">
+                <div class="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-scout text-sm"></i></div>
+                <div>
+                    <h4 class="font-bold text-scout text-sm mb-1">Hai domande?</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Per info sulle attività scrivi a <a href="mailto:info@agescibrescia7.com" class="text-scout font-semibold hover:underline">info@agescibrescia7.com</a>.</p>
+                </div>
+            </div>
+            <div class="bg-green-50 rounded-2xl p-6 flex items-start gap-4">
+                <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-list-check text-white text-sm"></i></div>
+                <div>
+                    <h4 class="font-bold text-scout text-sm mb-1">Bacheca annunci</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Leggi gli avvisi importanti nella <a href="bacheca.html" class="text-scout font-semibold hover:underline">Bacheca comunicazioni</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+    const UNITA_COLOR = { tutto:'#9ca3af', cerchio:'#eab308', reparto:'#22c55e', clan:'#ef4444', capi:'#7c3aed' };
+    const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', capi:'Capi' };
+
+    var cur = new Date();
+    var year = cur.getFullYear(), month = cur.getMonth();
+    var eventiAll = [];
+
+    function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+    function pad(n) { return n < 10 ? '0'+n : n; }
+
+    function renderCalendar() {
+        document.getElementById('cal-month-label').textContent = MESI[month] + ' ' + year;
+        var first = new Date(year, month, 1);
+        var last  = new Date(year, month+1, 0);
+        var startDow = (first.getDay() + 6) % 7; // Mon=0
+        var todayStr = cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate());
+
+        var evByDate = {};
+        eventiAll.forEach(function(ev) {
+            var start = new Date(ev.data);
+            var end   = ev.data_fine ? new Date(ev.data_fine) : start;
+            for (var t = new Date(start); t <= end; t.setDate(t.getDate()+1)) {
+                var k = t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());
+                if (!evByDate[k]) evByDate[k] = [];
+                // evita duplicati se l'evento è già in quella data
+                if (!evByDate[k].find(function(x){ return x.id === ev.id; })) evByDate[k].push(ev);
+            }
+        });
+
+        var cellBase = 'min-height:5rem;padding:6px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;box-sizing:border-box;';
+        var html = '';
+        for (var i = 0; i < startDow; i++) {
+            html += '<div style="'+cellBase+'background:#fafafa"></div>';
+        }
+        for (var d = 1; d <= last.getDate(); d++) {
+            var dateStr = year+'-'+pad(month+1)+'-'+pad(d);
+            var isToday = dateStr === todayStr;
+            var evs = evByDate[dateStr] || [];
+            html += '<div style="'+cellBase+(isToday?'background:#fffbeb;':'')+'">';
+            if (isToday) {
+                html += '<div style="width:1.5rem;height:1.5rem;border-radius:50%;background:#003366;color:#fff;font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:4px">'+d+'</div>';
+            } else {
+                html += '<div style="font-size:.7rem;font-weight:700;color:#9ca3af;margin-bottom:4px">'+d+'</div>';
+            }
+            evs.forEach(function(ev) {
+                var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
+                html += '<div style="background:'+col+';color:#fff;font-size:10px;font-weight:600;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
+            });
+            html += '</div>';
+        }
+        var total = startDow + last.getDate();
+        var rem = total % 7;
+        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div style="'+cellBase+'background:#fafafa"></div>';
+        document.getElementById('cal-grid').innerHTML = html;
+    }
+
+    function renderProssimi() {
+        var now = new Date(); now.setHours(0,0,0,0);
+        var upcoming = eventiAll
+            .filter(function(ev){ return new Date(ev.data) >= now; })
+            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); })
+            .slice(0, 10);
+        var el = document.getElementById('eventi-prossimi');
+        if (!upcoming.length) {
+            el.innerHTML = '<div class="text-center text-gray-400 py-12 text-sm">Nessun evento in programma. Torna presto!</div>';
+            return;
+        }
+        el.innerHTML = upcoming.map(function(ev) {
+            var d = new Date(ev.data);
+            var day = pad(d.getDate());
+            var mon = d.toLocaleDateString('it-IT',{month:'short'}).toUpperCase().replace('.','');
+            var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
+            var label = UNITA_LABEL[ev.unita] || 'Tutto il gruppo';
+            var dateStr = ev.data_fine
+                ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})
+                : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long'});
+            return '<div class="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">'
+                + '<div class="flex-shrink-0 text-center w-14 rounded-xl p-2" style="background:#f0f4fa">'
+                +   '<div class="text-2xl font-black leading-none" style="color:#003366">'+day+'</div>'
+                +   '<div class="text-xs font-bold" style="color:#fcc400">'+mon+'</div>'
+                + '</div>'
+                + '<div class="flex-1 min-w-0">'
+                +   '<div class="font-black text-sm" style="color:#003366">'+esc(ev.titolo)+'</div>'
+                +   '<div class="text-xs mt-0.5" style="color:#9ca3af">'+dateStr+'</div>'
+                +   (ev.luogo ? '<div class="text-xs mt-1" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</div>' : '')
+                +   (ev.descrizione ? '<div class="text-xs mt-1.5 leading-relaxed" style="color:#6b7280">'+esc(ev.descrizione)+'</div>' : '')
+                + '</div>'
+                + '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px;flex-shrink:0;align-self:flex-start">'+esc(label)+'</span>'
+                + '</div>';
+        }).join('');
+    }
+
+    window.calPrev = function() { month--; if (month < 0) { month = 11; year--; } renderCalendar(); };
+    window.calNext = function() { month++; if (month > 11) { month = 0; year++; } renderCalendar(); };
+
+    renderCalendar(); // prima render struttura (senza eventi)
+
+    window.addEventListener('load', function() {
+        if (!window.db) return;
+        window.db.collection('eventi').get().then(function(snap) {
+            eventiAll = snap.docs.map(function(doc){ return doc.data(); });
+            renderCalendar();
+            renderProssimi();
+        }).catch(function(e){ console.error('[cal]', e); renderProssimi(); });
+    });
+})();
+</script>
+
+<!-- FOOTER -->
+<!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
+<footer id="contatti" class="bg-gray-950 text-white">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-5">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-16 w-16 rounded-full overflow-hidden bg-white flex-shrink-0 flex items-center justify-center"><img src="logo.png" alt="BS7" class="h-14 w-14 object-contain"></div>
+                    <div><div class="font-black text-xl">BRESCIA 7</div><div class="text-gray-500 text-xs uppercase tracking-widest">Gruppo Scout AGESCI</div></div>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">Dal 1977 educhiamo i giovani di Brescia secondo i valori dello scautismo: avventura, servizio e fede. La nostra sede è a San Polo.</p>
+                <div class="flex gap-3">
+                    <a href="https://www.instagram.com/agesci_brescia7" target="_blank" aria-label="Instagram AGESCI Brescia 7" rel="noopener" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fab fa-instagram text-lg"></i></a>
+                    <a href="https://www.facebook.com/scoutbrescia7" target="_blank" aria-label="Facebook AGESCI Brescia 7" rel="noopener" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fab fa-facebook text-lg"></i></a>
+                    <a href="mailto:info@agescibrescia7.com" aria-label="Email AGESCI Brescia 7" class="bg-white/8 hover:bg-white/15 p-3 rounded-xl transition text-gray-300 hover:text-white"><i class="fas fa-envelope text-lg"></i></a>
+                </div>
+            </div>
+            <div class="md:col-span-3">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="chi-siamo.html"        class="hover:text-white transition">Chi siamo</a></li>
+                    <li><a href="unita.html"            class="hover:text-white transition">Le Unità</a></li>
+                    <li><a href="bacheca.html"          class="hover:text-white transition">Bacheca</a></li>
+                    <li><a href="calendario.html"       class="hover:text-white transition">Calendario</a></li>
+                    <li><a href="faq.html"              class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="rassegna-stampa.html"  class="hover:text-white transition">Parlano di noi</a></li>
+                    <li><a href="area-soci.html"        class="hover:text-white transition">Area Soci</a></li>
+                    <li><a href="documenti.html"        class="hover:text-white transition">Modulistica</a></li>
+                </ul>
+            </div>
+            <div class="md:col-span-4">
+                <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Dove siamo</h4>
+                <div class="text-gray-400 text-sm space-y-4">
+                    <div class="flex items-start gap-3"><i class="fas fa-church text-gold mt-0.5 w-4 flex-shrink-0"></i><span>Parrocchia S. Angela Merici</span></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-map-marker-alt text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="hover:text-white transition">Via Cimabue, 271<br>25134 – Brescia (BS)</a></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-envelope text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="mailto:info@agescibrescia7.com" class="hover:text-white transition">info@agescibrescia7.com</a></div>
+                    <div class="flex items-start gap-3"><i class="fas fa-phone text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="tel:+393408740678" class="hover:text-white transition">+39 340 874 0678</a></div>
+                    <div class="flex items-start gap-3"><i class="fab fa-whatsapp text-gold mt-0.5 w-4 flex-shrink-0"></i><a href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20informazioni%20sulle%20attivit%C3%A0%20scout%20del%20Brescia%207." target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('footer')" class="hover:text-white transition">Scrivici su WhatsApp</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
+            <div class="flex items-center gap-4">
+                <a href="privacy.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Privacy &amp; Cookie</a>
+                <button onclick="if(window.riapriCookie)riapriCookie()" class="text-xs text-gray-700 hover:text-gray-500 transition">Gestisci cookie</button>
+                <a href="admin.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
+                <span class="font-scout text-xl text-gold/50 italic">Semel Scout, Semper Scout</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- WHATSAPP FLOTTANTE -->
+<a href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20informazioni%20sulle%20attivit%C3%A0%20scout%20del%20Brescia%207."
+   target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp"
+   onclick="if(window.trackWhatsApp)trackWhatsApp('flottante')"
+   class="fixed bottom-6 left-6 z-50 flex items-center gap-2 text-white font-bold rounded-full shadow-2xl pl-3.5 pr-5 py-3 hover:scale-105 transition-transform"
+   style="background:#25D366">
+    <i class="fab fa-whatsapp text-2xl"></i>
+    <span class="text-sm hidden sm:inline">Scrivici</span>
+</a>
+<!-- SITE-FOOTER:END -->
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const icon = document.getElementById('menu-icon');
+    const isOpen = !menu.classList.contains('hidden');
+    menu.classList.toggle('hidden');
+    var mb=document.getElementById('menu-btn'); if(mb) mb.setAttribute('aria-expanded', String(!isOpen));
+    icon.className = isOpen ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+}
+window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('shadow-lg', window.scrollY > 40);
+});
+window.openPreIscrizione = function() { document.getElementById('modal-pre').classList.remove('hidden'); document.body.style.overflow = 'hidden'; };
+window.closePreIscrizione = function() {
+    document.getElementById('modal-pre').classList.add('hidden'); document.body.style.overflow = '';
+    document.getElementById('form-pre').reset();
+    document.getElementById('form-pre').classList.remove('hidden');
+    document.getElementById('pre-success').classList.add('hidden');
+    document.getElementById('pre-error').classList.add('hidden');
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({ apiKey:"AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III", authDomain:"agescibrescia7-508b0.firebaseapp.com", projectId:"agescibrescia7-508b0", storageBucket:"agescibrescia7-508b0.firebasestorage.app", messagingSenderId:"738190317173", appId:"1:738190317173:web:6ee596fc6e09494f04ca3c" });
+window.db = firebase.firestore();
+/* submitPreIscrizione: vedi assets/lead.js */
+</script>
+
+<!-- TORNA SU -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
+  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
+  <i class="fas fa-chevron-up text-sm"></i>
+</button>
+<script>
+(function(){
+  var b=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){ if(window.scrollY>400){b.classList.remove('opacity-0','pointer-events-none');}else{b.classList.add('opacity-0','pointer-events-none');} });
+})();
+</script>
+<script src="assets/lead.js"></script>
+<script src="assets/cookie-consent.js"></script>
+</body>
+</html>
