@@ -121,6 +121,17 @@
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <!-- Preload LCP image -->
+    <link rel="preload" as="image" href="images/montagna.jpg" fetchpriority="high">
+
+    <!-- Preconnect critici -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+
     <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NJR3QFZP7"></script>
     <script>
@@ -130,12 +141,17 @@
         gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});
         gtag('config', 'G-4NJR3QFZP7');
     </script>
+
+    <!-- CSS critico -->
     <link rel="stylesheet" href="assets/tailwind.css">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome: non bloccante -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+
+    <!-- EmailJS: defer per non bloccare il rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" onload="emailjs.init('2-7fs3VQpyEDJMonD')"></script>
     <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
         html { scroll-behavior: smooth; }
@@ -271,7 +287,7 @@
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between items-center h-20">
             <a href="index.html" class="flex items-center gap-3">
-                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto">
+                <img src="logo.png" alt="AGESCI Brescia 7" class="h-12 w-auto" width="48" height="48" fetchpriority="high">
                 <div class="hidden sm:block leading-tight">
                     <div class="font-black text-scout text-lg">BRESCIA 7</div>
                     <div class="text-gray-400 text-xs tracking-widest uppercase">Gruppo Scout AGESCI</div>
@@ -871,21 +887,21 @@
         </div>
         <div class="grid md:grid-cols-3 gap-6">
             <div class="bg-amber-50 border border-amber-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
-                <img src="images/logo-lc.png" alt="Logo Cerchio" class="w-14 h-14 object-contain mb-4">
+                <img src="images/logo-lc.png" alt="Logo Cerchio" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-amber-600 mb-1">8 – 11 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Cerchio</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Giochi in natura, lavoro di squadra e prime avventure. I più piccoli imparano a esplorare il mondo con curiosità.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
             </div>
             <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
-                <img src="images/logo-eg.png" alt="Logo Reparto" class="w-14 h-14 object-contain mb-4">
+                <img src="images/logo-eg.png" alt="Logo Reparto" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-emerald-600 mb-1">12 – 16 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Reparto</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Uscite in autonomia, orientamento, tecniche di campo e primo soccorso. Responsabilità crescenti in piccoli gruppi.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
             </div>
             <div class="bg-red-50 border border-red-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
-                <img src="images/logo-rs.png" alt="Logo Clan" class="w-14 h-14 object-contain mb-4">
+                <img src="images/logo-rs.png" alt="Logo Clan" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-red-600 mb-1">17 – 21 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Clan</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Servizio alla comunità, grandi spedizioni e scelte di vita. I rover costruiscono la propria strada con autonomia.</p>
@@ -943,13 +959,13 @@
             </p>
         </div>
         <div class="grid grid-cols-2 gap-3 sm:gap-4">
-            <img src="images/foto-cerchio.webp" alt="Lupetti del Cerchio durante un'attività all'aperto" loading="lazy"
+            <img src="images/foto-cerchio.webp" alt="Lupetti del Cerchio durante un'attività all'aperto" loading="lazy" width="400" height="208"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm">
-            <img src="images/foto-montagna.webp" alt="Scout del Brescia 7 in montagna" loading="lazy"
+            <img src="images/foto-montagna.webp" alt="Scout del Brescia 7 in montagna" loading="lazy" width="400" height="208"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm mt-6 sm:mt-10">
-            <img src="images/foto-campo.webp" alt="Ragazze al campo estivo sotto la tenda" loading="lazy"
+            <img src="images/foto-campo.webp" alt="Ragazze al campo estivo sotto la tenda" loading="lazy" width="400" height="208"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm">
-            <img src="images/foto-comunita.webp" alt="Il distintivo Brescia 7 durante un momento di comunità" loading="lazy"
+            <img src="images/foto-comunita.webp" alt="Il distintivo Brescia 7 durante un momento di comunità" loading="lazy" width="400" height="208"
                  class="rounded-2xl object-cover w-full h-40 sm:h-52 shadow-sm mt-6 sm:mt-10">
         </div>
     </div>
