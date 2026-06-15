@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>Admin – AGESCI Brescia 7</title>
+    <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="assets/tailwind.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,6 +103,11 @@
 
         <div class="text-left space-y-4 mb-6">
             <div>
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="admin@agescibrescia7.com"
+                       onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div>
                 <label>Password</label>
                 <div class="relative">
                     <input type="password" id="login-pw" placeholder="••••••••"
@@ -111,7 +119,7 @@
             </div>
         </div>
 
-        <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Password errata. Riprova.</p>
+        <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Credenziali non valide. Riprova.</p>
 
         <button onclick="doLogin()"
                 class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
@@ -729,21 +737,16 @@
 
 // ── Costanti ─────────────────────────────────────────────────────
 const KEYS = {
-    pw:         'bs7_admin_pw',
     richieste:  'bs7_richieste',
     eventi:     'bs7_eventi',
     annunci:    'bs7_annunci',
     gcal:       'bs7_gcal_id',
     config:     'bs7_config',
-    logged:     'bs7_logged',
 };
-
-const DEFAULT_PW = 'bs7admin';
 
 // ── Helpers ──────────────────────────────────────────────────────
 const get  = key => JSON.parse(localStorage.getItem(key) || 'null');
 const set  = (key, val) => localStorage.setItem(key, JSON.stringify(val));
-const getPw = () => get(KEYS.pw) || DEFAULT_PW;
 
 function fmtDate(iso) {
     if (!iso) return '—';
@@ -768,25 +771,28 @@ function toast(msg, ok = true) {
     setTimeout(() => el.remove(), 3000);
 }
 
-// ── Login ────────────────────────────────────────────────────────
+// ── Login (Firebase Auth) ─────────────────────────────────────────
 function doLogin() {
-    const val = document.getElementById('login-pw').value;
-    if (val === getPw()) {
-        set(KEYS.logged, true);
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('app').classList.remove('hidden');
-        document.getElementById('app').classList.add('flex');
-        setupFirestoreListener();
-    } else {
-        document.getElementById('login-error').classList.remove('hidden');
-        document.getElementById('login-pw').value = '';
-        document.getElementById('login-pw').focus();
+    const email = document.getElementById('login-email').value.trim();
+    const pw    = document.getElementById('login-pw').value;
+    const errEl = document.getElementById('login-error');
+    errEl.classList.add('hidden');
+    if (!email || !pw) {
+        errEl.textContent = 'Inserisci email e password.';
+        errEl.classList.remove('hidden');
+        return;
     }
+    firebase.auth().signInWithEmailAndPassword(email, pw)
+        .catch(() => {
+            errEl.textContent = 'Credenziali non valide. Riprova.';
+            errEl.classList.remove('hidden');
+            document.getElementById('login-pw').value = '';
+            document.getElementById('login-pw').focus();
+        });
 }
 
 function logout() {
-    set(KEYS.logged, false);
-    location.reload();
+    firebase.auth().signOut();
 }
 
 function togglePw() {
@@ -799,20 +805,20 @@ function togglePw() {
     }
 }
 
-// Auto-login se già loggato
-if (get(KEYS.logged)) {
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('app').classList.remove('hidden');
-        document.getElementById('app').classList.add('flex');
-        setupFirestoreListener();
-        refreshAll();
-    });
-}
-
+// Auth state observer — unica fonte di verità per login/logout
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('login-pw').addEventListener('keydown', e => {
-        if (e.key === 'Enter') doLogin();
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('app').classList.add('flex');
+            setupFirestoreListener();
+            refreshAll();
+        } else {
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('app').classList.add('hidden');
+            document.getElementById('app').classList.remove('flex');
+        }
     });
     loadConfig();
 });
@@ -1225,11 +1231,11 @@ function openRichiesta(id) {
 
     const d = r.dati || {};
     const isMin = r.tipo === 'minorenne';
-    const emailVal = d.email || d.gen1_email || '';
-    const telVal   = d.telefono || d.gen1_tel || '';
+    const emailVal = escapeHtml(d.email || d.gen1_email || '');
+    const telVal   = escapeHtml(d.telefono || d.gen1_tel || '');
     const nomeVal  = isMin
-        ? `${d.nome || '—'} ${d.cognome || ''} <span class="text-xs text-gray-400">(Genitore: ${d.gen1_nome || ''} ${d.gen1_cognome || ''})</span>`
-        : `${d.nome || '—'} ${d.cognome || ''}`;
+        ? `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')} <span class="text-xs text-gray-400">(Genitore: ${escapeHtml(d.gen1_nome || '')} ${escapeHtml(d.gen1_cognome || '')})</span>`
+        : `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')}`;
     document.getElementById('modal-body').innerHTML = `
         <div class="space-y-4 text-sm">
             <div class="grid grid-cols-2 gap-3">
@@ -1256,7 +1262,7 @@ function openRichiesta(id) {
             </div>
             ${d.messaggio ? `<div class="bg-blue-50 rounded-xl p-4">
                 <div class="text-xs text-gray-400 mb-2">Messaggio</div>
-                <p class="text-gray-700 leading-relaxed">${d.messaggio}</p>
+                <p class="text-gray-700 leading-relaxed">${escapeHtml(d.messaggio)}</p>
             </div>` : ''}
             <div class="text-xs text-gray-400 pt-2">Ricevuto: ${fmtDatetime(r.timestamp)}</div>
             <div class="flex gap-3 pt-2">
@@ -1508,26 +1514,33 @@ function changePw() {
 
     msg.classList.remove('hidden', 'text-green-600', 'text-red-500');
 
-    if (old !== getPw()) {
-        msg.textContent = '❌ Password attuale errata.';
-        msg.classList.add('text-red-500');
-        return;
-    }
     if (nw.length < 6) {
         msg.textContent = '❌ La nuova password deve avere almeno 6 caratteri.';
-        msg.classList.add('text-red-500');
-        return;
+        msg.classList.add('text-red-500'); return;
     }
     if (nw !== confirm) {
         msg.textContent = '❌ Le password non coincidono.';
-        msg.classList.add('text-red-500');
-        return;
+        msg.classList.add('text-red-500'); return;
     }
-    set(KEYS.pw, nw);
-    ['pw-old','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
-    msg.textContent = '✅ Password aggiornata con successo.';
-    msg.classList.add('text-green-600');
-    toast('Password cambiata!');
+
+    const user = firebase.auth().currentUser;
+    if (!user) { msg.textContent = '❌ Sessione scaduta. Rieffettua il login.'; msg.classList.add('text-red-500'); return; }
+
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, old);
+    user.reauthenticateWithCredential(credential)
+        .then(() => user.updatePassword(nw))
+        .then(() => {
+            ['pw-old','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+            msg.textContent = '✅ Password aggiornata con successo.';
+            msg.classList.add('text-green-600');
+            toast('Password cambiata!');
+        })
+        .catch(err => {
+            msg.textContent = err.code === 'auth/wrong-password'
+                ? '❌ Password attuale errata.'
+                : '❌ Errore: ' + err.message;
+            msg.classList.add('text-red-500');
+        });
 }
 
 function exportData() {
@@ -1721,6 +1734,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 <script>
 firebase.initializeApp({
