@@ -238,8 +238,14 @@
 
         var evByDate = {};
         eventiAll.forEach(function(ev) {
-            if (!evByDate[ev.data]) evByDate[ev.data] = [];
-            evByDate[ev.data].push(ev);
+            var start = new Date(ev.data);
+            var end   = ev.data_fine ? new Date(ev.data_fine) : start;
+            for (var t = new Date(start); t <= end; t.setDate(t.getDate()+1)) {
+                var k = t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());
+                if (!evByDate[k]) evByDate[k] = [];
+                // evita duplicati se l'evento è già in quella data
+                if (!evByDate[k].find(function(x){ return x.id === ev.id; })) evByDate[k].push(ev);
+            }
         });
 
         var cellBase = 'min-height:5rem;padding:6px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;box-sizing:border-box;';
@@ -284,21 +290,23 @@
             var d = new Date(ev.data);
             var day = pad(d.getDate());
             var mon = d.toLocaleDateString('it-IT',{month:'short'}).toUpperCase().replace('.','');
-            var weekday = d.toLocaleDateString('it-IT',{weekday:'long'});
             var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
             var label = UNITA_LABEL[ev.unita] || 'Tutto il gruppo';
+            var dateStr = ev.data_fine
+                ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})
+                : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long'});
             return '<div class="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">'
-                + '<div class="flex-shrink-0 text-center w-14 bg-scout/5 rounded-xl p-2">'
-                +   '<div class="text-2xl font-black text-scout leading-none">'+day+'</div>'
-                +   '<div class="text-xs font-bold text-gold">'+mon+'</div>'
+                + '<div class="flex-shrink-0 text-center w-14 rounded-xl p-2" style="background:#f0f4fa">'
+                +   '<div class="text-2xl font-black leading-none" style="color:#003366">'+day+'</div>'
+                +   '<div class="text-xs font-bold" style="color:#fcc400">'+mon+'</div>'
                 + '</div>'
                 + '<div class="flex-1 min-w-0">'
-                +   '<div class="font-black text-scout text-sm">'+esc(ev.titolo)+'</div>'
-                +   '<div class="text-xs text-gray-400 capitalize mt-0.5">'+weekday+'</div>'
-                +   (ev.luogo ? '<div class="text-xs text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>'+esc(ev.luogo)+'</div>' : '')
-                +   (ev.descrizione ? '<div class="text-xs text-gray-500 mt-1.5 leading-relaxed">'+esc(ev.descrizione)+'</div>' : '')
+                +   '<div class="font-black text-sm" style="color:#003366">'+esc(ev.titolo)+'</div>'
+                +   '<div class="text-xs mt-0.5" style="color:#9ca3af">'+dateStr+'</div>'
+                +   (ev.luogo ? '<div class="text-xs mt-1" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</div>' : '')
+                +   (ev.descrizione ? '<div class="text-xs mt-1.5 leading-relaxed" style="color:#6b7280">'+esc(ev.descrizione)+'</div>' : '')
                 + '</div>'
-                + '<span style="background:'+col+'" class="text-white text-[10px] font-black px-2.5 py-1 rounded-lg flex-shrink-0 self-start">'+esc(label)+'</span>'
+                + '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px;flex-shrink:0;align-self:flex-start">'+esc(label)+'</span>'
                 + '</div>';
         }).join('');
     }

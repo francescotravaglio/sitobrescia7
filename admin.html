@@ -354,8 +354,12 @@
                             <input type="text" id="ev-titolo" placeholder="Es. Campo estivo Reparto">
                         </div>
                         <div>
-                            <label>Data *</label>
+                            <label>Data inizio *</label>
                             <input type="date" id="ev-data">
+                        </div>
+                        <div>
+                            <label>Data fine <span class="font-normal text-gray-400">(lascia vuoto se un solo giorno)</span></label>
+                            <input type="date" id="ev-data-fine">
                         </div>
                         <div>
                             <label>Unità</label>
@@ -1233,18 +1237,21 @@ function clearAllRichieste() {
 
 // ── EVENTI ────────────────────────────────────────────────────────
 function addEvento() {
-    const titolo = document.getElementById('ev-titolo').value.trim();
-    const data   = document.getElementById('ev-data').value;
+    const titolo    = document.getElementById('ev-titolo').value.trim();
+    const data      = document.getElementById('ev-data').value;
+    const dataFine  = document.getElementById('ev-data-fine').value;
     if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
+    if (dataFine && dataFine < data) { toast('La data fine non può essere prima della data inizio.', false); return; }
     const id = Date.now();
     const ev = { id, titolo, data,
+        data_fine:   dataFine || null,
         unita:       document.getElementById('ev-unita').value,
         luogo:       document.getElementById('ev-luogo').value.trim(),
         descrizione: document.getElementById('ev-descr').value.trim(),
     };
     window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
         .then(() => {
-            ['ev-titolo','ev-data','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
+            ['ev-titolo','ev-data','ev-data-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
             document.getElementById('ev-unita').selectedIndex = 0;
             toast('Evento aggiunto!');
         })
@@ -1263,11 +1270,14 @@ function renderEventi() {
 
 function eventRow(ev) {
     const d     = new Date(ev.data);
-    const past  = d < new Date();
+    const past  = (ev.data_fine ? new Date(ev.data_fine) : d) < new Date();
     const day   = d.toLocaleDateString('it-IT', {day:'2-digit'});
     const mon   = d.toLocaleDateString('it-IT', {month:'short'}).toUpperCase();
     const unitaColors = {cerchio:'bg-red-100 text-red-600', reparto:'bg-green-100 text-green-700', clan:'bg-blue-100 text-blue-800', capi:'bg-purple-100 text-purple-700', tutto:'bg-gray-100 text-gray-600'};
     const uc = unitaColors[ev.unita] || unitaColors.tutto;
+    const dateLabel = ev.data_fine
+        ? `${d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'})} → ${new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}`
+        : d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
 
     return `<div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 border-b border-gray-50 last:border-0 ${past ? 'opacity-50' : ''}">
         <div class="bg-scout text-white rounded-xl px-3 py-2 text-center flex-shrink-0 w-14">
@@ -1276,6 +1286,7 @@ function eventRow(ev) {
         </div>
         <div class="flex-1 min-w-0">
             <div class="font-bold text-gray-800">${ev.titolo}</div>
+            <div class="text-xs text-gray-400 mt-0.5">${dateLabel}</div>
             <div class="flex flex-wrap gap-2 mt-1">
                 <span class="badge ${uc}">${ev.unita}</span>
                 ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${ev.luogo}</span>` : ''}
