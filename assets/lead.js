@@ -85,32 +85,7 @@ window.trackWhatsApp = function(origine) {
             '</div></div>';
     }
 
-    // carica le recensioni approvate; la sezione è sempre visibile (con stato vuoto invitante)
-    window.db.collection('testimonianze').get().then(snap => {
-        const ok = [];
-        snap.forEach(d => { const t = d.data(); if (t.approvata) ok.push(t); });
-        if (!ok.length) return;                       // resta lo stato vuoto + bottone
-        ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
-
-        // GRIGLIA (pagina "Parlano di noi")
-        var grid = document.getElementById('testi-grid');
-        if (grid) grid.innerHTML = ok.slice(0,6).map(t => card(t)).join('');
-
-        // NASTRO SCORREVOLE (homepage): due metà identiche, loop a -50%
-        var track = document.getElementById('testi-track');
-        if (track) {
-            var unit = ok.map(t => card(t, 'flex-shrink-0 w-80 text-left')).join('');
-            var reps = Math.max(2, Math.ceil(8 / ok.length));   // abbastanza card da riempire lo schermo
-            var half = new Array(reps).fill(unit).join('');
-            track.innerHTML = half + half;
-            var mq = document.getElementById('testi-marquee');
-            if (mq) mq.classList.remove('hidden');
-        }
-
-        var empty = document.getElementById('testi-empty');
-        if (empty) empty.classList.add('hidden');     // nascondi l'invito quando ci sono recensioni
-    }).catch(e => console.error('[testimonianze]', e));
-
+    // Funzioni modal definite subito — non dipendono da Firebase
     window.openTestiModal = function(){ document.getElementById('modal-testi').classList.remove('hidden'); document.body.style.overflow='hidden'; };
     window.closeTestiModal = function(){
         document.getElementById('modal-testi').classList.add('hidden'); document.body.style.overflow='';
@@ -151,4 +126,31 @@ window.trackWhatsApp = function(origine) {
             }
         }).catch(err => { console.error(err); alert('Errore. Riprova.'); });
     };
+
+    // Carica le recensioni approvate dopo che Firebase è pronto
+    window.addEventListener('load', function(){
+        if (!window.db) return;
+        window.db.collection('testimonianze').get().then(snap => {
+            const ok = [];
+            snap.forEach(d => { const t = d.data(); if (t.approvata) ok.push(t); });
+            if (!ok.length) return;
+            ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+
+            var grid = document.getElementById('testi-grid');
+            if (grid) grid.innerHTML = ok.slice(0,6).map(t => card(t)).join('');
+
+            var track = document.getElementById('testi-track');
+            if (track) {
+                var unit = ok.map(t => card(t, 'flex-shrink-0 w-80 text-left')).join('');
+                var reps = Math.max(2, Math.ceil(8 / ok.length));
+                var half = new Array(reps).fill(unit).join('');
+                track.innerHTML = half + half;
+                var mq = document.getElementById('testi-marquee');
+                if (mq) mq.classList.remove('hidden');
+            }
+
+            var empty = document.getElementById('testi-empty');
+            if (empty) empty.classList.add('hidden');
+        }).catch(e => console.error('[testimonianze]', e));
+    });
 })();
