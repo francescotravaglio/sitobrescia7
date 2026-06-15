@@ -868,10 +868,16 @@
 <!-- ── STATS BAR ─────────────────────────────────────────────────── -->
 <div class="bg-scout text-white">
     <!-- Mobile: tasto pieno -->
-    <button onclick="openPreIscrizione()" class="md:hidden w-full border-b border-white/10 py-3 px-6 text-center hover:bg-white/10 transition">
-        <div class="text-gold font-black text-sm">Compila la Pre-Iscrizione 25/26 <i class="fas fa-chevron-right text-xs ml-1"></i></div>
-        <div class="text-white/50 text-xs font-normal mt-0.5">nessun impegno</div>
+    <button onclick="openPreIscrizione()" class="md:hidden w-full py-3 px-6 text-center transition" style="animation:pulseBar 2s ease-in-out infinite;border-bottom:1px solid rgba(255,255,255,.1)">
+        <div class="text-gold font-black text-sm uppercase tracking-widest">COMPILA LA PRE-ISCRIZIONE 25/26 <i class="fas fa-chevron-right text-xs ml-1"></i></div>
+        <div class="text-white/50 text-xs font-normal mt-0.5 uppercase tracking-wider">Nessun impegno</div>
     </button>
+    <style>
+    @keyframes pulseBar {
+        0%,100% { background:rgba(255,255,255,0); }
+        50%      { background:rgba(252,196,0,.18); }
+    }
+    </style>
     <!-- Desktop: barra testo -->
     <div class="hidden md:flex border-b border-white/10 py-2.5 px-6 text-center text-xs font-bold tracking-widest uppercase items-center justify-center gap-2">
         <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
