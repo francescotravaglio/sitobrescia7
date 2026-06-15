@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /import-soci.html
+
+Sitemap: https://agescibrescia7.com/sitemap.xml
