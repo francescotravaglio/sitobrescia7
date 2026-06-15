@@ -178,7 +178,7 @@
                 <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
             <div onclick="showTab('calendario-google')" class="sidebar-link" id="nav-calendario-google">
-                <i class="fab fa-google"></i> Google Calendar
+                <i class="fas fa-images"></i> Galleria & Media
             </div>
             <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
                 <i class="fas fa-cog"></i> Impostazioni
@@ -455,59 +455,8 @@
                 </div>
             </section>
 
-            <!-- ──────────────────── GOOGLE CALENDAR ─────────────── -->
+            <!-- ──────────────────── GALLERIA & MEDIA ────────────── -->
             <section id="tab-calendario-google" class="tab-panel space-y-6">
-                <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-6">
-                    <div>
-                        <h3 class="font-black text-scout mb-1">Calendari Google</h3>
-                        <p class="text-gray-500 text-sm">Incolla l'<strong>ID del calendario</strong> Google per ogni unità. L'ID si trova in Google Calendar → Impostazioni del calendario → in fondo alla pagina, voce <em>"ID calendario"</em> (es. <code class="bg-gray-100 px-1 rounded text-xs">nome@gmail.com</code> oppure <code class="bg-gray-100 px-1 rounded text-xs">abc123@group.calendar.google.com</code>).</p>
-                        <a href="https://calendar.google.com" target="_blank" class="inline-flex items-center gap-2 mt-3 text-xs font-bold text-blue-600 hover:underline"><i class="fab fa-google"></i> Apri Google Calendar</a>
-                    </div>
-
-                    <!-- Principale (sito pubblico) -->
-                    <div class="bg-scout/5 border border-scout/20 rounded-2xl p-4">
-                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
-                            <i class="fas fa-globe text-scout"></i> Calendario principale
-                            <span class="text-xs font-normal text-gray-500 ml-1">— usato dal sito pubblico e come default per le tab</span>
-                        </label>
-                        <input type="text" id="gcal-id"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono"
-                               placeholder="info@agescibrescia7.com">
-                        <p class="text-xs text-gray-400 mt-1">Se non hai calendari separati per branca, basta questo campo.</p>
-                    </div>
-
-                    <!-- Calendari per branca (opzionali) -->
-                    <details class="group">
-                        <summary class="cursor-pointer flex items-center gap-2 text-sm font-bold text-scout select-none">
-                            <i class="fas fa-chevron-right group-open:rotate-90 transition-transform text-xs"></i>
-                            Calendari separati per branca <span class="font-normal text-gray-400">(opzionale)</span>
-                        </summary>
-                        <div class="mt-4 space-y-3">
-                            <p class="text-xs text-gray-500">Se hai un calendario diverso per ogni unità, incollalo qui. Altrimenti lascia vuoto: verrà usato il calendario principale.</p>
-                            <div class="bg-amber-50 rounded-xl p-3">
-                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout">🐞 Cerchio</label>
-                                <input type="text" id="gcal-cerchio" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
-                            </div>
-                            <div class="bg-green-50 rounded-xl p-3">
-                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout"><i class="fas fa-campground text-green-500 text-xs"></i> Reparto</label>
-                                <input type="text" id="gcal-reparto" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
-                            </div>
-                            <div class="bg-red-50 rounded-xl p-3">
-                                <label class="flex items-center gap-2 mb-1.5 text-xs font-black text-scout"><i class="fas fa-mountain text-red-500 text-xs"></i> Clan</label>
-                                <input type="text" id="gcal-clan" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono" placeholder="Lascia vuoto per usare il calendario principale">
-                            </div>
-                        </div>
-                    </details>
-
-                    <div class="flex items-center gap-3">
-                        <button onclick="saveCalendarIds()" class="bg-scout text-white font-black px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
-                            <i class="fas fa-save mr-2"></i>Salva calendari
-                        </button>
-                        <p id="gcal-saved-msg" class="text-green-600 text-sm hidden font-semibold">
-                            <i class="fas fa-check mr-1"></i> Salvato!
-                        </p>
-                    </div>
-                </div>
 
                 <!-- Galleria Foto -->
                 <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
@@ -551,27 +500,6 @@
                     </p>
                 </div>
 
-                <!-- Anteprima -->
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-black text-scout">Anteprima calendario</h3>
-                    </div>
-                    <div id="gcal-preview" class="p-4">
-                        <div class="bg-gray-50 rounded-xl p-8 text-center text-gray-400 text-sm">
-                            Inserisci un ID calendario per vedere l'anteprima.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Link apertura diretta -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-3">Gestione rapida eventi</h3>
-                    <p class="text-gray-500 text-sm mb-4">Apri Google Calendar per aggiungere, modificare o eliminare eventi direttamente.</p>
-                    <a href="https://calendar.google.com" target="_blank"
-                       class="inline-flex items-center gap-2 bg-blue-600 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-blue-700 transition">
-                        <i class="fab fa-google"></i> Apri Google Calendar
-                    </a>
-                </div>
             </section>
 
             <!-- ──────────────────────── IMPOSTAZIONI ─────────────── -->
@@ -829,7 +757,7 @@ const TAB_META = {
     richieste:         { title: 'Richieste',          sub: 'Messaggi e iscrizioni dal sito' },
     eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
     annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
-    'calendario-google': { title: 'Google Calendar', sub: 'Configurazione calendario integrato' },
+    'calendario-google': { title: 'Galleria & Media', sub: 'Galleria fotografica per unità' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
     soci:              { title: 'Elenco Soci',        sub: 'Importa e gestisci la lista dei soci' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },

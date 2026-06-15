@@ -147,38 +147,55 @@
 <!-- CALENDARIO -->
 <section class="py-20">
     <div class="max-w-6xl mx-auto px-6">
+
+        <!-- Legenda unità -->
+        <div class="flex flex-wrap gap-3 mb-6 justify-center">
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span class="w-3 h-3 rounded-full bg-scout inline-block"></span>Tutto il gruppo</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>Cerchio</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>Reparto</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>Clan</span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-600"><span class="w-3 h-3 rounded-full bg-gray-400 inline-block"></span>Capi</span>
+        </div>
+
+        <!-- Calendario mensile -->
         <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
             <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-b border-gray-100">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-scout rounded-lg flex items-center justify-center"><i class="fas fa-calendar-alt text-white text-sm"></i></div>
                     <span class="font-bold text-scout text-sm">Calendario Gruppo Scout AGESCI Brescia 7</span>
                 </div>
-                <a href="https://calendar.google.com/calendar/u/0/r?cid=agescibrescia7@gmail.com" target="_blank" class="text-xs text-scout font-semibold hover:underline flex items-center gap-1"><i class="fas fa-external-link-alt text-xs"></i>Apri in Google Calendar</a>
+                <div class="flex items-center gap-2">
+                    <button onclick="calPrev()" aria-label="Mese precedente" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 text-gray-500 transition"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <span id="cal-month-label" class="font-black text-scout text-sm w-36 text-center"></span>
+                    <button onclick="calNext()" aria-label="Mese successivo" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 text-gray-500 transition"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
             </div>
-            <div id="gcal-frame-wrapper" class="relative">
-                <iframe
-                    id="gcal-frame"
-                    src="https://calendar.google.com/calendar/embed?src=agescibrescia7%40gmail.com&ctz=Europe%2FRome&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0&hl=it&mode=MONTH"
-                    style="border:0"
-                    width="100%"
-                    height="700"
-                    frameborder="0"
-                    scrolling="no"
-                    loading="lazy"
-                    title="Calendario AGESCI Brescia 7">
-                </iframe>
+            <!-- Intestazioni giorni -->
+            <div class="grid grid-cols-7 border-b border-gray-100 bg-gray-50">
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Lun</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Mar</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Mer</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Gio</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2">Ven</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2 text-blue-400">Sab</div>
+                <div class="text-center text-xs font-black text-gray-400 uppercase py-2 text-red-400">Dom</div>
+            </div>
+            <!-- Griglia giorni -->
+            <div id="cal-grid" class="grid grid-cols-7 border-l border-t border-gray-100">
+                <!-- Renderizzata via JS -->
+            </div>
+        </div>
+
+        <!-- Prossimi eventi -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-black text-scout mb-6">Prossimi eventi</h2>
+            <div id="eventi-prossimi" class="space-y-3">
+                <div class="text-center text-gray-400 py-12 text-sm">Caricamento eventi…</div>
             </div>
         </div>
 
         <!-- Tips -->
-        <div class="mt-10 grid md:grid-cols-3 gap-6">
-            <div class="bg-blue-50 rounded-2xl p-6 flex items-start gap-4">
-                <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-bell text-white text-sm"></i></div>
-                <div>
-                    <h4 class="font-bold text-scout text-sm mb-1">Rimani aggiornato</h4>
-                    <p class="text-gray-500 text-xs leading-relaxed">Aggiungi il calendario al tuo Google Calendar per ricevere notifiche automatiche degli eventi.</p>
-                </div>
-            </div>
+        <div class="mt-10 grid md:grid-cols-2 gap-6">
             <div class="bg-amber-50 rounded-2xl p-6 flex items-start gap-4">
                 <div class="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-scout text-sm"></i></div>
                 <div>
@@ -196,6 +213,105 @@
         </div>
     </div>
 </section>
+
+<script>
+(function () {
+    const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+    const UNITA_COLOR = { tutto:'#003366', cerchio:'#3b82f6', reparto:'#22c55e', clan:'#ef4444', capi:'#9ca3af' };
+    const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', capi:'Capi' };
+
+    var cur = new Date();
+    var year = cur.getFullYear(), month = cur.getMonth();
+    var eventiAll = [];
+
+    function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+    function pad(n) { return n < 10 ? '0'+n : n; }
+
+    function renderCalendar() {
+        document.getElementById('cal-month-label').textContent = MESI[month] + ' ' + year;
+        var first = new Date(year, month, 1);
+        var last  = new Date(year, month+1, 0);
+        var startDow = (first.getDay() + 6) % 7; // Mon=0
+        var todayStr = cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate());
+
+        var evByDate = {};
+        eventiAll.forEach(function(ev) {
+            if (!evByDate[ev.data]) evByDate[ev.data] = [];
+            evByDate[ev.data].push(ev);
+        });
+
+        var html = '';
+        for (var i = 0; i < startDow; i++) {
+            html += '<div class="min-h-[4.5rem] p-1 border-b border-r border-gray-100 bg-gray-50/60"></div>';
+        }
+        for (var d = 1; d <= last.getDate(); d++) {
+            var dateStr = year+'-'+pad(month+1)+'-'+pad(d);
+            var isToday = dateStr === todayStr;
+            var evs = evByDate[dateStr] || [];
+            html += '<div class="min-h-[4.5rem] p-1.5 border-b border-r border-gray-100 '+(isToday?'bg-amber-50':'')+'">';
+            html += '<div class="text-xs font-bold mb-1 '+(isToday?'w-6 h-6 rounded-full bg-scout text-white flex items-center justify-center':'text-gray-400')+'">'+(isToday?'<span>'+d+'</span>':d)+'</div>';
+            evs.forEach(function(ev) {
+                var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
+                html += '<div style="background:'+col+'" class="text-white text-[10px] font-semibold px-1.5 py-0.5 rounded mb-0.5 truncate cursor-default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
+            });
+            html += '</div>';
+        }
+        var total = startDow + last.getDate();
+        var rem = total % 7;
+        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div class="min-h-[4.5rem] p-1 border-b border-r border-gray-100 bg-gray-50/60"></div>';
+        document.getElementById('cal-grid').innerHTML = html;
+    }
+
+    function renderProssimi() {
+        var now = new Date(); now.setHours(0,0,0,0);
+        var upcoming = eventiAll
+            .filter(function(ev){ return new Date(ev.data) >= now; })
+            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); })
+            .slice(0, 10);
+        var el = document.getElementById('eventi-prossimi');
+        if (!upcoming.length) {
+            el.innerHTML = '<div class="text-center text-gray-400 py-12 text-sm">Nessun evento in programma. Torna presto!</div>';
+            return;
+        }
+        el.innerHTML = upcoming.map(function(ev) {
+            var d = new Date(ev.data);
+            var day = pad(d.getDate());
+            var mon = d.toLocaleDateString('it-IT',{month:'short'}).toUpperCase().replace('.','');
+            var weekday = d.toLocaleDateString('it-IT',{weekday:'long'});
+            var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
+            var label = UNITA_LABEL[ev.unita] || 'Tutto il gruppo';
+            return '<div class="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">'
+                + '<div class="flex-shrink-0 text-center w-14 bg-scout/5 rounded-xl p-2">'
+                +   '<div class="text-2xl font-black text-scout leading-none">'+day+'</div>'
+                +   '<div class="text-xs font-bold text-gold">'+mon+'</div>'
+                + '</div>'
+                + '<div class="flex-1 min-w-0">'
+                +   '<div class="font-black text-scout text-sm">'+esc(ev.titolo)+'</div>'
+                +   '<div class="text-xs text-gray-400 capitalize mt-0.5">'+weekday+'</div>'
+                +   (ev.luogo ? '<div class="text-xs text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>'+esc(ev.luogo)+'</div>' : '')
+                +   (ev.descrizione ? '<div class="text-xs text-gray-500 mt-1.5 leading-relaxed">'+esc(ev.descrizione)+'</div>' : '')
+                + '</div>'
+                + '<span style="background:'+col+'" class="text-white text-[10px] font-black px-2.5 py-1 rounded-lg flex-shrink-0 self-start">'+esc(label)+'</span>'
+                + '</div>';
+        }).join('');
+    }
+
+    window.calPrev = function() { month--; if (month < 0) { month = 11; year--; } renderCalendar(); };
+    window.calNext = function() { month++; if (month > 11) { month = 0; year++; } renderCalendar(); };
+
+    renderCalendar(); // prima render struttura (senza eventi)
+
+    window.addEventListener('load', function() {
+        if (!window.db) return;
+        window.db.collection('eventi').get().then(function(snap) {
+            eventiAll = snap.docs.map(function(doc){ return doc.data(); });
+            renderCalendar();
+            renderProssimi();
+        }).catch(function(e){ console.error('[cal]', e); renderProssimi(); });
+    });
+})();
+</script>
 
 <!-- FOOTER -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
