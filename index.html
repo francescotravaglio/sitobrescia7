@@ -1230,6 +1230,11 @@
         document.body.style.overflow = 'hidden';
     };
 
+    // Apertura automatica se si arriva da un link diretto (#pre-iscrizione)
+    if (location.hash === '#pre-iscrizione') {
+        window.openPreIscrizione();
+    }
+
     // ── Modal Contatto ────────────────────────────────────────────
     window.openModalContatto = function() {
         document.getElementById('modal-contatto').classList.remove('hidden');
