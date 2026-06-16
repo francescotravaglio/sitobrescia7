@@ -503,6 +503,37 @@
   <!-- ⑤ CONTENUTO HERO -->
   <div class="relative text-center text-white px-6 max-w-4xl mx-auto" style="z-index:10">
 
+    <!-- FOULARD ANIMATO (triangolo blu, righe bianche incrociate) -->
+    <div class="fade-up flex justify-center mb-5" aria-hidden="true">
+      <svg width="86" height="74" viewBox="0 0 120 100" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
+        <defs>
+          <clipPath id="foulardClip"><polygon points="6,4 114,4 60,96"/></clipPath>
+        </defs>
+        <g style="transform-origin:50% 0%;animation:foulardSway 3.4s ease-in-out infinite">
+          <!-- base blu navy -->
+          <polygon points="6,4 114,4 60,96" fill="#0d2d52"/>
+          <!-- righe bianche incrociate (clippate al triangolo) -->
+          <g clip-path="url(#foulardClip)" stroke="#f4f7fb" stroke-width="4.5" opacity="0.95">
+            <!-- diagonali \ -->
+            <line x1="-10" y1="-10" x2="70"  y2="110"/>
+            <line x1="15"  y1="-10" x2="95"  y2="110"/>
+            <line x1="40"  y1="-10" x2="120" y2="110"/>
+            <!-- diagonali / -->
+            <line x1="130" y1="-10" x2="50"  y2="110"/>
+            <line x1="105" y1="-10" x2="25"  y2="110"/>
+            <line x1="80"  y1="-10" x2="0"   y2="110"/>
+          </g>
+          <polygon points="6,4 114,4 60,96" fill="none" stroke="#0d2d52" stroke-width="3"/>
+        </g>
+      </svg>
+    </div>
+    <style>
+    @keyframes foulardSway {
+        0%, 100% { transform: rotate(-4deg); }
+        50%      { transform: rotate(4deg); }
+    }
+    </style>
+
     <div class="fade-up inline-block bg-gold text-scout text-xs font-black px-5 py-2 rounded-full uppercase tracking-widest mb-8 shadow-lg">
       Dal 1977 · Scout a Brescia
     </div>
