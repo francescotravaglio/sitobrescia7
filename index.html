@@ -505,25 +505,25 @@
 
     <!-- FOULARD ANIMATO (triangolo blu, righe bianche incrociate) -->
     <div class="fade-up flex justify-center mb-5" aria-hidden="true">
-      <svg width="64" height="110" viewBox="0 0 120 200" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
+      <svg width="120" height="58" viewBox="0 0 200 100" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
         <defs>
-          <clipPath id="foulardClip"><polygon points="20,4 100,4 60,196"/></clipPath>
+          <clipPath id="foulardClip"><polygon points="4,4 196,4 100,96"/></clipPath>
         </defs>
         <g style="transform-origin:50% 0%;animation:foulardSway 3.4s ease-in-out infinite">
           <!-- base blu navy -->
-          <polygon points="20,4 100,4 60,196" fill="#0d2d52"/>
+          <polygon points="4,4 196,4 100,96" fill="#0d2d52"/>
           <!-- righe bianche incrociate (clippate al triangolo) -->
-          <g clip-path="url(#foulardClip)" stroke="#f4f7fb" stroke-width="4" opacity="0.95">
+          <g clip-path="url(#foulardClip)" stroke="#f4f7fb" stroke-width="5" opacity="0.95">
             <!-- diagonali \ -->
-            <line x1="-30" y1="-20" x2="70"  y2="220"/>
-            <line x1="0"   y1="-20" x2="100" y2="220"/>
-            <line x1="30"  y1="-20" x2="130" y2="220"/>
+            <line x1="-30" y1="-10" x2="90"  y2="110"/>
+            <line x1="10"  y1="-10" x2="130" y2="110"/>
+            <line x1="50"  y1="-10" x2="170" y2="110"/>
             <!-- diagonali / -->
-            <line x1="150" y1="-20" x2="50"  y2="220"/>
-            <line x1="120" y1="-20" x2="20"  y2="220"/>
-            <line x1="90"  y1="-20" x2="-10" y2="220"/>
+            <line x1="230" y1="-10" x2="110" y2="110"/>
+            <line x1="190" y1="-10" x2="70"  y2="110"/>
+            <line x1="150" y1="-10" x2="30"  y2="110"/>
           </g>
-          <polygon points="20,4 100,4 60,196" fill="none" stroke="#0d2d52" stroke-width="3"/>
+          <polygon points="4,4 196,4 100,96" fill="none" stroke="#0d2d52" stroke-width="3"/>
         </g>
       </svg>
     </div>
