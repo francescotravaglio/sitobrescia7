@@ -457,24 +457,24 @@
 <!-- ── HERO NOTTE STELLATA ─────────────────────────────────────────── -->
 <style>
   #hero-night { background: #07073b; }
-  #hero-night video { object-fit:contain; object-position:center center; }
+  #hero-video-wrap { background: #07073b; }
+  #hero-video-wrap video { object-fit:contain; object-position:center center; }
   @keyframes fireflicker { 0%,100%{opacity:.7;transform:scaleY(1) scaleX(1);}33%{opacity:1;transform:scaleY(1.12) scaleX(.92);}66%{opacity:.85;transform:scaleY(.95) scaleX(1.08);} }
   @keyframes glowpulse  { 0%,100%{opacity:.5;r:22;}50%{opacity:.85;r:28;} }
   @keyframes tentglow   { 0%,100%{opacity:.5;}50%{opacity:.9;} }
 </style>
 
-<header id="hero-night" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+<header id="hero-night" class="relative overflow-hidden">
 
-  <!-- ① VIDEO DI SFONDO (Brescia 7) -->
-  <video class="absolute inset-0 w-full h-full object-cover" style="z-index:0;object-position:center top" autoplay muted loop playsinline preload="auto">
-    <source src="assets/video/hero-bg.mp4" type="video/mp4">
-  </video>
+  <!-- ① VIDEO (ben visibile, niente testo sopra) -->
+  <div id="hero-video-wrap" class="relative w-full" style="height:48vh;min-height:280px">
+    <video class="absolute inset-0 w-full h-full" autoplay muted loop playsinline preload="auto">
+      <source src="assets/video/hero-bg.mp4" type="video/mp4">
+    </video>
+  </div>
 
-  <!-- ② OVERLAY blu navy per leggibilità testo e coerenza colori BS7 -->
-  <div class="absolute inset-0 pointer-events-none" style="z-index:2;background:radial-gradient(ellipse 65% 65% at 50% 48%,rgba(0,9,40,.8) 0%,rgba(0,9,40,.55) 55%,rgba(0,9,40,.3) 100%)"></div>
-
-  <!-- ⑤ CONTENUTO HERO -->
-  <div class="relative text-center text-white px-6 max-w-4xl mx-auto" style="z-index:10">
+  <!-- ② CONTENUTO HERO (sotto il video, su sfondo blu pieno per leggibilità) -->
+  <div class="relative text-center text-white px-6 py-16 max-w-4xl mx-auto" style="z-index:10">
 
     <!-- FOULARD ANIMATO (triangolo blu, righe bianche incrociate) -->
     <div class="fade-up flex justify-center mb-5" aria-hidden="true">
@@ -532,7 +532,7 @@
     </p>
   </div>
 
-  <a href="#sez-testimonianze" class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/40 hover:text-white transition" style="z-index:10">
+  <a href="#sez-testimonianze" class="relative flex justify-center pb-8 animate-bounce text-white/40 hover:text-white transition" style="z-index:10">
     <i class="fas fa-chevron-down text-2xl"></i>
   </a>
 </header>
