@@ -464,41 +464,13 @@
 
 <header id="hero-night" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
 
-  <!-- ① CANVAS stelle + stelle cadenti -->
-  <canvas id="sky-canvas" class="absolute inset-0 w-full h-full" style="z-index:1"></canvas>
+  <!-- ① VIDEO DI SFONDO (Brescia 7) -->
+  <video class="absolute inset-0 w-full h-full object-cover" style="z-index:0" autoplay muted loop playsinline preload="auto">
+    <source src="assets/video/hero-bg.mp4" type="video/mp4">
+  </video>
 
-  <!-- ② SILHOUETTE FORESTA (SVG) -->
-  <div class="absolute bottom-0 inset-x-0 pointer-events-none" style="z-index:3">
-    <svg viewBox="0 0 1440 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto">
-      <!-- montagne sfondo -->
-      <polygon points="0,280 0,180 200,80 400,180 600,60 800,170 1000,50 1200,160 1440,90 1440,280" fill="#020d06"/>
-      <!-- alberi sinistra -->
-      <polygon points="  0,280  45,120  90,280" fill="#010905"/>
-      <polygon points=" 30,280  85, 90 140,280" fill="#010b05"/>
-      <polygon points=" 80,280 140,105 200,280" fill="#010905"/>
-      <polygon points="130,280 195, 75 260,280" fill="#010b05"/>
-      <polygon points="190,280 260,100 330,280" fill="#010905"/>
-      <polygon points="250,280 325, 65 400,280" fill="#010b05"/>
-      <polygon points="310,280 390, 85 470,280" fill="#010905"/>
-      <polygon points="370,280 455, 50 540,280" fill="#010b05"/>
-      <!-- alberi destra -->
-      <polygon points=" 900,280  970, 85 1040,280" fill="#010905"/>
-      <polygon points=" 970,280 1045, 65 1120,280" fill="#010b05"/>
-      <polygon points="1040,280 1120, 90 1200,280" fill="#010905"/>
-      <polygon points="1110,280 1195, 60 1280,280" fill="#010b05"/>
-      <polygon points="1180,280 1265, 80 1350,280" fill="#010905"/>
-      <polygon points="1250,280 1340, 50 1430,280" fill="#010b05"/>
-      <polygon points="1320,280 1380,100 1440,280" fill="#010905"/>
-      <!-- suolo -->
-      <rect x="0" y="250" width="1440" height="30" fill="#010b05"/>
-    </svg>
-  </div>
-
-  <!-- ③ TENDA + FUOCO su canvas dedicato -->
-  <canvas id="camp-canvas" class="absolute pointer-events-none" style="z-index:5;bottom:0;right:0;height:240px;width:520px;max-width:55vw"></canvas>
-
-  <!-- ④ OVERLAY sfumatura per leggibilità testo -->
-  <div class="absolute inset-0 pointer-events-none" style="z-index:2;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,0,0,.1) 0%,rgba(0,0,0,.35) 100%)"></div>
+  <!-- ② OVERLAY blu navy per leggibilità testo e coerenza colori BS7 -->
+  <div class="absolute inset-0 pointer-events-none" style="z-index:2;background:linear-gradient(180deg,rgba(0,20,46,.55) 0%,rgba(0,20,46,.35) 45%,rgba(0,20,46,.7) 100%)"></div>
 
   <!-- ⑤ CONTENUTO HERO -->
   <div class="relative text-center text-white px-6 max-w-4xl mx-auto" style="z-index:10">
