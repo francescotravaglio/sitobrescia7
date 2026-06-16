@@ -502,6 +502,29 @@
 
   <!-- ⑤ CONTENUTO HERO -->
   <div class="relative text-center text-white px-6 max-w-4xl mx-auto" style="z-index:10">
+
+    <!-- FOULARD ANIMATO (blu con righe bianche incrociate) -->
+    <div class="fade-up flex justify-center mb-5" aria-hidden="true">
+      <svg width="72" height="72" viewBox="0 0 100 100" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
+        <g style="transform-origin:50% 8%;animation:foulardSway 3.2s ease-in-out infinite">
+          <!-- triangolo foulard -->
+          <polygon points="50,6 94,90 6,90" fill="#003366" stroke="#001f3f" stroke-width="1"/>
+          <!-- riga bianca diagonale 1 -->
+          <polygon points="50,6 66,6 94,90 78,90" fill="#ffffff" opacity="0.92"/>
+          <!-- riga bianca diagonale 2 (incrociata) -->
+          <polygon points="50,6 34,6 6,90 22,90" fill="#ffffff" opacity="0.92"/>
+          <!-- nodo -->
+          <circle cx="50" cy="78" r="7" fill="#fcc400"/>
+        </g>
+      </svg>
+    </div>
+    <style>
+    @keyframes foulardSway {
+        0%, 100% { transform: rotate(-6deg); }
+        50%      { transform: rotate(6deg); }
+    }
+    </style>
+
     <div class="fade-up inline-block bg-gold text-scout text-xs font-black px-5 py-2 rounded-full uppercase tracking-widest mb-8 shadow-lg">
       Dal 1977 · Scout a Brescia
     </div>
