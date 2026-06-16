@@ -1228,6 +1228,7 @@
     window.openPreIscrizione = function() {
         document.getElementById('modal-pre').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+        if (location.hash !== '#pre-iscrizione') history.pushState(null, '', '#pre-iscrizione');
     };
 
     // Apertura automatica se si arriva da un link diretto (#pre-iscrizione)
@@ -1265,6 +1266,7 @@
     window.closePreIscrizione = function() {
         document.getElementById('modal-pre').classList.add('hidden');
         document.body.style.overflow = '';
+        if (location.hash === '#pre-iscrizione') history.pushState(null, '', location.pathname + location.search);
         document.getElementById('form-pre').reset();
         document.getElementById('form-pre').classList.remove('hidden');
         document.getElementById('pre-success').classList.add('hidden');
