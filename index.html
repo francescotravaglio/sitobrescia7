@@ -347,14 +347,14 @@
         <i class="fas fa-feather-alt text-white text-lg sm:text-2xl"></i>
       </div>
       <div>
-        <h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Ricevi tutte le informazioni</h3>
-        <p class="text-gray-400 text-xs sm:text-sm">Senza alcun impegno</p>
+        <h3 id="pre-modal-title" class="text-lg sm:text-2xl font-black text-scout leading-tight">Ricevi tutte le informazioni</h3>
+        <p id="pre-modal-subtitle" class="text-gray-400 text-xs sm:text-sm">Senza alcun impegno</p>
       </div>
     </div>
     <!-- Info box collassato su mobile -->
     <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug">
       <i class="fas fa-info-circle mr-1 text-amber-500"></i>
-      Ti contattiamo per presentarti la proposta scout del Brescia 7. Nessun impegno di iscrizione.
+      <span id="pre-modal-disclaimer">Ti contattiamo per presentarti la proposta scout del Brescia 7. Nessun impegno di iscrizione.</span>
     </div>
     <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
       <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -901,7 +901,7 @@
 <!-- ── STATS BAR ─────────────────────────────────────────────────── -->
 <div class="bg-scout text-white">
     <!-- Mobile: tasto pieno -->
-    <button onclick="openPreIscrizione()" class="md:hidden w-full py-3 px-6 text-center transition" style="animation:pulseBar 2s ease-in-out infinite;border-bottom:1px solid rgba(255,255,255,.1)">
+    <button onclick="openPreIscrizione('preiscrizione')" class="md:hidden w-full py-3 px-6 text-center transition" style="animation:pulseBar 2s ease-in-out infinite;border-bottom:1px solid rgba(255,255,255,.1)">
         <div class="text-white font-black text-sm uppercase tracking-widest">COMPILA LA PRE-ISCRIZIONE 25/26 <i class="fas fa-chevron-right text-xs ml-1"></i></div>
         <div class="text-white/50 text-xs font-normal mt-0.5 uppercase tracking-wider">Nessun impegno</div>
     </button>
@@ -918,7 +918,7 @@
         <span class="opacity-40 mx-1">·</span>
         <span class="opacity-70">Anno scout 2025/26</span>
         <span class="opacity-40 mx-1">·</span>
-        <button onclick="openPreIscrizione()" class="text-white hover:opacity-80 transition underline underline-offset-2">Clicca qui per la pre-iscrizione</button>
+        <button onclick="openPreIscrizione('preiscrizione')" class="text-white hover:opacity-80 transition underline underline-offset-2">Clicca qui per la pre-iscrizione</button>
         <span class="opacity-40 mx-1">·</span>
         <span class="opacity-50 normal-case tracking-normal font-normal">nessun impegno</span>
     </div>
@@ -933,21 +933,21 @@
             <p class="text-gray-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed">Abbiamo un'unità per ogni fascia d'età, dagli 8 ai 21 anni.</p>
         </div>
         <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-amber-50 border border-amber-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+            <div class="bg-amber-50 border border-amber-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione('preiscrizione')">
                 <img src="images/logo-lc.png" alt="Logo Cerchio" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-amber-600 mb-1">8 – 11 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Cerchio</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Giochi in natura, lavoro di squadra e prime avventure. I più piccoli imparano a esplorare il mondo con curiosità.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
             </div>
-            <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione('preiscrizione')">
                 <img src="images/logo-eg.png" alt="Logo Reparto" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-emerald-600 mb-1">12 – 16 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Reparto</h3>
                 <p class="text-gray-500 text-sm leading-relaxed">Uscite in autonomia, orientamento, tecniche di campo e primo soccorso. Responsabilità crescenti in piccoli gruppi.</p>
                 <div class="mt-4 text-scout font-black text-xs flex items-center gap-1">Iscriviti <i class="fas fa-arrow-right text-[10px]"></i></div>
             </div>
-            <div class="bg-red-50 border border-red-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione()">
+            <div class="bg-red-50 border border-red-100 rounded-3xl p-7 cursor-pointer hover:shadow-lg transition-shadow" onclick="openPreIscrizione('preiscrizione')">
                 <img src="images/logo-rs.png" alt="Logo Clan" class="w-14 h-14 object-contain mb-4" width="56" height="56" loading="lazy">
                 <div class="text-xs font-black uppercase tracking-widest text-red-600 mb-1">17 – 21 anni</div>
                 <h3 class="text-xl font-black text-scout mb-2">Clan</h3>
@@ -1225,15 +1225,28 @@
     });
 
     // ── Pre-iscrizione modal ──────────────────────────────────────
-    window.openPreIscrizione = function() {
+    window.openPreIscrizione = function(mode) {
         document.getElementById('modal-pre').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
         if (location.hash !== '#pre-iscrizione') history.pushState(null, '', '#pre-iscrizione');
+
+        var title = document.getElementById('pre-modal-title');
+        var sub   = document.getElementById('pre-modal-subtitle');
+        var disc  = document.getElementById('pre-modal-disclaimer');
+        if (mode === 'preiscrizione') {
+            title.textContent = 'Sto compilando una pre-iscrizione';
+            sub.textContent = 'Senza alcun impegno';
+            disc.textContent = 'Questa è una pre-iscrizione: ci aiuta a organizzare l\'accoglienza. Ti ricontatteremo per presentarti la proposta e le date ufficiali. Nessun impegno.';
+        } else {
+            title.textContent = 'Ricevi tutte le informazioni';
+            sub.textContent = 'Senza alcun impegno';
+            disc.textContent = 'Ti contattiamo per presentarti la proposta scout del Brescia 7. Nessun impegno di iscrizione.';
+        }
     };
 
     // Apertura automatica se si arriva da un link diretto (#pre-iscrizione)
     if (location.hash === '#pre-iscrizione') {
-        window.openPreIscrizione();
+        window.openPreIscrizione('preiscrizione');
     }
 
     // ── Modal Contatto ────────────────────────────────────────────
