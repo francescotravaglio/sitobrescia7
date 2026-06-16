@@ -505,25 +505,25 @@
 
     <!-- FOULARD ANIMATO (triangolo blu, righe bianche incrociate) -->
     <div class="fade-up flex justify-center mb-5" aria-hidden="true">
-      <svg width="86" height="74" viewBox="0 0 120 100" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
+      <svg width="64" height="110" viewBox="0 0 120 200" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">
         <defs>
-          <clipPath id="foulardClip"><polygon points="6,4 114,4 60,96"/></clipPath>
+          <clipPath id="foulardClip"><polygon points="20,4 100,4 60,196"/></clipPath>
         </defs>
         <g style="transform-origin:50% 0%;animation:foulardSway 3.4s ease-in-out infinite">
           <!-- base blu navy -->
-          <polygon points="6,4 114,4 60,96" fill="#0d2d52"/>
+          <polygon points="20,4 100,4 60,196" fill="#0d2d52"/>
           <!-- righe bianche incrociate (clippate al triangolo) -->
-          <g clip-path="url(#foulardClip)" stroke="#f4f7fb" stroke-width="4.5" opacity="0.95">
+          <g clip-path="url(#foulardClip)" stroke="#f4f7fb" stroke-width="4" opacity="0.95">
             <!-- diagonali \ -->
-            <line x1="-10" y1="-10" x2="70"  y2="110"/>
-            <line x1="15"  y1="-10" x2="95"  y2="110"/>
-            <line x1="40"  y1="-10" x2="120" y2="110"/>
+            <line x1="-30" y1="-20" x2="70"  y2="220"/>
+            <line x1="0"   y1="-20" x2="100" y2="220"/>
+            <line x1="30"  y1="-20" x2="130" y2="220"/>
             <!-- diagonali / -->
-            <line x1="130" y1="-10" x2="50"  y2="110"/>
-            <line x1="105" y1="-10" x2="25"  y2="110"/>
-            <line x1="80"  y1="-10" x2="0"   y2="110"/>
+            <line x1="150" y1="-20" x2="50"  y2="220"/>
+            <line x1="120" y1="-20" x2="20"  y2="220"/>
+            <line x1="90"  y1="-20" x2="-10" y2="220"/>
           </g>
-          <polygon points="6,4 114,4 60,96" fill="none" stroke="#0d2d52" stroke-width="3"/>
+          <polygon points="20,4 100,4 60,196" fill="none" stroke="#0d2d52" stroke-width="3"/>
         </g>
       </svg>
     </div>
