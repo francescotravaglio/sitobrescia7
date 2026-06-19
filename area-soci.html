@@ -979,12 +979,17 @@
                 draw(sp0,fnt,218,575,d.indirizzo||'',234);draw(sp0,fnt,461,575,d.n_civico||'',60);
                 draw(sp0,fnt,48,550,d.citta||'',298);draw(sp0,fnt,371,550,d.cap||'',95);draw(sp0,fnt,474,550,d.provincia||'',8);
                 draw(sp0,fnt,81,535,d.email||'',271);draw(sp0,fnt,374,535,d.cellulare||'',177);
-                // sp0: scheda sanitaria
-                draw(sp0,fnt,68,328,d.cognome||'',200,8);draw(sp0,fnt,340,328,d.nome||'',193,8);draw(sp0,fnt,68,310,d.luogo_nascita||'',220,8);draw(sp0,fnt,380,310,d.data_nascita||'',160,8);draw(sp0,fnt,68,292,d.cf||'',200,8);draw(sp0,fnt,340,292,d.tessera_sanitaria||'',193,8);
-                draw(sp0,fnt,68,274,d.emerg_nome||'',240,8);draw(sp0,fnt,365,274,d.emerg_tel||'',168,8);
-                if(d.antitetanica==='SI')draw(sp0,fnt,97,258,'X',15,9);if(d.antitetanica==='NO')draw(sp0,fnt,147,258,'X',15,9);
-                if(d.allergie){draw(sp0,fnt,68,212,d.allergie,463,8);if(d.allergie.length>90)draw(sp0,fnt,68,200,d.allergie.substring(90),463,8);}
-                if(d.profilassi){draw(sp0,fnt,68,163,d.profilassi,463,8);if(d.profilassi.length>90)draw(sp0,fnt,68,145,d.profilassi.substring(90),463,8);}
+                // sp0: scheda sanitaria - coord da pdfplumber (y=842-bottom)
+                // Cognome/Nome bottom=509→y=333; nato/a bottom=528→y=314; CF/tessera bottom=547→y=296
+                // emergenze bottom=565→y=277; antitetanica bottom=601→y=241; profilassi label bottom=710→y=132
+                var fmtD=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
+                draw(sp0,fnt,90,333,d.cognome||'',182,8);draw(sp0,fnt,303,333,d.nome||'',233,8);
+                draw(sp0,fnt,79,314,d.luogo_nascita||'',290,8);draw(sp0,fnt,415,314,fmtD(d.data_nascita),110,8);
+                draw(sp0,fnt,108,296,d.cf||'',142,8);draw(sp0,fnt,347,296,d.tessera_sanitaria||'',190,8);
+                draw(sp0,fnt,167,277,d.emerg_nome||'',120,8);draw(sp0,fnt,289,277,d.emerg_tel||'',246,8);
+                if(d.antitetanica==='SI')draw(sp0,fnt,194,241,'X',15,9);if(d.antitetanica==='NO')draw(sp0,fnt,291,241,'X',15,9);
+                if(d.allergie){draw(sp0,fnt,42,212,d.allergie,496,8);if(d.allergie.length>90)draw(sp0,fnt,42,200,d.allergie.substring(90),496,8);}
+                if(d.profilassi){draw(sp0,fnt,42,122,d.profilassi,496,8);if(d.profilassi.length>90)draw(sp0,fnt,42,105,d.profilassi.substring(90),496,8);}
                 if(sp1){if(d.note_sanitarie){draw(sp1,fnt,68,795,d.note_sanitarie,463,8);if(d.note_sanitarie.length>90)draw(sp1,fnt,68,777,d.note_sanitarie.substring(90),463,8);}draw(sp1,fnt,107,742,today,77);draw(sp1,fnt,227,742,'Brescia',303);}
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
