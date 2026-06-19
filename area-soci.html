@@ -852,14 +852,14 @@
         var nome = get(nomeN), cognome = get(cognomeN), nascita = get(nascitaN), luogo = get(luogoN), sesso = get(sessoN);
         if (!nome || !cognome || !nascita || !luogo) { alert('Compila prima: Nome, Cognome, Data di nascita e Luogo di nascita.'); return; }
         if (!sesso) { sesso = prompt('Sesso (M o F)?', 'M'); if (!sesso) return; }
-        var c15 = cfCognome(cognome) + cfNome(nome) + cfData(nascita, sesso) + getCodComune(luogo);
+        var c15 = window._cfCognome(cognome) + window._cfNome(nome) + window._cfData(nascita, sesso) + window._getCodComune(luogo);
         if (!inp) return;
         if (c15.includes('????')) {
-            inp.value = c15 + cfChecksum(c15.replace('????','A000'));
+            inp.value = c15 + window._cfChecksum(c15.replace('????','A000'));
             inp.style.borderColor = '#f59e0b';
             alert('Comune "'+luogo+'" non trovato nel database.\nVerifica le ultime 5 cifre.');
         } else {
-            inp.value = c15 + cfChecksum(c15);
+            inp.value = c15 + window._cfChecksum(c15);
             inp.style.borderColor = '#22c55e';
         }
     };
@@ -960,16 +960,35 @@
                 var fnt = await doc.embedFont(StandardFonts.Helvetica);
                 var pg = doc.getPages();
                 var rp0=pg[0], rp1=pg[1], sp0=pg[2], sp1=pg[3], g4=pg[7];
-                draw(rp0,fnt,136,643,(d.nome||'')+' '+(d.cognome||''),406);draw(rp0,fnt,68,620,d.sesso||'',30);draw(rp0,fnt,175,620,d.luogo_nascita||'',200);draw(rp0,fnt,455,620,d.data_nascita||'',87);draw(rp0,fnt,136,597,d.cf||'',406);draw(rp0,fnt,108,574,d.indirizzo||'',330);draw(rp0,fnt,480,574,d.n_civico||'',62);draw(rp0,fnt,68,551,d.citta||'',272);draw(rp0,fnt,400,551,d.cap||'',40);draw(rp0,fnt,460,551,d.provincia||'',80);draw(rp0,fnt,68,528,d.email||'',244);draw(rp0,fnt,365,528,d.cellulare||'',177);draw(rp0,fnt,408,488,'Brescia 7',134);
+                // rp0: pagina 1 - coord da pdfplumber: y=842-bottom (baseline su riga blank)
+                // sesso/luogo/prov/data: template bottom=218.1 → y=624; CF: bottom=242.7 → y=599
+                // indirizzo: bottom=267.3 → y=575; citta: bottom=291.9 → y=550; email: bottom=316.5 → y=526
+                // pag1 city layout: "a [citta] (….prov….) CAP [cap]"
+                draw(rp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
+                draw(rp0,fnt,88,624,d.sesso||'',30);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,d.data_nascita||'',87);
+                draw(rp0,fnt,113,599,d.cf||'',280);
+                draw(rp0,fnt,218,575,d.indirizzo||'',234);draw(rp0,fnt,469,575,d.n_civico||'',60);
+                draw(rp0,fnt,48,550,d.citta||'',336);draw(rp0,fnt,393,550,d.provincia||'',16);draw(rp0,fnt,449,550,d.cap||'',140);
+                draw(rp0,fnt,81,526,d.email||'',271);draw(rp0,fnt,380,526,d.cellulare||'',170);
+                draw(rp0,fnt,374,486,'Brescia 7',134);
                 if(rp1){draw(rp1,fnt,68,168,today,120);draw(rp1,fnt,264,168,'Brescia',278);}
-                draw(sp0,fnt,136,643,(d.nome||'')+' '+(d.cognome||''),406);draw(sp0,fnt,68,620,d.sesso||'',30);draw(sp0,fnt,175,620,d.luogo_nascita||'',200);draw(sp0,fnt,455,620,d.data_nascita||'',87);draw(sp0,fnt,136,597,d.cf||'',406);draw(sp0,fnt,108,574,d.indirizzo||'',330);draw(sp0,fnt,480,574,d.n_civico||'',62);draw(sp0,fnt,68,551,d.citta||'',272);draw(sp0,fnt,400,551,d.cap||'',40);draw(sp0,fnt,460,551,d.provincia||'',80);draw(sp0,fnt,68,528,d.email||'',244);draw(sp0,fnt,365,528,d.cellulare||'',177);
+                // sp0: pagina 3 - stessa anagrafica; city layout diverso: "a [citta] CAP [cap] (prov)"
+                draw(sp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
+                draw(sp0,fnt,88,624,d.sesso||'',30);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,d.data_nascita||'',87);
+                draw(sp0,fnt,113,599,d.cf||'',280);
+                draw(sp0,fnt,218,575,d.indirizzo||'',234);draw(sp0,fnt,461,575,d.n_civico||'',60);
+                draw(sp0,fnt,48,550,d.citta||'',298);draw(sp0,fnt,371,550,d.cap||'',95);draw(sp0,fnt,474,550,d.provincia||'',8);
+                draw(sp0,fnt,81,535,d.email||'',271);draw(sp0,fnt,374,535,d.cellulare||'',177);
+                // sp0: scheda sanitaria
                 draw(sp0,fnt,68,328,d.cognome||'',200,8);draw(sp0,fnt,340,328,d.nome||'',193,8);draw(sp0,fnt,68,310,d.luogo_nascita||'',220,8);draw(sp0,fnt,380,310,d.data_nascita||'',160,8);draw(sp0,fnt,68,292,d.cf||'',200,8);draw(sp0,fnt,340,292,d.tessera_sanitaria||'',193,8);
                 draw(sp0,fnt,68,274,d.emerg_nome||'',240,8);draw(sp0,fnt,365,274,d.emerg_tel||'',168,8);
                 if(d.antitetanica==='SI')draw(sp0,fnt,97,258,'X',15,9);if(d.antitetanica==='NO')draw(sp0,fnt,147,258,'X',15,9);
-                if(d.allergie){draw(sp0,fnt,68,225,d.allergie,463,8);if(d.allergie.length>90)draw(sp0,fnt,68,207,d.allergie.substring(90),463,8);}
+                if(d.allergie){draw(sp0,fnt,68,212,d.allergie,463,8);if(d.allergie.length>90)draw(sp0,fnt,68,200,d.allergie.substring(90),463,8);}
                 if(d.profilassi){draw(sp0,fnt,68,163,d.profilassi,463,8);if(d.profilassi.length>90)draw(sp0,fnt,68,145,d.profilassi.substring(90),463,8);}
                 if(sp1){if(d.note_sanitarie){draw(sp1,fnt,68,795,d.note_sanitarie,463,8);if(d.note_sanitarie.length>90)draw(sp1,fnt,68,777,d.note_sanitarie.substring(90),463,8);}draw(sp1,fnt,107,742,today,77);draw(sp1,fnt,227,742,'Brescia',303);}
-                if(g4){draw(g4,fnt,210,653,(d.nome||'')+' '+(d.cognome||''),330);draw(g4,fnt,68,629,d.luogo_nascita||'',200);draw(g4,fnt,296,629,d.data_nascita||'',95);draw(g4,fnt,413,629,d.cf||'',127);draw(g4,fnt,68,605,d.citta||'',90);draw(g4,fnt,193,605,d.indirizzo||'',258);draw(g4,fnt,487,605,d.n_civico||'',52);draw(g4,fnt,40,581,d.cap||'',60);draw(g4,fnt,143,581,d.email||'',236);draw(g4,fnt,408,581,d.cellulare||'',132);draw(g4,fnt,68,484,today,120);draw(g4,fnt,68,344,today,120);draw(g4,fnt,68,152,today,120);}
+                // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
+                // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
+                if(g4){draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,d.data_nascita||'',72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
                 doc.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc.setAuthor('AGESCI Brescia 7');
                 var byt=await doc.save();var bl=new Blob([byt],{type:'application/pdf'});var ul=URL.createObjectURL(bl);var al=document.createElement('a');al.href=ul;al.download='Iscrizione_'+(d.nome||'')+'_'+(d.cognome||'')+'_BS7.pdf';document.body.appendChild(al);al.click();document.body.removeChild(al);URL.revokeObjectURL(ul);return;
             }
@@ -1359,6 +1378,13 @@
         for (let i=0;i<15;i++) { const c=cf15[i]; sum += i%2===0 ? (ODD[c]??0) : (EVEN[c]??0); }
         return String.fromCharCode(65+(sum%26));
     }
+
+    // Esponi helper CF a iscrAutoCalcCF (che vive fuori da questo IIFE)
+    window._cfCognome    = cfCognome;
+    window._cfNome       = cfNome;
+    window._cfData       = cfData;
+    window._getCodComune = getCodComune;
+    window._cfChecksum   = cfChecksum;
 
     window.autoCalcCF = function(btn, nomeN, cognomeN, nascitaN, luogoN, sessoN) {
         const panel = btn.closest('.step-panel') || btn.closest('form');
