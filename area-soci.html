@@ -881,16 +881,19 @@
             else { data[el.name] = el.value; }
         });
         var submission = { tipo: tipo, dati: data, timestamp: new Date().toISOString(), letta: false, stato: 'nuova' };
-        function proceed() {
+        function proceed(firmaPng) {
+            submission.dati._firma_png = firmaPng || null;
             iscrGeneraPDF(submission);
             iscrSendEmail(submission);
             form.classList.add('hidden');
             var successId = tipo === 'maggiorenne' ? 'mag-success' : 'min-success';
             document.getElementById(successId).classList.remove('hidden');
         }
-        if (window.db) {
-            window.db.collection('iscrizioni').add(submission).then(proceed).catch(function(err) { console.error('Firestore:', err); proceed(); });
-        } else { proceed(); }
+        window.iscrMostraFirma(function(firmaPng) {
+            if (window.db) {
+                window.db.collection('iscrizioni').add(submission).then(function(){ proceed(firmaPng); }).catch(function(err) { console.error('Firestore:', err); proceed(firmaPng); });
+            } else { proceed(firmaPng); }
+        });
     };
     window.iscrReset = function(tipo) {
         var formId = tipo === 'maggiorenne' ? 'form-mag' : 'form-min';
@@ -994,6 +997,20 @@
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
                 if(g4){draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,d.data_nascita||'',72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
+                // Embedding firma digitale
+                if (d._firma_png) {
+                    try {
+                        var sigBuf = await fetch(d._firma_png).then(function(r){return r.arrayBuffer();});
+                        var sigImg = await doc.embedPng(sigBuf);
+                        var sW=220, sH=28;
+                        // rp1 pag2: "In fede ... (firma)" — blank firma tra top=588 e top=616 → y_pdfl≈226-244
+                        if(rp1) rp1.drawImage(sigImg,{x:100,y:224,width:sW,height:sH});
+                        // sp1 pag4: stessa struttura → y_pdfl≈525-553
+                        if(sp1) sp1.drawImage(sigImg,{x:100,y:525,width:sW,height:sH});
+                        // g4 pag8: 3 firme — blank a y=430, y=181, y=83
+                        if(g4){g4.drawImage(sigImg,{x:100,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:100,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:100,y:74,width:sW,height:sH});}
+                    } catch(sigErr) { console.warn('Firma embed:', sigErr); }
+                }
                 doc.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc.setAuthor('AGESCI Brescia 7');
                 var byt=await doc.save();var bl=new Blob([byt],{type:'application/pdf'});var ul=URL.createObjectURL(bl);var al=document.createElement('a');al.href=ul;al.download='Iscrizione_'+(d.nome||'')+'_'+(d.cognome||'')+'_BS7.pdf';document.body.appendChild(al);al.click();document.body.removeChild(al);URL.revokeObjectURL(ul);return;
             }
@@ -1040,6 +1057,8 @@
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <!-- jsPDF (fallback) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Signature Pad -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>window.addEventListener('load', function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
@@ -1520,6 +1539,65 @@ if ('serviceWorker' in navigator) {
             .catch(function(err) { console.warn('SW registration failed:', err); });
     });
 }
+</script>
+
+<!-- Modal firma digitale -->
+<div id="firma-modal" class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg">
+    <h3 class="text-lg font-black text-scout mb-1"><i class="fas fa-pen-nib mr-2"></i>Firma digitale</h3>
+    <p class="text-sm text-gray-500 mb-4">Firma con il dito o con il mouse nel riquadro. La firma verrà inserita nel PDF.</p>
+    <div class="border-2 border-gray-300 rounded-xl bg-gray-50 mb-4 relative" style="touch-action:none">
+      <canvas id="firma-canvas" style="width:100%;height:130px;display:block;border-radius:0.75rem;"></canvas>
+    </div>
+    <div class="flex gap-3 mb-3">
+      <button onclick="firmaClear()" class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all">
+        <i class="fas fa-eraser mr-1"></i>Pulisci
+      </button>
+      <button onclick="firmaConferma()" class="flex-[2] bg-scout text-white py-3 px-6 rounded-xl text-sm font-black hover:bg-scout/90 transition-all">
+        <i class="fas fa-check mr-1"></i>Conferma firma e genera PDF
+      </button>
+    </div>
+    <p class="text-xs text-gray-400 text-center">Oppure <button onclick="firmaConferma(true)" class="underline text-gray-500 font-medium">salta la firma</button> — la firmerai a mano sul PDF stampato</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var _sigPad = null;
+  var _firmaCallback = null;
+
+  function initCanvas() {
+    var canvas = document.getElementById('firma-canvas');
+    if (!canvas || !window.SignaturePad) return;
+    // Adatta dimensioni al display
+    var ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext('2d').scale(ratio, ratio);
+    _sigPad = new SignaturePad(canvas, { penColor: '#003366', backgroundColor: 'rgba(249,250,251,1)' });
+  }
+
+  window.iscrMostraFirma = function(callback) {
+    _firmaCallback = callback;
+    var modal = document.getElementById('firma-modal');
+    modal.classList.remove('hidden');
+    // Inizializza (o resetta) il canvas al momento dell'apertura
+    setTimeout(function() {
+      if (!_sigPad) { initCanvas(); } else { _sigPad.clear(); }
+    }, 50);
+  };
+
+  window.firmaClear = function() { if (_sigPad) _sigPad.clear(); };
+
+  window.firmaConferma = function(skip) {
+    var png = null;
+    if (!skip && _sigPad && !_sigPad.isEmpty()) {
+      png = _sigPad.toDataURL('image/png');
+    }
+    document.getElementById('firma-modal').classList.add('hidden');
+    if (_firmaCallback) _firmaCallback(png);
+  };
+})();
 </script>
 </body>
 </html>
