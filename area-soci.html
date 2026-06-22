@@ -963,29 +963,29 @@
                 var fnt = await doc.embedFont(StandardFonts.Helvetica);
                 var pg = doc.getPages();
                 var rp0=pg[0], rp1=pg[1], sp0=pg[2], sp1=pg[3], g4=pg[7];
+                var fmtD=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
                 // rp0: pagina 1 - coord da pdfplumber: y=842-bottom (baseline su riga blank)
                 // sesso/luogo/prov/data: template bottom=218.1 → y=624; CF: bottom=242.7 → y=599
                 // indirizzo: bottom=267.3 → y=575; citta: bottom=291.9 → y=550; email: bottom=316.5 → y=526
                 // pag1 city layout: "a [citta] (….prov….) CAP [cap]"
                 draw(rp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
-                draw(rp0,fnt,88,624,d.sesso||'',30);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,d.data_nascita||'',87);
+                draw(rp0,fnt,88,624,d.sesso||'',30);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,fmtD(d.data_nascita),87);
                 draw(rp0,fnt,113,599,d.cf||'',280);
                 draw(rp0,fnt,218,575,d.indirizzo||'',234);draw(rp0,fnt,469,575,d.n_civico||'',60);
                 draw(rp0,fnt,48,550,d.citta||'',336);draw(rp0,fnt,393,550,d.provincia||'',16);draw(rp0,fnt,449,550,d.cap||'',140);
                 draw(rp0,fnt,81,526,d.email||'',271);draw(rp0,fnt,380,526,d.cellulare||'',170);
                 draw(rp0,fnt,374,486,'Brescia 7',134);
-                if(rp1){draw(rp1,fnt,68,168,today,120);draw(rp1,fnt,264,168,'Brescia',278);}
+                if(rp1){draw(rp1,fnt,200,274,today,120);draw(rp1,fnt,315,274,'Brescia',225);if(d.rivista==='SI')draw(rp1,fnt,49,315,'X',12,11);if(d.rivista==='NO')draw(rp1,fnt,290,315,'X',12,11);}
                 // sp0: pagina 3 - stessa anagrafica; city layout diverso: "a [citta] CAP [cap] (prov)"
                 draw(sp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
-                draw(sp0,fnt,88,624,d.sesso||'',30);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,d.data_nascita||'',87);
+                draw(sp0,fnt,88,624,d.sesso||'',30);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,fmtD(d.data_nascita),87);
                 draw(sp0,fnt,113,599,d.cf||'',280);
                 draw(sp0,fnt,218,575,d.indirizzo||'',234);draw(sp0,fnt,461,575,d.n_civico||'',60);
                 draw(sp0,fnt,48,550,d.citta||'',298);draw(sp0,fnt,371,550,d.cap||'',95);draw(sp0,fnt,474,550,d.provincia||'',8);
-                draw(sp0,fnt,81,535,d.email||'',271);draw(sp0,fnt,374,535,d.cellulare||'',177);
+                draw(sp0,fnt,81,526,d.email||'',271);draw(sp0,fnt,380,526,d.cellulare||'',177);
                 // sp0: scheda sanitaria - coord da pdfplumber (y=842-bottom)
                 // Cognome/Nome bottom=509→y=333; nato/a bottom=528→y=314; CF/tessera bottom=547→y=296
                 // emergenze bottom=565→y=277; antitetanica bottom=601→y=241; profilassi label bottom=710→y=132
-                var fmtD=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
                 draw(sp0,fnt,90,333,d.cognome||'',182,8);draw(sp0,fnt,303,333,d.nome||'',233,8);
                 draw(sp0,fnt,79,314,d.luogo_nascita||'',290,8);draw(sp0,fnt,415,314,fmtD(d.data_nascita),110,8);
                 draw(sp0,fnt,108,296,d.cf||'',142,8);draw(sp0,fnt,347,296,d.tessera_sanitaria||'',190,8);
@@ -993,10 +993,10 @@
                 if(d.antitetanica==='SI')draw(sp0,fnt,194,241,'X',15,9);if(d.antitetanica==='NO')draw(sp0,fnt,291,241,'X',15,9);
                 if(d.allergie){draw(sp0,fnt,42,212,d.allergie,496,8);if(d.allergie.length>90)draw(sp0,fnt,42,200,d.allergie.substring(90),496,8);}
                 if(d.profilassi){draw(sp0,fnt,42,122,d.profilassi,496,8);if(d.profilassi.length>90)draw(sp0,fnt,42,105,d.profilassi.substring(90),496,8);}
-                if(sp1){if(d.note_sanitarie){draw(sp1,fnt,68,795,d.note_sanitarie,463,8);if(d.note_sanitarie.length>90)draw(sp1,fnt,68,777,d.note_sanitarie.substring(90),463,8);}draw(sp1,fnt,107,742,today,77);draw(sp1,fnt,227,742,'Brescia',303);}
+                if(sp1){if(d.note_sanitarie){draw(sp1,fnt,47,641,d.note_sanitarie,490,8);if(d.note_sanitarie.length>85)draw(sp1,fnt,47,623,d.note_sanitarie.substring(85),490,8);}draw(sp1,fnt,82,583,today,77);draw(sp1,fnt,208,583,'Brescia',295);}
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
-                if(g4){draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,d.data_nascita||'',72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
+                if(g4){draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
                 // Embedding firma digitale
                 if (d._firma_png) {
                     try {
@@ -1008,7 +1008,7 @@
                         // sp1 pag4: stessa struttura → y_pdfl≈525-553
                         if(sp1) sp1.drawImage(sigImg,{x:100,y:525,width:sW,height:sH});
                         // g4 pag8: 3 firme — blank a y=430, y=181, y=83
-                        if(g4){g4.drawImage(sigImg,{x:100,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:100,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:100,y:74,width:sW,height:sH});}
+                        if(g4){g4.drawImage(sigImg,{x:310,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:74,width:sW,height:sH});}
                     } catch(sigErr) { console.warn('Firma embed:', sigErr); }
                 }
                 doc.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc.setAuthor('AGESCI Brescia 7');
