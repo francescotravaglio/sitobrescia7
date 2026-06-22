@@ -215,7 +215,7 @@
             gap: 1.5rem;
             width: max-content;
             padding: .5rem 1.5rem;
-            animation: testi-scroll 65s linear infinite;
+            animation: testi-scroll 20s linear infinite;
         }
         .testi-marquee:hover .testi-track { animation-play-state: paused; }
         @keyframes testi-scroll {
@@ -969,35 +969,16 @@
         <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
         <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
     </div>
-    <!-- Mobile: carousel a card singola con swipe -->
-    <div class="sm:hidden px-4 mb-10">
+    <!-- Mobile: carousel a card singola (popolato da lead.js con recensioni reali) -->
+    <div id="testi-mob-section" class="sm:hidden px-4 mb-10 hidden">
         <div class="overflow-hidden" id="testi-mob-outer">
-            <div id="testi-mob-track" class="flex transition-transform duration-500 ease-in-out">
-                <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col text-left" style="min-width:100%;flex-shrink:0"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
-                <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col text-left" style="min-width:100%;flex-shrink:0"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
-                <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col text-left" style="min-width:100%;flex-shrink:0"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
-                <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col text-left" style="min-width:100%;flex-shrink:0"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
-            </div>
+            <div id="testi-mob-track" class="flex transition-transform duration-500 ease-in-out"></div>
         </div>
-        <div class="flex justify-center gap-3 mt-5">
-            <button onclick="testiGo(0)" class="testi-dot w-2.5 h-2.5 rounded-full bg-scout transition-opacity" style="opacity:1"></button>
-            <button onclick="testiGo(1)" class="testi-dot w-2.5 h-2.5 rounded-full bg-scout transition-opacity" style="opacity:0.3"></button>
-            <button onclick="testiGo(2)" class="testi-dot w-2.5 h-2.5 rounded-full bg-scout transition-opacity" style="opacity:0.3"></button>
-            <button onclick="testiGo(3)" class="testi-dot w-2.5 h-2.5 rounded-full bg-scout transition-opacity" style="opacity:0.3"></button>
-        </div>
+        <div id="testi-mob-dots" class="flex justify-center gap-3 mt-5"></div>
     </div>
-    <!-- Desktop: nastro scorrevole -->
-    <div id="testi-marquee" class="testi-marquee mb-10 hidden sm:block">
-        <div id="testi-track" class="testi-track">
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Da quando mio figlio è negli scout è cambiato tutto: è più responsabile, si organizza da solo, ha amici veri. Cose che nessun corso di calcio ti dà.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Paola R.</span><span class="text-gray-400"> · mamma di un lupetto</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">I capi sono fantastici, seguono i ragazzi con dedizione autentica. Mia figlia è entrata timidissima e ora organizza le uscite per la squadriglia. Impressionante.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Marco T.</span><span class="text-gray-400"> · papà di un'esploratrice</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Il campo estivo è stato il momento più bello dell'estate: tre settimane lontano dal telefono, con amicizie che durano. Grazie Brescia 7.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Giovanna M.</span><span class="text-gray-400"> · mamma di un rover</span></div></div>
-            <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col flex-shrink-0 w-80 text-left"><i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i><p class="text-gray-600 text-sm leading-relaxed italic flex-1">Eravamo scettici all'inizio, ma dopo il primo sabato di prova nostro figlio ci ha chiesto subito di iscriversi. Non potevamo fare scelta migliore.</p><div class="mt-5 pt-4 border-t border-gray-100 text-sm"><span class="font-black text-scout">Luca e Sara B.</span><span class="text-gray-400"> · genitori di un cerchio</span></div></div>
-        </div>
+    <!-- Desktop: nastro scorrevole (popolato da lead.js con recensioni reali) -->
+    <div id="testi-marquee" class="testi-marquee mb-10 hidden">
+        <div id="testi-track" class="testi-track"></div>
     </div>
     <div class="text-center">
         <button onclick="openTestiModal()" class="inline-flex items-center gap-2 bg-white border-2 border-scout text-scout font-black px-7 py-3.5 rounded-full text-sm hover:bg-scout hover:text-white transition">
@@ -1414,9 +1395,9 @@ window.addEventListener('load', function() {
 })();
 </script>
 <script>
-(function(){
+window.initTestiMob = function(){
     var track = document.getElementById('testi-mob-track');
-    if(!track) return;
+    if(!track || !track.children.length) return;
     var n = track.children.length, cur = 0, timer, startX;
     window.testiGo = function(i){
         cur = (i + n) % n;
@@ -1428,7 +1409,7 @@ window.addEventListener('load', function() {
     outer.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; clearInterval(timer); }, {passive:true});
     outer.addEventListener('touchend', function(e){ var dx = e.changedTouches[0].clientX - startX; if(Math.abs(dx) > 40) window.testiGo(cur + (dx < 0 ? 1 : -1)); reset(); }, {passive:true});
     window.testiGo(0); reset();
-})();
+};
 </script>
 <script defer src="assets/lead.js"></script>
 <script defer src="assets/cookie-consent.js"></script>
