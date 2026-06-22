@@ -137,7 +137,7 @@ window.trackWhatsApp = function(origine) {
             ok.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
 
             var grid = document.getElementById('testi-grid');
-            if (grid) grid.innerHTML = ok.slice(0,6).map(t => card(t)).join('');
+            if (grid) grid.innerHTML = ok.map(t => card(t)).join('');
 
             var track = document.getElementById('testi-track');
             if (track) {
