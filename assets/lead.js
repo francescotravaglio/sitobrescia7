@@ -149,26 +149,6 @@ window.trackWhatsApp = function(origine) {
                 if (mq) mq.classList.remove('hidden');
             }
 
-            // Carousel mobile
-            var mobTrack = document.getElementById('testi-mob-track');
-            var mobDots  = document.getElementById('testi-mob-dots');
-            var mobSec   = document.getElementById('testi-mob-section');
-            if (mobTrack) {
-                mobTrack.innerHTML = ok.map(t =>
-                    '<div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 flex flex-col text-left" style="min-width:100%;flex-shrink:0">' +
-                    '<i class="fas fa-quote-left text-scout-mid text-2xl mb-4"></i>' +
-                    '<p class="text-gray-700 text-base leading-relaxed italic flex-1">' + esc(t.testo) + '</p>' +
-                    '<div class="mt-5 pt-4 border-t border-gray-100 text-sm">' +
-                    '<span class="font-black text-scout">' + esc(t.nome) + '</span>' +
-                    (t.ruolo ? '<span class="text-gray-400"> · ' + esc(t.ruolo) + '</span>' : '') +
-                    '</div></div>'
-                ).join('');
-                if (mobDots) mobDots.innerHTML = ok.map((_,i) =>
-                    '<button onclick="testiGo(' + i + ')" class="testi-dot w-2.5 h-2.5 rounded-full bg-scout transition-opacity" style="opacity:' + (i===0?'1':'0.3') + '"></button>'
-                ).join('');
-                if (mobSec) mobSec.classList.remove('hidden');
-                if (window.initTestiMob) window.initTestiMob();
-            }
 
             var empty = document.getElementById('testi-empty');
             if (empty) empty.classList.add('hidden');
