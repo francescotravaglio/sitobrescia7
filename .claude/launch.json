@@ -12,6 +12,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", ".", "-p", "3000", "--no-clipboard"],
       "port": 3000
+    },
+    {
+      "name": "Locals Table (Expo web)",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\Users\\mimi\\Desktop\\Locals-Table && npx expo start --web --port 8081"],
+      "port": 8081
     }
   ]
 }
