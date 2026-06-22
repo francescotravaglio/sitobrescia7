@@ -993,12 +993,12 @@
                 // Cognome/Nome bottom=509→y=333; nato/a bottom=528→y=314; CF/tessera bottom=547→y=296
                 // emergenze bottom=565→y=277; antitetanica bottom=601→y=241; profilassi label bottom=710→y=132
                 draw(sp0,fnt,90,333,d.cognome||'',182,8);draw(sp0,fnt,303,333,d.nome||'',233,8);
-                draw(sp0,fnt,79,314,d.luogo_nascita||'',290,8);draw(sp0,fnt,415,314,fmtD(d.data_nascita),110,8);
+                draw(sp0,fnt,79,314,d.luogo_nascita||'',290,8);var dp=fmtD(d.data_nascita).split('/');draw(sp0,fnt,415,314,dp[0]||'',25,8);draw(sp0,fnt,449,314,dp[1]||'',9,8);draw(sp0,fnt,465,314,dp[2]||'',50,8);
                 draw(sp0,fnt,108,296,d.cf||'',142,8);draw(sp0,fnt,347,296,d.tessera_sanitaria||'',190,8);
                 draw(sp0,fnt,167,277,d.emerg_nome||'',120,8);draw(sp0,fnt,289,277,d.emerg_tel||'',246,8);
-                if(d.antitetanica==='SI')draw(sp0,fnt,194,241,'X',15,9);if(d.antitetanica==='NO')draw(sp0,fnt,291,241,'X',15,9);
-                if(d.allergie){draw(sp0,fnt,42,212,d.allergie,496,8);if(d.allergie.length>90)draw(sp0,fnt,42,200,d.allergie.substring(90),496,8);}
-                if(d.profilassi){draw(sp0,fnt,42,122,d.profilassi,496,8);if(d.profilassi.length>90)draw(sp0,fnt,42,105,d.profilassi.substring(90),496,8);}
+                if(d.antitetanica==='SI')draw(sp0,fnt,212,243,'X',12,9);if(d.antitetanica==='NO')draw(sp0,fnt,304,243,'X',12,9);
+                if(d.allergie){draw(sp0,fnt,42,202,d.allergie.substring(0,110),496,8);if(d.allergie.length>110)draw(sp0,fnt,42,183,d.allergie.substring(110,220),496,8);if(d.allergie.length>220)draw(sp0,fnt,42,164,d.allergie.substring(220),496,8);}
+                if(d.profilassi){draw(sp0,fnt,42,116,d.profilassi.substring(0,110),496,8);if(d.profilassi.length>110)draw(sp0,fnt,42,97,d.profilassi.substring(110,220),496,8);}
                 if(sp1){if(d.note_sanitarie){draw(sp1,fnt,47,641,d.note_sanitarie,490,8);if(d.note_sanitarie.length>85)draw(sp1,fnt,47,623,d.note_sanitarie.substring(85),490,8);}draw(sp1,fnt,82,583,today,77);draw(sp1,fnt,208,583,'Brescia',295);}
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
@@ -1012,7 +1012,7 @@
                         // rp1 pag2: "In fede ... (firma)" — blank firma tra top=588 e top=616 → y_pdfl≈226-244
                         if(rp1) rp1.drawImage(sigImg,{x:100,y:224,width:sW,height:sH});
                         // sp1 pag4: stessa struttura → y_pdfl≈525-553
-                        if(sp1) sp1.drawImage(sigImg,{x:100,y:525,width:sW,height:sH});
+                        if(sp1) sp1.drawImage(sigImg,{x:260,y:525,width:sW,height:sH});
                         // g4 pag8: 3 firme — blank a y=430, y=181, y=83
                         if(g4){g4.drawImage(sigImg,{x:310,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:74,width:sW,height:sH});}
                     } catch(sigErr) { console.warn('Firma embed:', sigErr); }
