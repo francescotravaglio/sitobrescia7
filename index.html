@@ -969,14 +969,7 @@
         <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">La parola ai genitori</div>
         <h2 class="text-2xl md:text-4xl font-black text-scout">Cosa dicono le famiglie</h2>
     </div>
-    <!-- Mobile: carousel a card singola (popolato da lead.js con recensioni reali) -->
-    <div id="testi-mob-section" class="sm:hidden px-4 mb-10 hidden">
-        <div class="overflow-hidden" id="testi-mob-outer">
-            <div id="testi-mob-track" class="flex transition-transform duration-500 ease-in-out"></div>
-        </div>
-        <div id="testi-mob-dots" class="flex justify-center gap-3 mt-5"></div>
-    </div>
-    <!-- Desktop: nastro scorrevole (popolato da lead.js con recensioni reali) -->
+    <!-- Nastro scorrevole (popolato da lead.js con recensioni reali) -->
     <div id="testi-marquee" class="testi-marquee mb-10 hidden">
         <div id="testi-track" class="testi-track"></div>
     </div>
@@ -1393,23 +1386,6 @@ window.addEventListener('load', function() {
     updateCarousel();
     resetTimer();
 })();
-</script>
-<script>
-window.initTestiMob = function(){
-    var track = document.getElementById('testi-mob-track');
-    if(!track || !track.children.length) return;
-    var n = track.children.length, cur = 0, timer, startX;
-    window.testiGo = function(i){
-        cur = (i + n) % n;
-        track.style.transform = 'translateX(-' + (cur * 100) + '%)';
-        document.querySelectorAll('.testi-dot').forEach(function(d,j){ d.style.opacity = j===cur ? '1' : '0.3'; });
-    };
-    function reset(){ clearInterval(timer); timer = setInterval(function(){ window.testiGo(cur+1); }, 6000); }
-    var outer = document.getElementById('testi-mob-outer');
-    outer.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; clearInterval(timer); }, {passive:true});
-    outer.addEventListener('touchend', function(e){ var dx = e.changedTouches[0].clientX - startX; if(Math.abs(dx) > 40) window.testiGo(cur + (dx < 0 ? 1 : -1)); reset(); }, {passive:true});
-    window.testiGo(0); reset();
-};
 </script>
 <script defer src="assets/lead.js"></script>
 <script defer src="assets/cookie-consent.js"></script>
