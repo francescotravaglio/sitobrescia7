@@ -412,6 +412,12 @@
       <div class="bg-white rounded-3xl shadow-md border border-gray-100 p-4 sm:p-8 md:p-10">
         <form id="form-mag" novalidate>
 
+          <!-- CODICE SOCIO CENSIMENTO -->
+          <div class="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
+            <label class="text-sm font-semibold text-gray-700 mb-1 block">Codice Socio / Censimento <span class="font-normal text-gray-400">(facoltativo, 7 cifre — da compilare se già iscritto AGESCI)</span></label>
+            <input type="text" name="codice_socio" maxlength="7" placeholder="0000000" class="w-40 border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout">
+          </div>
+
           <!-- DATI ANAGRAFICI -->
           <p class="text-lg font-black text-scout mb-4 mt-2 border-b border-gray-200 pb-2">Dati anagrafici</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -996,7 +1002,7 @@
                 if(sp1){if(d.note_sanitarie){draw(sp1,fnt,47,641,d.note_sanitarie,490,8);if(d.note_sanitarie.length>85)draw(sp1,fnt,47,623,d.note_sanitarie.substring(85),490,8);}draw(sp1,fnt,82,583,today,77);draw(sp1,fnt,208,583,'Brescia',295);}
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
-                if(g4){draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
+                if(g4){if(d.codice_socio){var cs=String(d.codice_socio).substring(0,7);var bx=[388,406,425,443,462,480,499];for(var ci=0;ci<cs.length;ci++)draw(g4,fnt,bx[ci],668,cs[ci],18,10);}draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
                 // Embedding firma digitale
                 if (d._firma_png) {
                     try {
