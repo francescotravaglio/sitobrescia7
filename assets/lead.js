@@ -136,7 +136,7 @@ window.trackWhatsApp = function(origine) {
         var inner = document.getElementById('testi-carousel-inner');
         if (inner) inner.style.transform = 'translateX(-' + (idx * 100) + '%)';
         document.querySelectorAll('[id^="testi-dot-"]').forEach(function(d, i) {
-            d.className = 'w-2.5 h-2.5 rounded-full transition-colors duration-200 ' + (i === idx ? 'bg-scout' : 'bg-gray-300');
+            d.style.background = i === idx ? '#003366' : '#d1d5db';
         });
     };
 
@@ -145,6 +145,15 @@ window.trackWhatsApp = function(origine) {
         if (!len) return;
         window.testitSetIdx((window._testitIdx + dir + len) % len);
     };
+
+    function testitUpdateLayout() {
+        var grid     = document.getElementById('testi-grid');
+        var carousel = document.getElementById('testi-carousel');
+        if (!grid || !carousel || !window._testitLen) return;
+        var mobile = window.innerWidth < 640;
+        grid.style.display     = mobile ? 'none'  : '';
+        carousel.style.display = mobile ? 'block' : 'none';
+    }
 
     // Carica le recensioni approvate dopo che Firebase è pronto
     window.addEventListener('load', function(){
@@ -161,18 +170,16 @@ window.trackWhatsApp = function(origine) {
             // Carosello mobile
             var carouselInner = document.getElementById('testi-carousel-inner');
             if (carouselInner) {
-                carouselInner.innerHTML = ok.map(t =>
-                    '<div class="min-w-full">' + card(t) + '</div>'
-                ).join('');
+                carouselInner.innerHTML = ok.map(function(t) {
+                    return '<div style="min-width:100%;box-sizing:border-box;">' + card(t) + '</div>';
+                }).join('');
                 var dotsEl = document.getElementById('testi-carousel-dots');
                 if (dotsEl) {
                     dotsEl.innerHTML = ok.map(function(_, i) {
-                        return '<button onclick="testitSetIdx(' + i + ')" id="testi-dot-' + i + '" aria-label="Vai a ' + (i+1) + '" class="w-2.5 h-2.5 rounded-full transition-colors duration-200 ' + (i===0 ? 'bg-scout' : 'bg-gray-300') + '"></button>';
+                        return '<button onclick="testitSetIdx(' + i + ')" id="testi-dot-' + i + '" aria-label="Vai a ' + (i+1) + '" style="width:.65rem;height:.65rem;border-radius:50%;border:none;cursor:pointer;background:' + (i===0 ? '#003366' : '#d1d5db') + ';padding:0;transition:background .2s;"></button>';
                     }).join('');
                 }
                 window._testitLen = ok.length;
-                var carousel = document.getElementById('testi-carousel');
-                if (carousel) carousel.classList.remove('hidden');
             }
 
             var track = document.getElementById('testi-track');
@@ -187,6 +194,9 @@ window.trackWhatsApp = function(origine) {
 
             var empty = document.getElementById('testi-empty');
             if (empty) empty.classList.add('hidden');
+
+            testitUpdateLayout();
+            window.addEventListener('resize', testitUpdateLayout);
         }).catch(e => console.error('[testimonianze]', e));
     });
 })();
