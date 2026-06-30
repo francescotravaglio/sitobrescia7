@@ -331,6 +331,9 @@
                         <button onclick="markAllPreLette()" class="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition font-semibold">
                             <i class="fas fa-check-double mr-1"></i>Segna tutte lette
                         </button>
+                        <button onclick="exportPreIscrizioniExcel()" class="text-xs text-green-600 border border-green-200 px-3 py-1.5 rounded-lg hover:bg-green-50 transition font-semibold">
+                            <i class="fas fa-file-excel mr-1"></i>Scarica Excel
+                        </button>
                         <button onclick="clearAllPreIscrizioni()" class="text-xs text-red-400 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition font-semibold">
                             <i class="fas fa-trash mr-1"></i>Elimina tutte
                         </button>
@@ -1070,6 +1073,30 @@ function markAllPreLette() {
     batch.commit()
         .then(() => toast(nonLette.length + ' pre-iscrizioni segnate lette.'))
         .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+function exportPreIscrizioniExcel() {
+    const all = window.preIscrizioniCache || [];
+    if (!all.length) { toast('Nessuna pre-iscrizione da esportare.'); return; }
+    const rows = all
+        .slice()
+        .sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''))
+        .map(r => ({
+            'Nome bambino':      r.bambino_nome     || '',
+            'Data di nascita':   r.data_nascita     || '',
+            'Nome genitore':     r.genitore_nome    || '',
+            'Cognome genitore':  r.genitore_cognome || '',
+            'Email':             r.email            || '',
+            'Telefono':          r.telefono         || '',
+            'Data invio':        r.timestamp ? r.timestamp.slice(0, 10) : '',
+            'Letta':             r.letta ? 'Sì' : 'No',
+        }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [20,14,16,18,32,16,12,8].map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Pre-iscrizioni');
+    XLSX.writeFile(wb, 'pre-iscrizioni.xlsx');
+    toast('Excel scaricato.');
 }
 
 // ── RICHIESTE ────────────────────────────────────────────────────
