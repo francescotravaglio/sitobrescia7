@@ -73,20 +73,28 @@ service cloud.firestore {
     // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato } per Codice Socio,
     // generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è mai
     // leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
-    // riesce solo se il valore inserito coincide con quello reale, rendendolo monouso.
+    // riesce solo se il valore in "tentativo" coincide con "pin", rendendolo monouso.
+    //
+    // NB: il confronto usa un campo "tentativo" separato (mai presente nel documento
+    // originale), NON un update diretto su "pin". Con un update() parziale, un campo
+    // omesso dalla richiesta mantiene il suo valore precedente: un confronto del tipo
+    // "request.resource.data.pin == resource.data.pin" sarebbe quindi vero anche
+    // omettendo del tutto il pin dalla richiesta (nessun valore "nuovo" da confrontare,
+    // il vecchio resta invariato) — bypassando la verifica senza conoscere il PIN.
+    // Usando "tentativo" (campo che non esiste finché non lo scrive il client), se viene
+    // omesso il suo valore risulta assente/nullo e non potrà mai coincidere con "pin".
     match /soci_attivazione/{doc} {
       allow get, list:      if isAdmin();
       allow create, delete: if isAdmin();
       // L'admin può sempre rigenerare/sovrascrivere un PIN (anche se il documento esiste
       // già, es. per riemettere un codice perso o già usato: Firestore classifica questa
       // scrittura come "update", non "create", quindi va concessa esplicitamente qui).
-      // In alternativa, un client non-admin può "consumare" il PIN esistente tentando una
-      // scrittura che riesce solo se il valore inserito coincide con quello reale.
       allow update: if isAdmin()
                     || (resource.data.usato == false
                         && request.resource.data.usato == true
                         && request.resource.data.pin == resource.data.pin
-                        && request.resource.data.keys().hasOnly(['pin', 'usato']));
+                        && request.resource.data.tentativo == resource.data.pin
+                        && request.resource.data.keys().hasOnly(['pin', 'usato', 'tentativo']));
     }
 
     // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili

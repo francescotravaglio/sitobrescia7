@@ -1200,10 +1200,11 @@
             .then(function(methods) {
                 if (methods && methods.length) throw { code: 'auth/email-already-in-use' };
                 // 2) Verifica il codice di attivazione senza mai leggerlo: la scrittura
-                //    riesce solo se il PIN inserito coincide con quello generato dall'admin
-                //    (vedi firestore.rules, collection soci_attivazione). In caso contrario
-                //    fallisce con permission-denied e il PIN reale non viene mai rivelato.
-                return window.db.collection('soci_attivazione').doc(codice).update({ pin: pin, usato: true });
+                //    riesce solo se "tentativo" coincide con il PIN reale generato
+                //    dall'admin (vedi firestore.rules, collection soci_attivazione).
+                //    In caso contrario fallisce con permission-denied e il PIN reale
+                //    non viene mai rivelato.
+                return window.db.collection('soci_attivazione').doc(codice).update({ tentativo: pin, usato: true });
             })
             .then(function() {
                 return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password);
