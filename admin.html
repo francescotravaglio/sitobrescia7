@@ -744,6 +744,13 @@ function togglePw() {
 document.addEventListener('DOMContentLoaded', () => {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
+            if (user.email && user.email.endsWith('@soci.agescibrescia7.com')) {
+                firebase.auth().signOut();
+                const errEl = document.getElementById('login-error');
+                errEl.textContent = 'Accesso non autorizzato per questo account.';
+                errEl.classList.remove('hidden');
+                return;
+            }
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('app').classList.remove('hidden');
             document.getElementById('app').classList.add('flex');
