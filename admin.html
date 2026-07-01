@@ -609,11 +609,15 @@
                                 class="bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
                             <i class="fas fa-key mr-2"></i>Genera codice
                         </button>
+                        <button onclick="controllaAttivazioneSocio()"
+                                class="border border-gray-200 text-gray-600 font-bold px-5 py-2.5 rounded-xl text-sm hover:border-scout hover:text-scout transition">
+                            <i class="fas fa-search mr-2"></i>Controlla stato
+                        </button>
                     </div>
                     <div id="attiva-risultato" class="hidden mt-5 bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
                         <div class="text-gray-500 mb-1">Codice di attivazione per <strong id="attiva-risultato-codice"></strong>:</div>
                         <div class="text-2xl font-black text-scout tracking-widest" id="attiva-risultato-pin"></div>
-                        <p class="text-xs text-gray-400 mt-2">Comunicalo al socio: è valido una sola volta e scade dopo 72 ore. Se lo rigeneri, quello precedente smette di funzionare.</p>
+                        <p class="text-xs text-gray-400 mt-2" id="attiva-risultato-scadenza"></p>
                     </div>
                     <p id="attiva-msg" class="text-xs mt-3 hidden font-semibold"></p>
                 </div>
@@ -1543,6 +1547,13 @@ function resetAll() {
 // se il valore inserito coincide (vedi firestore.rules). Il PIN è a 8 cifre
 // e scade dopo 72 ore (regola lato server) per limitare la finestra utile
 // a un eventuale tentativo di forza bruta.
+function fmtScadenza(creatoDate) {
+    const scadenza = new Date(creatoDate.getTime() + 72 * 60 * 60 * 1000);
+    const scaduto = scadenza < new Date();
+    const str = scadenza.toLocaleString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    return scaduto ? `Scaduto il ${str} — non più utilizzabile, rigeneralo.` : `Valido fino al ${str}.`;
+}
+
 function generaAttivazioneSocio() {
     const codice = document.getElementById('attiva-codice').value.trim();
     const msg = document.getElementById('attiva-msg');
@@ -1559,13 +1570,58 @@ function generaAttivazioneSocio() {
         .then(() => {
             document.getElementById('attiva-risultato-codice').textContent = codice;
             document.getElementById('attiva-risultato-pin').textContent = pin;
+            document.getElementById('attiva-risultato-scadenza').textContent =
+                'Comunicalo al socio: è valido una sola volta. ' + fmtScadenza(new Date());
             document.getElementById('attiva-risultato').classList.remove('hidden');
-            document.getElementById('attiva-codice').value = '';
             toast('Codice di attivazione generato!');
         })
         .catch(e => {
             console.error(e);
             msg.textContent = '❌ Errore durante la generazione: ' + e.message;
+            msg.className = 'text-xs mt-3 font-semibold text-red-500';
+            msg.classList.remove('hidden');
+        });
+}
+
+// Ricontrolla lo stato di un'attivazione già generata (es. dopo aver
+// lasciato la pagina): l'admin ha accesso in lettura a questa collection
+// (vedi firestore.rules), quindi può sempre recuperare PIN/scadenza/stato.
+function controllaAttivazioneSocio() {
+    const codice = document.getElementById('attiva-codice').value.trim();
+    const msg = document.getElementById('attiva-msg');
+    msg.classList.add('hidden');
+    document.getElementById('attiva-risultato').classList.add('hidden');
+    if (!codice) {
+        msg.textContent = '❌ Inserisci il Codice Socio.';
+        msg.className = 'text-xs mt-3 font-semibold text-red-500';
+        msg.classList.remove('hidden');
+        return;
+    }
+    window.firestoreDb.collection('soci_attivazione').doc(codice).get()
+        .then(doc => {
+            if (!doc.exists) {
+                msg.textContent = 'ℹ️ Nessuna attivazione pendente per questo codice. Generane una nuova.';
+                msg.className = 'text-xs mt-3 font-semibold text-gray-500';
+                msg.classList.remove('hidden');
+                return;
+            }
+            const d = doc.data();
+            if (d.usato) {
+                msg.textContent = '✅ Questo codice ha già completato la registrazione (PIN già usato).';
+                msg.className = 'text-xs mt-3 font-semibold text-green-600';
+                msg.classList.remove('hidden');
+                return;
+            }
+            const creatoDate = d.creato && d.creato.toDate ? d.creato.toDate() : new Date();
+            document.getElementById('attiva-risultato-codice').textContent = codice;
+            document.getElementById('attiva-risultato-pin').textContent = d.pin;
+            document.getElementById('attiva-risultato-scadenza').textContent =
+                'Non ancora usato. ' + fmtScadenza(creatoDate);
+            document.getElementById('attiva-risultato').classList.remove('hidden');
+        })
+        .catch(e => {
+            console.error(e);
+            msg.textContent = '❌ Errore durante il controllo: ' + e.message;
             msg.className = 'text-xs mt-3 font-semibold text-red-500';
             msg.classList.remove('hidden');
         });
