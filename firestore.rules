@@ -77,10 +77,16 @@ service cloud.firestore {
     match /soci_attivazione/{doc} {
       allow get, list:      if isAdmin();
       allow create, delete: if isAdmin();
-      allow update: if resource.data.usato == false
-                    && request.resource.data.usato == true
-                    && request.resource.data.pin == resource.data.pin
-                    && request.resource.data.keys().hasOnly(['pin', 'usato']);
+      // L'admin può sempre rigenerare/sovrascrivere un PIN (anche se il documento esiste
+      // già, es. per riemettere un codice perso o già usato: Firestore classifica questa
+      // scrittura come "update", non "create", quindi va concessa esplicitamente qui).
+      // In alternativa, un client non-admin può "consumare" il PIN esistente tentando una
+      // scrittura che riesce solo se il valore inserito coincide con quello reale.
+      allow update: if isAdmin()
+                    || (resource.data.usato == false
+                        && request.resource.data.usato == true
+                        && request.resource.data.pin == resource.data.pin
+                        && request.resource.data.keys().hasOnly(['pin', 'usato']));
     }
 
     // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
