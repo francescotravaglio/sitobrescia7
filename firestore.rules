@@ -70,25 +70,17 @@ service cloud.firestore {
     }
 
     // ── Area soci ──
-    // soci_lista: dati completi (nome, nascita, cellulare, ecc.) leggibili solo dall'admin
-    //             o dal socio stesso (match tra la sua email fittizia {codice}@soci... e il doc);
-    //             NESSUN utente autenticato può elencare/leggere l'intera collection.
-    //             Scrittura (import Excel censimento) solo admin.
-    match /soci_lista/{doc} {
-      allow get:   if isAdmin() || (request.auth != null && request.auth.token.email == doc + '@soci.agescibrescia7.com');
-      allow list:  if isAdmin();
-      allow write: if isAdmin();
-    }
-
-    // soci_codici: indice minimale (solo l'esistenza del codice, NESSUN dato personale)
-    // usato dalla registrazione Area Soci per verificare che il Codice Socio inserito
-    // sia un codice censito reale prima di creare l'account Firebase Auth.
-    // NB: il Codice Socio non è un segreto, quindi questo filtro blocca solo le
-    // registrazioni con numeri inventati/casuali, non l'uso di un codice reale altrui.
-    match /soci_codici/{doc} {
-      allow get:   if true;
-      allow list:  if isAdmin();
-      allow write: if isAdmin();
+    // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato } per Codice Socio,
+    // generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è mai
+    // leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
+    // riesce solo se il valore inserito coincide con quello reale, rendendolo monouso.
+    match /soci_attivazione/{doc} {
+      allow get, list:      if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if resource.data.usato == false
+                    && request.resource.data.usato == true
+                    && request.resource.data.pin == resource.data.pin
+                    && request.resource.data.keys().hasOnly(['pin', 'usato']);
     }
 
     // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili

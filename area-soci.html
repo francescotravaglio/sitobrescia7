@@ -182,11 +182,16 @@
 
         <!-- Registration form -->
         <div id="soci-register-form" class="hidden">
-            <p class="text-xs text-gray-500 mb-5">Inserisci il tuo Codice Socio e scegli una password per accedere all'area riservata.</p>
+            <p class="text-xs text-gray-500 mb-5">Inserisci il tuo Codice Socio, il codice di attivazione che ti è stato comunicato e scegli una password per accedere all'area riservata.</p>
             <div class="text-left space-y-4 mb-5">
                 <div>
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Codice Socio</label>
                     <input type="number" id="reg-codice" placeholder="Es. 12345"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Codice di attivazione</label>
+                    <input type="text" id="reg-pin" placeholder="Ricevuto da un capo/dall'admin" maxlength="6"
                            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
                 </div>
                 <div>
@@ -1132,46 +1137,8 @@
         var btn = document.getElementById('btn-logout-nav');
         if (btn) { btn.classList.remove('hidden'); btn.classList.add('flex'); }
         document.getElementById('welcome-codice').textContent = codice || '';
-
-        function nomeFromData(d) {
-            var nome    = d.Nome    || d.nome    || d.NOME    || '';
-            var cognome = d.Cognome || d.cognome || d.COGNOME || '';
-            return (nome + ' ' + cognome).trim();
-        }
-
-        if (!codice) { setNomeUI(''); return; }
-
-        function doLookup() {
-            if (!window.db) { setTimeout(doLookup, 300); return; }
-            window.db.collection('soci_lista').doc(String(codice)).get()
-                .then(function(doc) {
-                    if (doc.exists) {
-                        var n = nomeFromData(doc.data());
-                        if (n) { setNomeUI(n); return; }
-                    }
-                    return window.db.collection('soci_lista')
-                        .where('CodiceSocio', '==', codice)
-                        .limit(1).get()
-                        .then(function(snap) {
-                            if (!snap.empty) {
-                                var n2 = nomeFromData(snap.docs[0].data());
-                                if (n2) { setNomeUI(n2); return; }
-                            }
-                            var numCodice = Number(codice);
-                            if (!isNaN(numCodice) && numCodice !== 0) {
-                                return window.db.collection('soci_lista')
-                                    .where('CodiceSocio', '==', numCodice)
-                                    .limit(1).get()
-                                    .then(function(snap2) {
-                                        setNomeUI(snap2.empty ? codice : (nomeFromData(snap2.docs[0].data()) || codice));
-                                    });
-                            }
-                            setNomeUI(codice);
-                        });
-                })
-                .catch(function(e) { console.error('[soci_lista]', e); setNomeUI(codice); });
-        }
-        doLookup();
+        // Nessun dato anagrafico è salvato su Firestore: si mostra solo il Codice Socio.
+        setNomeUI(codice ? 'Socio ' + codice : '');
     }
     function hideContent() { document.getElementById('area-soci-content').classList.add('hidden'); }
 
@@ -1218,24 +1185,33 @@
     window.sociRegister = function() {
         clearErrors();
         var codice   = document.getElementById('reg-codice').value.trim();
+        var pin      = document.getElementById('reg-pin').value.trim();
         var password = document.getElementById('reg-password').value;
         var password2= document.getElementById('reg-password2').value;
 
         if (!codice)             { errRegister('Inserisci il Codice Socio.'); return; }
+        if (!pin)                { errRegister('Inserisci il codice di attivazione ricevuto.'); return; }
         if (password.length < 6) { errRegister('La password deve avere almeno 6 caratteri.'); return; }
         if (password !== password2) { errRegister('Le password non coincidono.'); return; }
 
-        // Verifica che il Codice Socio sia un codice censito reale (indice minimale
-        // senza dati personali) prima di creare l'account Firebase Auth.
-        window.db.collection('soci_codici').doc(codice).get()
-            .then(function(doc) {
-                if (!doc.exists) throw { code: 'bs7/codice-non-trovato' };
+        // 1) Controlla prima che non esista già un account per questo codice, per non
+        //    "bruciare" inutilmente il PIN monouso in caso di errore dell'utente.
+        firebase.auth().fetchSignInMethodsForEmail(toEmail(codice))
+            .then(function(methods) {
+                if (methods && methods.length) throw { code: 'auth/email-already-in-use' };
+                // 2) Verifica il codice di attivazione senza mai leggerlo: la scrittura
+                //    riesce solo se il PIN inserito coincide con quello generato dall'admin
+                //    (vedi firestore.rules, collection soci_attivazione). In caso contrario
+                //    fallisce con permission-denied e il PIN reale non viene mai rivelato.
+                return window.db.collection('soci_attivazione').doc(codice).update({ pin: pin, usato: true });
+            })
+            .then(function() {
                 return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password);
             })
             .then(function(cred) { return cred.user.updateProfile({ displayName: codice }); })
             .catch(function(err) {
-                if (err.code === 'bs7/codice-non-trovato') {
-                    errRegister('Codice Socio non trovato. Verifica il numero o contatta info@agescibrescia7.com.');
+                if (err.code === 'permission-denied' || err.code === 'not-found') {
+                    errRegister('Codice di attivazione non valido, già usato o Codice Socio errato. Contatta info@agescibrescia7.com.');
                 } else if (err.code === 'auth/email-already-in-use') {
                     errRegister('Questo Codice Socio ha già un accesso. Usa il login.');
                 } else if (err.code === 'auth/weak-password') {
