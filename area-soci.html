@@ -1436,6 +1436,9 @@
 
     var BRANCH_LABELS = { cerchio: '🐞 Cerchio', reparto: 'Reparto', clan: 'Clan' };
 
+    function escGal(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+    function safeUrl(url) { return /^https?:\/\//i.test(url || '') ? url : ''; }
+
     function photoIcon(url) {
         if (!url) return '<i class="fas fa-images text-5xl text-gray-300"></i>';
         if (url.includes('photos.google.com') || url.includes('photos.app.goo.gl')) {
@@ -1459,7 +1462,7 @@
         ['cerchio','reparto','clan'].forEach(function(b) {
             document.getElementById('gal-tab-' + b).classList.toggle('active', b === branch);
         });
-        var url = _urls[branch];
+        var url = safeUrl(_urls[branch]);
         var container = document.getElementById('gallery-container');
         var openLink  = document.getElementById('gallery-open-link');
         if (openLink) {
@@ -1470,24 +1473,24 @@
             container.innerHTML =
                 '<div class="bg-white rounded-3xl border border-dashed border-gray-200 p-12 text-center text-gray-400">' +
                 '<i class="fas fa-camera text-4xl mb-4 opacity-20 block"></i>' +
-                '<p class="font-semibold text-sm">Nessun album configurato per ' + BRANCH_LABELS[branch] + '</p>' +
+                '<p class="font-semibold text-sm">Nessun album configurato per ' + escGal(BRANCH_LABELS[branch]) + '</p>' +
                 '</div>';
             return;
         }
         container.innerHTML =
-            '<a href="' + url + '" target="_blank" rel="noopener" ' +
+            '<a href="' + escGal(url) + '" target="_blank" rel="noopener" ' +
             'class="group flex flex-col sm:flex-row items-center gap-6 bg-white ' +
             'border border-gray-100 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-8">' +
                 '<div class="flex-shrink-0 w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">' +
                     photoIcon(url) +
                 '</div>' +
                 '<div class="flex-1 text-center sm:text-left">' +
-                    '<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Album ' + BRANCH_LABELS[branch] + '</p>' +
+                    '<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Album ' + escGal(BRANCH_LABELS[branch]) + '</p>' +
                     '<p class="text-xl font-black text-scout mb-1">Le nostre foto</p>' +
                     '<p class="text-sm text-gray-500">Tocca per aprire la galleria fotografica</p>' +
                 '</div>' +
                 '<div class="flex-shrink-0 flex items-center gap-2 bg-scout group-hover:bg-scout-dark text-white font-black text-sm px-6 py-3 rounded-2xl transition-all">' +
-                    '<i class="fas fa-arrow-right"></i> ' + photoLabel(url) +
+                    '<i class="fas fa-arrow-right"></i> ' + escGal(photoLabel(url)) +
                 '</div>' +
             '</a>';
     };
