@@ -5,32 +5,33 @@ rules_version = '2';
 // ⚠️ Per attivarle: Firebase Console → Firestore Database → Regole → incolla → Pubblica
 //    https://console.firebase.google.com/project/agescibrescia7-508b0/firestore/rules
 //
-// Tutte le operazioni di scrittura/lettura privilegiata richiedono
-// request.auth != null  (= admin loggato con Firebase Auth in admin.html).
-// Le uniche eccezioni sono le operazioni pubbliche necessarie al sito:
-//   • lettura contenuti (annunci, eventi, testimonianze approvate)
-//   • invio pre-iscrizioni e testimonianze (create con validazione)
-//   • autenticazione soci (soci_auth read/create)
+// isAdmin(): utente Firebase Auth con email NON @soci.agescibrescia7.com
+// I soci usano email {codice}@soci.agescibrescia7.com e non sono admin.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isAdmin() {
+      return request.auth != null &&
+             !(request.auth.token.email.matches('.*@soci[.]agescibrescia7[.]com'));
+    }
+
     // ── Contenuti pubblici: lettura libera, scrittura solo admin ──
     match /annunci/{doc} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     match /eventi/{doc} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     match /config/{doc} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     match /informazioni/{doc} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     // ── Pre-iscrizioni: il pubblico può solo CREARE (con validazione) ──
@@ -41,10 +42,10 @@ service cloud.firestore {
         request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
         request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
         request.resource.data.letta == false;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
-    // ── Iscrizioni complete (form area soci) ──
+    // ── Iscrizioni complete (form area soci — utenti autenticati) ──
     match /iscrizioni/{doc} {
       allow create: if
         request.auth != null &&
@@ -55,31 +56,29 @@ service cloud.firestore {
         request.resource.data.timestamp is string &&
         request.resource.data.dati is map &&
         request.resource.data.size() <= 6;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if isAdmin();
     }
 
-    // ── Testimonianze: lettura pubblica (serve per mostrarle), invio pubblico con validazione ──
+    // ── Testimonianze: lettura pubblica, invio pubblico con validazione ──
     match /testimonianze/{doc} {
       allow read: if true;
       allow create: if
         request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
         request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
         request.resource.data.approvata == false;
-      allow update, delete: if request.auth != null;
+      allow update, delete: if isAdmin();
     }
 
     // ── Area soci ──
-    // soci_lista: lettura solo per utenti autenticati (soci e admin),
-    //             scrittura bloccata (import solo da Firebase Console)
+    // soci_lista: lettura per qualsiasi utente autenticato (soci e admin)
     match /soci_lista/{doc}  { allow read: if request.auth != null; allow write: if false; }
 
     // soci_auth: lettura pubblica solo durante periodo di migrazione legacy,
-    //            nessuna creazione pubblica (le password plain-text non vengono più salvate),
     //            eliminazione consentita per la migrazione automatica (utente appena autenticato)
     match /soci_auth/{doc}   {
       allow read: if true;
       allow create: if false;
-      allow update: if request.auth != null;
+      allow update: if isAdmin();
       allow delete: if request.auth != null;
     }
 
