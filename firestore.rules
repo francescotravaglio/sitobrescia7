@@ -70,16 +70,24 @@ service cloud.firestore {
     }
 
     // ── Area soci ──
-    // soci_lista: lettura per qualsiasi utente autenticato (soci e admin)
-    match /soci_lista/{doc}  { allow read: if request.auth != null; allow write: if false; }
+    // soci_lista: dati completi (nome, nascita, cellulare, ecc.) leggibili solo dall'admin
+    //             o dal socio stesso (match tra la sua email fittizia {codice}@soci... e il doc);
+    //             NESSUN utente autenticato può elencare/leggere l'intera collection.
+    //             Scrittura (import Excel censimento) solo admin.
+    match /soci_lista/{doc} {
+      allow get:   if isAdmin() || (request.auth != null && request.auth.token.email == doc + '@soci.agescibrescia7.com');
+      allow list:  if isAdmin();
+      allow write: if isAdmin();
+    }
 
-    // soci_auth: lettura pubblica solo durante periodo di migrazione legacy,
-    //            eliminazione consentita per la migrazione automatica (utente appena autenticato)
+    // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
+    //            da un client non admin. La migrazione dei soci storici va gestita
+    //            manualmente dall'admin, che verifica l'identità e poi crea/elimina l'account.
     match /soci_auth/{doc}   {
-      allow read: if true;
+      allow read:   if isAdmin();
       allow create: if false;
       allow update: if isAdmin();
-      allow delete: if request.auth != null;
+      allow delete: if isAdmin();
     }
 
     // ── Tutto il resto: negato ──

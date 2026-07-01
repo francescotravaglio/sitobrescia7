@@ -1202,28 +1202,7 @@
         firebase.auth().signInWithEmailAndPassword(toEmail(codice), password)
             .catch(function(err) {
                 if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-                    return window.db.collection('soci_auth')
-                        .where('codiceSocio', '==', codice)
-                        .get()
-                        .then(function(snap) {
-                            if (snap.empty) throw { code: 'auth/user-not-found' };
-                            var match = null;
-                            snap.forEach(function(doc) {
-                                if (doc.data().password === password) match = doc;
-                            });
-                            if (!match) throw { code: 'auth/wrong-password' };
-                            return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password)
-                                .then(function(cred) {
-                                    return cred.user.updateProfile({ displayName: codice })
-                                        .then(function() { return match.ref.delete(); });
-                                });
-                        });
-                }
-                throw err;
-            })
-            .catch(function(err) {
-                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-                    errLogin('Nessun account trovato per questo Codice Socio.');
+                    errLogin('Nessun account trovato per questo Codice Socio. Se sei un socio storico non ancora migrato, contatta info@agescibrescia7.com per attivare il tuo accesso.');
                 } else if (err.code === 'auth/wrong-password') {
                     errLogin('Password errata. Riprova.');
                 } else if (err.code === 'auth/too-many-requests') {
