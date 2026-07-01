@@ -61,17 +61,18 @@ service cloud.firestore {
     }
 
     // ── Area soci ──
-    // soci_lista: solo lettura pubblica (usato da area-soci.html per login soci),
+    // soci_lista: lettura solo per utenti autenticati (soci e admin),
     //             scrittura bloccata (import solo da Firebase Console)
-    // NOTA: la lettura pubblica espone i dati dei soci — da proteggere
-    //       con Firebase Auth area-soci in un futuro aggiornamento.
-    match /soci_lista/{doc}  { allow read: if true; allow write: if false; }
+    match /soci_lista/{doc}  { allow read: if request.auth != null; allow write: if false; }
 
-    // soci_auth: lettura e creazione pubbliche (necessarie per login/registrazione soci),
-    //            modifica ed eliminazione solo admin
+    // soci_auth: lettura pubblica solo durante periodo di migrazione legacy,
+    //            nessuna creazione pubblica (le password plain-text non vengono più salvate),
+    //            eliminazione consentita per la migrazione automatica (utente appena autenticato)
     match /soci_auth/{doc}   {
-      allow read, create: if true;
-      allow update, delete: if request.auth != null;
+      allow read: if true;
+      allow create: if false;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
     }
 
     // ── Tutto il resto: negato ──
