@@ -1,0 +1,119 @@
+rules_version = '2';
+
+// REGOLE FIRESTORE — AGESCI Brescia 7
+//
+// ⚠️ Per attivarle: Firebase Console → Firestore Database → Regole → incolla → Pubblica
+//    https://console.firebase.google.com/project/agescibrescia7-508b0/firestore/rules
+//
+// isAdmin(): utente Firebase Auth con email NON @soci.agescibrescia7.com
+// I soci usano email {codice}@soci.agescibrescia7.com e non sono admin.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.email == 'info@agescibrescia7.com';
+    }
+
+    // ── Contenuti pubblici: lettura libera, scrittura solo admin ──
+    match /annunci/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /eventi/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /config/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /informazioni/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Pre-iscrizioni: il pubblico può solo CREARE (con validazione) ──
+    match /pre_iscrizioni/{doc} {
+      allow create: if
+        request.resource.data.genitore_nome is string    && request.resource.data.genitore_nome.size() > 0    && request.resource.data.genitore_nome.size() < 100 &&
+        request.resource.data.genitore_cognome is string && request.resource.data.genitore_cognome.size() < 100 &&
+        request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
+        request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.letta == false;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Iscrizioni complete (form area soci — utenti autenticati) ──
+    match /iscrizioni/{doc} {
+      allow create: if
+        request.auth != null &&
+        request.resource.data.tipo is string &&
+        (request.resource.data.tipo == 'maggiorenne' || request.resource.data.tipo == 'minorenne') &&
+        request.resource.data.letta == false &&
+        request.resource.data.stato == 'nuova' &&
+        request.resource.data.timestamp is string &&
+        request.resource.data.dati is map &&
+        request.resource.data.size() <= 6;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Testimonianze: lettura pubblica, invio pubblico con validazione ──
+    match /testimonianze/{doc} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
+        request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
+        request.resource.data.approvata == false;
+      allow update, delete: if isAdmin();
+    }
+
+    // ── Area soci ──
+    // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato, creato } per Codice
+    // Socio, generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è
+    // mai leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
+    // riesce solo se il valore in "tentativo" coincide con "pin", rendendolo monouso.
+    //
+    // NB: il confronto usa un campo "tentativo" separato (mai presente nel documento
+    // originale), NON un update diretto su "pin". Con un update() parziale, un campo
+    // omesso dalla richiesta mantiene il suo valore precedente: un confronto del tipo
+    // "request.resource.data.pin == resource.data.pin" sarebbe quindi vero anche
+    // omettendo del tutto il pin dalla richiesta (nessun valore "nuovo" da confrontare,
+    // il vecchio resta invariato) — bypassando la verifica senza conoscere il PIN.
+    // Usando "tentativo" (campo che non esiste finché non lo scrive il client), se viene
+    // omesso il suo valore risulta assente/nullo e non potrà mai coincidere con "pin".
+    match /soci_attivazione/{doc} {
+      allow get, list:      if isAdmin();
+      allow create, delete: if isAdmin();
+      // L'admin può sempre rigenerare/sovrascrivere un PIN (anche se il documento esiste
+      // già, es. per riemettere un codice perso o già usato: Firestore classifica questa
+      // scrittura come "update", non "create", quindi va concessa esplicitamente qui).
+      // Il ramo non-admin richiede anche che siano passate meno di 72 ore da "creato"
+      // (timestamp impostato dall'admin alla generazione): limita la finestra utile per
+      // un eventuale tentativo di forza bruta sul PIN, dato che Firestore non ha un
+      // meccanismo nativo di blocco dopo N tentativi falliti su questa regola.
+      allow update: if isAdmin()
+                    || (resource.data.usato == false
+                        && request.resource.data.usato == true
+                        && request.resource.data.pin == resource.data.pin
+                        && request.resource.data.tentativo == resource.data.pin
+                        && request.resource.data.creato is timestamp
+                        && request.time.toMillis() < resource.data.creato.toMillis() + 72 * 60 * 60 * 1000
+                        && request.resource.data.keys().hasOnly(['pin', 'usato', 'tentativo', 'creato']));
+    }
+
+    // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
+    //            da un client non admin. La migrazione dei soci storici va gestita
+    //            manualmente dall'admin, che verifica l'identità e poi crea/elimina l'account.
+    match /soci_auth/{doc}   {
+      allow read:   if isAdmin();
+      allow create: if false;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Tutto il resto: negato ──
+    match /{document=**} { allow read, write: if false; }
+  }
+}

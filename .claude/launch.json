@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Static Site (Python)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "."],
+      "port": 8080
+    },
+    {
+      "name": "Static Site (Node npx serve)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "-p", "3000", "--no-clipboard"],
+      "port": 3000
+    },
+    {
+      "name": "Locals Table (Expo web)",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\Users\\mimi\\Desktop\\Locals-Table && npx expo start --web --port 8081"],
+      "port": 8081
+    }
+  ]
+}

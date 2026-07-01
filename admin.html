@@ -1,0 +1,1694 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <title>Admin – AGESCI Brescia 7</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="assets/tailwind.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- tailwind.config ora in tailwind.config.js (build statica) -->
+    <style>
+        html { scroll-behavior: smooth; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: .75rem;
+            padding: .65rem 1rem; border-radius: .75rem;
+            font-size: .8rem; font-weight: 600;
+            color: rgba(255,255,255,.6);
+            transition: background .2s, color .2s;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,.08); color: #fff; }
+        .sidebar-link.active { background: rgba(252,196,0,.15); color: #fcc400; }
+        .sidebar-link i { width: 1.1rem; text-align: center; font-size: .85rem; }
+
+        .stat-card {
+            background: #fff; border-radius: 1.25rem;
+            padding: 1.5rem; border: 1px solid #f0f0f0;
+            transition: box-shadow .2s;
+        }
+        .stat-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+
+        .badge {
+            display: inline-block; padding: .2rem .6rem;
+            border-radius: 9999px; font-size: .65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .badge-new    { background: #ecfdf5; color: #059669; }
+        .badge-read   { background: #f1f5f9; color: #94a3b8; }
+        .badge-iscrizione { background: #eff6ff; color: #2563eb; }
+        .badge-info   { background: #fefce8; color: #ca8a04; }
+
+        .tab-btn { padding: .5rem 1.25rem; border-radius: .6rem; font-size: .8rem; font-weight: 700;
+                   transition: background .2s, color .2s; cursor: pointer; }
+        .tab-btn.active { background: #003366; color: #fff; }
+        .tab-btn:not(.active) { color: #64748b; }
+        .tab-btn:not(.active):hover { background: #f1f5f9; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        input[type="text"], input[type="date"], input[type="password"],
+        input[type="email"], select, textarea {
+            width: 100%; padding: .65rem 1rem; border: 1px solid #e5e7eb;
+            border-radius: .75rem; font-size: .85rem; outline: none;
+            font-family: 'Montserrat', sans-serif; transition: border-color .2s, box-shadow .2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0,51,102,.1);
+        }
+        label { display: block; font-size: .7rem; font-weight: 700;
+                text-transform: uppercase; letter-spacing: .1em;
+                color: #64748b; margin-bottom: .4rem; }
+
+        .table-row:hover { background: #f8fafc; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5);
+                         z-index: 1000; display: flex; align-items: center;
+                         justify-content: center; padding: 1rem; }
+        .modal-box { background: #fff; border-radius: 1.5rem; padding: 2rem;
+                     max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        /* .hidden (Tailwind statico) deve vincere su .modal-overlay display:flex */
+        .modal-overlay.hidden { display: none; }
+
+        /* Sidebar responsive: drawer su mobile, fissa su desktop */
+        @media (max-width: 1023px) {
+            #sidebar {
+                position: fixed; top: 0; left: 0; height: 100vh; z-index: 50;
+                transform: translateX(-100%); transition: transform .3s ease;
+            }
+            #sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+        }
+        @media (min-width: 1024px) {
+            #sidebar { position: sticky; top: 0; height: 100vh; }
+            #sidebar-backdrop { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  LOGIN OVERLAY                                                 -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="login-overlay" class="fixed inset-0 bg-scout z-50 flex items-center justify-center">
+    <div class="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-sm text-center">
+        <img src="logo.png" alt="BS7" class="h-16 mx-auto mb-6">
+        <h1 class="text-2xl font-black text-scout mb-1">Area Riservata</h1>
+        <p class="text-gray-400 text-sm mb-8">Pannello di amministrazione BS7</p>
+
+        <div class="text-left space-y-4 mb-6">
+            <div>
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="admin@agescibrescia7.com"
+                       onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div>
+                <label>Password</label>
+                <div class="relative">
+                    <input type="password" id="login-pw" placeholder="••••••••"
+                           onkeydown="if(event.key==='Enter')doLogin()">
+                    <button onclick="togglePw()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-scout">
+                        <i class="fas fa-eye text-sm" id="pw-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Credenziali non valide. Riprova.</p>
+
+        <button onclick="doLogin()"
+                class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
+            <i class="fas fa-lock-open mr-2"></i>Accedi
+        </button>
+
+        <a href="index.html" class="block mt-5 text-xs text-gray-400 hover:text-scout transition">
+            ← Torna al sito
+        </a>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  MAIN LAYOUT                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="app" class="hidden flex min-h-screen">
+
+    <!-- backdrop sidebar (solo mobile) -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <aside id="sidebar" class="w-60 bg-scout-dark flex-shrink-0 flex flex-col overflow-y-auto">
+        <!-- Logo -->
+        <div class="px-5 py-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="BS7" class="h-9 brightness-0 invert opacity-80">
+                <div>
+                    <div class="text-white font-black text-sm">BRESCIA 7</div>
+                    <div class="text-white/40 text-xs">Admin Panel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-5 space-y-1">
+            <div onclick="showTab('dashboard')" class="sidebar-link active" id="nav-dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </div>
+            <div onclick="showTab('richieste')" class="sidebar-link" id="nav-richieste">
+                <i class="fas fa-inbox"></i> Richieste
+                <span id="badge-unread" class="ml-auto bg-gold text-scout text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
+            <div onclick="showTab('pre-iscrizioni')" class="sidebar-link" id="nav-pre-iscrizioni">
+                <i class="fas fa-child"></i> Pre-iscrizioni
+                <span id="badge-pre" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
+            <div onclick="showTab('eventi')" class="sidebar-link" id="nav-eventi">
+                <i class="fas fa-calendar-alt"></i> Calendario
+            </div>
+            <div onclick="showTab('annunci')" class="sidebar-link" id="nav-annunci">
+                <i class="fas fa-bullhorn"></i> Annunci
+            </div>
+            <div onclick="showTab('testimonianze')" class="sidebar-link" id="nav-testimonianze">
+                <i class="fas fa-quote-left"></i> Testimonianze
+                <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
+            <div onclick="showTab('calendario-google')" class="sidebar-link" id="nav-calendario-google">
+                <i class="fas fa-images"></i> Galleria & Media
+            </div>
+            <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
+                <i class="fas fa-cog"></i> Impostazioni
+            </div>
+            <div onclick="showTab('soci')" class="sidebar-link" id="nav-soci">
+                <i class="fas fa-key"></i> Attivazione Soci
+            </div>
+        </nav>
+
+        <!-- Footer sidebar -->
+        <div class="px-5 py-4 border-t border-white/10 text-xs text-white/30">
+            <div class="flex items-center justify-between">
+                <span>Admin BS7</span>
+                <button onclick="logout()" class="hover:text-white transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+    <main class="flex-1 overflow-auto">
+
+        <!-- Top bar -->
+        <header class="bg-white border-b border-gray-100 px-5 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="lg:hidden text-scout p-1 -ml-1" aria-label="Apri menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div>
+                    <h1 id="page-title" class="font-black text-scout text-lg sm:text-xl">Dashboard</h1>
+                    <p id="page-sub" class="text-gray-400 text-xs mt-0.5">Riepilogo generale</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="index.html" target="_blank"
+                   class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-scout transition border border-gray-200 px-4 py-2 rounded-xl hover:border-scout">
+                    <i class="fas fa-external-link-alt text-xs"></i> Vedi sito
+                </a>
+                <button onclick="logout()"
+                        class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-500 transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="p-8">
+
+            <!-- ──────────────────────── DASHBOARD ───────────────── -->
+            <section id="tab-dashboard" class="tab-panel active space-y-8">
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-5" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-blue-50 p-2.5 rounded-xl"><i class="fas fa-inbox text-scout"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Totale</span>
+                        </div>
+                        <div class="text-3xl font-black text-scout" id="stat-total">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste ricevute</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-envelope text-amber-500"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Da leggere</span>
+                        </div>
+                        <div class="text-3xl font-black text-amber-500" id="stat-unread">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Messaggi non letti</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-green-50 p-2.5 rounded-xl"><i class="fas fa-user-plus text-green-600"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Iscrizioni</span>
+                        </div>
+                        <div class="text-3xl font-black text-green-600" id="stat-iscrizioni">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste iscrizione</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Pre-iscrizioni</span>
+                        </div>
+                        <div class="text-3xl font-black text-amber-500" id="stat-pre">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Richieste pre-iscrizione</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-purple-50 p-2.5 rounded-xl"><i class="fas fa-calendar text-purple-600"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Prossimi</span>
+                        </div>
+                        <div class="text-3xl font-black text-purple-600" id="stat-eventi">0</div>
+                        <div class="text-xs text-gray-400 mt-1">Eventi in programma</div>
+                    </div>
+                </div>
+
+                <!-- Ultime richieste -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-black text-scout">Ultime richieste</h3>
+                        <button onclick="showTab('richieste')" class="text-xs text-scout font-semibold hover:underline">Vedi tutte →</button>
+                    </div>
+                    <div id="dashboard-recent" class="divide-y divide-gray-50">
+                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>
+                    </div>
+                </div>
+
+                <!-- Prossimi eventi -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-black text-scout">Prossimi eventi</h3>
+                        <button onclick="showTab('eventi')" class="text-xs text-scout font-semibold hover:underline">Gestisci →</button>
+                    </div>
+                    <div id="dashboard-events" class="divide-y divide-gray-50">
+                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── RICHIESTE ───────────────── -->
+            <section id="tab-richieste" class="tab-panel space-y-6">
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex gap-2" id="filter-tabs">
+                        <button onclick="filterRichieste('tutte')"  class="tab-btn active" id="f-tutte">Tutte</button>
+                        <button onclick="filterRichieste('nuove')"  class="tab-btn" id="f-nuove">Non lette</button>
+                        <button onclick="filterRichieste('iscrizione')" class="tab-btn" id="f-iscrizione">Iscrizioni</button>
+                        <button onclick="filterRichieste('informazioni')" class="tab-btn" id="f-informazioni">Info</button>
+                    </div>
+                    <button onclick="clearAllRichieste()"
+                            class="text-xs text-red-400 hover:text-red-600 font-semibold transition flex items-center gap-1">
+                        <i class="fas fa-trash-alt"></i> Svuota archivio
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div id="richieste-table">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── PRE-ISCRIZIONI ─────────── -->
+            <section id="tab-pre-iscrizioni" class="tab-panel space-y-6">
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex gap-2">
+                        <button onclick="filterPreIscrizioni('tutte')"  class="tab-btn active" id="pf-tutte">Tutte</button>
+                        <button onclick="filterPreIscrizioni('nuove')"  class="tab-btn" id="pf-nuove">Non lette</button>
+                    </div>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
+                        <button onclick="markAllPreLette()" class="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition font-semibold">
+                            <i class="fas fa-check-double mr-1"></i>Segna tutte lette
+                        </button>
+                        <button onclick="exportPreIscrizioniExcel()" class="text-xs text-green-600 border border-green-200 px-3 py-1.5 rounded-lg hover:bg-green-50 transition font-semibold">
+                            <i class="fas fa-file-excel mr-1"></i>Scarica Excel
+                        </button>
+                        <button onclick="clearAllPreIscrizioni()" class="text-xs text-red-400 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition font-semibold">
+                            <i class="fas fa-trash mr-1"></i>Elimina tutte
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div id="pre-iscrizioni-table">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── EVENTI ──────────────────── -->
+            <section id="tab-eventi" class="tab-panel space-y-6">
+                <!-- Aggiungi evento -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Nuovo evento</h3>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label>Titolo evento *</label>
+                            <input type="text" id="ev-titolo" placeholder="Es. Campo estivo Reparto">
+                        </div>
+                        <div>
+                            <label>Data inizio *</label>
+                            <input type="date" id="ev-data">
+                        </div>
+                        <div>
+                            <label>Data fine <span class="font-normal text-gray-400">(lascia vuoto se un solo giorno)</span></label>
+                            <input type="date" id="ev-data-fine">
+                        </div>
+                        <div>
+                            <label>Unità</label>
+                            <select id="ev-unita">
+                                <option value="tutto">Tutto il gruppo</option>
+                                <option value="cerchio">Cerchio</option>
+                                <option value="reparto">Reparto</option>
+                                <option value="clan">Clan</option>
+                                <option value="capi">Capi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Luogo</label>
+                            <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga...">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label>Descrizione</label>
+                            <textarea id="ev-descr" rows="2" placeholder="Breve descrizione dell'evento..."></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addEvento()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-plus mr-2"></i>Aggiungi evento
+                    </button>
+                </div>
+
+                <!-- Lista eventi -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-black text-scout">Tutti gli eventi</h3>
+                    </div>
+                    <div id="eventi-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── ANNUNCI ─────────────────── -->
+            <section id="tab-annunci" class="tab-panel space-y-6">
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Nuovo annuncio</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Titolo *</label>
+                            <input type="text" id="ann-titolo" placeholder="Es. Quota 2024/25">
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label>Categoria</label>
+                                <select id="ann-cat">
+                                    <option value="news">News</option>
+                                    <option value="urgente">Urgente</option>
+                                    <option value="evento">Evento</option>
+                                    <option value="info">Info</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Scadenza (opzionale)</label>
+                                <input type="date" id="ann-scad">
+                            </div>
+                        </div>
+                        <div>
+                            <label>Testo *</label>
+                            <textarea id="ann-testo" rows="4" placeholder="Testo dell'annuncio..."></textarea>
+                        </div>
+                    </div>
+                    <button onclick="addAnnuncio()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-paper-plane mr-2"></i>Pubblica annuncio
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-black text-scout">Annunci pubblicati</h3>
+                    </div>
+                    <div id="annunci-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────── TESTIMONIANZE ───────────────── -->
+            <section id="tab-testimonianze" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Le frasi inviate dai genitori dal sito arrivano qui. <strong>Solo quelle approvate</strong> compaiono in homepage. Controlla che non ci siano dati sensibili o cognomi completi prima di approvare.
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="font-black text-scout">Testimonianze ricevute</h3>
+                        <button onclick="renderTestimonianze()" class="text-gray-400 hover:text-scout transition text-sm"><i class="fas fa-rotate-right"></i></button>
+                    </div>
+                    <div id="testi-list">
+                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Caricamento…</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────── GALLERIA & MEDIA ────────────── -->
+            <section id="tab-calendario-google" class="tab-panel space-y-6">
+
+                <!-- Galleria Foto -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-black text-scout"><i class="fas fa-images text-gold mr-2"></i>Galleria fotografica (Area Soci)</h3>
+                        <button onclick="savePhotosUrls()"
+                                class="bg-gold text-scout font-black px-5 py-2 rounded-xl text-sm hover:bg-yellow-400 transition flex-shrink-0">
+                            <i class="fas fa-save mr-1"></i>Salva tutto
+                        </button>
+                    </div>
+                    <p class="text-gray-500 text-xs">Incolla il link condivisibile di un album Google Photos per ogni unità. Lascia vuoto se non disponibile.</p>
+                    <!-- Cerchio -->
+                    <div class="bg-blue-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <span>🐞</span> Cerchio <span class="text-xs font-normal text-gray-500">(Lupetti/Coccinelle)</span>
+                        </label>
+                        <input type="url" id="photos-url-cerchio"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
+                    <!-- Reparto -->
+                    <div class="bg-green-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <i class="fas fa-campground text-green-500"></i> Reparto <span class="text-xs font-normal text-gray-500">(Esploratori/Guide)</span>
+                        </label>
+                        <input type="url" id="photos-url-reparto"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
+                    <!-- Clan -->
+                    <div class="bg-orange-50 rounded-xl p-4">
+                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
+                            <i class="fas fa-mountain text-orange-500"></i> Clan <span class="text-xs font-normal text-gray-500">(Rover/Scolte)</span>
+                        </label>
+                        <input type="url" id="photos-url-clan"
+                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                               placeholder="https://photos.app.goo.gl/...">
+                    </div>
+                    <p id="photos-saved-msg" class="text-green-600 text-xs hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Link gallerie salvati!
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- ──────────────────────── IMPOSTAZIONI ─────────────── -->
+            <section id="tab-impostazioni" class="tab-panel space-y-6">
+
+                <!-- Cambia password -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Cambia password admin</h3>
+                    <div class="grid sm:grid-cols-3 gap-4">
+                        <div>
+                            <label>Password attuale</label>
+                            <input type="password" id="pw-old" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label>Nuova password</label>
+                            <input type="password" id="pw-new" placeholder="••••••••">
+                        </div>
+                        <div>
+                            <label>Conferma password</label>
+                            <input type="password" id="pw-confirm" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <p id="pw-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                    <button onclick="changePw()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-key mr-2"></i>Aggiorna password
+                    </button>
+                </div>
+
+                <!-- Info sito -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-5">Informazioni del gruppo</h3>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label>Email di contatto</label>
+                            <input type="email" id="cfg-email" placeholder="info@agescibrescia7.com">
+                        </div>
+                        <div>
+                            <label>Telefono</label>
+                            <input type="text" id="cfg-tel" placeholder="+39 340 874 0678">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label>Indirizzo sede</label>
+                            <input type="text" id="cfg-indirizzo" placeholder="Via Cimabue, 271 – 25134 Brescia">
+                        </div>
+                        <div>
+                            <label>Instagram</label>
+                            <input type="text" id="cfg-ig" placeholder="@agesci_brescia7">
+                        </div>
+                        <div>
+                            <label>Facebook URL</label>
+                            <input type="text" id="cfg-fb" placeholder="https://facebook.com/...">
+                        </div>
+                    </div>
+                    <button onclick="saveConfig()"
+                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
+                        <i class="fas fa-save mr-2"></i>Salva impostazioni
+                    </button>
+                    <p id="cfg-msg" class="text-green-600 text-xs mt-3 hidden font-semibold">
+                        <i class="fas fa-check mr-1"></i> Impostazioni salvate.
+                    </p>
+                </div>
+
+                <!-- Export dati -->
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Esporta dati</h3>
+                    <p class="text-gray-500 text-sm mb-5">Scarica tutte le richieste ricevute in formato JSON.</p>
+                    <button onclick="exportData()"
+                            class="flex items-center gap-2 border border-gray-200 text-gray-600 font-bold px-5 py-3 rounded-xl text-sm hover:border-scout hover:text-scout transition">
+                        <i class="fas fa-download"></i> Esporta richieste (.json)
+                    </button>
+                </div>
+
+                <!-- Reset -->
+                <div class="bg-red-50 rounded-2xl border border-red-100 p-6">
+                    <h3 class="font-black text-red-600 mb-2">Zona pericolosa</h3>
+                    <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (richieste, eventi, annunci).</p>
+                    <button onclick="resetAll()"
+                            class="flex items-center gap-2 bg-red-500 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-red-600 transition">
+                        <i class="fas fa-trash-alt"></i> Cancella tutti i dati
+                    </button>
+                </div>
+            </section>
+
+            <!-- ──────────────────── ATTIVAZIONE SOCI ────────────── -->
+            <section id="tab-soci" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Qui non è salvato nessun dato anagrafico dei soci, solo il <strong>Codice Socio</strong> e un <strong>codice di attivazione</strong> monouso. Genera il codice, comunicalo al socio (di persona, telefono o messaggio), e lui lo userà una sola volta per creare il proprio accesso in "Area Soci".
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Genera codice di attivazione</h3>
+                    <div class="flex flex-wrap items-end gap-4">
+                        <div>
+                            <label>Codice Socio</label>
+                            <input type="text" id="attiva-codice" placeholder="Es. 12345" class="w-48">
+                        </div>
+                        <button onclick="generaAttivazioneSocio()"
+                                class="bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
+                            <i class="fas fa-key mr-2"></i>Genera codice
+                        </button>
+                        <button onclick="controllaAttivazioneSocio()"
+                                class="border border-gray-200 text-gray-600 font-bold px-5 py-2.5 rounded-xl text-sm hover:border-scout hover:text-scout transition">
+                            <i class="fas fa-search mr-2"></i>Controlla stato
+                        </button>
+                    </div>
+                    <div id="attiva-risultato" class="hidden mt-5 bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
+                        <div class="text-gray-500 mb-1">Codice di attivazione per <strong id="attiva-risultato-codice"></strong>:</div>
+                        <div class="text-2xl font-black text-scout tracking-widest" id="attiva-risultato-pin"></div>
+                        <p class="text-xs text-gray-400 mt-2" id="attiva-risultato-scadenza"></p>
+                    </div>
+                    <p id="attiva-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                </div>
+            </section>
+
+        </div><!-- /p-8 -->
+    </main>
+</div><!-- /app -->
+
+<!-- ── MODAL DETTAGLIO PRE-ISCRIZIONE ───────────────────────────── -->
+<div id="modal-pre-iscrizione" class="modal-overlay hidden" onclick="if(event.target===this)closePreModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Pre-iscrizione</h3>
+            <button onclick="closePreModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-pre-body"></div>
+    </div>
+</div>
+
+<!-- ── MODAL DETTAGLIO RICHIESTA ─────────────────────────────────── -->
+<div id="modal-richiesta" class="modal-overlay hidden" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Dettaglio richiesta</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                                    -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── Costanti ─────────────────────────────────────────────────────
+const KEYS = {
+    richieste:  'bs7_richieste',
+    eventi:     'bs7_eventi',
+    annunci:    'bs7_annunci',
+    gcal:       'bs7_gcal_id',
+    config:     'bs7_config',
+};
+
+// ── Helpers ──────────────────────────────────────────────────────
+const get  = key => JSON.parse(localStorage.getItem(key) || 'null');
+const set  = (key, val) => localStorage.setItem(key, JSON.stringify(val));
+
+function fmtDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('it-IT', {day:'2-digit', month:'short', year:'numeric'});
+}
+function fmtDatetime(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleString('it-IT', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+}
+
+function tipoLabel(t) {
+    const m = {iscrizione:'Iscrizione', informazioni:'Informazioni', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', altro:'Altro', maggiorenne:'Iscrizione maggiorenne', minorenne:'Iscrizione minorenne'};
+    return m[t] || escapeHtml(String(t || ''));
+}
+
+function toast(msg, ok = true) {
+    const el = document.createElement('div');
+    el.className = `fixed bottom-6 right-6 z-[2000] px-5 py-3 rounded-xl shadow-lg font-semibold text-sm text-white transition
+                    ${ok ? 'bg-green-600' : 'bg-red-500'}`;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+}
+
+// ── Login (Firebase Auth) ─────────────────────────────────────────
+function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pw    = document.getElementById('login-pw').value;
+    const errEl = document.getElementById('login-error');
+    errEl.classList.add('hidden');
+    if (!email || !pw) {
+        errEl.textContent = 'Inserisci email e password.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+    firebase.auth().signInWithEmailAndPassword(email, pw)
+        .catch(() => {
+            errEl.textContent = 'Credenziali non valide. Riprova.';
+            errEl.classList.remove('hidden');
+            document.getElementById('login-pw').value = '';
+            document.getElementById('login-pw').focus();
+        });
+}
+
+function logout() {
+    firebase.auth().signOut();
+}
+
+function togglePw() {
+    const inp = document.getElementById('login-pw');
+    const ic  = document.getElementById('pw-icon');
+    if (inp.type === 'password') {
+        inp.type = 'text'; ic.className = 'fas fa-eye-slash text-sm';
+    } else {
+        inp.type = 'password'; ic.className = 'fas fa-eye text-sm';
+    }
+}
+
+// Auth state observer — unica fonte di verità per login/logout
+document.addEventListener('DOMContentLoaded', () => {
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            if (user.email !== 'info@agescibrescia7.com') {
+                firebase.auth().signOut();
+                const errEl = document.getElementById('login-error');
+                errEl.textContent = 'Accesso non autorizzato per questo account.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('app').classList.add('flex');
+            setupFirestoreListener();
+            refreshAll();
+        } else {
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('app').classList.add('hidden');
+            document.getElementById('app').classList.remove('flex');
+        }
+    });
+    loadConfig();
+});
+
+// ── Tab navigation ───────────────────────────────────────────────
+const TAB_META = {
+    dashboard:         { title: 'Dashboard',         sub: 'Riepilogo generale' },
+    richieste:         { title: 'Richieste',          sub: 'Messaggi e iscrizioni dal sito' },
+    eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
+    annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
+    'calendario-google': { title: 'Galleria & Media', sub: 'Galleria fotografica per unità' },
+    impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
+    soci:              { title: 'Attivazione Soci',    sub: 'Genera codici di attivazione monouso' },
+    'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
+    testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
+};
+
+// Sidebar mobile: apri/chiudi drawer
+function toggleSidebar() {
+    const s = document.getElementById('sidebar');
+    const b = document.getElementById('sidebar-backdrop');
+    const apri = !s.classList.contains('open');
+    s.classList.toggle('open', apri);
+    b.classList.toggle('hidden', !apri);
+}
+function chiudiSidebarMobile() {
+    if (window.innerWidth < 1024) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-backdrop').classList.add('hidden');
+    }
+}
+
+function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+    const meta = TAB_META[name] || {};
+    document.getElementById('page-title').textContent = meta.title || name;
+    document.getElementById('page-sub').textContent   = meta.sub   || '';
+    chiudiSidebarMobile();   // su mobile chiudi il drawer dopo la scelta
+
+    // Lazy render
+    if (name === 'richieste')   renderRichieste('tutte');
+    if (name === 'eventi')      renderEventi();
+    if (name === 'annunci')     renderAnnunci();
+    if (name === 'dashboard')   renderDashboard();
+    if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
+    if (name === 'testimonianze')   renderTestimonianze();
+}
+
+// ── TESTIMONIANZE ────────────────────────────────────────────────
+function renderTestimonianze() {
+    const list = document.getElementById('testi-list');
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').get().then(snap => {
+        const rows = [];
+        snap.forEach(doc => rows.push({ id: doc.id, ...doc.data() }));
+        rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+
+        const inAttesa = rows.filter(r => !r.approvata).length;
+        const badge = document.getElementById('badge-testi');
+        if (badge) { badge.textContent = inAttesa; badge.classList.toggle('hidden', inAttesa === 0); }
+
+        if (!rows.length) {
+            list.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna testimonianza ricevuta.</div>';
+            return;
+        }
+        list.innerHTML = rows.map(r => {
+            const data = r.timestamp ? new Date(r.timestamp).toLocaleDateString('it-IT') : '—';
+            const stato = r.approvata
+                ? '<span class="bg-green-100 text-green-700 text-xs font-black px-2.5 py-1 rounded-full">PUBBLICATA</span>'
+                : '<span class="bg-amber-100 text-amber-700 text-xs font-black px-2.5 py-1 rounded-full">IN ATTESA</span>';
+            const azione = r.approvata
+                ? `<button onclick="setTestiApprovata('${r.id}', false)" class="text-amber-600 hover:text-amber-800 text-xs font-bold"><i class="fas fa-eye-slash mr-1"></i>Nascondi</button>`
+                : `<button onclick="setTestiApprovata('${r.id}', true)" class="bg-scout text-white text-xs font-black px-4 py-2 rounded-lg hover:bg-scout-dark transition"><i class="fas fa-check mr-1"></i>Approva e pubblica</button>`;
+            return `
+            <div class="px-6 py-5 border-b border-gray-50 last:border-0">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="flex-1 min-w-[240px]">
+                        <p class="text-gray-700 text-sm italic leading-relaxed mb-2">&ldquo;${escapeHtml(r.testo||'')}&rdquo;</p>
+                        <div class="text-xs text-gray-400">— <strong class="text-gray-600">${escapeHtml(r.nome||'')}</strong>${r.ruolo ? ', ' + escapeHtml(r.ruolo) : ''} · ${data}</div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        ${stato}
+                        ${azione}
+                        <button onclick="deleteTestimonianza('${r.id}')" class="text-gray-300 hover:text-red-500 transition" title="Elimina"><i class="fas fa-trash text-sm"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }).catch(err => {
+        console.error(err);
+        list.innerHTML = '<div class="px-6 py-12 text-center text-red-400 text-sm">Errore nel caricamento.</div>';
+    });
+}
+function setTestiApprovata(id, val) {
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').doc(id).update({ approvata: val }).then(renderTestimonianze);
+}
+function deleteTestimonianza(id) {
+    if (!confirm('Eliminare definitivamente questa testimonianza?')) return;
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('testimonianze').doc(id).delete().then(renderTestimonianze);
+}
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── Refresh globale ───────────────────────────────────────────────
+function refreshAll() {
+    renderDashboard();
+    updateBadge();
+    updatePreBadge();
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────
+function renderDashboard() {
+    const richieste = window.richiesteCache || [];
+    const eventi    = window.eventiCache   || [];
+    const now       = new Date();
+    const unread    = richieste.filter(r => !r.letta).length;
+    const iscrizioni = richieste.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne').length;
+    const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
+
+    document.getElementById('stat-total').textContent    = richieste.length;
+    document.getElementById('stat-unread').textContent   = unread;
+    document.getElementById('stat-iscrizioni').textContent = iscrizioni;
+    document.getElementById('stat-eventi').textContent   = prossimi;
+    document.getElementById('stat-pre').textContent      = (window.preIscrizioniCache || []).length;
+
+    // Ultime 5 richieste
+    const recEl = document.getElementById('dashboard-recent');
+    if (!richieste.length) {
+        recEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>';
+    } else {
+        recEl.innerHTML = richieste.slice(0, 5).map(r => richiestaRow(r, true)).join('');
+    }
+
+    // Prossimi 3 eventi
+    const evEl = document.getElementById('dashboard-events');
+    const upcoming = eventi.filter(e => new Date(e.data) >= now)
+                           .sort((a,b) => new Date(a.data)-new Date(b.data))
+                           .slice(0,3);
+    if (!upcoming.length) {
+        evEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>';
+    } else {
+        evEl.innerHTML = upcoming.map(eventRow).join('');
+    }
+}
+
+function updateBadge() {
+    const richieste = window.richiesteCache || [];
+    const n = richieste.filter(r => !r.letta).length;
+    const b = document.getElementById('badge-unread');
+    if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
+    else b.classList.add('hidden');
+}
+
+function updatePreBadge() {
+    const pre = window.preIscrizioniCache || [];
+    const n = pre.filter(r => !r.letta).length;
+    const b = document.getElementById('badge-pre');
+    if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
+    else b.classList.add('hidden');
+}
+
+// ── PRE-ISCRIZIONI ───────────────────────────────────────────────
+let currentPreFilter = 'tutte';
+
+function filterPreIscrizioni(f) {
+    currentPreFilter = f;
+    ['tutte','nuove'].forEach(k => {
+        document.getElementById('pf-' + k)?.classList.toggle('active', k === f);
+    });
+    renderPreIscrizioni(f);
+}
+
+function renderPreIscrizioni(filtro) {
+    filtro = filtro || currentPreFilter;
+    let all = window.preIscrizioniCache || [];
+    if (filtro === 'nuove') all = all.filter(r => !r.letta);
+
+    const lbl = document.getElementById('pre-count-label');
+    if (lbl) lbl.textContent = all.length + ' richiesta' + (all.length !== 1 ? 'e' : '');
+
+    const el = document.getElementById('pre-iscrizioni-table');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione in questa categoria.</div>';
+        return;
+    }
+    el.innerHTML = `
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Bambino/a</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Genitore</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Telefono</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data invio</th>
+                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                ${all.map(r => preIscrizioneRow(r)).join('')}
+            </tbody>
+        </table>`;
+}
+
+function preIscrizioneRow(r) {
+    const bimbo = escapeHtml(r.bambino_nome || '—');
+    const genitore = escapeHtml(((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—');
+    const email = escapeHtml(r.email || '—');
+    const tel = escapeHtml(r.telefono || '—');
+    const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
+    const stato = r.letta
+        ? '<span class="badge badge-read">Letta</span>'
+        : '<span class="badge badge-new">Nuova</span>';
+    const safeId = escapeHtml(r.id);
+    return `<tr class="table-row cursor-pointer" onclick="openPreIscrizione('${safeId}')">
+        <td class="px-6 py-4 font-semibold text-gray-800">${bimbo}</td>
+        <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${genitore}</td>
+        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
+        <td class="px-6 py-4 text-gray-500 hidden lg:table-cell">${tel}</td>
+        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${data}</td>
+        <td class="px-6 py-4">${stato}</td>
+        <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+            <div class="flex gap-2 items-center justify-end">
+                ${!r.letta ? `<button onclick="markPreLetta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
+                <button onclick="deletePreIscrizione('${safeId}')" class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 font-bold px-2 py-1.5 rounded-lg transition" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
+}
+
+function markPreLetta(id) {
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ letta: true })
+        .catch(e => console.error('Errore markPreLetta:', e));
+}
+
+function openPreIscrizione(id) {
+    const r = (window.preIscrizioniCache || []).find(x => x.id === id);
+    if (!r) return;
+    if (!r.letta) markPreLetta(id);
+    const nascita = r.data_nascita ? fmtDate(r.data_nascita) : '—';
+    const genitore = escapeHtml(((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—');
+    const emailSafe = escapeHtml(r.email || '');
+    const telSafe   = escapeHtml(r.telefono || '');
+    const safeId    = escapeHtml(r.id);
+    document.getElementById('modal-pre-body').innerHTML = `
+        <div class="space-y-3 text-sm">
+            <div class="bg-amber-50 rounded-xl p-4">
+                <div class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">Bambino/a</div>
+                <div class="font-black text-lg text-scout">${escapeHtml(r.bambino_nome || '—')}</div>
+                <div class="text-xs text-gray-500 mt-0.5">Nato/a il: <strong>${nascita}</strong></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Genitore</div>
+                    <div class="font-semibold">${genitore}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Inviata il</div>
+                    <div class="font-semibold">${r.timestamp ? fmtDatetime(r.timestamp) : '—'}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${emailSafe}" class="font-semibold text-scout hover:underline">${emailSafe || '—'}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <a href="tel:${telSafe}" class="font-semibold">${telSafe || '—'}</a>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <a href="mailto:${emailSafe}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
+                    <i class="fas fa-envelope mr-2"></i>Rispondi
+                </a>
+                <button onclick="deletePreIscrizione('${safeId}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-pre-iscrizione').classList.remove('hidden');
+}
+
+function closePreModal() {
+    document.getElementById('modal-pre-iscrizione').classList.add('hidden');
+}
+
+function deletePreIscrizione(id) {
+    if (!confirm('Eliminare questa pre-iscrizione?')) return;
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).delete()
+        .then(() => toast('Pre-iscrizione eliminata.'))
+        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
+}
+
+function clearAllPreIscrizioni() {
+    const all = window.preIscrizioniCache || [];
+    if (!all.length) { toast('Nessuna pre-iscrizione da eliminare.'); return; }
+    if (!confirm('Eliminare TUTTE le ' + all.length + ' pre-iscrizioni? Operazione irreversibile.')) return;
+    const db = window.firestoreDb;
+    db.collection('pre_iscrizioni').get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    }).then(() => toast('Tutte le pre-iscrizioni eliminate.'))
+      .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+function markAllPreLette() {
+    const nonLette = (window.preIscrizioniCache || []).filter(r => !r.letta);
+    if (!nonLette.length) { toast('Nessuna nuova da segnare.'); return; }
+    const db = window.firestoreDb;
+    const batch = db.batch();
+    nonLette.forEach(r => batch.update(db.collection('pre_iscrizioni').doc(r.id), { letta: true }));
+    batch.commit()
+        .then(() => toast(nonLette.length + ' pre-iscrizioni segnate lette.'))
+        .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+function exportPreIscrizioniExcel() {
+    const all = window.preIscrizioniCache || [];
+    if (!all.length) { toast('Nessuna pre-iscrizione da esportare.'); return; }
+    const rows = all
+        .slice()
+        .sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''))
+        .map(r => ({
+            'Nome bambino':      r.bambino_nome     || '',
+            'Data di nascita':   r.data_nascita     || '',
+            'Nome genitore':     r.genitore_nome    || '',
+            'Cognome genitore':  r.genitore_cognome || '',
+            'Email':             r.email            || '',
+            'Telefono':          r.telefono         || '',
+            'Data invio':        r.timestamp ? r.timestamp.slice(0, 10) : '',
+            'Letta':             r.letta ? 'Sì' : 'No',
+        }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [20,14,16,18,32,16,12,8].map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Pre-iscrizioni');
+    XLSX.writeFile(wb, 'pre-iscrizioni.xlsx');
+    toast('Excel scaricato.');
+}
+
+// ── RICHIESTE ────────────────────────────────────────────────────
+let currentFilter = 'tutte';
+
+function filterRichieste(f) {
+    currentFilter = f;
+    ['tutte','nuove','iscrizione','informazioni'].forEach(k => {
+        document.getElementById('f-' + k)?.classList.toggle('active', k === f);
+    });
+    renderRichieste(f);
+}
+
+function renderRichieste(filtro) {
+    const all = window.richiesteCache || [];
+    let list = all;
+    if (filtro === 'nuove')       list = all.filter(r => !r.letta);
+    if (filtro === 'iscrizione')  list = all.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne');
+    if (filtro === 'informazioni')list = all.filter(r => r.dati?.tipo === 'informazioni');
+
+    const el = document.getElementById('richieste-table');
+    if (!list.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta in questa categoria.</div>';
+        return;
+    }
+    el.innerHTML = `
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Nome</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Tipo</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data</th>
+                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                ${list.map(r => richiestaRow(r, false)).join('')}
+            </tbody>
+        </table>`;
+}
+
+function richiestaRow(r, compact) {
+    const nome = escapeHtml((`${r.dati?.nome || ''} ${r.dati?.cognome || ''}`).trim() || 'Senza nome');
+    const email = escapeHtml(r.dati?.email || '—');
+    const statoBadge = r.letta
+        ? '<span class="badge badge-read">Letta</span>'
+        : '<span class="badge badge-new">Nuova</span>';
+    const tipoVal = r.tipo || r.dati?.tipo || '';
+    const tipoBadge = (tipoVal === 'minorenne' || tipoVal === 'maggiorenne')
+        ? `<span class="badge badge-iscrizione">Iscrizione ${tipoVal}</span>`
+        : '<span class="badge badge-info">' + tipoLabel(tipoVal) + '</span>';
+    const safeId = escapeHtml(r.id);
+
+    if (compact) {
+        return `<div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 table-row">
+            <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-800 truncate">${nome}</div>
+                <div class="text-xs text-gray-400">${fmtDatetime(r.timestamp)}</div>
+            </div>
+            ${statoBadge}
+            <button onclick="openRichiesta('${safeId}')" class="text-scout text-xs font-bold hover:underline">Apri</button>
+        </div>`;
+    }
+
+    return `<tr class="table-row">
+        <td class="px-6 py-4 font-semibold text-gray-800">${nome}</td>
+        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
+        <td class="px-6 py-4 hidden lg:table-cell">${tipoBadge}</td>
+        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${fmtDatetime(r.timestamp)}</td>
+        <td class="px-6 py-4">${statoBadge}</td>
+        <td class="px-6 py-4 text-right">
+            <div class="flex gap-2 justify-end">
+                <button onclick="openRichiesta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
+                <button onclick="deleteRichiesta('${safeId}')" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
+}
+
+function openRichiesta(id) {
+    const r = (window.richiesteCache || []).find(x => x.id === id);
+    if (!r) return;
+
+    // Marca come letta in Firestore
+    if (!r.letta) {
+        window.firestoreDb.collection('iscrizioni').doc(id).update({ letta: true })
+            .catch(err => console.error('Errore update letta:', err));
+    }
+
+    const d = r.dati || {};
+    const isMin = r.tipo === 'minorenne';
+    const emailVal = escapeHtml(d.email || d.gen1_email || '');
+    const telVal   = escapeHtml(d.telefono || d.gen1_tel || '');
+    const nomeVal  = isMin
+        ? `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')} <span class="text-xs text-gray-400">(Genitore: ${escapeHtml(d.gen1_nome || '')} ${escapeHtml(d.gen1_cognome || '')})</span>`
+        : `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')}`;
+    document.getElementById('modal-body').innerHTML = `
+        <div class="space-y-4 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Nome</div>
+                    <div class="font-semibold">${nomeVal}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Tipo richiesta</div>
+                    <div class="font-semibold">${tipoLabel(r.tipo)}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${emailVal}" class="font-semibold text-scout hover:underline">${emailVal || '—'}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <div class="font-semibold">${telVal || '—'}</div>
+                </div>
+                ${d.data_nascita ? `<div class="bg-gray-50 rounded-xl p-4 col-span-2">
+                    <div class="text-xs text-gray-400 mb-1">Data di nascita</div>
+                    <div class="font-semibold">${fmtDate(d.data_nascita)}</div>
+                </div>` : ''}
+            </div>
+            ${d.messaggio ? `<div class="bg-blue-50 rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-2">Messaggio</div>
+                <p class="text-gray-700 leading-relaxed">${escapeHtml(d.messaggio)}</p>
+            </div>` : ''}
+            <div class="text-xs text-gray-400 pt-2">Ricevuto: ${fmtDatetime(r.timestamp)}</div>
+            <div class="flex gap-3 pt-2">
+                <a href="mailto:${emailVal}?subject=Risposta%20richiesta%20AGESCI%20Brescia%207"
+                   class="flex items-center gap-2 bg-scout text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
+                    <i class="fas fa-reply"></i> Rispondi per email
+                </a>
+                <button onclick="deleteRichiesta('${id}'); closeModal()"
+                        class="flex items-center gap-2 text-red-400 font-bold text-sm border border-red-200 px-4 py-2.5 rounded-xl hover:bg-red-50 transition">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-richiesta').classList.remove('hidden');
+}
+
+function closeModal(e) {
+    if (!e || e.target === document.getElementById('modal-richiesta')) {
+        document.getElementById('modal-richiesta').classList.add('hidden');
+    }
+}
+
+function deleteRichiesta(id) {
+    if (!confirm('Eliminare questa richiesta?')) return;
+    window.firestoreDb.collection('iscrizioni').doc(id).delete()
+        .then(() => toast('Richiesta eliminata.'))
+        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
+}
+
+function clearAllRichieste() {
+    if (!confirm('Eliminare TUTTE le richieste? Operazione irreversibile.')) return;
+    const db = window.firestoreDb;
+    db.collection('iscrizioni').get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    }).then(() => toast('Archivio svuotato.'))
+      .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+// ── EVENTI ────────────────────────────────────────────────────────
+function addEvento() {
+    const titolo    = document.getElementById('ev-titolo').value.trim();
+    const data      = document.getElementById('ev-data').value;
+    const dataFine  = document.getElementById('ev-data-fine').value;
+    if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
+    if (dataFine && dataFine < data) { toast('La data fine non può essere prima della data inizio.', false); return; }
+    const id = Date.now();
+    const ev = { id, titolo, data,
+        data_fine:   dataFine || null,
+        unita:       document.getElementById('ev-unita').value,
+        luogo:       document.getElementById('ev-luogo').value.trim(),
+        descrizione: document.getElementById('ev-descr').value.trim(),
+    };
+    window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
+        .then(() => {
+            ['ev-titolo','ev-data','ev-data-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
+            document.getElementById('ev-unita').selectedIndex = 0;
+            toast('Evento aggiunto!');
+        })
+        .catch(e => { console.error(e); toast('Errore salvataggio evento.', false); });
+}
+
+function renderEventi() {
+    const all = (window.eventiCache || []).slice().sort((a,b) => new Date(a.data)-new Date(b.data));
+    const el  = document.getElementById('eventi-list');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>';
+        return;
+    }
+    el.innerHTML = all.map(eventRow).join('');
+}
+
+function eventRow(ev) {
+    const d     = new Date(ev.data);
+    const past  = (ev.data_fine ? new Date(ev.data_fine) : d) < new Date();
+    const day   = d.toLocaleDateString('it-IT', {day:'2-digit'});
+    const mon   = d.toLocaleDateString('it-IT', {month:'short'}).toUpperCase();
+    const unitaColors = {cerchio:'bg-yellow-100 text-yellow-700', reparto:'bg-green-100 text-green-700', clan:'bg-red-100 text-red-600', capi:'bg-purple-100 text-purple-700', tutto:'bg-gray-100 text-gray-500'};
+    const uc = unitaColors[ev.unita] || unitaColors.tutto;
+    const dateLabel = ev.data_fine
+        ? `${d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'})} → ${new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}`
+        : d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+    return `<div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 border-b border-gray-50 last:border-0 ${past ? 'opacity-50' : ''}">
+        <div class="bg-scout text-white rounded-xl px-3 py-2 text-center flex-shrink-0 w-14">
+            <div class="text-xs font-bold opacity-60">${mon}</div>
+            <div class="text-2xl font-black leading-tight">${day}</div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="font-bold text-gray-800">${escapeHtml(ev.titolo||'')}</div>
+            <div class="text-xs text-gray-400 mt-0.5">${dateLabel}</div>
+            <div class="flex flex-wrap gap-2 mt-1">
+                <span class="badge ${uc}">${escapeHtml(ev.unita||'')}</span>
+                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${escapeHtml(ev.luogo)}</span>` : ''}
+            </div>
+            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
+        </div>
+        <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition ml-2 flex-shrink-0">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>`;
+}
+
+function deleteEvento(id) {
+    if (!confirm('Eliminare questo evento?')) return;
+    window.firestoreDb.collection('eventi').doc(String(id)).delete()
+        .then(() => toast('Evento eliminato.'))
+        .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
+}
+
+// ── ANNUNCI ───────────────────────────────────────────────────────
+function addAnnuncio() {
+    const titolo = document.getElementById('ann-titolo').value.trim();
+    const testo  = document.getElementById('ann-testo').value.trim();
+    if (!titolo || !testo) { toast('Titolo e testo sono obbligatori.', false); return; }
+    const id = Date.now();
+    const ann = { id, titolo, testo,
+        categoria: document.getElementById('ann-cat').value,
+        scadenza:  document.getElementById('ann-scad').value || null,
+        timestamp: new Date().toISOString(),
+    };
+    window.firestoreDb.collection('annunci').doc(String(id)).set(ann)
+        .then(() => {
+            ['ann-titolo','ann-testo','ann-scad'].forEach(i => document.getElementById(i).value = '');
+            document.getElementById('ann-cat').selectedIndex = 0;
+            toast('Annuncio pubblicato!');
+        })
+        .catch(e => { console.error(e); toast('Errore pubblicazione annuncio.', false); });
+}
+
+function renderAnnunci() {
+    const all = (window.annunciCache || []).slice().sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
+    const el  = document.getElementById('annunci-list');
+    if (!all.length) {
+        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio pubblicato.</div>';
+        return;
+    }
+    const catColors = {news:'bg-blue-50 text-blue-700', urgente:'bg-red-50 text-red-600', evento:'bg-purple-50 text-purple-700', info:'bg-amber-50 text-amber-700'};
+    el.innerHTML = all.map(a => {
+        const cc = catColors[a.categoria] || catColors.info;
+        return `<div class="flex items-start gap-4 px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50">
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap gap-2 items-center mb-1">
+                    <span class="font-bold text-gray-800">${escapeHtml(a.titolo||'')}</span>
+                    <span class="badge ${cc}">${escapeHtml(a.categoria||'')}</span>
+                    ${a.scadenza ? `<span class="text-xs text-gray-400">Scade: ${fmtDate(a.scadenza)}</span>` : ''}
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">${escapeHtml(a.testo||'')}</p>
+                <div class="text-xs text-gray-400 mt-2">${fmtDatetime(a.timestamp)}</div>
+            </div>
+            <button onclick="deleteAnnuncio(${a.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0 mt-1">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }).join('');
+}
+
+function deleteAnnuncio(id) {
+    if (!confirm('Eliminare questo annuncio?')) return;
+    window.firestoreDb.collection('annunci').doc(String(id)).delete()
+        .then(() => toast('Annuncio eliminato.'))
+        .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
+}
+
+// ── GOOGLE CALENDAR ───────────────────────────────────────────────
+function showCalendarPreview(id) {
+    const encoded = encodeURIComponent(id);
+    document.getElementById('gcal-preview').innerHTML = `
+        <iframe src="https://calendar.google.com/calendar/embed?src=${encoded}&ctz=Europe%2FRome&showTitle=0&showNav=1&mode=MONTH"
+                style="border:0" width="100%" height="500" frameborder="0" scrolling="no" class="rounded-xl"></iframe>`;
+}
+
+function loadCalendarId() {
+    if (!window.firestoreDb) return;
+    window.firestoreDb.collection('config').doc('site').get()
+        .then(doc => {
+            if (!doc.exists) return;
+            const data = doc.data();
+            if (data.gcalCerchio) document.getElementById('gcal-cerchio').value = data.gcalCerchio;
+            if (data.gcalReparto) document.getElementById('gcal-reparto').value = data.gcalReparto;
+            if (data.gcalClan)    document.getElementById('gcal-clan').value    = data.gcalClan;
+            if (data.gcalId) {
+                document.getElementById('gcal-id').value = data.gcalId;
+                showCalendarPreview(data.gcalId);
+            }
+            if (data.photosUrlCerchio) { const el = document.getElementById('photos-url-cerchio'); if (el) el.value = data.photosUrlCerchio; }
+            if (data.photosUrlReparto) { const el = document.getElementById('photos-url-reparto'); if (el) el.value = data.photosUrlReparto; }
+            if (data.photosUrlClan)    { const el = document.getElementById('photos-url-clan');    if (el) el.value = data.photosUrlClan;    }
+        })
+        .catch(e => console.error('loadCalendarId:', e));
+}
+
+function saveCalendarIds() {
+    const cerchio = document.getElementById('gcal-cerchio').value.trim();
+    const reparto = document.getElementById('gcal-reparto').value.trim();
+    const clan    = document.getElementById('gcal-clan').value.trim();
+    const pub     = document.getElementById('gcal-id').value.trim();
+    window.firestoreDb.collection('config').doc('site').set(
+        { gcalCerchio: cerchio, gcalReparto: reparto, gcalClan: clan, gcalId: pub },
+        { merge: true }
+    ).then(() => {
+        document.getElementById('gcal-saved-msg').classList.remove('hidden');
+        setTimeout(() => document.getElementById('gcal-saved-msg').classList.add('hidden'), 3000);
+        if (pub) showCalendarPreview(pub);
+        toast('Calendari salvati!');
+    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
+}
+// keep old name as alias for any residual calls
+function saveCalendarId() { saveCalendarIds(); }
+
+function savePhotosUrls() {
+    const cerchio = document.getElementById('photos-url-cerchio').value.trim();
+    const reparto = document.getElementById('photos-url-reparto').value.trim();
+    const clan    = document.getElementById('photos-url-clan').value.trim();
+    window.firestoreDb.collection('config').doc('site').set(
+        { photosUrlCerchio: cerchio, photosUrlReparto: reparto, photosUrlClan: clan },
+        { merge: true }
+    ).then(() => {
+        document.getElementById('photos-saved-msg').classList.remove('hidden');
+        setTimeout(() => document.getElementById('photos-saved-msg').classList.add('hidden'), 3000);
+        toast('Link gallerie salvati!');
+    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
+}
+function savePhotosUrl() { savePhotosUrls(); }
+
+// ── IMPOSTAZIONI ─────────────────────────────────────────────────
+function loadConfig() {
+    const cfg = get(KEYS.config) || {};
+    if (cfg.email)    document.getElementById('cfg-email').value    = cfg.email;
+    if (cfg.tel)      document.getElementById('cfg-tel').value      = cfg.tel;
+    if (cfg.indirizzo)document.getElementById('cfg-indirizzo').value = cfg.indirizzo;
+    if (cfg.ig)       document.getElementById('cfg-ig').value       = cfg.ig;
+    if (cfg.fb)       document.getElementById('cfg-fb').value       = cfg.fb;
+}
+
+function saveConfig() {
+    set(KEYS.config, {
+        email:     document.getElementById('cfg-email').value.trim(),
+        tel:       document.getElementById('cfg-tel').value.trim(),
+        indirizzo: document.getElementById('cfg-indirizzo').value.trim(),
+        ig:        document.getElementById('cfg-ig').value.trim(),
+        fb:        document.getElementById('cfg-fb').value.trim(),
+    });
+    const msg = document.getElementById('cfg-msg');
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 3000);
+    toast('Impostazioni salvate!');
+}
+
+function changePw() {
+    const old     = document.getElementById('pw-old').value;
+    const nw      = document.getElementById('pw-new').value;
+    const confirm = document.getElementById('pw-confirm').value;
+    const msg     = document.getElementById('pw-msg');
+
+    msg.classList.remove('hidden', 'text-green-600', 'text-red-500');
+
+    if (nw.length < 6) {
+        msg.textContent = '❌ La nuova password deve avere almeno 6 caratteri.';
+        msg.classList.add('text-red-500'); return;
+    }
+    if (nw !== confirm) {
+        msg.textContent = '❌ Le password non coincidono.';
+        msg.classList.add('text-red-500'); return;
+    }
+
+    const user = firebase.auth().currentUser;
+    if (!user) { msg.textContent = '❌ Sessione scaduta. Rieffettua il login.'; msg.classList.add('text-red-500'); return; }
+
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, old);
+    user.reauthenticateWithCredential(credential)
+        .then(() => user.updatePassword(nw))
+        .then(() => {
+            ['pw-old','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value = '');
+            msg.textContent = '✅ Password aggiornata con successo.';
+            msg.classList.add('text-green-600');
+            toast('Password cambiata!');
+        })
+        .catch(err => {
+            msg.textContent = err.code === 'auth/wrong-password'
+                ? '❌ Password attuale errata.'
+                : '❌ Errore: ' + err.message;
+            msg.classList.add('text-red-500');
+        });
+}
+
+function exportData() {
+    const data = {
+        richieste: window.richiesteCache || [],
+        eventi:    get(KEYS.eventi)    || [],
+        annunci:   get(KEYS.annunci)   || [],
+        esportato: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `bs7-dati-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Export completato!');
+}
+
+function resetAll() {
+    if (!confirm('⚠️ Eliminare TUTTI i dati (richieste, eventi, annunci)? Operazione irreversibile!')) return;
+    const db = window.firestoreDb;
+    if (!db) return;
+    const deleteCollection = col => db.collection(col).get().then(snap => {
+        const batch = db.batch();
+        snap.docs.forEach(d => batch.delete(d.ref));
+        return batch.commit();
+    });
+    Promise.all([
+        deleteCollection('iscrizioni'),
+        deleteCollection('eventi'),
+        deleteCollection('annunci'),
+    ]).then(() => toast('Tutti i dati eliminati.'))
+      .catch(e => { console.error(e); toast('Errore durante il reset.', false); });
+}
+
+// ── ATTIVAZIONE SOCI ────────────────────────────────────────────────
+// Nessun dato anagrafico salvato: solo { pin, usato, creato } per Codice
+// Socio, in collection "soci_attivazione". Il PIN non è mai leggibile via
+// API: la registrazione lo verifica tentando una scrittura che riesce solo
+// se il valore inserito coincide (vedi firestore.rules). Il PIN è a 8 cifre
+// e scade dopo 72 ore (regola lato server) per limitare la finestra utile
+// a un eventuale tentativo di forza bruta.
+function fmtScadenza(creatoDate) {
+    const scadenza = new Date(creatoDate.getTime() + 72 * 60 * 60 * 1000);
+    const scaduto = scadenza < new Date();
+    const str = scadenza.toLocaleString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'});
+    return scaduto ? `Scaduto il ${str} — non più utilizzabile, rigeneralo.` : `Valido fino al ${str}.`;
+}
+
+function generaAttivazioneSocio() {
+    const codice = document.getElementById('attiva-codice').value.trim();
+    const msg = document.getElementById('attiva-msg');
+    msg.classList.add('hidden');
+    if (!codice) {
+        msg.textContent = '❌ Inserisci il Codice Socio.';
+        msg.className = 'text-xs mt-3 font-semibold text-red-500';
+        msg.classList.remove('hidden');
+        return;
+    }
+    const pin = String(Math.floor(10000000 + Math.random() * 90000000));
+    window.firestoreDb.collection('soci_attivazione').doc(codice)
+        .set({ pin, usato: false, creato: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(() => {
+            document.getElementById('attiva-risultato-codice').textContent = codice;
+            document.getElementById('attiva-risultato-pin').textContent = pin;
+            document.getElementById('attiva-risultato-scadenza').textContent =
+                'Comunicalo al socio: è valido una sola volta. ' + fmtScadenza(new Date());
+            document.getElementById('attiva-risultato').classList.remove('hidden');
+            toast('Codice di attivazione generato!');
+        })
+        .catch(e => {
+            console.error(e);
+            msg.textContent = '❌ Errore durante la generazione: ' + e.message;
+            msg.className = 'text-xs mt-3 font-semibold text-red-500';
+            msg.classList.remove('hidden');
+        });
+}
+
+// Ricontrolla lo stato di un'attivazione già generata (es. dopo aver
+// lasciato la pagina): l'admin ha accesso in lettura a questa collection
+// (vedi firestore.rules), quindi può sempre recuperare PIN/scadenza/stato.
+function controllaAttivazioneSocio() {
+    const codice = document.getElementById('attiva-codice').value.trim();
+    const msg = document.getElementById('attiva-msg');
+    msg.classList.add('hidden');
+    document.getElementById('attiva-risultato').classList.add('hidden');
+    if (!codice) {
+        msg.textContent = '❌ Inserisci il Codice Socio.';
+        msg.className = 'text-xs mt-3 font-semibold text-red-500';
+        msg.classList.remove('hidden');
+        return;
+    }
+    window.firestoreDb.collection('soci_attivazione').doc(codice).get()
+        .then(doc => {
+            if (!doc.exists) {
+                msg.textContent = 'ℹ️ Nessuna attivazione pendente per questo codice. Generane una nuova.';
+                msg.className = 'text-xs mt-3 font-semibold text-gray-500';
+                msg.classList.remove('hidden');
+                return;
+            }
+            const d = doc.data();
+            if (d.usato) {
+                msg.textContent = '✅ Questo codice ha già completato la registrazione (PIN già usato).';
+                msg.className = 'text-xs mt-3 font-semibold text-green-600';
+                msg.classList.remove('hidden');
+                return;
+            }
+            const creatoDate = d.creato && d.creato.toDate ? d.creato.toDate() : new Date();
+            document.getElementById('attiva-risultato-codice').textContent = codice;
+            document.getElementById('attiva-risultato-pin').textContent = d.pin;
+            document.getElementById('attiva-risultato-scadenza').textContent =
+                'Non ancora usato. ' + fmtScadenza(creatoDate);
+            document.getElementById('attiva-risultato').classList.remove('hidden');
+        })
+        .catch(e => {
+            console.error(e);
+            msg.textContent = '❌ Errore durante il controllo: ' + e.message;
+            msg.className = 'text-xs mt-3 font-semibold text-red-500';
+            msg.classList.remove('hidden');
+        });
+}
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+    apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
+    authDomain: "agescibrescia7-508b0.firebaseapp.com",
+    projectId: "agescibrescia7-508b0",
+    storageBucket: "agescibrescia7-508b0.firebasestorage.app",
+    messagingSenderId: "738190317173",
+    appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
+});
+window.firestoreDb = firebase.firestore();
+window.richiesteCache = [];
+window.preIscrizioniCache = [];
+window.eventiCache = [];
+window.annunciCache = [];
+window.unsubscribeRichieste = null;
+window.unsubscribePreIscrizioni = null;
+window.unsubscribeEventi = null;
+window.unsubscribeAnnunci = null;
+
+function setupFirestoreListener() {
+    if (window.unsubscribeRichieste) window.unsubscribeRichieste();
+    window.unsubscribeRichieste = window.firestoreDb.collection('iscrizioni')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            window.richiesteCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            refreshAll();
+        }, err => console.error('Firestore listener error:', err));
+
+    if (window.unsubscribePreIscrizioni) window.unsubscribePreIscrizioni();
+    window.unsubscribePreIscrizioni = window.firestoreDb.collection('pre_iscrizioni')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            window.preIscrizioniCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            refreshAll();
+            if (document.getElementById('tab-pre-iscrizioni')?.classList.contains('active')) {
+                renderPreIscrizioni(currentPreFilter);
+            }
+        }, err => console.error('Firestore pre-iscrizioni listener error:', err));
+
+    if (window.unsubscribeEventi) window.unsubscribeEventi();
+    window.unsubscribeEventi = window.firestoreDb.collection('eventi')
+        .onSnapshot(snap => {
+            window.eventiCache = snap.docs.map(d => d.data());
+            renderDashboard();
+            if (document.getElementById('tab-eventi')?.classList.contains('active')) renderEventi();
+        }, err => console.error('Firestore eventi listener error:', err));
+
+    if (window.unsubscribeAnnunci) window.unsubscribeAnnunci();
+    window.unsubscribeAnnunci = window.firestoreDb.collection('annunci')
+        .onSnapshot(snap => {
+            window.annunciCache = snap.docs.map(d => d.data());
+            if (document.getElementById('tab-annunci')?.classList.contains('active')) renderAnnunci();
+        }, err => console.error('Firestore annunci listener error:', err));
+
+    // Carica ID calendario
+    loadCalendarId();
+}
+</script>
+</body>
+</html>
