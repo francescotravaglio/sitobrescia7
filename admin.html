@@ -613,7 +613,7 @@
                     <div id="attiva-risultato" class="hidden mt-5 bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
                         <div class="text-gray-500 mb-1">Codice di attivazione per <strong id="attiva-risultato-codice"></strong>:</div>
                         <div class="text-2xl font-black text-scout tracking-widest" id="attiva-risultato-pin"></div>
-                        <p class="text-xs text-gray-400 mt-2">Comunicalo al socio: è valido una sola volta. Se lo rigeneri, quello precedente smette di funzionare.</p>
+                        <p class="text-xs text-gray-400 mt-2">Comunicalo al socio: è valido una sola volta e scade dopo 72 ore. Se lo rigeneri, quello precedente smette di funzionare.</p>
                     </div>
                     <p id="attiva-msg" class="text-xs mt-3 hidden font-semibold"></p>
                 </div>
@@ -1537,10 +1537,12 @@ function resetAll() {
 }
 
 // ── ATTIVAZIONE SOCI ────────────────────────────────────────────────
-// Nessun dato anagrafico salvato: solo { pin, usato } per Codice Socio,
-// in collection "soci_attivazione". Il PIN non è mai leggibile via API:
-// la registrazione lo verifica tentando una scrittura che riesce solo
-// se il valore inserito coincide (vedi firestore.rules).
+// Nessun dato anagrafico salvato: solo { pin, usato, creato } per Codice
+// Socio, in collection "soci_attivazione". Il PIN non è mai leggibile via
+// API: la registrazione lo verifica tentando una scrittura che riesce solo
+// se il valore inserito coincide (vedi firestore.rules). Il PIN è a 8 cifre
+// e scade dopo 72 ore (regola lato server) per limitare la finestra utile
+// a un eventuale tentativo di forza bruta.
 function generaAttivazioneSocio() {
     const codice = document.getElementById('attiva-codice').value.trim();
     const msg = document.getElementById('attiva-msg');
@@ -1551,8 +1553,9 @@ function generaAttivazioneSocio() {
         msg.classList.remove('hidden');
         return;
     }
-    const pin = String(Math.floor(100000 + Math.random() * 900000));
-    window.firestoreDb.collection('soci_attivazione').doc(codice).set({ pin, usato: false })
+    const pin = String(Math.floor(10000000 + Math.random() * 90000000));
+    window.firestoreDb.collection('soci_attivazione').doc(codice)
+        .set({ pin, usato: false, creato: firebase.firestore.FieldValue.serverTimestamp() })
         .then(() => {
             document.getElementById('attiva-risultato-codice').textContent = codice;
             document.getElementById('attiva-risultato-pin').textContent = pin;

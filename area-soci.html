@@ -191,7 +191,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Codice di attivazione</label>
-                    <input type="text" id="reg-pin" placeholder="Ricevuto da un capo/dall'admin" maxlength="6"
+                    <input type="text" id="reg-pin" placeholder="Ricevuto da un capo/dall'admin" maxlength="8"
                            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
                 </div>
                 <div>
@@ -1200,10 +1200,11 @@
             .then(function(methods) {
                 if (methods && methods.length) throw { code: 'auth/email-already-in-use' };
                 // 2) Verifica il codice di attivazione senza mai leggerlo: la scrittura
-                //    riesce solo se il PIN inserito coincide con quello generato dall'admin
-                //    (vedi firestore.rules, collection soci_attivazione). In caso contrario
-                //    fallisce con permission-denied e il PIN reale non viene mai rivelato.
-                return window.db.collection('soci_attivazione').doc(codice).update({ pin: pin, usato: true });
+                //    riesce solo se "tentativo" coincide con il PIN reale generato
+                //    dall'admin (vedi firestore.rules, collection soci_attivazione).
+                //    In caso contrario fallisce con permission-denied e il PIN reale
+                //    non viene mai rivelato.
+                return window.db.collection('soci_attivazione').doc(codice).update({ tentativo: pin, usato: true });
             })
             .then(function() {
                 return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password);
@@ -1211,7 +1212,7 @@
             .then(function(cred) { return cred.user.updateProfile({ displayName: codice }); })
             .catch(function(err) {
                 if (err.code === 'permission-denied' || err.code === 'not-found') {
-                    errRegister('Codice di attivazione non valido, già usato o Codice Socio errato. Contatta info@agescibrescia7.com.');
+                    errRegister('Codice di attivazione non valido, scaduto, già usato o Codice Socio errato. Contatta info@agescibrescia7.com.');
                 } else if (err.code === 'auth/email-already-in-use') {
                     errRegister('Questo Codice Socio ha già un accesso. Usa il login.');
                 } else if (err.code === 'auth/weak-password') {
