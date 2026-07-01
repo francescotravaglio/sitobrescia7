@@ -1098,6 +1098,7 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 <script>
     firebase.initializeApp({
         apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
@@ -1115,6 +1116,8 @@
 (function() {
     'use strict';
 
+    function toEmail(codice) { return codice + '@soci.agescibrescia7.com'; }
+
     // ── Helpers ──────────────────────────────────────────────────
     function showWall()    { document.getElementById('soci-login-wall').classList.remove('hidden'); }
     function hideWall()    { document.getElementById('soci-login-wall').classList.add('hidden'); }
@@ -1124,15 +1127,12 @@
         var heroNome = document.getElementById('hero-nome');
         if (heroNome) heroNome.textContent = nomeDisplay;
     }
-    function showContent() {
+    function showContent(codice) {
         document.getElementById('area-soci-content').classList.remove('hidden');
         var btn = document.getElementById('btn-logout-nav');
         if (btn) { btn.classList.remove('hidden'); btn.classList.add('flex'); }
-        var session = JSON.parse(sessionStorage.getItem('soci_session') || '{}');
-        var codice = session.codiceSocio || '';
-        document.getElementById('welcome-codice').textContent = codice;
+        document.getElementById('welcome-codice').textContent = codice || '';
 
-        // Helper: extract name from a Firestore doc data object
         function nomeFromData(d) {
             var nome    = d.Nome    || d.nome    || d.NOME    || '';
             var cognome = d.Cognome || d.cognome || d.COGNOME || '';
@@ -1143,14 +1143,12 @@
 
         function doLookup() {
             if (!window.db) { setTimeout(doLookup, 300); return; }
-            // 1. Try direct doc lookup (doc ID = codiceSocio)
             window.db.collection('soci_lista').doc(String(codice)).get()
                 .then(function(doc) {
                     if (doc.exists) {
                         var n = nomeFromData(doc.data());
                         if (n) { setNomeUI(n); return; }
                     }
-                    // 2. Fallback: query by CodiceSocio field
                     return window.db.collection('soci_lista')
                         .where('CodiceSocio', '==', codice)
                         .limit(1).get()
@@ -1159,22 +1157,16 @@
                                 var n2 = nomeFromData(snap.docs[0].data());
                                 if (n2) { setNomeUI(n2); return; }
                             }
-                            // 3. Try numeric codice
                             var numCodice = Number(codice);
                             if (!isNaN(numCodice) && numCodice !== 0) {
                                 return window.db.collection('soci_lista')
                                     .where('CodiceSocio', '==', numCodice)
                                     .limit(1).get()
                                     .then(function(snap2) {
-                                        if (!snap2.empty) {
-                                            var n3 = nomeFromData(snap2.docs[0].data());
-                                            setNomeUI(n3 || codice);
-                                        } else {
-                                            setNomeUI(codice); // show codice as fallback
-                                        }
+                                        setNomeUI(snap2.empty ? codice : (nomeFromData(snap2.docs[0].data()) || codice));
                                     });
                             }
-                            setNomeUI(codice); // show codice as fallback
+                            setNomeUI(codice);
                         });
                 })
                 .catch(function(e) { console.error('[soci_lista]', e); setNomeUI(codice); });
@@ -1198,17 +1190,6 @@
         document.getElementById('soci-register-error').classList.add('hidden');
     }
 
-    // ── Session check ─────────────────────────────────────────────
-    function isLoggedIn() {
-        return !!sessionStorage.getItem('soci_session');
-    }
-    function setSession(codiceSocio) {
-        sessionStorage.setItem('soci_session', JSON.stringify({ codiceSocio: codiceSocio, ts: Date.now() }));
-    }
-    function clearSession() {
-        sessionStorage.removeItem('soci_session');
-    }
-
     // ── Login ─────────────────────────────────────────────────────
     window.sociLogin = function() {
         clearErrors();
@@ -1218,26 +1199,39 @@
         if (!codice)   { errLogin('Inserisci il Codice Socio.'); return; }
         if (!password) { errLogin('Inserisci la password.'); return; }
 
-        window.db.collection('soci_auth')
-            .where('codiceSocio', '==', codice)
-            .get()
-            .then(function(snap) {
-                if (snap.empty) { errLogin('Nessun account trovato per questo Codice Socio.'); return; }
-                var found = false;
-                snap.forEach(function(doc) {
-                    if (doc.data().password === password) found = true;
-                });
-                if (found) {
-                    setSession(codice);
-                    hideWall();
-                    showContent();
-                } else {
-                    errLogin('Password errata. Riprova.');
+        firebase.auth().signInWithEmailAndPassword(toEmail(codice), password)
+            .catch(function(err) {
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    return window.db.collection('soci_auth')
+                        .where('codiceSocio', '==', codice)
+                        .get()
+                        .then(function(snap) {
+                            if (snap.empty) throw { code: 'auth/user-not-found' };
+                            var match = null;
+                            snap.forEach(function(doc) {
+                                if (doc.data().password === password) match = doc;
+                            });
+                            if (!match) throw { code: 'auth/wrong-password' };
+                            return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password)
+                                .then(function(cred) {
+                                    return cred.user.updateProfile({ displayName: codice })
+                                        .then(function() { return match.ref.delete(); });
+                                });
+                        });
                 }
+                throw err;
             })
             .catch(function(err) {
-                console.error('Firestore login error:', err);
-                errLogin('Errore di connessione. Riprova.');
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    errLogin('Nessun account trovato per questo Codice Socio.');
+                } else if (err.code === 'auth/wrong-password') {
+                    errLogin('Password errata. Riprova.');
+                } else if (err.code === 'auth/too-many-requests') {
+                    errLogin('Troppi tentativi. Riprova tra qualche minuto.');
+                } else {
+                    console.error('Login error:', err);
+                    errLogin('Errore di connessione. Riprova.');
+                }
             });
     };
 
@@ -1248,31 +1242,21 @@
         var password = document.getElementById('reg-password').value;
         var password2= document.getElementById('reg-password2').value;
 
-        if (!codice)          { errRegister('Inserisci il Codice Socio.'); return; }
+        if (!codice)             { errRegister('Inserisci il Codice Socio.'); return; }
         if (password.length < 6) { errRegister('La password deve avere almeno 6 caratteri.'); return; }
         if (password !== password2) { errRegister('Le password non coincidono.'); return; }
 
-        // Check if already registered
-        window.db.collection('soci_auth')
-            .where('codiceSocio', '==', codice)
-            .get()
-            .then(function(snap) {
-                if (!snap.empty) { errRegister('Questo Codice Socio ha già un accesso. Usa il login.'); return; }
-                return window.db.collection('soci_auth').add({
-                    codiceSocio: codice,
-                    password:    password,
-                    timestamp:   new Date().toISOString()
-                });
-            })
-            .then(function(docRef) {
-                if (!docRef) return; // already returned above due to duplicate
-                setSession(codice);
-                hideWall();
-                showContent();
-            })
+        firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password)
+            .then(function(cred) { return cred.user.updateProfile({ displayName: codice }); })
             .catch(function(err) {
-                console.error('Firestore register error:', err);
-                errRegister('Errore di connessione. Riprova.');
+                if (err.code === 'auth/email-already-in-use') {
+                    errRegister('Questo Codice Socio ha già un accesso. Usa il login.');
+                } else if (err.code === 'auth/weak-password') {
+                    errRegister('La password deve avere almeno 6 caratteri.');
+                } else {
+                    console.error('Register error:', err);
+                    errRegister('Errore durante la registrazione. Riprova.');
+                }
             });
     };
 
@@ -1290,25 +1274,26 @@
 
     // ── Logout ────────────────────────────────────────────────────
     window.sociLogout = function() {
-        clearSession();
-        hideContent();
-        showWall();
-        sociShowLogin();
-        document.getElementById('soci-codice').value = '';
-        document.getElementById('soci-password').value = '';
-        var btn = document.getElementById('btn-logout-nav');
-        if (btn) { btn.classList.add('hidden'); btn.classList.remove('flex'); }
+        firebase.auth().signOut();
     };
 
-    // ── On page load ──────────────────────────────────────────────
+    // ── Auth state ────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-        if (isLoggedIn()) {
-            hideWall();
-            showContent();
-        } else {
-            showWall();
-            hideContent();
-        }
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                var codice = user.displayName || user.email.replace('@soci.agescibrescia7.com', '');
+                hideWall();
+                showContent(codice);
+            } else {
+                hideContent();
+                showWall();
+                sociShowLogin();
+                document.getElementById('soci-codice').value = '';
+                document.getElementById('soci-password').value = '';
+                var btn = document.getElementById('btn-logout-nav');
+                if (btn) { btn.classList.add('hidden'); btn.classList.remove('flex'); }
+            }
+        });
     });
 })();
 

@@ -693,8 +693,8 @@ function fmtDatetime(iso) {
 }
 
 function tipoLabel(t) {
-    const m = {iscrizione:'Iscrizione', informazioni:'Informazioni', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', altro:'Altro'};
-    return m[t] || t;
+    const m = {iscrizione:'Iscrizione', informazioni:'Informazioni', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', altro:'Altro', maggiorenne:'Iscrizione maggiorenne', minorenne:'Iscrizione minorenne'};
+    return m[t] || escapeHtml(String(t || ''));
 }
 
 function toast(msg, ok = true) {
@@ -966,15 +966,16 @@ function renderPreIscrizioni(filtro) {
 }
 
 function preIscrizioneRow(r) {
-    const bimbo = r.bambino_nome || '—';
-    const genitore = ((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—';
-    const email = r.email || '—';
-    const tel = r.telefono || '—';
+    const bimbo = escapeHtml(r.bambino_nome || '—');
+    const genitore = escapeHtml(((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—');
+    const email = escapeHtml(r.email || '—');
+    const tel = escapeHtml(r.telefono || '—');
     const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
     const stato = r.letta
         ? '<span class="badge badge-read">Letta</span>'
         : '<span class="badge badge-new">Nuova</span>';
-    return `<tr class="table-row cursor-pointer" onclick="openPreIscrizione('${r.id}')">
+    const safeId = escapeHtml(r.id);
+    return `<tr class="table-row cursor-pointer" onclick="openPreIscrizione('${safeId}')">
         <td class="px-6 py-4 font-semibold text-gray-800">${bimbo}</td>
         <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${genitore}</td>
         <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
@@ -983,8 +984,8 @@ function preIscrizioneRow(r) {
         <td class="px-6 py-4">${stato}</td>
         <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
             <div class="flex gap-2 items-center justify-end">
-                ${!r.letta ? `<button onclick="markPreLetta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
-                <button onclick="deletePreIscrizione('${r.id}')" class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 font-bold px-2 py-1.5 rounded-lg transition" title="Elimina">
+                ${!r.letta ? `<button onclick="markPreLetta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
+                <button onclick="deletePreIscrizione('${safeId}')" class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 font-bold px-2 py-1.5 rounded-lg transition" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -1002,12 +1003,15 @@ function openPreIscrizione(id) {
     if (!r) return;
     if (!r.letta) markPreLetta(id);
     const nascita = r.data_nascita ? fmtDate(r.data_nascita) : '—';
-    const genitore = ((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—';
+    const genitore = escapeHtml(((r.genitore_nome || '') + ' ' + (r.genitore_cognome || '')).trim() || '—');
+    const emailSafe = escapeHtml(r.email || '');
+    const telSafe   = escapeHtml(r.telefono || '');
+    const safeId    = escapeHtml(r.id);
     document.getElementById('modal-pre-body').innerHTML = `
         <div class="space-y-3 text-sm">
             <div class="bg-amber-50 rounded-xl p-4">
                 <div class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">Bambino/a</div>
-                <div class="font-black text-lg text-scout">${r.bambino_nome || '—'}</div>
+                <div class="font-black text-lg text-scout">${escapeHtml(r.bambino_nome || '—')}</div>
                 <div class="text-xs text-gray-500 mt-0.5">Nato/a il: <strong>${nascita}</strong></div>
             </div>
             <div class="grid grid-cols-2 gap-3">
@@ -1021,18 +1025,18 @@ function openPreIscrizione(id) {
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 col-span-2">
                     <div class="text-xs text-gray-400 mb-1">Email</div>
-                    <a href="mailto:${r.email || ''}" class="font-semibold text-scout hover:underline">${r.email || '—'}</a>
+                    <a href="mailto:${emailSafe}" class="font-semibold text-scout hover:underline">${emailSafe || '—'}</a>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 col-span-2">
                     <div class="text-xs text-gray-400 mb-1">Telefono</div>
-                    <a href="tel:${r.telefono || ''}" class="font-semibold">${r.telefono || '—'}</a>
+                    <a href="tel:${telSafe}" class="font-semibold">${telSafe || '—'}</a>
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
-                <a href="mailto:${r.email || ''}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
+                <a href="mailto:${emailSafe}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
                     <i class="fas fa-envelope mr-2"></i>Rispondi
                 </a>
-                <button onclick="deletePreIscrizione('${r.id}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
+                <button onclick="deletePreIscrizione('${safeId}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -1141,7 +1145,8 @@ function renderRichieste(filtro) {
 }
 
 function richiestaRow(r, compact) {
-    const nome = `${r.dati?.nome || ''} ${r.dati?.cognome || ''}`.trim() || 'Senza nome';
+    const nome = escapeHtml((`${r.dati?.nome || ''} ${r.dati?.cognome || ''}`).trim() || 'Senza nome');
+    const email = escapeHtml(r.dati?.email || '—');
     const statoBadge = r.letta
         ? '<span class="badge badge-read">Letta</span>'
         : '<span class="badge badge-new">Nuova</span>';
@@ -1149,6 +1154,7 @@ function richiestaRow(r, compact) {
     const tipoBadge = (tipoVal === 'minorenne' || tipoVal === 'maggiorenne')
         ? `<span class="badge badge-iscrizione">Iscrizione ${tipoVal}</span>`
         : '<span class="badge badge-info">' + tipoLabel(tipoVal) + '</span>';
+    const safeId = escapeHtml(r.id);
 
     if (compact) {
         return `<div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 table-row">
@@ -1157,20 +1163,20 @@ function richiestaRow(r, compact) {
                 <div class="text-xs text-gray-400">${fmtDatetime(r.timestamp)}</div>
             </div>
             ${statoBadge}
-            <button onclick="openRichiesta('${r.id}')" class="text-scout text-xs font-bold hover:underline">Apri</button>
+            <button onclick="openRichiesta('${safeId}')" class="text-scout text-xs font-bold hover:underline">Apri</button>
         </div>`;
     }
 
     return `<tr class="table-row">
         <td class="px-6 py-4 font-semibold text-gray-800">${nome}</td>
-        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${r.dati?.email || '—'}</td>
+        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
         <td class="px-6 py-4 hidden lg:table-cell">${tipoBadge}</td>
         <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${fmtDatetime(r.timestamp)}</td>
         <td class="px-6 py-4">${statoBadge}</td>
         <td class="px-6 py-4 text-right">
             <div class="flex gap-2 justify-end">
-                <button onclick="openRichiesta('${r.id}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
-                <button onclick="deleteRichiesta('${r.id}')" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
+                <button onclick="openRichiesta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
+                <button onclick="deleteRichiesta('${safeId}')" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -1312,13 +1318,13 @@ function eventRow(ev) {
             <div class="text-2xl font-black leading-tight">${day}</div>
         </div>
         <div class="flex-1 min-w-0">
-            <div class="font-bold text-gray-800">${ev.titolo}</div>
+            <div class="font-bold text-gray-800">${escapeHtml(ev.titolo||'')}</div>
             <div class="text-xs text-gray-400 mt-0.5">${dateLabel}</div>
             <div class="flex flex-wrap gap-2 mt-1">
-                <span class="badge ${uc}">${ev.unita}</span>
-                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${ev.luogo}</span>` : ''}
+                <span class="badge ${uc}">${escapeHtml(ev.unita||'')}</span>
+                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${escapeHtml(ev.luogo)}</span>` : ''}
             </div>
-            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${ev.descrizione}</div>` : ''}
+            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
         </div>
         <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition ml-2 flex-shrink-0">
             <i class="fas fa-trash"></i>
@@ -1366,11 +1372,11 @@ function renderAnnunci() {
         return `<div class="flex items-start gap-4 px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50">
             <div class="flex-1 min-w-0">
                 <div class="flex flex-wrap gap-2 items-center mb-1">
-                    <span class="font-bold text-gray-800">${a.titolo}</span>
-                    <span class="badge ${cc}">${a.categoria}</span>
+                    <span class="font-bold text-gray-800">${escapeHtml(a.titolo||'')}</span>
+                    <span class="badge ${cc}">${escapeHtml(a.categoria||'')}</span>
                     ${a.scadenza ? `<span class="text-xs text-gray-400">Scade: ${fmtDate(a.scadenza)}</span>` : ''}
                 </div>
-                <p class="text-sm text-gray-600 leading-relaxed">${a.testo}</p>
+                <p class="text-sm text-gray-600 leading-relaxed">${escapeHtml(a.testo||'')}</p>
                 <div class="text-xs text-gray-400 mt-2">${fmtDatetime(a.timestamp)}</div>
             </div>
             <button onclick="deleteAnnuncio(${a.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0 mt-1">
