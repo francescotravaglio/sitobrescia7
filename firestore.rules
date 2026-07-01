@@ -5,21 +5,35 @@ rules_version = '2';
 // ⚠️ Per attivarle: Firebase Console → Firestore Database → Regole → incolla → Pubblica
 //    https://console.firebase.google.com/project/agescibrescia7-508b0/firestore/rules
 //
-// NOTA ONESTA: admin.html e area-soci.html oggi NON usano Firebase Authentication,
-// quindi non è possibile distinguere l'admin da un visitatore qualunque a livello di
-// regole. Queste regole riducono il danno (validazione campi, dimensioni massime,
-// niente cancellazioni di massa dal pubblico) ma la protezione vera arriverà solo
-// aggiungendo Firebase Auth all'admin. Finché non c'è, NON salvare dati sensibili.
+// Tutte le operazioni di scrittura/lettura privilegiata richiedono
+// request.auth != null  (= admin loggato con Firebase Auth in admin.html).
+// Le uniche eccezioni sono le operazioni pubbliche necessarie al sito:
+//   • lettura contenuti (annunci, eventi, testimonianze approvate)
+//   • invio pre-iscrizioni e testimonianze (create con validazione)
+//   • autenticazione soci (soci_auth read/create)
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ── Contenuti pubblici del sito (sola lettura per i visitatori) ──
-    match /annunci/{doc}  { allow read: if true; allow write: if true; }   // TODO: stringere con auth
-    match /eventi/{doc}   { allow read: if true; allow write: if true; }   // TODO: stringere con auth
-    match /config/{doc}   { allow read: if true; allow write: if true; }   // TODO: stringere con auth
+    // ── Contenuti pubblici: lettura libera, scrittura solo admin ──
+    match /annunci/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /eventi/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /config/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /informazioni/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
 
-    // ── Pre-iscrizioni: il pubblico può solo CREARE, con campi validati ──
+    // ── Pre-iscrizioni: il pubblico può solo CREARE (con validazione) ──
     match /pre_iscrizioni/{doc} {
       allow create: if
         request.resource.data.genitore_nome is string    && request.resource.data.genitore_nome.size() > 0    && request.resource.data.genitore_nome.size() < 100 &&
@@ -27,29 +41,38 @@ service cloud.firestore {
         request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
         request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
         request.resource.data.letta == false;
-      allow read, update, delete: if true;                                 // TODO: stringere con auth (serve all'admin)
+      allow read, update, delete: if request.auth != null;
     }
 
     // ── Iscrizioni complete (form area soci) ──
     match /iscrizioni/{doc} {
       allow create: if request.resource.data.size() < 40;
-      allow read, update, delete: if true;                                 // TODO: stringere con auth
+      allow read, update, delete: if request.auth != null;
     }
 
-    // ── Testimonianze genitori: il pubblico CREA (non approvate), l'admin approva ──
+    // ── Testimonianze: lettura pubblica (serve per mostrarle), invio pubblico con validazione ──
     match /testimonianze/{doc} {
       allow read: if true;
       allow create: if
         request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
         request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
         request.resource.data.approvata == false;
-      allow update, delete: if true;                                      // TODO: stringere con auth (serve all'admin)
+      allow update, delete: if request.auth != null;
     }
 
     // ── Area soci ──
-    match /soci_lista/{doc}  { allow read: if true; allow write: if false; }  // solo admin da console
-    match /soci_auth/{doc}   { allow read, create: if true; allow update, delete: if true; } // TODO: auth
-    match /informazioni/{doc}{ allow read, write: if true; }
+    // soci_lista: solo lettura pubblica (usato da area-soci.html per login soci),
+    //             scrittura bloccata (import solo da Firebase Console)
+    // NOTA: la lettura pubblica espone i dati dei soci — da proteggere
+    //       con Firebase Auth area-soci in un futuro aggiornamento.
+    match /soci_lista/{doc}  { allow read: if true; allow write: if false; }
+
+    // soci_auth: lettura e creazione pubbliche (necessarie per login/registrazione soci),
+    //            modifica ed eliminazione solo admin
+    match /soci_auth/{doc}   {
+      allow read, create: if true;
+      allow update, delete: if request.auth != null;
+    }
 
     // ── Tutto il resto: negato ──
     match /{document=**} { allow read, write: if false; }
