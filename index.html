@@ -1313,6 +1313,7 @@ window.addEventListener('load', function() {
             evento:  'fa-calendar-check',
             info:    'fa-info-circle'
         };
+        function escAnn(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
         window.db.collection('annunci')
             .orderBy('timestamp', 'desc')
             .get()
@@ -1338,7 +1339,7 @@ window.addEventListener('load', function() {
                     var scad  = a.scadenza
                         ? '<span class="text-xs text-gray-400 ml-2"><i class="fas fa-clock mr-1"></i>Scade il ' + new Date(a.scadenza).toLocaleDateString('it-IT') + '</span>'
                         : '';
-                    var testo = (a.testo || '').replace(/\n/g, '<br>');
+                    var testo = escAnn((a.testo || '')).replace(/\n/g, '<br>');
                     return '<div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow">'
                         + '<div class="flex items-start gap-4">'
                         + '<div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ' + badge + ' bg-opacity-60">'
@@ -1346,10 +1347,10 @@ window.addEventListener('load', function() {
                         + '<div class="flex-1 min-w-0">'
                         + '<div class="flex flex-wrap items-center gap-2 mb-2">'
                         + '<span class="text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-full ' + badge + '">'
-                        + cat.charAt(0).toUpperCase() + cat.slice(1) + '</span>'
+                        + escAnn(cat.charAt(0).toUpperCase() + cat.slice(1)) + '</span>'
                         + '<span class="text-xs text-gray-400">' + data + '</span>' + scad
                         + '</div>'
-                        + '<h3 class="font-black text-scout text-lg mb-1">' + (a.titolo || '') + '</h3>'
+                        + '<h3 class="font-black text-scout text-lg mb-1">' + escAnn(a.titolo || '') + '</h3>'
                         + '<p class="text-gray-600 text-sm leading-relaxed">' + testo + '</p>'
                         + '</div></div></div>';
                 }).join('') + '</div>';

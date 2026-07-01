@@ -70,16 +70,27 @@ service cloud.firestore {
     }
 
     // ── Area soci ──
-    // soci_lista: lettura per qualsiasi utente autenticato (soci e admin)
-    match /soci_lista/{doc}  { allow read: if request.auth != null; allow write: if false; }
+    // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato } per Codice Socio,
+    // generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è mai
+    // leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
+    // riesce solo se il valore inserito coincide con quello reale, rendendolo monouso.
+    match /soci_attivazione/{doc} {
+      allow get, list:      if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if resource.data.usato == false
+                    && request.resource.data.usato == true
+                    && request.resource.data.pin == resource.data.pin
+                    && request.resource.data.keys().hasOnly(['pin', 'usato']);
+    }
 
-    // soci_auth: lettura pubblica solo durante periodo di migrazione legacy,
-    //            eliminazione consentita per la migrazione automatica (utente appena autenticato)
+    // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
+    //            da un client non admin. La migrazione dei soci storici va gestita
+    //            manualmente dall'admin, che verifica l'identità e poi crea/elimina l'account.
     match /soci_auth/{doc}   {
-      allow read: if true;
+      allow read:   if isAdmin();
       allow create: if false;
       allow update: if isAdmin();
-      allow delete: if request.auth != null;
+      allow delete: if isAdmin();
     }
 
     // ── Tutto il resto: negato ──

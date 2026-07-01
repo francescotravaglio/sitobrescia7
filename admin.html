@@ -184,7 +184,7 @@
                 <i class="fas fa-cog"></i> Impostazioni
             </div>
             <div onclick="showTab('soci')" class="sidebar-link" id="nav-soci">
-                <i class="fas fa-users"></i> Soci
+                <i class="fas fa-key"></i> Attivazione Soci
             </div>
         </nav>
 
@@ -591,50 +591,31 @@
                 </div>
             </section>
 
-            <!-- ──────────────────────── SOCI ────────────────────── -->
+            <!-- ──────────────────── ATTIVAZIONE SOCI ────────────── -->
             <section id="tab-soci" class="tab-panel space-y-6">
-                <!-- Import Excel -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-2">Elenco Soci</h3>
-                    <p class="text-gray-500 text-sm mb-5">Importa il file Excel (ElencoSoci) per visualizzare e ricercare i soci del gruppo.</p>
-                    <div class="flex items-center gap-4">
-                        <label class="flex items-center gap-2 bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition cursor-pointer">
-                            <i class="fas fa-file-excel"></i> Importa Excel
-                            <input type="file" id="soci-file-input" accept=".xlsx,.xls" class="hidden" onchange="importSoci(this)">
-                        </label>
-                        <span id="soci-file-name" class="text-sm text-gray-400 italic"></span>
-                    </div>
-                    <p id="soci-import-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Qui non è salvato nessun dato anagrafico dei soci, solo il <strong>Codice Socio</strong> e un <strong>codice di attivazione</strong> monouso. Genera il codice, comunicalo al socio (di persona, telefono o messaggio), e lui lo userà una sola volta per creare il proprio accesso in "Area Soci".
                 </div>
 
-                <!-- Search + Table -->
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap gap-3 items-center justify-between">
-                        <h3 class="font-black text-scout">Lista Soci <span id="soci-count" class="text-gray-400 font-semibold text-sm ml-2"></span></h3>
-                        <input type="text" id="soci-search" placeholder="Cerca per nome, cognome, branca..."
-                               oninput="filterSoci(this.value)"
-                               class="border border-gray-200 rounded-xl px-4 py-2 text-sm w-64 focus:outline-none focus:border-scout focus:ring-2 focus:ring-scout/10">
+                <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                    <h3 class="font-black text-scout mb-2">Genera codice di attivazione</h3>
+                    <div class="flex flex-wrap items-end gap-4">
+                        <div>
+                            <label>Codice Socio</label>
+                            <input type="text" id="attiva-codice" placeholder="Es. 12345" class="w-48">
+                        </div>
+                        <button onclick="generaAttivazioneSocio()"
+                                class="bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
+                            <i class="fas fa-key mr-2"></i>Genera codice
+                        </button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm" id="soci-table">
-                            <thead>
-                                <tr class="bg-gray-50 text-left">
-                                    <th onclick="sortSoci('CodiceSocio')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Codice <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-CodiceSocio"></i></th>
-                                    <th onclick="sortSoci('Nome')"          class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Nome <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Nome"></i></th>
-                                    <th onclick="sortSoci('Cognome')"       class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Cognome <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Cognome"></i></th>
-                                    <th onclick="sortSoci('Branca')"        class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Branca <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Branca"></i></th>
-                                    <th onclick="sortSoci('TipoUnita')"     class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Tipo Unità <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-TipoUnita"></i></th>
-                                    <th onclick="sortSoci('StatusSocio')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Stato <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-StatusSocio"></i></th>
-                                    <th onclick="sortSoci('DataNascita')"   class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none whitespace-nowrap">Data Nascita <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-DataNascita"></i></th>
-                                    <th onclick="sortSoci('Cellulare')"     class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider cursor-pointer hover:text-scout select-none">Cellulare <i class="fas fa-sort ml-1 text-gray-300" id="sort-icon-Cellulare"></i></th>
-                                    <th class="px-4 py-3 font-bold text-gray-600 text-xs uppercase tracking-wider">Account</th>
-                                </tr>
-                            </thead>
-                            <tbody id="soci-tbody">
-                                <tr><td colspan="8" class="px-6 py-12 text-center text-gray-400">Nessun dato. Importa un file Excel per iniziare.</td></tr>
-                            </tbody>
-                        </table>
+                    <div id="attiva-risultato" class="hidden mt-5 bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
+                        <div class="text-gray-500 mb-1">Codice di attivazione per <strong id="attiva-risultato-codice"></strong>:</div>
+                        <div class="text-2xl font-black text-scout tracking-widest" id="attiva-risultato-pin"></div>
+                        <p class="text-xs text-gray-400 mt-2">Comunicalo al socio: è valido una sola volta. Se lo rigeneri, quello precedente smette di funzionare.</p>
                     </div>
+                    <p id="attiva-msg" class="text-xs mt-3 hidden font-semibold"></p>
                 </div>
             </section>
 
@@ -773,7 +754,7 @@ const TAB_META = {
     annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
     'calendario-google': { title: 'Galleria & Media', sub: 'Galleria fotografica per unità' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
-    soci:              { title: 'Elenco Soci',        sub: 'Importa e gestisci la lista dei soci' },
+    soci:              { title: 'Attivazione Soci',    sub: 'Genera codici di attivazione monouso' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
 };
@@ -808,7 +789,6 @@ function showTab(name) {
     if (name === 'eventi')      renderEventi();
     if (name === 'annunci')     renderAnnunci();
     if (name === 'dashboard')   renderDashboard();
-    if (name === 'soci')            renderSoci();
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
     if (name === 'testimonianze')   renderTestimonianze();
 }
@@ -1556,159 +1536,37 @@ function resetAll() {
       .catch(e => { console.error(e); toast('Errore durante il reset.', false); });
 }
 
-// ── SOCI ─────────────────────────────────────────────────────────
-const SOCI_COLUMNS = ['CodiceSocio','Nome','Cognome','Branca','TipoUnita','StatusSocio','DataNascita','Cellulare'];
-let sociData      = [];   // full dataset
-let sociFiltered  = [];   // after search filter
-let sociSortCol   = '';
-let sociSortAsc   = true;
-
-function importSoci(input) {
-    const file = input.files[0];
-    if (!file) return;
-    document.getElementById('soci-file-name').textContent = file.name;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const wb   = XLSX.read(e.target.result, { type: 'array', cellDates: true });
-            const ws   = wb.Sheets['ElencoSoci'] || wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-            sociData = rows;
-            localStorage.setItem('soci_lista', JSON.stringify(rows));
-            sociFiltered = [...sociData];
-            renderSoci();
-            // Salva su Firestore (batch write, doc ID = CodiceSocio)
-            const batch = window.firestoreDb.batch();
-            rows.forEach(row => {
-                const codice = String(row['CodiceSocio'] || '').trim();
-                if (codice) {
-                    const ref = window.firestoreDb.collection('soci_lista').doc(codice);
-                    batch.set(ref, row);
-                }
-            });
-            batch.commit().catch(e => console.error('Firestore soci_lista error:', e));
-            const msg = document.getElementById('soci-import-msg');
-            msg.textContent = '✅ Importati ' + rows.length + ' soci.';
-            msg.className = 'text-xs mt-3 font-semibold text-green-600';
-            msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 4000);
-            toast('Importati ' + rows.length + ' soci!');
-        } catch(err) {
-            console.error(err);
-            const msg = document.getElementById('soci-import-msg');
-            msg.textContent = '❌ Errore lettura file: ' + err.message;
-            msg.className = 'text-xs mt-3 font-semibold text-red-500';
-            msg.classList.remove('hidden');
-            toast('Errore importazione Excel.', false);
-        }
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-function filterSoci(q) {
-    const lq = q.toLowerCase();
-    sociFiltered = sociData.filter(row => {
-        return SOCI_COLUMNS.some(col => {
-            const v = (row[col] || '').toString().toLowerCase();
-            return v.includes(lq);
-        });
-    });
-    renderSoci();
-}
-
-function sortSoci(col) {
-    if (sociSortCol === col) {
-        sociSortAsc = !sociSortAsc;
-    } else {
-        sociSortCol = col;
-        sociSortAsc = true;
-    }
-    sociFiltered.sort((a, b) => {
-        const va = (a[col] || '').toString().toLowerCase();
-        const vb = (b[col] || '').toString().toLowerCase();
-        if (va < vb) return sociSortAsc ? -1 : 1;
-        if (va > vb) return sociSortAsc ? 1  : -1;
-        return 0;
-    });
-    // Update sort icons
-    SOCI_COLUMNS.forEach(c => {
-        const ic = document.getElementById('sort-icon-' + c);
-        if (!ic) return;
-        ic.className = c === sociSortCol
-            ? 'fas fa-sort-' + (sociSortAsc ? 'up' : 'down') + ' ml-1 text-scout'
-            : 'fas fa-sort ml-1 text-gray-300';
-    });
-    renderSoci();
-}
-
-function renderSoci() {
-    const tbody = document.getElementById('soci-tbody');
-    const count = document.getElementById('soci-count');
-    if (!sociFiltered.length) {
-        tbody.innerHTML = '<tr><td colspan="9" class="px-6 py-12 text-center text-gray-400">Nessun socio trovato.</td></tr>';
-        count.textContent = '(0)';
+// ── ATTIVAZIONE SOCI ────────────────────────────────────────────────
+// Nessun dato anagrafico salvato: solo { pin, usato } per Codice Socio,
+// in collection "soci_attivazione". Il PIN non è mai leggibile via API:
+// la registrazione lo verifica tentando una scrittura che riesce solo
+// se il valore inserito coincide (vedi firestore.rules).
+function generaAttivazioneSocio() {
+    const codice = document.getElementById('attiva-codice').value.trim();
+    const msg = document.getElementById('attiva-msg');
+    msg.classList.add('hidden');
+    if (!codice) {
+        msg.textContent = '❌ Inserisci il Codice Socio.';
+        msg.className = 'text-xs mt-3 font-semibold text-red-500';
+        msg.classList.remove('hidden');
         return;
     }
-    count.textContent = '(' + sociFiltered.length + ')';
-    tbody.innerHTML = sociFiltered.map(row => {
-        const dn = row['DataNascita'];
-        let dnStr = '—';
-        if (dn) {
-            if (dn instanceof Date) {
-                dnStr = dn.toLocaleDateString('it-IT');
-            } else {
-                dnStr = dn.toString();
-            }
-        }
-        const statusClass = {
-            'Attivo':    'badge-new',
-            'Inattivo':  'badge-read',
-            'Sospeso':   'badge-info',
-        }[row['StatusSocio']] || 'badge-read';
-        return `<tr class="table-row border-t border-gray-50">
-            <td class="px-4 py-3 font-mono text-xs text-gray-500">${row['CodiceSocio'] || '—'}</td>
-            <td class="px-4 py-3 font-semibold text-scout">${row['Nome'] || '—'}</td>
-            <td class="px-4 py-3">${row['Cognome'] || '—'}</td>
-            <td class="px-4 py-3 text-xs">${row['Branca'] || '—'}</td>
-            <td class="px-4 py-3 text-xs">${row['TipoUnita'] || '—'}</td>
-            <td class="px-4 py-3"><span class="badge ${statusClass}">${row['StatusSocio'] || '—'}</span></td>
-            <td class="px-4 py-3 text-xs whitespace-nowrap">${dnStr}</td>
-            <td class="px-4 py-3 text-xs">${row['Cellulare'] || '—'}</td>
-            <td class="px-4 py-3">
-                <button onclick="deleteAccountSocio('${String(row['CodiceSocio']||'').replace(/'/g,"\\'")}','${(row['Nome']||'').replace(/'/g,"\\'")} ${(row['Cognome']||'').replace(/'/g,"\\'")}')"
-                    class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1 rounded-lg hover:bg-red-50 transition flex items-center gap-1">
-                    <i class="fas fa-user-slash"></i> Elimina
-                </button>
-            </td>
-        </tr>`;
-    }).join('');
-}
-
-function deleteAccountSocio(codice, nome) {
-    if (!confirm('Eliminare l\'account di ' + nome + ' (codice ' + codice + ')?\nIl socio non potrà più accedere all\'area riservata.')) return;
-    window.firestoreDb.collection('soci_auth')
-        .where('codiceSocio', '==', codice)
-        .get()
-        .then(snap => {
-            if (snap.empty) { toast('Nessun account trovato per questo socio.', false); return; }
-            const batch = window.firestoreDb.batch();
-            snap.forEach(doc => batch.delete(doc.ref));
-            return batch.commit();
+    const pin = String(Math.floor(100000 + Math.random() * 900000));
+    window.firestoreDb.collection('soci_attivazione').doc(codice).set({ pin, usato: false })
+        .then(() => {
+            document.getElementById('attiva-risultato-codice').textContent = codice;
+            document.getElementById('attiva-risultato-pin').textContent = pin;
+            document.getElementById('attiva-risultato').classList.remove('hidden');
+            document.getElementById('attiva-codice').value = '';
+            toast('Codice di attivazione generato!');
         })
-        .then(() => { toast('Account di ' + nome + ' eliminato.'); })
-        .catch(e => { console.error(e); toast('Errore eliminazione account.', false); });
+        .catch(e => {
+            console.error(e);
+            msg.textContent = '❌ Errore durante la generazione: ' + e.message;
+            msg.className = 'text-xs mt-3 font-semibold text-red-500';
+            msg.classList.remove('hidden');
+        });
 }
-
-// Load persisted soci on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem('soci_lista');
-    if (saved) {
-        try {
-            sociData     = JSON.parse(saved);
-            sociFiltered = [...sociData];
-        } catch(e) { sociData = []; sociFiltered = []; }
-    }
-});
 </script>
 
 <!-- Firebase SDK -->
