@@ -13,7 +13,7 @@ service cloud.firestore {
 
     function isAdmin() {
       return request.auth != null &&
-             !(request.auth.token.email.matches('.*@soci[.]agescibrescia7[.]com'));
+             request.auth.token.email == 'info@agescibrescia7.com';
     }
 
     // ── Contenuti pubblici: lettura libera, scrittura solo admin ──
