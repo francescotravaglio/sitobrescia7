@@ -46,7 +46,15 @@ service cloud.firestore {
 
     // ── Iscrizioni complete (form area soci) ──
     match /iscrizioni/{doc} {
-      allow create: if request.resource.data.size() < 40;
+      allow create: if
+        request.auth != null &&
+        request.resource.data.tipo is string &&
+        (request.resource.data.tipo == 'maggiorenne' || request.resource.data.tipo == 'minorenne') &&
+        request.resource.data.letta == false &&
+        request.resource.data.stato == 'nuova' &&
+        request.resource.data.timestamp is string &&
+        request.resource.data.dati is map &&
+        request.resource.data.size() <= 6;
       allow read, update, delete: if request.auth != null;
     }
 

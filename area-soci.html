@@ -1201,7 +1201,6 @@
 
         firebase.auth().signInWithEmailAndPassword(toEmail(codice), password)
             .catch(function(err) {
-                // Legacy migration: user exists in old soci_auth with plain-text password
                 if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
                     return window.db.collection('soci_auth')
                         .where('codiceSocio', '==', codice)
@@ -1213,7 +1212,6 @@
                                 if (doc.data().password === password) match = doc;
                             });
                             if (!match) throw { code: 'auth/wrong-password' };
-                            // Migrate to Firebase Auth and remove old record
                             return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password)
                                 .then(function(cred) {
                                     return cred.user.updateProfile({ displayName: codice })
