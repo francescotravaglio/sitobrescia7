@@ -1225,10 +1225,18 @@
         if (password.length < 6) { errRegister('La password deve avere almeno 6 caratteri.'); return; }
         if (password !== password2) { errRegister('Le password non coincidono.'); return; }
 
-        firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password)
+        // Verifica che il Codice Socio sia un codice censito reale (indice minimale
+        // senza dati personali) prima di creare l'account Firebase Auth.
+        window.db.collection('soci_codici').doc(codice).get()
+            .then(function(doc) {
+                if (!doc.exists) throw { code: 'bs7/codice-non-trovato' };
+                return firebase.auth().createUserWithEmailAndPassword(toEmail(codice), password);
+            })
             .then(function(cred) { return cred.user.updateProfile({ displayName: codice }); })
             .catch(function(err) {
-                if (err.code === 'auth/email-already-in-use') {
+                if (err.code === 'bs7/codice-non-trovato') {
+                    errRegister('Codice Socio non trovato. Verifica il numero o contatta info@agescibrescia7.com.');
+                } else if (err.code === 'auth/email-already-in-use') {
                     errRegister('Questo Codice Socio ha già un accesso. Usa il login.');
                 } else if (err.code === 'auth/weak-password') {
                     errRegister('La password deve avere almeno 6 caratteri.');

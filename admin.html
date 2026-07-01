@@ -1584,6 +1584,9 @@ function importSoci(input) {
                 if (codice) {
                     const ref = window.firestoreDb.collection('soci_lista').doc(codice);
                     batch.set(ref, row);
+                    // Indice minimale (nessun dato personale) usato per validare la registrazione
+                    const refCodice = window.firestoreDb.collection('soci_codici').doc(codice);
+                    batch.set(refCodice, { v: true });
                 }
             });
             batch.commit().catch(e => console.error('Firestore soci_lista error:', e));

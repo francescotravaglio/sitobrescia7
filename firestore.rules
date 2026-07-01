@@ -80,6 +80,17 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // soci_codici: indice minimale (solo l'esistenza del codice, NESSUN dato personale)
+    // usato dalla registrazione Area Soci per verificare che il Codice Socio inserito
+    // sia un codice censito reale prima di creare l'account Firebase Auth.
+    // NB: il Codice Socio non è un segreto, quindi questo filtro blocca solo le
+    // registrazioni con numeri inventati/casuali, non l'uso di un codice reale altrui.
+    match /soci_codici/{doc} {
+      allow get:   if true;
+      allow list:  if isAdmin();
+      allow write: if isAdmin();
+    }
+
     // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
     //            da un client non admin. La migrazione dei soci storici va gestita
     //            manualmente dall'admin, che verifica l'identità e poi crea/elimina l'account.
