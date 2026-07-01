@@ -70,9 +70,9 @@ service cloud.firestore {
     }
 
     // ── Area soci ──
-    // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato } per Codice Socio,
-    // generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è mai
-    // leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
+    // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato, creato } per Codice
+    // Socio, generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è
+    // mai leggibile: la registrazione lo "consuma" tentando una scrittura (update) che
     // riesce solo se il valore in "tentativo" coincide con "pin", rendendolo monouso.
     //
     // NB: il confronto usa un campo "tentativo" separato (mai presente nel documento
@@ -89,12 +89,18 @@ service cloud.firestore {
       // L'admin può sempre rigenerare/sovrascrivere un PIN (anche se il documento esiste
       // già, es. per riemettere un codice perso o già usato: Firestore classifica questa
       // scrittura come "update", non "create", quindi va concessa esplicitamente qui).
+      // Il ramo non-admin richiede anche che siano passate meno di 72 ore da "creato"
+      // (timestamp impostato dall'admin alla generazione): limita la finestra utile per
+      // un eventuale tentativo di forza bruta sul PIN, dato che Firestore non ha un
+      // meccanismo nativo di blocco dopo N tentativi falliti su questa regola.
       allow update: if isAdmin()
                     || (resource.data.usato == false
                         && request.resource.data.usato == true
                         && request.resource.data.pin == resource.data.pin
                         && request.resource.data.tentativo == resource.data.pin
-                        && request.resource.data.keys().hasOnly(['pin', 'usato', 'tentativo']));
+                        && request.resource.data.creato is timestamp
+                        && request.time.toMillis() < resource.data.creato.toMillis() + 72 * 60 * 60 * 1000
+                        && request.resource.data.keys().hasOnly(['pin', 'usato', 'tentativo', 'creato']));
     }
 
     // soci_auth: credenziali legacy in chiaro (password in testo semplice) — MAI leggibili
