@@ -1318,13 +1318,13 @@ function eventRow(ev) {
             <div class="text-2xl font-black leading-tight">${day}</div>
         </div>
         <div class="flex-1 min-w-0">
-            <div class="font-bold text-gray-800">${ev.titolo}</div>
+            <div class="font-bold text-gray-800">${escapeHtml(ev.titolo||'')}</div>
             <div class="text-xs text-gray-400 mt-0.5">${dateLabel}</div>
             <div class="flex flex-wrap gap-2 mt-1">
-                <span class="badge ${uc}">${ev.unita}</span>
-                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${ev.luogo}</span>` : ''}
+                <span class="badge ${uc}">${escapeHtml(ev.unita||'')}</span>
+                ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${escapeHtml(ev.luogo)}</span>` : ''}
             </div>
-            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${ev.descrizione}</div>` : ''}
+            ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
         </div>
         <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition ml-2 flex-shrink-0">
             <i class="fas fa-trash"></i>
@@ -1372,11 +1372,11 @@ function renderAnnunci() {
         return `<div class="flex items-start gap-4 px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50">
             <div class="flex-1 min-w-0">
                 <div class="flex flex-wrap gap-2 items-center mb-1">
-                    <span class="font-bold text-gray-800">${a.titolo}</span>
-                    <span class="badge ${cc}">${a.categoria}</span>
+                    <span class="font-bold text-gray-800">${escapeHtml(a.titolo||'')}</span>
+                    <span class="badge ${cc}">${escapeHtml(a.categoria||'')}</span>
                     ${a.scadenza ? `<span class="text-xs text-gray-400">Scade: ${fmtDate(a.scadenza)}</span>` : ''}
                 </div>
-                <p class="text-sm text-gray-600 leading-relaxed">${a.testo}</p>
+                <p class="text-sm text-gray-600 leading-relaxed">${escapeHtml(a.testo||'')}</p>
                 <div class="text-xs text-gray-400 mt-2">${fmtDatetime(a.timestamp)}</div>
             </div>
             <button onclick="deleteAnnuncio(${a.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0 mt-1">
