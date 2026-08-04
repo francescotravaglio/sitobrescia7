@@ -27,6 +27,27 @@
         .input-field { width: 100%; padding: .75rem 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; font-size: .875rem; transition: box-shadow .2s, border-color .2s; outline: none; font-family: 'Montserrat', sans-serif; }
         .input-field:focus { border-color: #003366; box-shadow: 0 0 0 3px rgba(0,51,102,.1); }
         .form-label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+
+        /* ── Calendario mensile: griglia responsive ── */
+        .cal-header { background:#f9fafb; padding: .875rem 1rem; display:flex; flex-wrap: wrap; align-items:center; justify-content:space-between; gap:.5rem .75rem; border-bottom:1px solid #f3f4f6; }
+        .cal-header-title { display:flex; align-items:center; gap:.6rem; min-width:0; }
+        .cal-header-title span { font-weight:800; color:#003366; font-size:.875rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .cal-header-nav { display:flex; align-items:center; gap:.25rem; flex-shrink:0; margin-left:auto; }
+        .cal-grid-row { display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        .cal-dow { text-align:center; font-size:.7rem; font-weight:800; color:#9ca3af; text-transform:uppercase; padding:.5rem 0; }
+        .cal-cell { min-height: 5rem; padding: 6px; border-bottom: 1px solid #f3f4f6; border-right: 1px solid #f3f4f6; box-sizing: border-box; overflow: hidden; min-width: 0; }
+        .cal-day-num { font-size: .7rem; font-weight: 700; color: #9ca3af; margin-bottom: 4px; }
+        .cal-event-chip { font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        @media (max-width: 640px) {
+            .cal-header-title span.cal-title-full { display: none; }
+            .cal-cell { min-height: 3.5rem; padding: 3px; }
+            .cal-dow { font-size: .6rem; padding: .35rem 0; }
+            .cal-day-num { font-size: .6rem; margin-bottom: 2px; }
+            .cal-event-chip { font-size: 7px; padding: 1px 3px; margin-bottom: 1px; border-radius: 3px; }
+        }
+        @media (min-width: 641px) {
+            .cal-header-title span.cal-title-short { display: none; }
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -164,29 +185,30 @@
         <!-- Calendario mensile -->
         <div style="background:#fff;border-radius:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden;border:1px solid #f3f4f6">
             <!-- Header -->
-            <div style="background:#f9fafb;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f3f4f6">
-                <div style="display:flex;align-items:center;gap:.75rem">
-                    <div style="width:2rem;height:2rem;background:#003366;border-radius:.5rem;display:flex;align-items:center;justify-content:center"><i class="fas fa-calendar-alt" style="color:#fff;font-size:.75rem"></i></div>
-                    <span style="font-weight:800;color:#003366;font-size:.875rem">Calendario Gruppo Scout AGESCI Brescia 7</span>
+            <div class="cal-header">
+                <div class="cal-header-title">
+                    <div style="width:2rem;height:2rem;background:#003366;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-calendar-alt" style="color:#fff;font-size:.75rem"></i></div>
+                    <span class="cal-title-full">Calendario Gruppo Scout AGESCI Brescia 7</span>
+                    <span class="cal-title-short">Calendario</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:.5rem">
+                <div class="cal-header-nav">
                     <button onclick="calPrev()" aria-label="Mese precedente" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-left"></i></button>
-                    <span id="cal-month-label" style="font-weight:900;color:#003366;font-size:.9rem;min-width:9rem;text-align:center"></span>
+                    <span id="cal-month-label" style="font-weight:900;color:#003366;font-size:.85rem;min-width:7.5rem;text-align:center"></span>
                     <button onclick="calNext()" aria-label="Mese successivo" style="width:2rem;height:2rem;border:none;background:none;cursor:pointer;border-radius:.5rem;color:#6b7280;font-size:.875rem" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='none'"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
             <!-- Intestazioni giorni -->
-            <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #f3f4f6;background:#f9fafb">
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Lun</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mar</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Mer</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Gio</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;text-transform:uppercase;padding:.5rem 0">Ven</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#3b82f6;text-transform:uppercase;padding:.5rem 0">Sab</div>
-                <div style="text-align:center;font-size:.7rem;font-weight:800;color:#ef4444;text-transform:uppercase;padding:.5rem 0">Dom</div>
+            <div class="cal-grid-row" style="border-bottom:1px solid #f3f4f6;background:#f9fafb">
+                <div class="cal-dow">Lun</div>
+                <div class="cal-dow">Mar</div>
+                <div class="cal-dow">Mer</div>
+                <div class="cal-dow">Gio</div>
+                <div class="cal-dow">Ven</div>
+                <div class="cal-dow" style="color:#3b82f6">Sab</div>
+                <div class="cal-dow" style="color:#ef4444">Dom</div>
             </div>
             <!-- Griglia giorni -->
-            <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr)">
+            <div id="cal-grid" class="cal-grid-row">
                 <!-- Renderizzata via JS -->
             </div>
         </div>
@@ -306,30 +328,29 @@
             }
         });
 
-        var cellBase = 'min-height:5rem;padding:6px;border-bottom:1px solid #f3f4f6;border-right:1px solid #f3f4f6;box-sizing:border-box;';
         var html = '';
         for (var i = 0; i < startDow; i++) {
-            html += '<div style="'+cellBase+'background:#fafafa"></div>';
+            html += '<div class="cal-cell" style="background:#fafafa"></div>';
         }
         for (var d = 1; d <= last.getDate(); d++) {
             var dateStr = year+'-'+pad(month+1)+'-'+pad(d);
             var isToday = dateStr === todayStr;
             var evs = evByDate[dateStr] || [];
-            html += '<div style="'+cellBase+(isToday?'background:#fffbeb;':'')+'">';
+            html += '<div class="cal-cell"'+(isToday?' style="background:#fffbeb"':'')+'>';
             if (isToday) {
                 html += '<div style="width:1.5rem;height:1.5rem;border-radius:50%;background:#003366;color:#fff;font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:4px">'+d+'</div>';
             } else {
-                html += '<div style="font-size:.7rem;font-weight:700;color:#9ca3af;margin-bottom:4px">'+d+'</div>';
+                html += '<div class="cal-day-num">'+d+'</div>';
             }
             evs.forEach(function(ev) {
                 var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
-                html += '<div style="background:'+col+';color:#fff;font-size:10px;font-weight:600;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
+                html += '<div class="cal-event-chip" style="background:'+col+';cursor:default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
             });
             html += '</div>';
         }
         var total = startDow + last.getDate();
         var rem = total % 7;
-        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div style="'+cellBase+'background:#fafafa"></div>';
+        if (rem > 0) for (var j = 0; j < 7-rem; j++) html += '<div class="cal-cell" style="background:#fafafa"></div>';
         document.getElementById('cal-grid').innerHTML = html;
     }
 
