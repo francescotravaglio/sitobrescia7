@@ -311,7 +311,11 @@
                         </div>
                         <div>
                             <label>Luogo</label>
-                            <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga...">
+                            <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga..." class="max-w-xs">
+                            <button type="button" onclick="setLuogoSede()"
+                                    class="mt-2 text-xs text-scout font-bold border border-scout/20 bg-scout/5 px-3 py-1.5 rounded-lg hover:bg-scout/10 transition">
+                                <i class="fas fa-map-marker-alt mr-1"></i>In sede — Via Giovanni Cimabue 271, 25134 Brescia (San Polo)
+                            </button>
                         </div>
                         <div class="sm:col-span-2">
                             <label>Descrizione</label>
@@ -886,6 +890,10 @@ function exportPreIscrizioniExcel() {
 }
 
 // ── EVENTI ────────────────────────────────────────────────────────
+function setLuogoSede() {
+    document.getElementById('ev-luogo').value = 'Via Giovanni Cimabue 271, 25134 Brescia (San Polo)';
+}
+
 function addEvento() {
     const titolo    = document.getElementById('ev-titolo').value.trim();
     const data      = document.getElementById('ev-data').value;
