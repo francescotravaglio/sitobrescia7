@@ -217,6 +217,7 @@
     const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
     const UNITA_COLOR = { tutto:'#9ca3af', cerchio:'#eab308', reparto:'#22c55e', clan:'#ef4444', capi:'#7c3aed' };
     const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', capi:'Capi' };
+    const UNITA_TITOLO_PDF = { cerchio:'Cerchio "Ali di Speranza"', reparto:'Reparto "Alce Mite Val Brandet"', clan:'Clan "Azimuth"' };
 
     var cur = new Date();
     var year = cur.getFullYear(), month = cur.getMonth();
@@ -371,7 +372,7 @@
             var doc = new jsPDF({ unit:'mm', format:'a4' });
             var pageW = doc.internal.pageSize.getWidth();
             var pageH = doc.internal.pageSize.getHeight();
-            var titolo = 'Calendario ' + (UNITA_LABEL[branca] || 'Tutto il gruppo');
+            var titolo = 'Calendario ' + (UNITA_TITOLO_PDF[branca] || UNITA_LABEL[branca] || 'Tutto il gruppo');
 
             var y = drawLetterhead(doc, logoData, titolo);
 
@@ -451,7 +452,7 @@
             } catch(e) { console.warn('[cal-pdf] logo branca non caricato', e); }
         }
 
-        var titolo = 'Calendario ' + (UNITA_LABEL[branca] || 'Tutto il gruppo');
+        var titolo = 'Calendario ' + (UNITA_TITOLO_PDF[branca] || UNITA_LABEL[branca] || 'Tutto il gruppo');
         var page, pageW, pageH, y;
 
         async function nuovaPagina() {
