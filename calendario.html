@@ -363,60 +363,172 @@
         doc.text('WAGGGS / WOSM Member', pageW/2, pageH-7, {align:'center'});
     }
 
-    window.scaricaCalendarioPdf = async function(branca) {
-        if (!window.jspdf) { alert('PDF non disponibile, riprova tra qualche secondo.'); return; }
-        var now = new Date(); now.setHours(0,0,0,0);
-        var eventi = eventiAll
-            .filter(function(ev){ return branca === 'tutto' ? true : (ev.unita === branca || ev.unita === 'tutto'); })
-            .filter(function(ev){ return new Date(ev.data) >= now; })
-            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+    // ── Fallback: ricostruzione grafica della carta intestata via jsPDF ──
+    // (usata solo se pdf-lib o la carta intestata originale non sono disponibili)
+    function scaricaCalendarioPdfFallback(branca, eventi) {
+        loadImageAsDataURL('logo.png').catch(function(){ return null; }).then(function(logoData){
+            var jsPDF = window.jspdf.jsPDF;
+            var doc = new jsPDF({ unit:'mm', format:'a4' });
+            var pageW = doc.internal.pageSize.getWidth();
+            var pageH = doc.internal.pageSize.getHeight();
+            var titolo = 'Calendario ' + (UNITA_LABEL[branca] || 'Tutto il gruppo');
 
-        var logoData = null;
-        try { logoData = await loadImageAsDataURL('logo.png'); } catch(e) { console.warn('[cal-pdf] logo non caricato', e); }
+            var y = drawLetterhead(doc, logoData, titolo);
 
-        var jsPDF = window.jspdf.jsPDF;
-        var doc = new jsPDF({ unit:'mm', format:'a4' });
-        var pageW = doc.internal.pageSize.getWidth();
-        var pageH = doc.internal.pageSize.getHeight();
-        var titolo = 'Calendario ' + (UNITA_LABEL[branca] || 'Tutto il gruppo');
+            if (!eventi.length) {
+                doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(150,150,150);
+                doc.text('Nessun evento in programma al momento.', PDF_MARGIN, y);
+            }
 
-        var y = drawLetterhead(doc, logoData, titolo);
+            eventi.forEach(function(ev) {
+                var d = new Date(ev.data);
+                var dateStr = ev.data_fine
+                    ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})
+                    : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
-        if (!eventi.length) {
-            doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(150,150,150);
-            doc.text('Nessun evento in programma al momento.', PDF_MARGIN, y);
+                var blockH = 16 + (ev.luogo?5:0) + (ev.descrizione ? doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4).length*4.2 : 0);
+                if (y + blockH > pageH - 22) { doc.addPage(); y = drawLetterhead(doc, logoData, titolo); }
+
+                doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(0,51,102);
+                doc.text(ev.titolo || '(senza titolo)', PDF_MARGIN, y);
+                y += 5;
+                doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(100,100,100);
+                doc.text(dateStr, PDF_MARGIN, y);
+                y += 5;
+                if (ev.luogo) { doc.text('Luogo: ' + ev.luogo, PDF_MARGIN, y); y += 5; }
+                if (ev.descrizione) {
+                    doc.setFontSize(9); doc.setTextColor(80,80,80);
+                    var lines = doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4);
+                    doc.text(lines, PDF_MARGIN, y);
+                    y += lines.length*4.2 + 2;
+                }
+                doc.setDrawColor(230,230,230);
+                doc.line(PDF_MARGIN, y, pageW-PDF_MARGIN, y);
+                y += 6;
+            });
+
+            for (var p = 1; p <= doc.internal.getNumberOfPages(); p++) { doc.setPage(p); drawPdfFooter(doc); }
+
+            doc.save('calendario-' + branca + '-brescia7.pdf');
+        });
+    }
+
+    // ── Generazione sulla vera carta intestata ufficiale (pdf-lib) ──
+    var LETTERHEAD_URL  = 'documents/carta-intestata-bs7.pdf';
+    var BRANCH_LOGO_URL = { cerchio:'images/logo-lc.png', reparto:'images/logo-eg.png', clan:'images/logo-rs.png' };
+    var CONTENT_TOP    = 138; // spazio (pt, da cima pagina) riservato a logo/intestazione
+    var FOOTER_RESERVE = 70;  // spazio (pt, da fondo pagina) riservato al footer della carta intestata
+    var CONTENT_MARGIN = 34;  // margine sinistro/destro (pt) del testo sulla carta intestata
+
+    function wrapPdfLibText(text, font, size, maxWidth) {
+        var words = String(text).split(/\s+/).filter(Boolean);
+        var lines = [], cur = '';
+        words.forEach(function(w){
+            var test = cur ? cur + ' ' + w : w;
+            if (cur && font.widthOfTextAtSize(test, size) > maxWidth) { lines.push(cur); cur = w; }
+            else cur = test;
+        });
+        if (cur) lines.push(cur);
+        return lines;
+    }
+
+    async function scaricaCalendarioPdfLib(branca, eventi) {
+        var PDFDocument = PDFLib.PDFDocument, StandardFonts = PDFLib.StandardFonts, rgb = PDFLib.rgb;
+
+        var templateBytes = await fetch(LETTERHEAD_URL).then(function(r){ if (!r.ok) throw new Error('carta intestata non trovata'); return r.arrayBuffer(); });
+        var templateDoc = await PDFDocument.load(templateBytes);
+
+        var outDoc = await PDFDocument.create();
+        var fontR = await outDoc.embedFont(StandardFonts.Helvetica);
+        var fontB = await outDoc.embedFont(StandardFonts.HelveticaBold);
+        var fontI = await outDoc.embedFont(StandardFonts.HelveticaOblique);
+
+        var branchLogoImg = null;
+        if (BRANCH_LOGO_URL[branca]) {
+            try {
+                var logoBytes = await fetch(BRANCH_LOGO_URL[branca]).then(function(r){ return r.arrayBuffer(); });
+                branchLogoImg = await outDoc.embedPng(logoBytes);
+            } catch(e) { console.warn('[cal-pdf] logo branca non caricato', e); }
         }
 
-        eventi.forEach(function(ev) {
+        var titolo = 'Calendario ' + (UNITA_LABEL[branca] || 'Tutto il gruppo');
+        var page, pageW, pageH, y;
+
+        async function nuovaPagina() {
+            var copied = (await outDoc.copyPages(templateDoc, [0]))[0];
+            outDoc.addPage(copied);
+            page = copied;
+            var size = page.getSize();
+            pageW = size.width; pageH = size.height;
+
+            if (branchLogoImg) {
+                var targetH = 78;
+                var w = targetH * (branchLogoImg.width / branchLogoImg.height);
+                var groupLogoCenterY = pageH - 75.9; // centro verticale del logo di gruppo sulla carta intestata
+                page.drawImage(branchLogoImg, { x: 128, y: groupLogoCenterY - targetH/2, width: w, height: targetH });
+            }
+
+            y = pageH - CONTENT_TOP;
+            page.drawText(titolo, { x: CONTENT_MARGIN, y: y, size: 17, font: fontB, color: rgb(0, 0.2, 0.4) });
+            y -= 16;
+            page.drawText('Generato il ' + new Date().toLocaleDateString('it-IT'), { x: CONTENT_MARGIN, y: y, size: 9, font: fontR, color: rgb(0.47,0.47,0.47) });
+            y -= 14;
+        }
+
+        await nuovaPagina();
+
+        if (!eventi.length) {
+            page.drawText('Nessun evento in programma al momento.', { x: CONTENT_MARGIN, y: y, size: 11, font: fontI, color: rgb(0.6,0.6,0.6) });
+        }
+
+        for (var i = 0; i < eventi.length; i++) {
+            var ev = eventi[i];
             var d = new Date(ev.data);
             var dateStr = ev.data_fine
                 ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})
                 : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
-            var blockH = 16 + (ev.luogo?5:0) + (ev.descrizione ? doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4).length*4.2 : 0);
-            if (y + blockH > pageH - 22) { doc.addPage(); y = drawLetterhead(doc, logoData, titolo); }
+            var maxTextW = pageW - 2*(CONTENT_MARGIN);
+            var descLines = ev.descrizione ? wrapPdfLibText(ev.descrizione, fontR, 9, maxTextW) : [];
+            var blockH = 17 + (ev.luogo ? 12 : 0) + descLines.length*11.5;
 
-            doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(0,51,102);
-            doc.text(ev.titolo || '(senza titolo)', PDF_MARGIN, y);
-            y += 5;
-            doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(100,100,100);
-            doc.text(dateStr, PDF_MARGIN, y);
-            y += 5;
-            if (ev.luogo) { doc.text('Luogo: ' + ev.luogo, PDF_MARGIN, y); y += 5; }
-            if (ev.descrizione) {
-                doc.setFontSize(9); doc.setTextColor(80,80,80);
-                var lines = doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4);
-                doc.text(lines, PDF_MARGIN, y);
-                y += lines.length*4.2 + 2;
-            }
-            doc.setDrawColor(230,230,230);
-            doc.line(PDF_MARGIN, y, pageW-PDF_MARGIN, y);
-            y += 6;
-        });
+            if (y - blockH < FOOTER_RESERVE) { await nuovaPagina(); }
 
-        for (var p = 1; p <= doc.internal.getNumberOfPages(); p++) { doc.setPage(p); drawPdfFooter(doc); }
+            page.drawText(ev.titolo || '(senza titolo)', { x: CONTENT_MARGIN, y: y, size: 11, font: fontB, color: rgb(0, 0.2, 0.4) });
+            y -= 13;
+            page.drawText(dateStr, { x: CONTENT_MARGIN, y: y, size: 9, font: fontR, color: rgb(0.39,0.39,0.39) });
+            y -= 12;
+            if (ev.luogo) { page.drawText('Luogo: ' + ev.luogo, { x: CONTENT_MARGIN, y: y, size: 9, font: fontR, color: rgb(0.39,0.39,0.39) }); y -= 12; }
+            descLines.forEach(function(line){ page.drawText(line, { x: CONTENT_MARGIN, y: y, size: 9, font: fontR, color: rgb(0.31,0.31,0.31) }); y -= 11.5; });
+            y -= 3;
+            page.drawLine({ start:{x:CONTENT_MARGIN, y:y}, end:{x:pageW-CONTENT_MARGIN, y:y}, thickness:0.5, color: rgb(0.9,0.9,0.9) });
+            y -= 14;
+        }
 
-        doc.save('calendario-' + branca + '-brescia7.pdf');
+        var bytes = await outDoc.save();
+        var blob = new Blob([bytes], { type: 'application/pdf' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = 'calendario-' + branca + '-brescia7.pdf';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    window.scaricaCalendarioPdf = async function(branca) {
+        var now = new Date(); now.setHours(0,0,0,0);
+        var eventi = eventiAll
+            .filter(function(ev){ return ev.unita === branca || ev.unita === 'tutto'; })
+            .filter(function(ev){ return new Date(ev.data) >= now; })
+            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+
+        try {
+            if (typeof PDFLib === 'undefined') throw new Error('pdf-lib non disponibile');
+            await scaricaCalendarioPdfLib(branca, eventi);
+        } catch (e) {
+            console.warn('[cal-pdf] uso fallback jsPDF:', e);
+            if (!window.jspdf) { alert('PDF non disponibile, riprova tra qualche secondo.'); return; }
+            scaricaCalendarioPdfFallback(branca, eventi);
+        }
     };
 
     renderCalendar(); // prima render struttura (senza eventi)
@@ -536,6 +648,9 @@ window.db = firebase.firestore();
 </script>
 <script src="assets/lead.js"></script>
 <script src="assets/cookie-consent.js"></script>
+<!-- pdf-lib: genera il calendario sulla vera carta intestata ufficiale -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<!-- jsPDF: fallback se pdf-lib o la carta intestata non sono disponibili -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
