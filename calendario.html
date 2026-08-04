@@ -218,6 +218,7 @@
     const UNITA_COLOR = { tutto:'#9ca3af', cerchio:'#eab308', reparto:'#22c55e', clan:'#ef4444', capi:'#7c3aed' };
     const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', capi:'Capi' };
     const UNITA_TITOLO_PDF = { cerchio:'Cerchio "Ali di Speranza"', reparto:'Reparto "Alce Mite Val Brandet"', clan:'Clan "Azimuth"' };
+    const UNITA_SOTTOTITOLO_PDF = { cerchio:'Avverti le coccinelle anziane in caso di assenza', reparto:'Avverti i capi in caso di assenza', clan:'Avverti i capi in caso di assenza' };
 
     var cur = new Date();
     var year = cur.getFullYear(), month = cur.getMonth();
@@ -326,7 +327,7 @@
     var PDF_MARGIN = 15;
     var PDF_PURPLE = [91,45,130];
 
-    function drawLetterhead(doc, logoData, titolo) {
+    function drawLetterhead(doc, logoData, titolo, branca) {
         var pageW = doc.internal.pageSize.getWidth();
         var barH = 5, steps = 100;
         for (var i = 0; i < steps; i++) {
@@ -346,9 +347,15 @@
         lines.forEach(function(l){ doc.text(l, pageW-PDF_MARGIN, ty, {align:'right'}); ty += 4; });
 
         var y = Math.max(logoBottom, ty) + 6;
-        doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(0,51,102);
+        doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(220,38,38);
         doc.text(titolo, PDF_MARGIN, y);
         y += 6;
+        var sottotitolo = UNITA_SOTTOTITOLO_PDF[branca];
+        if (sottotitolo) {
+            doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(180,83,13);
+            doc.text(sottotitolo, PDF_MARGIN, y);
+            y += 5.5;
+        }
         doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(120,120,120);
         doc.text('Generato il ' + new Date().toLocaleDateString('it-IT'), PDF_MARGIN, y);
         return y + 8;
@@ -374,7 +381,7 @@
             var pageH = doc.internal.pageSize.getHeight();
             var titolo = 'Calendario ' + (UNITA_TITOLO_PDF[branca] || UNITA_LABEL[branca] || 'Tutto il gruppo');
 
-            var y = drawLetterhead(doc, logoData, titolo);
+            var y = drawLetterhead(doc, logoData, titolo, branca);
 
             if (!eventi.length) {
                 doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(150,150,150);
@@ -388,7 +395,7 @@
                     : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
                 var blockH = 16 + (ev.luogo?5:0) + (ev.descrizione ? doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4).length*4.2 : 0);
-                if (y + blockH > pageH - 22) { doc.addPage(); y = drawLetterhead(doc, logoData, titolo); }
+                if (y + blockH > pageH - 22) { doc.addPage(); y = drawLetterhead(doc, logoData, titolo, branca); }
 
                 doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(0,51,102);
                 doc.text(ev.titolo || '(senza titolo)', PDF_MARGIN, y);
@@ -470,8 +477,13 @@
             }
 
             y = pageH - CONTENT_TOP;
-            page.drawText(titolo, { x: CONTENT_MARGIN, y: y, size: 17, font: fontB, color: rgb(0, 0.2, 0.4) });
+            page.drawText(titolo, { x: CONTENT_MARGIN, y: y, size: 17, font: fontB, color: rgb(0.86, 0.15, 0.15) });
             y -= 16;
+            var sottotitolo = UNITA_SOTTOTITOLO_PDF[branca];
+            if (sottotitolo) {
+                page.drawText(sottotitolo, { x: CONTENT_MARGIN, y: y, size: 10, font: fontB, color: rgb(0.71, 0.33, 0.05) });
+                y -= 13;
+            }
             page.drawText('Generato il ' + new Date().toLocaleDateString('it-IT'), { x: CONTENT_MARGIN, y: y, size: 9, font: fontR, color: rgb(0.47,0.47,0.47) });
             y -= 14;
         }
