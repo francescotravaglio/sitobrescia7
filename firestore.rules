@@ -5,15 +5,16 @@ rules_version = '2';
 // ⚠️ Per attivarle: Firebase Console → Firestore Database → Regole → incolla → Pubblica
 //    https://console.firebase.google.com/project/agescibrescia7-508b0/firestore/rules
 //
-// isAdmin(): utente Firebase Auth con email NON @soci.agescibrescia7.com
-// I soci usano email {codice}@soci.agescibrescia7.com e non sono admin.
+// isAdmin(): utente Firebase Auth con email @agescibrescia7.com (capi/admin).
+// I soci usano email {codice}@soci.agescibrescia7.com e non sono admin:
+// quel dominio non termina con "@agescibrescia7.com" quindi resta escluso.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
     function isAdmin() {
       return request.auth != null &&
-             request.auth.token.email == 'info@agescibrescia7.com';
+             request.auth.token.email.matches('.*@agescibrescia7[.]com$');
     }
 
     // ── Contenuti pubblici: lettura libera, scrittura solo admin ──
