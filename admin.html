@@ -159,10 +159,6 @@
             <div onclick="showTab('dashboard')" class="sidebar-link active" id="nav-dashboard">
                 <i class="fas fa-home"></i> Dashboard
             </div>
-            <div onclick="showTab('richieste')" class="sidebar-link" id="nav-richieste">
-                <i class="fas fa-inbox"></i> Richieste
-                <span id="badge-unread" class="ml-auto bg-gold text-scout text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
-            </div>
             <div onclick="showTab('pre-iscrizioni')" class="sidebar-link" id="nav-pre-iscrizioni">
                 <i class="fas fa-child"></i> Pre-iscrizioni
                 <span id="badge-pre" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
@@ -170,15 +166,9 @@
             <div onclick="showTab('eventi')" class="sidebar-link" id="nav-eventi">
                 <i class="fas fa-calendar-alt"></i> Calendario
             </div>
-            <div onclick="showTab('annunci')" class="sidebar-link" id="nav-annunci">
-                <i class="fas fa-bullhorn"></i> Annunci
-            </div>
             <div onclick="showTab('testimonianze')" class="sidebar-link" id="nav-testimonianze">
                 <i class="fas fa-quote-left"></i> Testimonianze
                 <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
-            </div>
-            <div onclick="showTab('calendario-google')" class="sidebar-link" id="nav-calendario-google">
-                <i class="fas fa-images"></i> Galleria & Media
             </div>
             <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
                 <i class="fas fa-cog"></i> Impostazioni
@@ -231,31 +221,7 @@
             <section id="tab-dashboard" class="tab-panel active space-y-8">
 
                 <!-- Stats -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-5" id="stats-grid">
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-blue-50 p-2.5 rounded-xl"><i class="fas fa-inbox text-scout"></i></div>
-                            <span class="text-xs text-gray-400 font-semibold">Totale</span>
-                        </div>
-                        <div class="text-3xl font-black text-scout" id="stat-total">0</div>
-                        <div class="text-xs text-gray-400 mt-1">Richieste ricevute</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-envelope text-amber-500"></i></div>
-                            <span class="text-xs text-gray-400 font-semibold">Da leggere</span>
-                        </div>
-                        <div class="text-3xl font-black text-amber-500" id="stat-unread">0</div>
-                        <div class="text-xs text-gray-400 mt-1">Messaggi non letti</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-green-50 p-2.5 rounded-xl"><i class="fas fa-user-plus text-green-600"></i></div>
-                            <span class="text-xs text-gray-400 font-semibold">Iscrizioni</span>
-                        </div>
-                        <div class="text-3xl font-black text-green-600" id="stat-iscrizioni">0</div>
-                        <div class="text-xs text-gray-400 mt-1">Richieste iscrizione</div>
-                    </div>
+                <div class="grid grid-cols-2 gap-5" id="stats-grid">
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
@@ -274,17 +240,6 @@
                     </div>
                 </div>
 
-                <!-- Ultime richieste -->
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 class="font-black text-scout">Ultime richieste</h3>
-                        <button onclick="showTab('richieste')" class="text-xs text-scout font-semibold hover:underline">Vedi tutte →</button>
-                    </div>
-                    <div id="dashboard-recent" class="divide-y divide-gray-50">
-                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>
-                    </div>
-                </div>
-
                 <!-- Prossimi eventi -->
                 <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -297,27 +252,7 @@
                 </div>
             </section>
 
-            <!-- ──────────────────────── RICHIESTE ───────────────── -->
-            <section id="tab-richieste" class="tab-panel space-y-6">
-                <div class="flex flex-wrap gap-3 items-center justify-between">
-                    <div class="flex gap-2" id="filter-tabs">
-                        <button onclick="filterRichieste('tutte')"  class="tab-btn active" id="f-tutte">Tutte</button>
-                        <button onclick="filterRichieste('nuove')"  class="tab-btn" id="f-nuove">Non lette</button>
-                        <button onclick="filterRichieste('iscrizione')" class="tab-btn" id="f-iscrizione">Iscrizioni</button>
-                        <button onclick="filterRichieste('informazioni')" class="tab-btn" id="f-informazioni">Info</button>
-                    </div>
-                    <button onclick="clearAllRichieste()"
-                            class="text-xs text-red-400 hover:text-red-600 font-semibold transition flex items-center gap-1">
-                        <i class="fas fa-trash-alt"></i> Svuota archivio
-                    </button>
-                </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div id="richieste-table">
-                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta.</div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ──────────────────────── PRE-ISCRIZIONI ─────────── -->
             <section id="tab-pre-iscrizioni" class="tab-panel space-y-6">
@@ -400,50 +335,7 @@
                 </div>
             </section>
 
-            <!-- ──────────────────────── ANNUNCI ─────────────────── -->
-            <section id="tab-annunci" class="tab-panel space-y-6">
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-5">Nuovo annuncio</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label>Titolo *</label>
-                            <input type="text" id="ann-titolo" placeholder="Es. Quota 2024/25">
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label>Categoria</label>
-                                <select id="ann-cat">
-                                    <option value="news">News</option>
-                                    <option value="urgente">Urgente</option>
-                                    <option value="evento">Evento</option>
-                                    <option value="info">Info</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Scadenza (opzionale)</label>
-                                <input type="date" id="ann-scad">
-                            </div>
-                        </div>
-                        <div>
-                            <label>Testo *</label>
-                            <textarea id="ann-testo" rows="4" placeholder="Testo dell'annuncio..."></textarea>
-                        </div>
-                    </div>
-                    <button onclick="addAnnuncio()"
-                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
-                        <i class="fas fa-paper-plane mr-2"></i>Pubblica annuncio
-                    </button>
-                </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-black text-scout">Annunci pubblicati</h3>
-                    </div>
-                    <div id="annunci-list">
-                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio.</div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ──────────────────── TESTIMONIANZE ───────────────── -->
             <section id="tab-testimonianze" class="tab-panel space-y-6">
@@ -462,52 +354,7 @@
                 </div>
             </section>
 
-            <!-- ──────────────────── GALLERIA & MEDIA ────────────── -->
-            <section id="tab-calendario-google" class="tab-panel space-y-6">
 
-                <!-- Galleria Foto -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-black text-scout"><i class="fas fa-images text-gold mr-2"></i>Galleria fotografica (Area Soci)</h3>
-                        <button onclick="savePhotosUrls()"
-                                class="bg-gold text-scout font-black px-5 py-2 rounded-xl text-sm hover:bg-yellow-400 transition flex-shrink-0">
-                            <i class="fas fa-save mr-1"></i>Salva tutto
-                        </button>
-                    </div>
-                    <p class="text-gray-500 text-xs">Incolla il link condivisibile di un album Google Photos per ogni unità. Lascia vuoto se non disponibile.</p>
-                    <!-- Cerchio -->
-                    <div class="bg-blue-50 rounded-xl p-4">
-                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
-                            <span>🐞</span> Cerchio <span class="text-xs font-normal text-gray-500">(Lupetti/Coccinelle)</span>
-                        </label>
-                        <input type="url" id="photos-url-cerchio"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
-                               placeholder="https://photos.app.goo.gl/...">
-                    </div>
-                    <!-- Reparto -->
-                    <div class="bg-green-50 rounded-xl p-4">
-                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
-                            <i class="fas fa-campground text-green-500"></i> Reparto <span class="text-xs font-normal text-gray-500">(Esploratori/Guide)</span>
-                        </label>
-                        <input type="url" id="photos-url-reparto"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
-                               placeholder="https://photos.app.goo.gl/...">
-                    </div>
-                    <!-- Clan -->
-                    <div class="bg-orange-50 rounded-xl p-4">
-                        <label class="flex items-center gap-2 mb-2 text-sm font-black text-scout">
-                            <i class="fas fa-mountain text-orange-500"></i> Clan <span class="text-xs font-normal text-gray-500">(Rover/Scolte)</span>
-                        </label>
-                        <input type="url" id="photos-url-clan"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
-                               placeholder="https://photos.app.goo.gl/...">
-                    </div>
-                    <p id="photos-saved-msg" class="text-green-600 text-xs hidden font-semibold">
-                        <i class="fas fa-check mr-1"></i> Link gallerie salvati!
-                    </p>
-                </div>
-
-            </section>
 
             <!-- ──────────────────────── IMPOSTAZIONI ─────────────── -->
             <section id="tab-impostazioni" class="tab-panel space-y-6">
@@ -570,20 +417,10 @@
                     </p>
                 </div>
 
-                <!-- Export dati -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-2">Esporta dati</h3>
-                    <p class="text-gray-500 text-sm mb-5">Scarica tutte le richieste ricevute in formato JSON.</p>
-                    <button onclick="exportData()"
-                            class="flex items-center gap-2 border border-gray-200 text-gray-600 font-bold px-5 py-3 rounded-xl text-sm hover:border-scout hover:text-scout transition">
-                        <i class="fas fa-download"></i> Esporta richieste (.json)
-                    </button>
-                </div>
-
                 <!-- Reset -->
                 <div class="bg-red-50 rounded-2xl border border-red-100 p-6">
                     <h3 class="font-black text-red-600 mb-2">Zona pericolosa</h3>
-                    <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (richieste, eventi, annunci).</p>
+                    <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (iscrizioni ed eventi).</p>
                     <button onclick="resetAll()"
                             class="flex items-center gap-2 bg-red-500 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-red-600 transition">
                         <i class="fas fa-trash-alt"></i> Cancella tutti i dati
@@ -638,16 +475,7 @@
     </div>
 </div>
 
-<!-- ── MODAL DETTAGLIO RICHIESTA ─────────────────────────────────── -->
-<div id="modal-richiesta" class="modal-overlay hidden" onclick="closeModal(event)">
-    <div class="modal-box" onclick="event.stopPropagation()">
-        <div class="flex justify-between items-start mb-6">
-            <h3 class="font-black text-scout text-xl">Dettaglio richiesta</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
-        </div>
-        <div id="modal-body"></div>
-    </div>
-</div>
+
 
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!--  JAVASCRIPT                                                    -->
@@ -657,10 +485,6 @@
 
 // ── Costanti ─────────────────────────────────────────────────────
 const KEYS = {
-    richieste:  'bs7_richieste',
-    eventi:     'bs7_eventi',
-    annunci:    'bs7_annunci',
-    gcal:       'bs7_gcal_id',
     config:     'bs7_config',
 };
 
@@ -675,11 +499,6 @@ function fmtDate(iso) {
 function fmtDatetime(iso) {
     if (!iso) return '—';
     return new Date(iso).toLocaleString('it-IT', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
-}
-
-function tipoLabel(t) {
-    const m = {iscrizione:'Iscrizione', informazioni:'Informazioni', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', altro:'Altro', maggiorenne:'Iscrizione maggiorenne', minorenne:'Iscrizione minorenne'};
-    return m[t] || escapeHtml(String(t || ''));
 }
 
 function toast(msg, ok = true) {
@@ -753,10 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Tab navigation ───────────────────────────────────────────────
 const TAB_META = {
     dashboard:         { title: 'Dashboard',         sub: 'Riepilogo generale' },
-    richieste:         { title: 'Richieste',          sub: 'Messaggi e iscrizioni dal sito' },
     eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
-    annunci:           { title: 'Annunci',            sub: 'Comunicazioni pubblicate sul sito' },
-    'calendario-google': { title: 'Galleria & Media', sub: 'Galleria fotografica per unità' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Password e configurazione' },
     soci:              { title: 'Attivazione Soci',    sub: 'Genera codici di attivazione monouso' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
@@ -789,9 +605,7 @@ function showTab(name) {
     chiudiSidebarMobile();   // su mobile chiudi il drawer dopo la scelta
 
     // Lazy render
-    if (name === 'richieste')   renderRichieste('tutte');
     if (name === 'eventi')      renderEventi();
-    if (name === 'annunci')     renderAnnunci();
     if (name === 'dashboard')   renderDashboard();
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
     if (name === 'testimonianze')   renderTestimonianze();
@@ -858,32 +672,17 @@ function escapeHtml(s) {
 // ── Refresh globale ───────────────────────────────────────────────
 function refreshAll() {
     renderDashboard();
-    updateBadge();
     updatePreBadge();
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────────
 function renderDashboard() {
-    const richieste = window.richiesteCache || [];
-    const eventi    = window.eventiCache   || [];
+    const eventi    = window.eventiCache || [];
     const now       = new Date();
-    const unread    = richieste.filter(r => !r.letta).length;
-    const iscrizioni = richieste.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne').length;
     const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
 
-    document.getElementById('stat-total').textContent    = richieste.length;
-    document.getElementById('stat-unread').textContent   = unread;
-    document.getElementById('stat-iscrizioni').textContent = iscrizioni;
-    document.getElementById('stat-eventi').textContent   = prossimi;
-    document.getElementById('stat-pre').textContent      = (window.preIscrizioniCache || []).length;
-
-    // Ultime 5 richieste
-    const recEl = document.getElementById('dashboard-recent');
-    if (!richieste.length) {
-        recEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessuna richiesta ricevuta.</div>';
-    } else {
-        recEl.innerHTML = richieste.slice(0, 5).map(r => richiestaRow(r, true)).join('');
-    }
+    document.getElementById('stat-eventi').textContent = prossimi;
+    document.getElementById('stat-pre').textContent    = (window.preIscrizioniCache || []).length;
 
     // Prossimi 3 eventi
     const evEl = document.getElementById('dashboard-events');
@@ -895,14 +694,6 @@ function renderDashboard() {
     } else {
         evEl.innerHTML = upcoming.map(eventRow).join('');
     }
-}
-
-function updateBadge() {
-    const richieste = window.richiesteCache || [];
-    const n = richieste.filter(r => !r.letta).length;
-    const b = document.getElementById('badge-unread');
-    if (n > 0) { b.textContent = n; b.classList.remove('hidden'); }
-    else b.classList.add('hidden');
 }
 
 function updatePreBadge() {
@@ -1094,171 +885,6 @@ function exportPreIscrizioniExcel() {
     toast('Excel scaricato.');
 }
 
-// ── RICHIESTE ────────────────────────────────────────────────────
-let currentFilter = 'tutte';
-
-function filterRichieste(f) {
-    currentFilter = f;
-    ['tutte','nuove','iscrizione','informazioni'].forEach(k => {
-        document.getElementById('f-' + k)?.classList.toggle('active', k === f);
-    });
-    renderRichieste(f);
-}
-
-function renderRichieste(filtro) {
-    const all = window.richiesteCache || [];
-    let list = all;
-    if (filtro === 'nuove')       list = all.filter(r => !r.letta);
-    if (filtro === 'iscrizione')  list = all.filter(r => r.tipo === 'minorenne' || r.tipo === 'maggiorenne');
-    if (filtro === 'informazioni')list = all.filter(r => r.dati?.tipo === 'informazioni');
-
-    const el = document.getElementById('richieste-table');
-    if (!list.length) {
-        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna richiesta in questa categoria.</div>';
-        return;
-    }
-    el.innerHTML = `
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
-                <tr>
-                    <th class="px-6 py-3 text-left font-semibold">Nome</th>
-                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
-                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Tipo</th>
-                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data</th>
-                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
-                    <th class="px-6 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                ${list.map(r => richiestaRow(r, false)).join('')}
-            </tbody>
-        </table>`;
-}
-
-function richiestaRow(r, compact) {
-    const nome = escapeHtml((`${r.dati?.nome || ''} ${r.dati?.cognome || ''}`).trim() || 'Senza nome');
-    const email = escapeHtml(r.dati?.email || '—');
-    const statoBadge = r.letta
-        ? '<span class="badge badge-read">Letta</span>'
-        : '<span class="badge badge-new">Nuova</span>';
-    const tipoVal = r.tipo || r.dati?.tipo || '';
-    const tipoBadge = (tipoVal === 'minorenne' || tipoVal === 'maggiorenne')
-        ? `<span class="badge badge-iscrizione">Iscrizione ${tipoVal}</span>`
-        : '<span class="badge badge-info">' + tipoLabel(tipoVal) + '</span>';
-    const safeId = escapeHtml(r.id);
-
-    if (compact) {
-        return `<div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 table-row">
-            <div class="flex-1 min-w-0">
-                <div class="font-semibold text-gray-800 truncate">${nome}</div>
-                <div class="text-xs text-gray-400">${fmtDatetime(r.timestamp)}</div>
-            </div>
-            ${statoBadge}
-            <button onclick="openRichiesta('${safeId}')" class="text-scout text-xs font-bold hover:underline">Apri</button>
-        </div>`;
-    }
-
-    return `<tr class="table-row">
-        <td class="px-6 py-4 font-semibold text-gray-800">${nome}</td>
-        <td class="px-6 py-4 text-gray-500 hidden md:table-cell truncate max-w-[180px]">${email}</td>
-        <td class="px-6 py-4 hidden lg:table-cell">${tipoBadge}</td>
-        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${fmtDatetime(r.timestamp)}</td>
-        <td class="px-6 py-4">${statoBadge}</td>
-        <td class="px-6 py-4 text-right">
-            <div class="flex gap-2 justify-end">
-                <button onclick="openRichiesta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Apri</button>
-                <button onclick="deleteRichiesta('${safeId}')" class="text-xs text-red-400 hover:text-red-600 font-bold px-2 py-1.5 transition">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </td>
-    </tr>`;
-}
-
-function openRichiesta(id) {
-    const r = (window.richiesteCache || []).find(x => x.id === id);
-    if (!r) return;
-
-    // Marca come letta in Firestore
-    if (!r.letta) {
-        window.firestoreDb.collection('iscrizioni').doc(id).update({ letta: true })
-            .catch(err => console.error('Errore update letta:', err));
-    }
-
-    const d = r.dati || {};
-    const isMin = r.tipo === 'minorenne';
-    const emailVal = escapeHtml(d.email || d.gen1_email || '');
-    const telVal   = escapeHtml(d.telefono || d.gen1_tel || '');
-    const nomeVal  = isMin
-        ? `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')} <span class="text-xs text-gray-400">(Genitore: ${escapeHtml(d.gen1_nome || '')} ${escapeHtml(d.gen1_cognome || '')})</span>`
-        : `${escapeHtml(d.nome || '—')} ${escapeHtml(d.cognome || '')}`;
-    document.getElementById('modal-body').innerHTML = `
-        <div class="space-y-4 text-sm">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 rounded-xl p-4 col-span-2">
-                    <div class="text-xs text-gray-400 mb-1">Nome</div>
-                    <div class="font-semibold">${nomeVal}</div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                    <div class="text-xs text-gray-400 mb-1">Tipo richiesta</div>
-                    <div class="font-semibold">${tipoLabel(r.tipo)}</div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                    <div class="text-xs text-gray-400 mb-1">Email</div>
-                    <a href="mailto:${emailVal}" class="font-semibold text-scout hover:underline">${emailVal || '—'}</a>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
-                    <div class="font-semibold">${telVal || '—'}</div>
-                </div>
-                ${d.data_nascita ? `<div class="bg-gray-50 rounded-xl p-4 col-span-2">
-                    <div class="text-xs text-gray-400 mb-1">Data di nascita</div>
-                    <div class="font-semibold">${fmtDate(d.data_nascita)}</div>
-                </div>` : ''}
-            </div>
-            ${d.messaggio ? `<div class="bg-blue-50 rounded-xl p-4">
-                <div class="text-xs text-gray-400 mb-2">Messaggio</div>
-                <p class="text-gray-700 leading-relaxed">${escapeHtml(d.messaggio)}</p>
-            </div>` : ''}
-            <div class="text-xs text-gray-400 pt-2">Ricevuto: ${fmtDatetime(r.timestamp)}</div>
-            <div class="flex gap-3 pt-2">
-                <a href="mailto:${emailVal}?subject=Risposta%20richiesta%20AGESCI%20Brescia%207"
-                   class="flex items-center gap-2 bg-scout text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
-                    <i class="fas fa-reply"></i> Rispondi per email
-                </a>
-                <button onclick="deleteRichiesta('${id}'); closeModal()"
-                        class="flex items-center gap-2 text-red-400 font-bold text-sm border border-red-200 px-4 py-2.5 rounded-xl hover:bg-red-50 transition">
-                    <i class="fas fa-trash"></i> Elimina
-                </button>
-            </div>
-        </div>`;
-    document.getElementById('modal-richiesta').classList.remove('hidden');
-}
-
-function closeModal(e) {
-    if (!e || e.target === document.getElementById('modal-richiesta')) {
-        document.getElementById('modal-richiesta').classList.add('hidden');
-    }
-}
-
-function deleteRichiesta(id) {
-    if (!confirm('Eliminare questa richiesta?')) return;
-    window.firestoreDb.collection('iscrizioni').doc(id).delete()
-        .then(() => toast('Richiesta eliminata.'))
-        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
-}
-
-function clearAllRichieste() {
-    if (!confirm('Eliminare TUTTE le richieste? Operazione irreversibile.')) return;
-    const db = window.firestoreDb;
-    db.collection('iscrizioni').get().then(snap => {
-        const batch = db.batch();
-        snap.docs.forEach(d => batch.delete(d.ref));
-        return batch.commit();
-    }).then(() => toast('Archivio svuotato.'))
-      .catch(err => { console.error(err); toast('Errore.', false); });
-}
-
 // ── EVENTI ────────────────────────────────────────────────────────
 function addEvento() {
     const titolo    = document.getElementById('ev-titolo').value.trim();
@@ -1330,121 +956,6 @@ function deleteEvento(id) {
         .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
 }
 
-// ── ANNUNCI ───────────────────────────────────────────────────────
-function addAnnuncio() {
-    const titolo = document.getElementById('ann-titolo').value.trim();
-    const testo  = document.getElementById('ann-testo').value.trim();
-    if (!titolo || !testo) { toast('Titolo e testo sono obbligatori.', false); return; }
-    const id = Date.now();
-    const ann = { id, titolo, testo,
-        categoria: document.getElementById('ann-cat').value,
-        scadenza:  document.getElementById('ann-scad').value || null,
-        timestamp: new Date().toISOString(),
-    };
-    window.firestoreDb.collection('annunci').doc(String(id)).set(ann)
-        .then(() => {
-            ['ann-titolo','ann-testo','ann-scad'].forEach(i => document.getElementById(i).value = '');
-            document.getElementById('ann-cat').selectedIndex = 0;
-            toast('Annuncio pubblicato!');
-        })
-        .catch(e => { console.error(e); toast('Errore pubblicazione annuncio.', false); });
-}
-
-function renderAnnunci() {
-    const all = (window.annunciCache || []).slice().sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
-    const el  = document.getElementById('annunci-list');
-    if (!all.length) {
-        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun annuncio pubblicato.</div>';
-        return;
-    }
-    const catColors = {news:'bg-blue-50 text-blue-700', urgente:'bg-red-50 text-red-600', evento:'bg-purple-50 text-purple-700', info:'bg-amber-50 text-amber-700'};
-    el.innerHTML = all.map(a => {
-        const cc = catColors[a.categoria] || catColors.info;
-        return `<div class="flex items-start gap-4 px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50">
-            <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap gap-2 items-center mb-1">
-                    <span class="font-bold text-gray-800">${escapeHtml(a.titolo||'')}</span>
-                    <span class="badge ${cc}">${escapeHtml(a.categoria||'')}</span>
-                    ${a.scadenza ? `<span class="text-xs text-gray-400">Scade: ${fmtDate(a.scadenza)}</span>` : ''}
-                </div>
-                <p class="text-sm text-gray-600 leading-relaxed">${escapeHtml(a.testo||'')}</p>
-                <div class="text-xs text-gray-400 mt-2">${fmtDatetime(a.timestamp)}</div>
-            </div>
-            <button onclick="deleteAnnuncio(${a.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0 mt-1">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>`;
-    }).join('');
-}
-
-function deleteAnnuncio(id) {
-    if (!confirm('Eliminare questo annuncio?')) return;
-    window.firestoreDb.collection('annunci').doc(String(id)).delete()
-        .then(() => toast('Annuncio eliminato.'))
-        .catch(e => { console.error(e); toast('Errore eliminazione.', false); });
-}
-
-// ── GOOGLE CALENDAR ───────────────────────────────────────────────
-function showCalendarPreview(id) {
-    const encoded = encodeURIComponent(id);
-    document.getElementById('gcal-preview').innerHTML = `
-        <iframe src="https://calendar.google.com/calendar/embed?src=${encoded}&ctz=Europe%2FRome&showTitle=0&showNav=1&mode=MONTH"
-                style="border:0" width="100%" height="500" frameborder="0" scrolling="no" class="rounded-xl"></iframe>`;
-}
-
-function loadCalendarId() {
-    if (!window.firestoreDb) return;
-    window.firestoreDb.collection('config').doc('site').get()
-        .then(doc => {
-            if (!doc.exists) return;
-            const data = doc.data();
-            if (data.gcalCerchio) document.getElementById('gcal-cerchio').value = data.gcalCerchio;
-            if (data.gcalReparto) document.getElementById('gcal-reparto').value = data.gcalReparto;
-            if (data.gcalClan)    document.getElementById('gcal-clan').value    = data.gcalClan;
-            if (data.gcalId) {
-                document.getElementById('gcal-id').value = data.gcalId;
-                showCalendarPreview(data.gcalId);
-            }
-            if (data.photosUrlCerchio) { const el = document.getElementById('photos-url-cerchio'); if (el) el.value = data.photosUrlCerchio; }
-            if (data.photosUrlReparto) { const el = document.getElementById('photos-url-reparto'); if (el) el.value = data.photosUrlReparto; }
-            if (data.photosUrlClan)    { const el = document.getElementById('photos-url-clan');    if (el) el.value = data.photosUrlClan;    }
-        })
-        .catch(e => console.error('loadCalendarId:', e));
-}
-
-function saveCalendarIds() {
-    const cerchio = document.getElementById('gcal-cerchio').value.trim();
-    const reparto = document.getElementById('gcal-reparto').value.trim();
-    const clan    = document.getElementById('gcal-clan').value.trim();
-    const pub     = document.getElementById('gcal-id').value.trim();
-    window.firestoreDb.collection('config').doc('site').set(
-        { gcalCerchio: cerchio, gcalReparto: reparto, gcalClan: clan, gcalId: pub },
-        { merge: true }
-    ).then(() => {
-        document.getElementById('gcal-saved-msg').classList.remove('hidden');
-        setTimeout(() => document.getElementById('gcal-saved-msg').classList.add('hidden'), 3000);
-        if (pub) showCalendarPreview(pub);
-        toast('Calendari salvati!');
-    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
-}
-// keep old name as alias for any residual calls
-function saveCalendarId() { saveCalendarIds(); }
-
-function savePhotosUrls() {
-    const cerchio = document.getElementById('photos-url-cerchio').value.trim();
-    const reparto = document.getElementById('photos-url-reparto').value.trim();
-    const clan    = document.getElementById('photos-url-clan').value.trim();
-    window.firestoreDb.collection('config').doc('site').set(
-        { photosUrlCerchio: cerchio, photosUrlReparto: reparto, photosUrlClan: clan },
-        { merge: true }
-    ).then(() => {
-        document.getElementById('photos-saved-msg').classList.remove('hidden');
-        setTimeout(() => document.getElementById('photos-saved-msg').classList.add('hidden'), 3000);
-        toast('Link gallerie salvati!');
-    }).catch(e => { console.error(e); toast('Errore salvataggio.', false); });
-}
-function savePhotosUrl() { savePhotosUrls(); }
-
 // ── IMPOSTAZIONI ─────────────────────────────────────────────────
 function loadConfig() {
     const cfg = get(KEYS.config) || {};
@@ -1506,25 +1017,8 @@ function changePw() {
         });
 }
 
-function exportData() {
-    const data = {
-        richieste: window.richiesteCache || [],
-        eventi:    get(KEYS.eventi)    || [],
-        annunci:   get(KEYS.annunci)   || [],
-        esportato: new Date().toISOString(),
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `bs7-dati-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('Export completato!');
-}
-
 function resetAll() {
-    if (!confirm('⚠️ Eliminare TUTTI i dati (richieste, eventi, annunci)? Operazione irreversibile!')) return;
+    if (!confirm('⚠️ Eliminare TUTTI i dati (iscrizioni, eventi)? Operazione irreversibile!')) return;
     const db = window.firestoreDb;
     if (!db) return;
     const deleteCollection = col => db.collection(col).get().then(snap => {
@@ -1535,7 +1029,6 @@ function resetAll() {
     Promise.all([
         deleteCollection('iscrizioni'),
         deleteCollection('eventi'),
-        deleteCollection('annunci'),
     ]).then(() => toast('Tutti i dati eliminati.'))
       .catch(e => { console.error(e); toast('Errore durante il reset.', false); });
 }
@@ -1642,24 +1135,12 @@ firebase.initializeApp({
     appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
 });
 window.firestoreDb = firebase.firestore();
-window.richiesteCache = [];
 window.preIscrizioniCache = [];
 window.eventiCache = [];
-window.annunciCache = [];
-window.unsubscribeRichieste = null;
 window.unsubscribePreIscrizioni = null;
 window.unsubscribeEventi = null;
-window.unsubscribeAnnunci = null;
 
 function setupFirestoreListener() {
-    if (window.unsubscribeRichieste) window.unsubscribeRichieste();
-    window.unsubscribeRichieste = window.firestoreDb.collection('iscrizioni')
-        .orderBy('timestamp', 'desc')
-        .onSnapshot(snap => {
-            window.richiesteCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            refreshAll();
-        }, err => console.error('Firestore listener error:', err));
-
     if (window.unsubscribePreIscrizioni) window.unsubscribePreIscrizioni();
     window.unsubscribePreIscrizioni = window.firestoreDb.collection('pre_iscrizioni')
         .orderBy('timestamp', 'desc')
@@ -1678,16 +1159,6 @@ function setupFirestoreListener() {
             renderDashboard();
             if (document.getElementById('tab-eventi')?.classList.contains('active')) renderEventi();
         }, err => console.error('Firestore eventi listener error:', err));
-
-    if (window.unsubscribeAnnunci) window.unsubscribeAnnunci();
-    window.unsubscribeAnnunci = window.firestoreDb.collection('annunci')
-        .onSnapshot(snap => {
-            window.annunciCache = snap.docs.map(d => d.data());
-            if (document.getElementById('tab-annunci')?.classList.contains('active')) renderAnnunci();
-        }, err => console.error('Firestore annunci listener error:', err));
-
-    // Carica ID calendario
-    loadCalendarId();
 }
 </script>
 </body>
