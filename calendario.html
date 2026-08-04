@@ -248,6 +248,35 @@
         return 'https://calendar.google.com/calendar/render?' + params.toString();
     }
 
+    // ── Link "Aggiungi a Calendario iPhone/Apple" per singolo evento ──
+    // File .ics aperto direttamente (nessun attributo "download"): su iOS/Safari
+    // apre la scheda nativa "Aggiungi a Calendario"; sugli altri browser scarica
+    // il file, importabile in qualsiasi app di calendario.
+    function icsEscape(s) {
+        return String(s || '').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+    }
+    function icsDataUrl(ev) {
+        var start = gcalDate(ev.data, 0);
+        var end   = gcalDate(ev.data_fine || ev.data, 1);
+        var now = new Date();
+        var dtstamp = now.getUTCFullYear() + pad(now.getUTCMonth()+1) + pad(now.getUTCDate())
+            + 'T' + pad(now.getUTCHours()) + pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + 'Z';
+        var uid = (ev.id || (start + '-' + Math.random().toString(36).slice(2))) + '@agescibrescia7.com';
+        var lines = [
+            'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//AGESCI Brescia 7//Calendario//IT', 'CALSCALE:GREGORIAN',
+            'BEGIN:VEVENT',
+            'UID:' + uid,
+            'DTSTAMP:' + dtstamp,
+            'DTSTART;VALUE=DATE:' + start,
+            'DTEND;VALUE=DATE:' + end,
+            'SUMMARY:' + icsEscape(ev.titolo),
+        ];
+        if (ev.luogo)       lines.push('LOCATION:' + icsEscape(ev.luogo));
+        if (ev.descrizione) lines.push('DESCRIPTION:' + icsEscape(ev.descrizione));
+        lines.push('END:VEVENT', 'END:VCALENDAR');
+        return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+    }
+
     function renderCalendar() {
         document.getElementById('cal-month-label').textContent = MESI[month] + ' ' + year;
         var first = new Date(year, month, 1);
@@ -328,7 +357,10 @@
                 + '<div class="flex-shrink-0 flex flex-col items-end gap-2">'
                 +   '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px">'+esc(label)+'</span>'
                 +   '<a href="'+gcalAddUrl(ev)+'" target="_blank" rel="noopener" class="flex items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-scout transition whitespace-nowrap" title="Aggiungi a Google Calendar">'
-                +     '<i class="fab fa-google"></i>Aggiungi'
+                +     '<i class="fab fa-google"></i>Google Calendar'
+                +   '</a>'
+                +   '<a href="'+icsDataUrl(ev)+'" target="_blank" rel="noopener" class="flex items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-scout transition whitespace-nowrap" title="Aggiungi a Calendario iPhone/Apple">'
+                +     '<i class="fab fa-apple"></i>Calendario iPhone'
                 +   '</a>'
                 + '</div>'
                 + '</div>';
