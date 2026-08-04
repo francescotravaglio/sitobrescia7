@@ -951,10 +951,27 @@ function eventRow(ev) {
             </div>
             ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
         </div>
-        <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition ml-2 flex-shrink-0">
+        <button onclick="duplicaEvento(${ev.id})" class="text-gray-300 hover:text-scout transition ml-2 flex-shrink-0" title="Ripeti questo evento">
+            <i class="fas fa-copy"></i>
+        </button>
+        <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0">
             <i class="fas fa-trash"></i>
         </button>
     </div>`;
+}
+
+function duplicaEvento(id) {
+    const ev = (window.eventiCache || []).find(e => e.id === id);
+    if (!ev) return;
+    document.getElementById('ev-titolo').value    = ev.titolo || '';
+    document.getElementById('ev-data').value      = ev.data || '';
+    document.getElementById('ev-data-fine').value = ev.data_fine || '';
+    document.getElementById('ev-unita').value     = ev.unita || 'tutto';
+    document.getElementById('ev-luogo').value     = ev.luogo || '';
+    document.getElementById('ev-descr').value     = ev.descrizione || '';
+    document.getElementById('ev-titolo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('ev-data').focus();
+    toast('Evento copiato nel form: aggiorna la data e salva.');
 }
 
 function deleteEvento(id) {
