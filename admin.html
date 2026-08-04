@@ -20,19 +20,25 @@
             padding: .65rem 1rem; border-radius: .75rem;
             font-size: .8rem; font-weight: 600;
             color: rgba(255,255,255,.6);
-            transition: background .2s, color .2s;
+            border-left: 3px solid transparent;
+            transition: background .2s, color .2s, border-color .2s;
             cursor: pointer;
         }
         .sidebar-link:hover { background: rgba(255,255,255,.08); color: #fff; }
-        .sidebar-link.active { background: rgba(252,196,0,.15); color: #fcc400; }
+        .sidebar-link.active { background: rgba(252,196,0,.15); color: #fcc400; border-left-color: #fcc400; }
         .sidebar-link i { width: 1.1rem; text-align: center; font-size: .85rem; }
+        .sidebar-group-label {
+            padding: 1rem 1rem .35rem; font-size: .62rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.25);
+        }
+        .sidebar-group-label:first-child { padding-top: .35rem; }
 
         .stat-card {
             background: #fff; border-radius: 1.25rem;
             padding: 1.5rem; border: 1px solid #f0f0f0;
-            transition: box-shadow .2s;
+            transition: box-shadow .2s, transform .2s;
         }
-        .stat-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+        .stat-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.08); transform: translateY(-2px); }
 
         .badge {
             display: inline-block; padding: .2rem .6rem;
@@ -51,7 +57,54 @@
         .tab-btn:not(.active):hover { background: #f1f5f9; }
 
         .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
+        .tab-panel.active { display: block; animation: fadeUpTab .35s ease both; }
+        @keyframes fadeUpTab { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── Componenti condivisi: card, pulsanti, stati vuoti ── */
+        .panel { background: #fff; border-radius: 1.25rem; border: 1px solid #f0f0f0; }
+        .panel-head {
+            padding: 1.15rem 1.5rem; border-bottom: 1px solid #f3f4f6;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem; flex-wrap: wrap;
+        }
+        .panel-head h3 { display: flex; align-items: center; gap: .65rem; font-weight: 900; color: #003366; }
+        .panel-icon {
+            width: 2.1rem; height: 2.1rem; border-radius: .65rem; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: .8rem;
+        }
+        .panel-body { padding: 1.5rem; }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+            font-weight: 800; font-size: .85rem; padding: .75rem 1.5rem; border-radius: .85rem;
+            transition: background .2s, box-shadow .2s, transform .1s, border-color .2s, color .2s;
+            cursor: pointer; border: 1px solid transparent; line-height: 1;
+        }
+        .btn:active { transform: scale(.97); }
+        .btn-primary { background: #003366; color: #fff; }
+        .btn-primary:hover { background: #002347; box-shadow: 0 8px 22px rgba(0,51,102,.28); }
+        .btn-outline { background: #fff; color: #475569; border-color: #e2e8f0; }
+        .btn-outline:hover { border-color: #003366; color: #003366; background: #f8fafc; }
+        .btn-danger { background: #ef4444; color: #fff; }
+        .btn-danger:hover { background: #dc2626; box-shadow: 0 8px 22px rgba(239,68,68,.28); }
+        .btn-danger-outline { background: #fff; color: #f87171; border-color: #fecaca; }
+        .btn-danger-outline:hover { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
+        .btn-success-outline { background: #fff; color: #16a34a; border-color: #bbf7d0; }
+        .btn-success-outline:hover { background: #f0fdf4; border-color: #86efac; }
+        .btn-sm { padding: .5rem 1.1rem; font-size: .75rem; border-radius: .65rem; }
+
+        .icon-btn {
+            width: 2.15rem; height: 2.15rem; flex-shrink: 0;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: .7rem; color: #cbd5e1; cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+        .icon-btn:hover { background: #f1f5f9; color: #003366; }
+        .icon-btn.danger:hover { background: #fef2f2; color: #ef4444; }
+
+        .empty-state { padding: 3.5rem 1.5rem; text-align: center; color: #9ca3af; }
+        .empty-state i { font-size: 1.85rem; opacity: .3; display: block; margin-bottom: .85rem; }
+        .empty-state p { font-size: .85rem; font-weight: 600; }
 
         input[type="text"], input[type="date"], input[type="password"],
         input[type="email"], select, textarea {
@@ -155,10 +208,13 @@
         </div>
 
         <!-- Nav -->
-        <nav class="flex-1 px-3 py-5 space-y-1">
+        <nav class="flex-1 px-3 py-3 space-y-1">
+            <div class="sidebar-group-label">Principale</div>
             <div onclick="showTab('dashboard')" class="sidebar-link active" id="nav-dashboard">
                 <i class="fas fa-home"></i> Dashboard
             </div>
+
+            <div class="sidebar-group-label">Contenuti</div>
             <div onclick="showTab('pre-iscrizioni')" class="sidebar-link" id="nav-pre-iscrizioni">
                 <i class="fas fa-child"></i> Pre-iscrizioni
                 <span id="badge-pre" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
@@ -170,6 +226,8 @@
                 <i class="fas fa-quote-left"></i> Testimonianze
                 <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
+
+            <div class="sidebar-group-label">Sistema</div>
             <div onclick="showTab('impostazioni')" class="sidebar-link" id="nav-impostazioni">
                 <i class="fas fa-cog"></i> Impostazioni
             </div>
@@ -193,7 +251,7 @@
     <main class="flex-1 overflow-auto">
 
         <!-- Top bar -->
-        <header class="bg-white border-b border-gray-100 px-5 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-30">
+        <header class="bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm px-5 sm:px-8 py-4 flex justify-between items-center sticky top-0 z-30">
             <div class="flex items-center gap-3">
                 <button onclick="toggleSidebar()" class="lg:hidden text-scout p-1 -ml-1" aria-label="Apri menu">
                     <i class="fas fa-bars text-xl"></i>
@@ -221,7 +279,7 @@
             <section id="tab-dashboard" class="tab-panel active space-y-8">
 
                 <!-- Stats -->
-                <div class="grid grid-cols-2 gap-5" id="stats-grid">
+                <div class="grid grid-cols-2 gap-5 max-w-xl" id="stats-grid">
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
@@ -241,13 +299,13 @@
                 </div>
 
                 <!-- Prossimi eventi -->
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 class="font-black text-scout">Prossimi eventi</h3>
-                        <button onclick="showTab('eventi')" class="text-xs text-scout font-semibold hover:underline">Gestisci →</button>
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-purple-50 text-purple-600"><i class="fas fa-calendar"></i></span>Prossimi eventi</h3>
+                        <button onclick="showTab('eventi')" class="text-xs text-scout font-bold hover:underline">Gestisci →</button>
                     </div>
                     <div id="dashboard-events" class="divide-y divide-gray-50">
-                        <div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>
+                        <div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nessun evento programmato.</p></div>
                     </div>
                 </div>
             </section>
@@ -263,20 +321,20 @@
                     </div>
                     <div class="flex flex-wrap gap-2 items-center">
                         <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
-                        <button onclick="markAllPreLette()" class="text-xs text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition font-semibold">
-                            <i class="fas fa-check-double mr-1"></i>Segna tutte lette
+                        <button onclick="markAllPreLette()" class="btn btn-outline btn-sm">
+                            <i class="fas fa-check-double"></i>Segna tutte lette
                         </button>
-                        <button onclick="exportPreIscrizioniExcel()" class="text-xs text-green-600 border border-green-200 px-3 py-1.5 rounded-lg hover:bg-green-50 transition font-semibold">
-                            <i class="fas fa-file-excel mr-1"></i>Scarica Excel
+                        <button onclick="exportPreIscrizioniExcel()" class="btn btn-success-outline btn-sm">
+                            <i class="fas fa-file-excel"></i>Scarica Excel
                         </button>
-                        <button onclick="clearAllPreIscrizioni()" class="text-xs text-red-400 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition font-semibold">
-                            <i class="fas fa-trash mr-1"></i>Elimina tutte
+                        <button onclick="clearAllPreIscrizioni()" class="btn btn-danger-outline btn-sm">
+                            <i class="fas fa-trash"></i>Elimina tutte
                         </button>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="panel overflow-hidden">
                     <div id="pre-iscrizioni-table">
-                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione.</div>
+                        <div class="empty-state"><i class="fas fa-child"></i><p>Nessuna pre-iscrizione.</p></div>
                     </div>
                 </div>
             </section>
@@ -284,8 +342,11 @@
             <!-- ──────────────────────── EVENTI ──────────────────── -->
             <section id="tab-eventi" class="tab-panel space-y-6">
                 <!-- Aggiungi evento -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-5">Nuovo evento</h3>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-calendar-plus"></i></span>Nuovo evento</h3>
+                    </div>
+                    <div class="panel-body">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
                             <label>Titolo evento *</label>
@@ -322,19 +383,19 @@
                             <textarea id="ev-descr" rows="2" placeholder="Breve descrizione dell'evento..."></textarea>
                         </div>
                     </div>
-                    <button onclick="addEvento()"
-                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
-                        <i class="fas fa-plus mr-2"></i>Aggiungi evento
+                    <button onclick="addEvento()" class="btn btn-primary mt-5">
+                        <i class="fas fa-plus"></i>Aggiungi evento
                     </button>
+                    </div>
                 </div>
 
                 <!-- Lista eventi -->
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-black text-scout">Tutti gli eventi</h3>
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-list"></i></span>Tutti gli eventi</h3>
                     </div>
                     <div id="eventi-list">
-                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>
+                        <div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nessun evento. Aggiungine uno sopra.</p></div>
                     </div>
                 </div>
             </section>
@@ -347,13 +408,13 @@
                     <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
                     Le frasi inviate dai genitori dal sito arrivano qui. <strong>Solo quelle approvate</strong> compaiono in homepage. Controlla che non ci siano dati sensibili o cognomi completi prima di approvare.
                 </div>
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                        <h3 class="font-black text-scout">Testimonianze ricevute</h3>
-                        <button onclick="renderTestimonianze()" class="text-gray-400 hover:text-scout transition text-sm"><i class="fas fa-rotate-right"></i></button>
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-quote-left"></i></span>Testimonianze ricevute</h3>
+                        <button onclick="renderTestimonianze()" class="icon-btn" title="Aggiorna"><i class="fas fa-rotate-right"></i></button>
                     </div>
                     <div id="testi-list">
-                        <div class="px-6 py-12 text-center text-gray-400 text-sm">Caricamento…</div>
+                        <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Caricamento…</p></div>
                     </div>
                 </div>
             </section>
@@ -364,8 +425,11 @@
             <section id="tab-impostazioni" class="tab-panel space-y-6">
 
                 <!-- Cambia password -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-5">Cambia password admin</h3>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-key"></i></span>Cambia password admin</h3>
+                    </div>
+                    <div class="panel-body">
                     <div class="grid sm:grid-cols-3 gap-4">
                         <div>
                             <label>Password attuale</label>
@@ -381,15 +445,18 @@
                         </div>
                     </div>
                     <p id="pw-msg" class="text-xs mt-3 hidden font-semibold"></p>
-                    <button onclick="changePw()"
-                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
-                        <i class="fas fa-key mr-2"></i>Aggiorna password
+                    <button onclick="changePw()" class="btn btn-primary mt-5">
+                        <i class="fas fa-key"></i>Aggiorna password
                     </button>
+                    </div>
                 </div>
 
                 <!-- Info sito -->
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-5">Informazioni del gruppo</h3>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-building"></i></span>Informazioni del gruppo</h3>
+                    </div>
+                    <div class="panel-body">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
                             <label>Email di contatto</label>
@@ -412,23 +479,24 @@
                             <input type="text" id="cfg-fb" placeholder="https://facebook.com/...">
                         </div>
                     </div>
-                    <button onclick="saveConfig()"
-                            class="mt-5 bg-scout text-white font-black px-6 py-3 rounded-xl text-sm hover:bg-scout-dark transition">
-                        <i class="fas fa-save mr-2"></i>Salva impostazioni
+                    <button onclick="saveConfig()" class="btn btn-primary mt-5">
+                        <i class="fas fa-save"></i>Salva impostazioni
                     </button>
                     <p id="cfg-msg" class="text-green-600 text-xs mt-3 hidden font-semibold">
                         <i class="fas fa-check mr-1"></i> Impostazioni salvate.
                     </p>
+                    </div>
                 </div>
 
                 <!-- Reset -->
-                <div class="bg-red-50 rounded-2xl border border-red-100 p-6">
-                    <h3 class="font-black text-red-600 mb-2">Zona pericolosa</h3>
+                <div class="panel" style="background:#fef2f2; border-color:#fecaca">
+                    <div class="panel-body">
+                    <h3 class="flex items-center gap-2.5 font-black text-red-600 mb-2"><span class="panel-icon" style="background:#fee2e2;color:#dc2626"><i class="fas fa-triangle-exclamation"></i></span>Zona pericolosa</h3>
                     <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (iscrizioni ed eventi).</p>
-                    <button onclick="resetAll()"
-                            class="flex items-center gap-2 bg-red-500 text-white font-bold px-5 py-3 rounded-xl text-sm hover:bg-red-600 transition">
+                    <button onclick="resetAll()" class="btn btn-danger">
                         <i class="fas fa-trash-alt"></i> Cancella tutti i dati
                     </button>
+                    </div>
                 </div>
             </section>
 
@@ -439,20 +507,21 @@
                     Qui non è salvato nessun dato anagrafico dei soci, solo il <strong>Codice Socio</strong> e un <strong>codice di attivazione</strong> monouso. Genera il codice, comunicalo al socio (di persona, telefono o messaggio), e lui lo userà una sola volta per creare il proprio accesso in "Area Soci".
                 </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h3 class="font-black text-scout mb-2">Genera codice di attivazione</h3>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-key"></i></span>Genera codice di attivazione</h3>
+                    </div>
+                    <div class="panel-body">
                     <div class="flex flex-wrap items-end gap-4">
                         <div>
                             <label>Codice Socio</label>
                             <input type="text" id="attiva-codice" placeholder="Es. 12345" class="w-48">
                         </div>
-                        <button onclick="generaAttivazioneSocio()"
-                                class="bg-scout text-white font-black px-5 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">
-                            <i class="fas fa-key mr-2"></i>Genera codice
+                        <button onclick="generaAttivazioneSocio()" class="btn btn-primary">
+                            <i class="fas fa-key"></i>Genera codice
                         </button>
-                        <button onclick="controllaAttivazioneSocio()"
-                                class="border border-gray-200 text-gray-600 font-bold px-5 py-2.5 rounded-xl text-sm hover:border-scout hover:text-scout transition">
-                            <i class="fas fa-search mr-2"></i>Controlla stato
+                        <button onclick="controllaAttivazioneSocio()" class="btn btn-outline">
+                            <i class="fas fa-search"></i>Controlla stato
                         </button>
                     </div>
                     <div id="attiva-risultato" class="hidden mt-5 bg-green-50 border border-green-200 rounded-xl p-4 text-sm">
@@ -461,6 +530,7 @@
                         <p class="text-xs text-gray-400 mt-2" id="attiva-risultato-scadenza"></p>
                     </div>
                     <p id="attiva-msg" class="text-xs mt-3 hidden font-semibold"></p>
+                    </div>
                 </div>
             </section>
 
@@ -629,35 +699,35 @@ function renderTestimonianze() {
         if (badge) { badge.textContent = inAttesa; badge.classList.toggle('hidden', inAttesa === 0); }
 
         if (!rows.length) {
-            list.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna testimonianza ricevuta.</div>';
+            list.innerHTML = '<div class="empty-state"><i class="fas fa-quote-left"></i><p>Nessuna testimonianza ricevuta.</p></div>';
             return;
         }
         list.innerHTML = rows.map(r => {
             const data = r.timestamp ? new Date(r.timestamp).toLocaleDateString('it-IT') : '—';
             const stato = r.approvata
-                ? '<span class="bg-green-100 text-green-700 text-xs font-black px-2.5 py-1 rounded-full">PUBBLICATA</span>'
-                : '<span class="bg-amber-100 text-amber-700 text-xs font-black px-2.5 py-1 rounded-full">IN ATTESA</span>';
+                ? '<span class="badge" style="background:#dcfce7;color:#15803d">Pubblicata</span>'
+                : '<span class="badge badge-new" style="background:#fef3c7;color:#b45309">In attesa</span>';
             const azione = r.approvata
-                ? `<button onclick="setTestiApprovata('${r.id}', false)" class="text-amber-600 hover:text-amber-800 text-xs font-bold"><i class="fas fa-eye-slash mr-1"></i>Nascondi</button>`
-                : `<button onclick="setTestiApprovata('${r.id}', true)" class="bg-scout text-white text-xs font-black px-4 py-2 rounded-lg hover:bg-scout-dark transition"><i class="fas fa-check mr-1"></i>Approva e pubblica</button>`;
+                ? `<button onclick="setTestiApprovata('${r.id}', false)" class="btn btn-outline btn-sm"><i class="fas fa-eye-slash"></i>Nascondi</button>`
+                : `<button onclick="setTestiApprovata('${r.id}', true)" class="btn btn-primary btn-sm"><i class="fas fa-check"></i>Approva e pubblica</button>`;
             return `
-            <div class="px-6 py-5 border-b border-gray-50 last:border-0">
+            <div class="px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1 min-w-[240px]">
                         <p class="text-gray-700 text-sm italic leading-relaxed mb-2">&ldquo;${escapeHtml(r.testo||'')}&rdquo;</p>
                         <div class="text-xs text-gray-400">— <strong class="text-gray-600">${escapeHtml(r.nome||'')}</strong>${r.ruolo ? ', ' + escapeHtml(r.ruolo) : ''} · ${data}</div>
                     </div>
-                    <div class="flex items-center gap-3 flex-shrink-0">
+                    <div class="flex items-center gap-2 flex-shrink-0">
                         ${stato}
                         ${azione}
-                        <button onclick="deleteTestimonianza('${r.id}')" class="text-gray-300 hover:text-red-500 transition" title="Elimina"><i class="fas fa-trash text-sm"></i></button>
+                        <button onclick="deleteTestimonianza('${r.id}')" class="icon-btn danger" title="Elimina"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             </div>`;
         }).join('');
     }).catch(err => {
         console.error(err);
-        list.innerHTML = '<div class="px-6 py-12 text-center text-red-400 text-sm">Errore nel caricamento.</div>';
+        list.innerHTML = '<div class="empty-state text-red-400"><i class="fas fa-triangle-exclamation"></i><p>Errore nel caricamento.</p></div>';
     });
 }
 function setTestiApprovata(id, val) {
@@ -694,7 +764,7 @@ function renderDashboard() {
                            .sort((a,b) => new Date(a.data)-new Date(b.data))
                            .slice(0,3);
     if (!upcoming.length) {
-        evEl.innerHTML = '<div class="px-6 py-10 text-center text-gray-400 text-sm">Nessun evento programmato.</div>';
+        evEl.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nessun evento programmato.</p></div>';
     } else {
         evEl.innerHTML = upcoming.map(eventRow).join('');
     }
@@ -725,11 +795,11 @@ function renderPreIscrizioni(filtro) {
     if (filtro === 'nuove') all = all.filter(r => !r.letta);
 
     const lbl = document.getElementById('pre-count-label');
-    if (lbl) lbl.textContent = all.length + ' richiesta' + (all.length !== 1 ? 'e' : '');
+    if (lbl) lbl.textContent = all.length + (all.length !== 1 ? ' richieste' : ' richiesta');
 
     const el = document.getElementById('pre-iscrizioni-table');
     if (!all.length) {
-        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessuna pre-iscrizione in questa categoria.</div>';
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-child"></i><p>Nessuna pre-iscrizione in questa categoria.</p></div>';
         return;
     }
     el.innerHTML = `
@@ -770,8 +840,8 @@ function preIscrizioneRow(r) {
         <td class="px-6 py-4">${stato}</td>
         <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
             <div class="flex gap-2 items-center justify-end">
-                ${!r.letta ? `<button onclick="markPreLetta('${safeId}')" class="text-xs bg-scout text-white font-bold px-3 py-1.5 rounded-lg hover:bg-scout-dark transition">Segna letta</button>` : ''}
-                <button onclick="deletePreIscrizione('${safeId}')" class="text-xs text-red-400 hover:text-red-600 hover:bg-red-50 font-bold px-2 py-1.5 rounded-lg transition" title="Elimina">
+                ${!r.letta ? `<button onclick="markPreLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
+                <button onclick="deletePreIscrizione('${safeId}')" class="icon-btn danger" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -920,7 +990,7 @@ function renderEventi() {
     const all = (window.eventiCache || []).slice().sort((a,b) => new Date(a.data)-new Date(b.data));
     const el  = document.getElementById('eventi-list');
     if (!all.length) {
-        el.innerHTML = '<div class="px-6 py-12 text-center text-gray-400 text-sm">Nessun evento. Aggiungine uno sopra.</div>';
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nessun evento. Aggiungine uno sopra.</p></div>';
         return;
     }
     el.innerHTML = all.map(eventRow).join('');
@@ -951,10 +1021,10 @@ function eventRow(ev) {
             </div>
             ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
         </div>
-        <button onclick="duplicaEvento(${ev.id})" class="text-gray-300 hover:text-scout transition ml-2 flex-shrink-0" title="Ripeti questo evento">
+        <button onclick="duplicaEvento(${ev.id})" class="icon-btn ml-2" title="Ripeti questo evento">
             <i class="fas fa-copy"></i>
         </button>
-        <button onclick="deleteEvento(${ev.id})" class="text-gray-300 hover:text-red-500 transition flex-shrink-0">
+        <button onclick="deleteEvento(${ev.id})" class="icon-btn danger" title="Elimina">
             <i class="fas fa-trash"></i>
         </button>
     </div>`;
