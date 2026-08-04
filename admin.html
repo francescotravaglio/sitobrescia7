@@ -487,17 +487,6 @@
                     </p>
                     </div>
                 </div>
-
-                <!-- Reset -->
-                <div class="panel" style="background:#fef2f2; border-color:#fecaca">
-                    <div class="panel-body">
-                    <h3 class="flex items-center gap-2.5 font-black text-red-600 mb-2"><span class="panel-icon" style="background:#fee2e2;color:#dc2626"><i class="fas fa-triangle-exclamation"></i></span>Zona pericolosa</h3>
-                    <p class="text-gray-500 text-sm mb-5">Elimina definitivamente tutti i dati salvati (iscrizioni ed eventi).</p>
-                    <button onclick="resetAll()" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i> Cancella tutti i dati
-                    </button>
-                    </div>
-                </div>
             </section>
 
             <!-- ──────────────────── ATTIVAZIONE SOCI ────────────── -->
@@ -1110,22 +1099,6 @@ function changePw() {
                 : '❌ Errore: ' + err.message;
             msg.classList.add('text-red-500');
         });
-}
-
-function resetAll() {
-    if (!confirm('⚠️ Eliminare TUTTI i dati (iscrizioni, eventi)? Operazione irreversibile!')) return;
-    const db = window.firestoreDb;
-    if (!db) return;
-    const deleteCollection = col => db.collection(col).get().then(snap => {
-        const batch = db.batch();
-        snap.docs.forEach(d => batch.delete(d.ref));
-        return batch.commit();
-    });
-    Promise.all([
-        deleteCollection('iscrizioni'),
-        deleteCollection('eventi'),
-    ]).then(() => toast('Tutti i dati eliminati.'))
-      .catch(e => { console.error(e); toast('Errore durante il reset.', false); });
 }
 
 // ── ATTIVAZIONE SOCI ────────────────────────────────────────────────
