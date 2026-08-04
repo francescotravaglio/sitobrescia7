@@ -234,6 +234,15 @@
         if (addDays) d.setDate(d.getDate() + addDays);
         return d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate());
     }
+    // Descrizione arricchita col promemoria di branca (es. "Avverti i capi in
+    // caso di assenza"), inclusa sia nell'evento Google Calendar sia nel .ics,
+    // così chi salva l'evento lo vede anche senza aprire il PDF del calendario.
+    function descrizioneConPromemoria(ev) {
+        var promemoria = UNITA_SOTTOTITOLO_PDF[ev.unita];
+        if (!promemoria) return ev.descrizione || '';
+        return (ev.descrizione ? ev.descrizione + '\n\n' : '') + '⚠️ ' + promemoria;
+    }
+
     function gcalAddUrl(ev) {
         var start = gcalDate(ev.data, 0);
         var end   = gcalDate(ev.data_fine || ev.data, 1); // fine esclusiva (convenzione eventi "tutto il giorno")
@@ -241,7 +250,7 @@
             action: 'TEMPLATE',
             text: ev.titolo || '',
             dates: start + '/' + end,
-            details: ev.descrizione || '',
+            details: descrizioneConPromemoria(ev),
             location: ev.luogo || '',
             ctz: 'Europe/Rome'
         });
@@ -271,8 +280,9 @@
             'DTEND;VALUE=DATE:' + end,
             'SUMMARY:' + icsEscape(ev.titolo),
         ];
-        if (ev.luogo)       lines.push('LOCATION:' + icsEscape(ev.luogo));
-        if (ev.descrizione) lines.push('DESCRIPTION:' + icsEscape(ev.descrizione));
+        if (ev.luogo) lines.push('LOCATION:' + icsEscape(ev.luogo));
+        var descrizione = descrizioneConPromemoria(ev);
+        if (descrizione) lines.push('DESCRIPTION:' + icsEscape(descrizione));
         lines.push('END:VEVENT', 'END:VCALENDAR');
         return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
     }
