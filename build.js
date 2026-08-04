@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = __dirname;
-const PAGES = ['index.html','chi-siamo.html','unita.html','calendario.html','faq.html','rassegna-stampa.html','privacy.html'];
+const PAGES = ['index.html','chi-siamo.html','unita.html','calendario.html','faq.html','rassegna-stampa.html','privacy.html','documenti.html'];
 
 const header = fs.readFileSync(path.join(ROOT,'partials','header.html'),'utf8').trim();
 const footer = fs.readFileSync(path.join(ROOT,'partials','footer.html'),'utf8').trim();
