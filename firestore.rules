@@ -45,17 +45,10 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // ── Iscrizioni complete (modulo pubblico in documenti.html — nessun login richiesto) ──
+    // ── Iscrizioni complete: il modulo in documenti.html genera solo il PDF in locale,
+    //    non scrive più su Firestore. Collection mantenuta solo per lo storico esistente.
     match /iscrizioni/{doc} {
-      allow create: if
-        request.resource.data.tipo is string &&
-        (request.resource.data.tipo == 'maggiorenne' || request.resource.data.tipo == 'minorenne') &&
-        request.resource.data.letta == false &&
-        request.resource.data.stato == 'nuova' &&
-        request.resource.data.timestamp is string &&
-        request.resource.data.dati is map &&
-        request.resource.data.size() <= 6;
-      allow read, update, delete: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
     // ── Testimonianze: lettura pubblica, invio pubblico con validazione ──
