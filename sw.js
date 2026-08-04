@@ -1,6 +1,6 @@
-const CACHE = 'bs7-v2';
+const CACHE = 'bs7-v3';
 const SHELL = [
-    './area-soci.html',
+    './documenti.html',
     './index.html',
     './logo.png',
     './favicon.svg',
