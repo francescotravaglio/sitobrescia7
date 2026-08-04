@@ -548,7 +548,7 @@ function togglePw() {
 document.addEventListener('DOMContentLoaded', () => {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-            if (user.email !== 'info@agescibrescia7.com') {
+            if (!user.email || !user.email.toLowerCase().endsWith('@agescibrescia7.com')) {
                 firebase.auth().signOut();
                 const errEl = document.getElementById('login-error');
                 errEl.textContent = 'Accesso non autorizzato per questo account.';
