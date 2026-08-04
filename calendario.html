@@ -228,6 +228,26 @@
 
     function pad(n) { return n < 10 ? '0'+n : n; }
 
+    // ── Link "Aggiungi a Google Calendar" per singolo evento ──────────
+    function gcalDate(dateStr, addDays) {
+        var d = new Date(dateStr + 'T00:00:00');
+        if (addDays) d.setDate(d.getDate() + addDays);
+        return d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate());
+    }
+    function gcalAddUrl(ev) {
+        var start = gcalDate(ev.data, 0);
+        var end   = gcalDate(ev.data_fine || ev.data, 1); // fine esclusiva (convenzione eventi "tutto il giorno")
+        var params = new URLSearchParams({
+            action: 'TEMPLATE',
+            text: ev.titolo || '',
+            dates: start + '/' + end,
+            details: ev.descrizione || '',
+            location: ev.luogo || '',
+            ctz: 'Europe/Rome'
+        });
+        return 'https://calendar.google.com/calendar/render?' + params.toString();
+    }
+
     function renderCalendar() {
         document.getElementById('cal-month-label').textContent = MESI[month] + ' ' + year;
         var first = new Date(year, month, 1);
@@ -305,7 +325,12 @@
                 +   (ev.luogo ? '<div class="text-xs mt-1" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</div>' : '')
                 +   (ev.descrizione ? '<div class="text-xs mt-1.5 leading-relaxed" style="color:#6b7280">'+esc(ev.descrizione)+'</div>' : '')
                 + '</div>'
-                + '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px;flex-shrink:0;align-self:flex-start">'+esc(label)+'</span>'
+                + '<div class="flex-shrink-0 flex flex-col items-end gap-2">'
+                +   '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px">'+esc(label)+'</span>'
+                +   '<a href="'+gcalAddUrl(ev)+'" target="_blank" rel="noopener" class="flex items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-scout transition whitespace-nowrap" title="Aggiungi a Google Calendar">'
+                +     '<i class="fab fa-google"></i>Aggiungi'
+                +   '</a>'
+                + '</div>'
                 + '</div>';
         }).join('');
     }
