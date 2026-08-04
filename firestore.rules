@@ -45,10 +45,9 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // ── Iscrizioni complete (form area soci — utenti autenticati) ──
+    // ── Iscrizioni complete (modulo pubblico in documenti.html — nessun login richiesto) ──
     match /iscrizioni/{doc} {
       allow create: if
-        request.auth != null &&
         request.resource.data.tipo is string &&
         (request.resource.data.tipo == 'maggiorenne' || request.resource.data.tipo == 'minorenne') &&
         request.resource.data.letta == false &&

@@ -1,8 +1,8 @@
 {
   "name": "AGESCI Brescia 7",
   "short_name": "Brescia 7",
-  "description": "Area riservata soci – Gruppo Scout AGESCI Brescia 7",
-  "start_url": "./area-soci.html",
+  "description": "Sito ufficiale – Gruppo Scout AGESCI Brescia 7",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",

@@ -80,11 +80,10 @@
                 <a href="index.html#branche" class="nav-link hover:text-scout transition">Le Unità</a>
                 <a href="index.html#contatti"class="nav-link hover:text-scout transition">Contatti</a>
                 <a href="documenti.html"     class="nav-link hover:text-scout transition text-scout">Documenti</a>
-                <a href="area-soci.html"     class="nav-link hover:text-scout transition">Area Soci</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="area-soci.html" class="hidden sm:flex items-center gap-2 bg-white text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
+                <a href="#iscrizione" class="hidden sm:flex items-center gap-2 bg-white text-scout font-black px-5 py-2.5 rounded-full text-sm hover:scale-105 transition-transform shadow-md">
                     <i class="fas fa-star text-xs"></i> ISCRIVITI
                 </a>
                 <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
@@ -101,8 +100,7 @@
             <a href="index.html#branche" onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-blue-200 transition font-semibold">Le Unità</a>
             <a href="index.html#contatti"onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-blue-200 transition font-semibold">Contatti</a>
             <a href="documenti.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-blue-200 transition font-semibold">Documenti</a>
-            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="py-3 border-b border-white/10 hover:text-blue-200 transition font-semibold">Area Soci</a>
-            <a href="area-soci.html"     onclick="toggleMobileMenu()" class="mt-4 bg-white text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
+            <a href="#iscrizione"        onclick="toggleMobileMenu()" class="mt-4 bg-white text-scout font-black py-3 rounded-full text-center">ISCRIVITI ORA</a>
         </div>
     </div>
 </nav>
@@ -139,15 +137,15 @@
                 <i class="fas fa-download text-gray-300 group-hover:text-scout transition text-lg"></i>
             </a>
 
-            <a href="area-soci.html" class="flex items-center gap-5 p-6 hover:bg-amber-50 transition group border-b border-gray-100">
+            <a href="#iscrizione" class="flex items-center gap-5 p-6 hover:bg-amber-50 transition group border-b border-gray-100">
                 <div class="bg-amber-100 p-3.5 rounded-2xl flex-shrink-0 group-hover:scale-110 transition">
                     <i class="fas fa-file-signature text-amber-500 text-xl"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="font-bold text-scout">Modulo di Iscrizione</div>
-                    <div class="text-xs text-gray-400 mt-0.5">Compila e invia il modulo ufficiale AGESCI online – ricevi il PDF via email</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Compila e invia il modulo ufficiale AGESCI online, qui sotto – ricevi il PDF via email</div>
                 </div>
-                <i class="fas fa-arrow-right text-gray-300 group-hover:text-scout transition text-lg"></i>
+                <i class="fas fa-arrow-down text-gray-300 group-hover:text-scout transition text-lg"></i>
             </a>
 
             <a href="documents/modulo-adesione-minorenne.pdf" target="_blank" rel="noopener" class="flex items-center gap-5 p-6 hover:bg-green-50 transition group border-b border-gray-100">
@@ -194,6 +192,363 @@
     </div>
 </section>
 
+<!-- ── ISCRIZIONE ──────────────────────────────────────────────────── -->
+<section id="iscrizione" class="py-14 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-6">
+
+    <!-- Step 0: Scegli tipo modulo -->
+    <div id="iscr-step0">
+      <h2 class="text-3xl font-black text-scout mb-2 text-center">Scheda di Iscrizione</h2>
+      <p class="text-gray-500 text-center mb-10 text-sm">Seleziona il tipo di modulo da compilare. Riceverai il PDF da stampare, firmare e consegnare ai capi.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <button onclick="iscrizioneSelezionaTipo('maggiorenne')" class="group bg-white rounded-3xl shadow-md border border-gray-100 p-8 text-left hover:shadow-xl hover:border-scout/20 transition-all duration-300 hover:-translate-y-1 w-full">
+          <div class="w-14 h-14 bg-scout rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <i class="fas fa-user text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-black text-scout mb-2">Sono maggiorenne</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Compila il modulo per l'iscrizione di un adulto (Capo o socio maggiorenne).</p>
+          <div class="mt-5 flex items-center gap-2 text-scout text-sm font-bold">Inizia <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i></div>
+        </button>
+        <button onclick="iscrizioneSelezionaTipo('minorenne')" class="group bg-white rounded-3xl shadow-md border border-gray-100 p-8 text-left hover:shadow-xl hover:border-scout/20 transition-all duration-300 hover:-translate-y-1 w-full">
+          <div class="w-14 h-14 bg-scout rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <i class="fas fa-child text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-black text-scout mb-2">Iscrivo un minorenne</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Compila il modulo per l'iscrizione di un ragazzo/a minorenne (con dati dei genitori).</p>
+          <div class="mt-5 flex items-center gap-2 text-scout text-sm font-bold">Inizia <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i></div>
+        </button>
+      </div>
+    </div><!-- end step0 -->
+
+    <!-- FORM MAGGIORENNE -->
+    <div id="iscr-form-maggiorenne" class="hidden">
+      <div class="flex items-center gap-3 mb-8">
+        <button onclick="iscrizioneTornaStep0()" class="text-scout hover:underline text-sm font-bold flex items-center gap-1"><i class="fas fa-arrow-left text-xs"></i> Torna indietro</button>
+        <span class="text-gray-300">|</span>
+        <h2 class="text-2xl font-black text-scout">Modulo Maggiorenne</h2>
+      </div>
+      <div class="bg-white rounded-3xl shadow-md border border-gray-100 p-4 sm:p-8 md:p-10">
+        <form id="form-mag" novalidate>
+
+          <!-- CODICE SOCIO CENSIMENTO -->
+          <div class="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-200">
+            <label class="text-sm font-semibold text-gray-700 mb-1 block">Codice Socio / Censimento <span class="font-normal text-gray-400">(facoltativo, 7 cifre — da compilare se già iscritto AGESCI)</span></label>
+            <input type="text" name="codice_socio" maxlength="7" placeholder="0000000" class="w-40 border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout">
+          </div>
+
+          <!-- DATI ANAGRAFICI -->
+          <p class="text-lg font-black text-scout mb-4 mt-2 border-b border-gray-200 pb-2">Dati anagrafici</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome *</label><input type="text" name="nome" required placeholder="Mario" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-1 block">Sesso</label>
+            <select name="sesso" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout bg-white">
+              <option value="">Seleziona...</option><option value="M">M</option><option value="F">F</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nato/a a (città)</label><input type="text" name="luogo_nascita" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="prov_nascita" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+          </div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Data di nascita</label><input type="date" name="data_nascita" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-sm font-semibold text-gray-700">Codice Fiscale</label>
+              <button type="button" onclick="iscrAutoCalcCF('form-mag','nome','cognome','data_nascita','luogo_nascita','sesso')" class="text-xs text-scout font-bold hover:underline flex items-center gap-1"><i class="fas fa-magic text-xs"></i> Auto-calcola</button>
+            </div>
+            <input type="text" name="cf" placeholder="RSSMRA85A01B157Z" maxlength="16" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase">
+          </div>
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Residenza</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email *</label><input type="email" name="email" required placeholder="mario@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cellulare</label><input type="tel" name="cellulare" placeholder="+39 340 123 4567" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+
+          <!-- SCHEDA SANITARIA -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Scheda sanitaria</p>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nr. Tessera sanitaria</label><input type="text" name="tessera_sanitaria" placeholder="Numero tessera" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          <p class="text-sm font-semibold text-gray-700 mb-2">Reperibilità per emergenze</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome e Cognome</label><input type="text" name="emerg_nome" placeholder="Anna Bianchi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Recapito telefonico</label><input type="tel" name="emerg_tel" placeholder="+39 340 000 0000" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Vaccinazione antitetanica</label>
+            <div class="flex gap-6">
+              <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="antitetanica" value="SI" class="accent-scout"> Sì</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="antitetanica" value="NO" class="accent-scout"> No</label>
+            </div>
+          </div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Allergie/intolleranze</label><textarea name="allergie" rows="2" placeholder="Es. arachidi, glutine, lattosio..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Profilassi in corso</label><textarea name="profilassi" rows="2" placeholder="Es. terapie o profilassi attive..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Ulteriori note sanitarie</label><textarea name="note_sanitarie" rows="2" placeholder="Qualsiasi informazione utile per i capi..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+
+          <!-- CONSENSI -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Consensi e preferenze</p>
+          <div class="space-y-4 mb-4">
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="mag-privacy-a" name="consenso_a" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="mag-privacy-a" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* <strong class="text-gray-700">Acconsento al trattamento dei dati personali</strong> per finalità associative ai sensi del GDPR (UE 2016/679) – punto "a".</label>
+            </div>
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="mag-foto-b" name="consenso_b" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="mag-foto-b" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* <strong class="text-gray-700">Dichiaro di cedere i diritti sulle immagini fotografiche</strong> ad AGESCI per fini istituzionali – punto "b".</label>
+            </div>
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="mag-promo-c" name="consenso_c" class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="mag-promo-c" class="text-xs text-gray-500 leading-relaxed cursor-pointer"><strong class="text-gray-700">Acconsento al trattamento per promozione commerciale</strong> del Sistema AGESCI – punto "c" (facoltativo).</label>
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Rivista associativa</label>
+            <div class="flex flex-col gap-2">
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="rivista" value="SI" class="accent-scout"> Sì, desidero riceverla in formato cartaceo</label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="rivista" value="NO" class="accent-scout"> No, non desidero riceverla</label>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 mb-6">
+            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria. Riceverai anche una copia via email.
+          </div>
+          <button type="button" onclick="iscrSubmit('maggiorenne')" class="w-full bg-scout text-white font-black py-4 px-8 rounded-2xl hover:bg-scout/90 transition-all text-sm tracking-widest uppercase shadow-lg">
+            <i class="fas fa-file-pdf mr-2"></i>Genera PDF e invia
+          </button>
+        </form>
+
+        <!-- Successo -->
+        <div id="mag-success" class="hidden text-center py-10">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-green-600 text-2xl"></i></div>
+          <h4 class="text-2xl font-black text-scout mb-2">Modulo generato!</h4>
+          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Riceverai una copia via email. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
+          <button onclick="iscrReset('maggiorenne')" class="mt-2 text-scout underline text-sm font-semibold">Nuovo modulo</button>
+        </div>
+      </div>
+    </div><!-- end form maggiorenne -->
+
+    <!-- FORM MINORENNE -->
+    <div id="iscr-form-minorenne" class="hidden">
+      <div class="flex items-center gap-3 mb-8">
+        <button onclick="iscrizioneTornaStep0()" class="text-scout hover:underline text-sm font-bold flex items-center gap-1"><i class="fas fa-arrow-left text-xs"></i> Torna indietro</button>
+        <span class="text-gray-300">|</span>
+        <h2 class="text-2xl font-black text-scout">Modulo Minorenne</h2>
+      </div>
+      <div class="bg-white rounded-3xl shadow-md border border-gray-100 p-4 sm:p-8 md:p-10">
+        <form id="form-min" novalidate>
+
+          <!-- TIPO GENITORIALITA' -->
+          <p class="text-lg font-black text-scout mb-4 mt-2 border-b border-gray-200 pb-2">Tipo di genitorialità</p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 font-semibold">
+              <input type="radio" name="tipo_genitorialita" value="entrambi" checked onchange="iscrToggleGenitori()" class="accent-scout"> Entrambi i genitori
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 font-semibold">
+              <input type="radio" name="tipo_genitorialita" value="unico" onchange="iscrToggleGenitori()" class="accent-scout"> Unico genitore o tutore
+            </label>
+          </div>
+
+          <!-- GENITORE A -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2" id="label-genitore-a">Genitore A</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cognome *</label><input type="text" name="gen1_cognome" required placeholder="Rossi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome *</label><input type="text" name="gen1_nome" required placeholder="Giuseppe" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-1 block">Sesso</label>
+            <select name="gen1_sesso" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout bg-white">
+              <option value="">Seleziona...</option><option value="M">M</option><option value="F">F</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nato/a a</label><input type="text" name="gen1_luogo_nascita" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen1_prov_nascita" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Data di nascita</label><input type="date" name="gen1_data_nascita" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-sm font-semibold text-gray-700">Codice Fiscale</label>
+                <button type="button" onclick="iscrAutoCalcCF('form-min','gen1_nome','gen1_cognome','gen1_data_nascita','gen1_luogo_nascita','gen1_sesso')" class="text-xs text-scout font-bold hover:underline flex items-center gap-1"><i class="fas fa-magic text-xs"></i> Auto-calcola</button>
+              </div>
+              <input type="text" name="gen1_cf" placeholder="RSSGPP65A01B157X" maxlength="16" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen1_indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen1_n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen1_citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen1_provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen1_cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email *</label><input type="email" name="gen1_email" required placeholder="giuseppe@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cellulare</label><input type="tel" name="gen1_tel" placeholder="+39 340 000 0000" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+
+          <!-- GENITORE B (nascosto se unico) -->
+          <div id="sezione-genitore-b">
+            <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Genitore B</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cognome *</label><input type="text" name="gen2_cognome" placeholder="Verdi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome *</label><input type="text" name="gen2_nome" placeholder="Anna" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            </div>
+            <div class="mb-4">
+              <label class="text-sm font-semibold text-gray-700 mb-1 block">Sesso</label>
+              <select name="gen2_sesso" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout bg-white">
+                <option value="">Seleziona...</option><option value="M">M</option><option value="F">F</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nato/a a</label><input type="text" name="gen2_luogo_nascita" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen2_prov_nascita" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Data di nascita</label><input type="date" name="gen2_data_nascita" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-sm font-semibold text-gray-700">Codice Fiscale</label>
+                  <button type="button" onclick="iscrAutoCalcCF('form-min','gen2_nome','gen2_cognome','gen2_data_nascita','gen2_luogo_nascita','gen2_sesso')" class="text-xs text-scout font-bold hover:underline flex items-center gap-1"><i class="fas fa-magic text-xs"></i> Auto-calcola</button>
+                </div>
+                <input type="text" name="gen2_cf" placeholder="VRDNNA70A41B157Y" maxlength="16" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen2_indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen2_n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen2_citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen2_provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen2_cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email</label><input type="email" name="gen2_email" placeholder="anna@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cellulare</label><input type="tel" name="gen2_tel" placeholder="+39 340 000 0001" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            </div>
+          </div><!-- end sezione genitore b -->
+
+          <!-- DATI DEL MINORE -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Dati del minore</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cognome *</label><input type="text" name="cognome" required placeholder="Rossi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome *</label><input type="text" name="nome" required placeholder="Luca" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-1 block">Sesso</label>
+            <select name="sesso" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout bg-white">
+              <option value="">Seleziona...</option><option value="M">M</option><option value="F">F</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nato/a a (città)</label><input type="text" name="luogo_nascita" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="prov_nascita" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+          </div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Data di nascita</label><input type="date" name="data_nascita" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-sm font-semibold text-gray-700">Codice Fiscale</label>
+              <button type="button" onclick="iscrAutoCalcCF('form-min','nome','cognome','data_nascita','luogo_nascita','sesso')" class="text-xs text-scout font-bold hover:underline flex items-center gap-1"><i class="fas fa-magic text-xs"></i> Auto-calcola</button>
+            </div>
+            <input type="text" name="cf" placeholder="RSSLCU10A01B157Z" maxlength="16" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase">
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email del minore (opzionale)</label><input type="email" name="email" placeholder="luca@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Cellulare del minore (opzionale)</label><input type="tel" name="cellulare" placeholder="+39 340 000 0002" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+
+          <!-- SCHEDA SANITARIA MINORE -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Scheda sanitaria del minore</p>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Nr. Tessera sanitaria</label><input type="text" name="tessera_sanitaria" placeholder="Numero tessera" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          <p class="text-sm font-semibold text-gray-700 mb-2">Reperibilità per emergenze</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Nome e Cognome</label><input type="text" name="emerg_nome" placeholder="Anna Bianchi" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Recapito telefonico</label><input type="tel" name="emerg_tel" placeholder="+39 340 000 0000" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Vaccinazione antitetanica</label>
+            <div class="flex gap-6">
+              <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="antitetanica" value="SI" class="accent-scout"> Sì</label>
+              <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="antitetanica" value="NO" class="accent-scout"> No</label>
+            </div>
+          </div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Allergie/intolleranze</label><textarea name="allergie" rows="2" placeholder="Es. arachidi, glutine, lattosio..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Profilassi in corso</label><textarea name="profilassi" rows="2" placeholder="Es. terapie o profilassi attive..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+          <div class="mb-4"><label class="text-sm font-semibold text-gray-700 mb-1 block">Ulteriori note sanitarie</label><textarea name="note_sanitarie" rows="2" placeholder="Qualsiasi informazione utile per i capi..." class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout resize-none"></textarea></div>
+
+          <!-- PREFERENZE E CONSENSI -->
+          <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Preferenze e consensi</p>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Rivista associativa</label>
+            <div class="flex flex-col gap-2">
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="rivista" value="SI" class="accent-scout"> Sì, il minore riceva la rivista cartacea</label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="rivista" value="NO" class="accent-scout"> No</label>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Al termine delle attività il minore</label>
+            <div class="flex flex-col gap-2">
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="uscita_autonoma" value="autonomo" class="accent-scout"> Ritorni a casa da solo/a o con amici</label>
+              <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600"><input type="radio" name="uscita_autonoma" value="delegato" class="accent-scout"> Sia affidato/a ad un adulto delegato</label>
+            </div>
+          </div>
+          <div class="space-y-4 mb-6">
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="min-privacy-a" name="consenso_a" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="min-privacy-a" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* <strong class="text-gray-700">Acconsentono al trattamento dei dati personali</strong> del minore per finalità associative ai sensi del GDPR (UE 2016/679) – punto "a".</label>
+            </div>
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="min-foto-b" name="consenso_b" required class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="min-foto-b" class="text-xs text-gray-500 leading-relaxed cursor-pointer">* <strong class="text-gray-700">Dichiarano cessione dei diritti sulle immagini fotografiche</strong> del minore ad AGESCI per fini istituzionali – punto "b".</label>
+            </div>
+            <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
+              <input type="checkbox" id="min-promo-c" name="consenso_c" class="mt-0.5 w-4 h-4 accent-scout flex-shrink-0">
+              <label for="min-promo-c" class="text-xs text-gray-500 leading-relaxed cursor-pointer"><strong class="text-gray-700">Acconsentiamo al trattamento per promozione commerciale</strong> del Sistema AGESCI – punto "c" (facoltativo).</label>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 mb-6">
+            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria. Riceverai anche una copia via email.
+          </div>
+          <button type="button" onclick="iscrSubmit('minorenne')" class="w-full bg-scout text-white font-black py-4 px-8 rounded-2xl hover:bg-scout/90 transition-all text-sm tracking-widest uppercase shadow-lg">
+            <i class="fas fa-file-pdf mr-2"></i>Genera PDF e invia
+          </button>
+        </form>
+
+        <!-- Successo -->
+        <div id="min-success" class="hidden text-center py-10">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-green-600 text-2xl"></i></div>
+          <h4 class="text-2xl font-black text-scout mb-2">Modulo generato!</h4>
+          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Riceverai una copia via email. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
+          <button onclick="iscrReset('minorenne')" class="mt-2 text-scout underline text-sm font-semibold">Nuovo modulo</button>
+        </div>
+      </div>
+    </div><!-- end form minorenne -->
+
+  </div><!-- end max-w container -->
+</section>
+
+
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
 <footer id="contatti" class="bg-gray-950 text-white">
     <div class="max-w-7xl mx-auto px-6 py-20">
@@ -229,8 +584,8 @@
                 <ul class="space-y-3 text-sm text-gray-400">
                     <li><a href="index.html#storia"  class="hover:text-white transition">Chi siamo</a></li>
                     <li><a href="index.html#branche" class="hover:text-white transition">Le Unità</a></li>
-                    <li><a href="area-soci.html"     class="hover:text-white transition">Area Soci</a></li>
                     <li><a href="documenti.html"     class="hover:text-white transition">Modulistica</a></li>
+                    <li><a href="#iscrizione"        class="hover:text-white transition">Iscrizione</a></li>
                 </ul>
             </div>
 
@@ -283,6 +638,520 @@
         document.getElementById('navbar').classList.toggle('shadow-load', window.scrollY > 40);
     });
 </script>
+
+<!-- ── ISCRIZIONE: form logic + generazione PDF + invio email ────── -->
+<script>
+    // ── New Iscrizione Form Logic ──────────────────────────────────
+    window.iscrizioneSelezionaTipo = function(tipo) {
+        document.getElementById('iscr-step0').classList.add('hidden');
+        document.getElementById('iscr-form-maggiorenne').classList.add('hidden');
+        document.getElementById('iscr-form-minorenne').classList.add('hidden');
+        document.getElementById('iscr-form-' + tipo).classList.remove('hidden');
+        document.getElementById('iscr-form-' + tipo).scrollIntoView({behavior:'smooth', block:'start'});
+    };
+    window.iscrizioneTornaStep0 = function() {
+        document.getElementById('iscr-form-maggiorenne').classList.add('hidden');
+        document.getElementById('iscr-form-minorenne').classList.add('hidden');
+        document.getElementById('iscr-step0').classList.remove('hidden');
+        document.getElementById('iscr-step0').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+    window.iscrToggleGenitori = function() {
+        var val = document.querySelector('#form-min [name="tipo_genitorialita"]:checked');
+        var secB = document.getElementById('sezione-genitore-b');
+        var labelA = document.getElementById('label-genitore-a');
+        if (!val) return;
+        if (val.value === 'unico') {
+            if(secB) secB.classList.add('hidden');
+            if (labelA) labelA.textContent = 'Genitore / Tutore';
+        } else {
+            if(secB) secB.classList.remove('hidden');
+            if (labelA) labelA.textContent = 'Genitore A';
+        }
+    };
+    window.iscrAutoCalcCF = function(formId, nomeN, cognomeN, nascitaN, luogoN, sessoN) {
+        var form = document.getElementById(formId);
+        if (!form) return;
+        var get = function(n) { var el = form.querySelector('[name="'+n+'"]'); return el ? el.value.trim() : ''; };
+        var cfField = nomeN === 'nome' ? 'cf' : nomeN.replace('_nome','_cf');
+        var inp = form.querySelector('[name="'+cfField+'"]');
+        var nome = get(nomeN), cognome = get(cognomeN), nascita = get(nascitaN), luogo = get(luogoN), sesso = get(sessoN);
+        if (!nome || !cognome || !nascita || !luogo) { alert('Compila prima: Nome, Cognome, Data di nascita e Luogo di nascita.'); return; }
+        if (!sesso) { sesso = prompt('Sesso (M o F)?', 'M'); if (!sesso) return; }
+        var c15 = window._cfCognome(cognome) + window._cfNome(nome) + window._cfData(nascita, sesso) + window._getCodComune(luogo);
+        if (!inp) return;
+        if (c15.includes('????')) {
+            inp.value = c15 + window._cfChecksum(c15.replace('????','A000'));
+            inp.style.borderColor = '#f59e0b';
+            alert('Comune "'+luogo+'" non trovato nel database.\nVerifica le ultime 5 cifre.');
+        } else {
+            inp.value = c15 + window._cfChecksum(c15);
+            inp.style.borderColor = '#22c55e';
+        }
+    };
+    window.iscrSubmit = function(tipo) {
+        var formId = tipo === 'maggiorenne' ? 'form-mag' : 'form-min';
+        var form = document.getElementById(formId);
+        var required = form.querySelectorAll('[required]');
+        var valid = true;
+        required.forEach(function(f) {
+            if (f.type === 'checkbox') { if (!f.checked) { f.style.outline = '2px solid #ef4444'; valid = false; } else { f.style.outline = ''; } }
+            else { if (!f.value.trim()) { f.style.borderColor = '#ef4444'; valid = false; } else { f.style.borderColor = ''; } }
+        });
+        if (!valid) { alert('Compila tutti i campi obbligatori e accetta i consensi richiesti.'); return; }
+        var data = {};
+        form.querySelectorAll('input, select, textarea').forEach(function(el) {
+            if (!el.name) return;
+            if (el.type === 'checkbox') { data[el.name] = el.checked ? 'si' : ''; }
+            else if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
+            else { data[el.name] = el.value; }
+        });
+        var submission = { tipo: tipo, dati: data, timestamp: new Date().toISOString(), letta: false, stato: 'nuova' };
+        function proceed(firmaPng) {
+            submission.dati._firma_png = firmaPng || null;
+            iscrGeneraPDF(submission);
+            iscrSendEmail(submission);
+            form.classList.add('hidden');
+            var successId = tipo === 'maggiorenne' ? 'mag-success' : 'min-success';
+            document.getElementById(successId).classList.remove('hidden');
+        }
+        window.iscrMostraFirma(function(firmaPng) {
+            if (window.db) {
+                window.db.collection('iscrizioni').add(submission).then(function(){ proceed(firmaPng); }).catch(function(err) { console.error('Firestore:', err); proceed(firmaPng); });
+            } else { proceed(firmaPng); }
+        });
+    };
+    window.iscrReset = function(tipo) {
+        var formId = tipo === 'maggiorenne' ? 'form-mag' : 'form-min';
+        var successId = tipo === 'maggiorenne' ? 'mag-success' : 'min-success';
+        document.getElementById(formId).reset();
+        document.getElementById(formId).classList.remove('hidden');
+        document.getElementById(successId).classList.add('hidden');
+        iscrizioneTornaStep0();
+    };
+
+    // ── PDF Generation (jsPDF fallback) ──────────────────────────
+    window.iscrGeneraPDF = function(submission) {
+        var d = submission.dati || {}, tipo = submission.tipo;
+        var today = new Date().toLocaleDateString('it-IT');
+        try { if (typeof PDFLib !== 'undefined') { iscrGeneraPDFLib(submission, today); return; } } catch(e) {}
+        if (!window.jspdf) { return; }
+        var jsPDF = window.jspdf.jsPDF;
+        var doc = new jsPDF({ unit:'mm', format:'a4' });
+        var W=210, M=15;
+        doc.setFillColor(0,51,102); doc.rect(0,0,W,40,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
+        doc.text('AGESCI BRESCIA 7', M, 14);
+        doc.setFontSize(9); doc.setFont('helvetica','normal');
+        doc.text('Parrocchia S. Angela Merici - Via Cimabue 271, 25134 Brescia', M, 22);
+        doc.setFontSize(12); doc.setFont('helvetica','bold');
+        doc.text('RICHIESTA DI ADESIONE - ' + tipo.toUpperCase(), M, 32);
+        var y=52; doc.setTextColor(0);
+        function sec(t) { if(y>265){doc.addPage();y=15;} doc.setFillColor(0,51,102); doc.rect(M,y,W-2*M,7,'F'); doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.text(t.toUpperCase(),M+3,y+5); doc.setTextColor(0); doc.setFont('helvetica','normal'); y+=11; }
+        function row(l,v) { if(y>268){doc.addPage();y=15;} doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(80); doc.text(l+':',M,y); doc.setFont('helvetica','normal'); doc.setTextColor(0); doc.text(String(v||'--'),M+62,y,{maxWidth:W-M-62}); doc.setDrawColor(220); doc.line(M,y+2,W-M,y+2); y+=7; }
+        function chk(l,v) { row(l, v==='si' ? '[X] Si' : '[ ] No'); }
+        if (tipo === 'maggiorenne') {
+            sec('Dati anagrafici'); row('Cognome',d.cognome); row('Nome',d.nome); row('Sesso',d.sesso);
+            row('Nato/a a',(d.luogo_nascita||'')+' '+(d.prov_nascita||''));
+            row('Data nascita',d.data_nascita); row('Codice Fiscale',d.cf);
+            sec('Residenza'); row('Indirizzo',(d.indirizzo||'')+' '+(d.n_civico||'')); row('Citta',(d.citta||'')+' '+(d.provincia||'')+' '+(d.cap||'')); row('Email',d.email); row('Cellulare',d.cellulare);
+            sec('Scheda sanitaria'); row('Tessera sanitaria',d.tessera_sanitaria); row('Reperibilita emergenze',(d.emerg_nome||'')+' - '+(d.emerg_tel||'')); row('Antitetanica',d.antitetanica); row('Allergie',d.allergie); row('Profilassi',d.profilassi); row('Note sanitarie',d.note_sanitarie);
+            sec('Consensi'); chk('Trattamento dati (a)',d.consenso_a); chk('Cessione immagini (b)',d.consenso_b); chk('Promozione commerciale (c)',d.consenso_c); row('Rivista cartacea',d.rivista);
+        } else {
+            sec('Genitore A'); row('Cognome',d.gen1_cognome); row('Nome',d.gen1_nome); row('Nato/a a',d.gen1_luogo_nascita); row('Data nascita',d.gen1_data_nascita); row('CF',d.gen1_cf); row('Email',d.gen1_email); row('Tel',d.gen1_tel);
+            if(d.gen2_nome){sec('Genitore B'); row('Cognome',d.gen2_cognome); row('Nome',d.gen2_nome); row('CF',d.gen2_cf); row('Email',d.gen2_email);}
+            sec('Dati minore'); row('Cognome',d.cognome); row('Nome',d.nome); row('Sesso',d.sesso); row('Nato/a a',d.luogo_nascita); row('Data nascita',d.data_nascita); row('CF',d.cf); row('Indirizzo',(d.indirizzo||'')+' '+(d.n_civico||'')); row('Citta',(d.citta||'')+' '+(d.provincia||'')+' '+(d.cap||''));
+            sec('Scheda sanitaria'); row('Tessera',d.tessera_sanitaria); row('Reperibilita',(d.emerg_nome||'')+' - '+(d.emerg_tel||'')); row('Antitetanica',d.antitetanica); row('Allergie',d.allergie); row('Profilassi',d.profilassi); row('Note',d.note_sanitarie);
+            sec('Consensi'); row('Rivista',d.rivista); row('Uscita autonoma',d.uscita_autonoma); chk('Trattamento dati (a)',d.consenso_a); chk('Cessione immagini (b)',d.consenso_b); chk('Promozione (c)',d.consenso_c);
+        }
+        var totalPages = doc.internal.getNumberOfPages();
+        for(var i=1;i<=totalPages;i++){
+            doc.setPage(i); doc.setFontSize(7); doc.setTextColor(120);
+            doc.text('AGESCI Brescia 7 - Via Cimabue 271, Brescia',M,291);
+            doc.text('Pag. '+i+'/'+totalPages,W-M,291,{align:'right'});
+            if(i===totalPages){doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(180,50,50);doc.text('Questo documento deve essere stampato, firmato e consegnato ai capi. La firma e obbligatoria.',M,286);}
+        }
+        var nome = (d.nome||'')+'_'+(d.cognome||'');
+        doc.save('Iscrizione_'+nome+'_BS7.pdf');
+    };
+
+    window.iscrGeneraPDFLib = async function(submission, today) {
+        var d = submission.dati||{}, tipo = submission.tipo;
+        if (!today) today = new Date().toLocaleDateString('it-IT');
+        try {
+            var PDFDocument = PDFLib.PDFDocument, StandardFonts = PDFLib.StandardFonts;
+            function clip(t,mw,sz){return String(t||'|').substring(0,Math.floor(mw/((sz||8)*0.45)));}
+            function draw(pg,fnt,x,y,t,mw,sz){var s=clip(t,mw,sz);if(!s||s==='|')return;pg.drawText(s,{x:x,y:y,size:sz||8,font:fnt,color:PDFLib.rgb(0,0,0),maxWidth:mw});}
+            if (tipo === 'maggiorenne') {
+                // Brescia7-SchedaAdulti.pdf (8 pagine, header gia compilato): 0-1 richiesta, 2-3 sanitaria, 4-7 gdpr
+                var buf = await fetch('documents/Brescia7-SchedaAdulti.pdf').then(function(r){ if(!r.ok) throw r.status; return r.arrayBuffer(); });
+                var doc = await PDFDocument.load(buf);
+                var fnt = await doc.embedFont(StandardFonts.Helvetica);
+                var pg = doc.getPages();
+                var rp0=pg[0], rp1=pg[1], sp0=pg[2], sp1=pg[3], g4=pg[7];
+                var fmtD=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
+                // rp0: pagina 1 - coord da pdfplumber: y=842-bottom (baseline su riga blank)
+                // sesso/luogo/prov/data: template bottom=218.1 → y=624; CF: bottom=242.7 → y=599
+                // indirizzo: bottom=267.3 → y=575; citta: bottom=291.9 → y=550; email: bottom=316.5 → y=526
+                // pag1 city layout: "a [citta] (….prov….) CAP [cap]"
+                draw(rp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
+                draw(rp0,fnt,88,624,d.sesso||'',30);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,fmtD(d.data_nascita),87);
+                draw(rp0,fnt,113,599,d.cf||'',280);
+                draw(rp0,fnt,218,575,d.indirizzo||'',234);draw(rp0,fnt,469,575,d.n_civico||'',60);
+                draw(rp0,fnt,48,550,d.citta||'',336);draw(rp0,fnt,393,550,d.provincia||'',16);draw(rp0,fnt,449,550,d.cap||'',140);
+                draw(rp0,fnt,81,526,d.email||'',271);draw(rp0,fnt,380,526,d.cellulare||'',170);
+                draw(rp0,fnt,374,486,'Brescia 7',134);
+                if(rp1){draw(rp1,fnt,200,274,today,120);draw(rp1,fnt,315,274,'Brescia',225);if(d.rivista==='SI')draw(rp1,fnt,49,315,'X',12,11);if(d.rivista==='NO')draw(rp1,fnt,290,315,'X',12,11);}
+                // sp0: pagina 3 - stessa anagrafica; city layout diverso: "a [citta] CAP [cap] (prov)"
+                draw(sp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
+                draw(sp0,fnt,88,624,d.sesso||'',30);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,fmtD(d.data_nascita),87);
+                draw(sp0,fnt,113,599,d.cf||'',280);
+                draw(sp0,fnt,218,575,d.indirizzo||'',234);draw(sp0,fnt,461,575,d.n_civico||'',60);
+                draw(sp0,fnt,48,550,d.citta||'',298);draw(sp0,fnt,371,550,d.cap||'',95);draw(sp0,fnt,474,550,d.provincia||'',8);
+                draw(sp0,fnt,81,526,d.email||'',271);draw(sp0,fnt,380,526,d.cellulare||'',177);
+                // sp0: scheda sanitaria - coord da pdfplumber (y=842-bottom)
+                // Cognome/Nome bottom=509→y=333; nato/a bottom=528→y=314; CF/tessera bottom=547→y=296
+                // emergenze bottom=565→y=277; antitetanica bottom=601→y=241; profilassi label bottom=710→y=132
+                draw(sp0,fnt,90,333,d.cognome||'',182,8);draw(sp0,fnt,303,333,d.nome||'',233,8);
+                draw(sp0,fnt,79,314,d.luogo_nascita||'',290,8);var dp=fmtD(d.data_nascita).split('/');draw(sp0,fnt,415,314,dp[0]||'',25,8);draw(sp0,fnt,449,314,dp[1]||'',9,8);draw(sp0,fnt,465,314,dp[2]||'',50,8);
+                draw(sp0,fnt,108,296,d.cf||'',142,8);draw(sp0,fnt,347,296,d.tessera_sanitaria||'',190,8);
+                draw(sp0,fnt,167,277,d.emerg_nome||'',120,8);draw(sp0,fnt,289,277,d.emerg_tel||'',246,8);
+                if(d.antitetanica==='SI')draw(sp0,fnt,212,243,'X',12,9);if(d.antitetanica==='NO')draw(sp0,fnt,304,243,'X',12,9);
+                if(d.allergie){draw(sp0,fnt,42,202,d.allergie.substring(0,110),496,8);if(d.allergie.length>110)draw(sp0,fnt,42,183,d.allergie.substring(110,220),496,8);if(d.allergie.length>220)draw(sp0,fnt,42,164,d.allergie.substring(220),496,8);}
+                if(d.profilassi){draw(sp0,fnt,42,116,d.profilassi.substring(0,110),496,8);if(d.profilassi.length>110)draw(sp0,fnt,42,97,d.profilassi.substring(110,220),496,8);}
+                if(sp1){if(d.note_sanitarie){draw(sp1,fnt,47,641,d.note_sanitarie,490,8);if(d.note_sanitarie.length>85)draw(sp1,fnt,47,623,d.note_sanitarie.substring(85),490,8);}draw(sp1,fnt,82,583,today,77);draw(sp1,fnt,208,583,'Brescia',295);}
+                // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
+                // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
+                if(g4){if(d.codice_socio){var cs=String(d.codice_socio).substring(0,7);var bx=[388,406,425,443,462,480,499];for(var ci=0;ci<cs.length;ci++)draw(g4,fnt,bx[ci],668,cs[ci],18,10);}draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
+                // Embedding firma digitale
+                if (d._firma_png) {
+                    try {
+                        var sigBuf = await fetch(d._firma_png).then(function(r){return r.arrayBuffer();});
+                        var sigImg = await doc.embedPng(sigBuf);
+                        var sW=220, sH=28;
+                        // rp1 pag2: "In fede ... (firma)" — blank firma tra top=588 e top=616 → y_pdfl≈226-244
+                        if(rp1) rp1.drawImage(sigImg,{x:100,y:224,width:sW,height:sH});
+                        // sp1 pag4: stessa struttura → y_pdfl≈525-553
+                        if(sp1) sp1.drawImage(sigImg,{x:260,y:525,width:sW,height:sH});
+                        // g4 pag8: 3 firme — blank a y=430, y=181, y=83
+                        if(g4){g4.drawImage(sigImg,{x:310,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:74,width:sW,height:sH});}
+                    } catch(sigErr) { console.warn('Firma embed:', sigErr); }
+                }
+                doc.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc.setAuthor('AGESCI Brescia 7');
+                var byt=await doc.save();var bl=new Blob([byt],{type:'application/pdf'});var ul=URL.createObjectURL(bl);var al=document.createElement('a');al.href=ul;al.download='Iscrizione_'+(d.nome||'')+'_'+(d.cognome||'')+'_BS7.pdf';document.body.appendChild(al);al.click();document.body.removeChild(al);URL.revokeObjectURL(ul);return;
+            }
+            // Brescia7-SchedaMinori.pdf (12 pagine, header gia compilato): 0-2 modulo (dati), 5-6 sanitaria, 7-11 gdpr
+            var buf2 = await fetch('documents/Brescia7-SchedaMinori.pdf').then(function(r){ if(!r.ok) throw r.status; return r.arrayBuffer(); });
+            var doc2 = await PDFDocument.load(buf2);
+            var fnt2 = await doc2.embedFont(StandardFonts.Helvetica);
+            var pg2 = doc2.getPages();
+            var p1=pg2[0], p2=pg2[1], p3=pg2[2], sp1=pg2[5], sp2b=pg2[6];
+            var fmtD2=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
+            // p1 gen1
+            draw(p1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);draw(p1,fnt2,455,567,d.gen1_sesso||'',82);
+            draw(p1,fnt2,175,544,d.gen1_luogo_nascita||'',202);draw(p1,fnt2,394,544,d.gen1_prov_nascita||'',12);draw(p1,fnt2,455,544,fmtD2(d.gen1_data_nascita),82);
+            draw(p1,fnt2,175,521,d.gen1_cf||'',296);draw(p1,fnt2,475,521,d.gen1_tel||'',62);
+            draw(p1,fnt2,108,497,d.gen1_indirizzo||'',316);draw(p1,fnt2,474,497,d.gen1_n_civico||'',63);
+            draw(p1,fnt2,108,474,d.gen1_citta||'',289);draw(p1,fnt2,401,474,d.gen1_cap||'',23);draw(p1,fnt2,468,474,d.gen1_provincia||'',69);
+            draw(p1,fnt2,127,451,d.gen1_email||'',230);draw(p1,fnt2,399,451,d.gen1_tel||'',138);
+            // p1 gen2
+            if(d.gen2_nome){draw(p1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);draw(p1,fnt2,455,424,d.gen2_sesso||'',82);
+            draw(p1,fnt2,175,401,d.gen2_luogo_nascita||'',202);draw(p1,fnt2,394,401,d.gen2_prov_nascita||'',12);draw(p1,fnt2,455,401,fmtD2(d.gen2_data_nascita),82);
+            draw(p1,fnt2,175,378,d.gen2_cf||'',296);draw(p1,fnt2,475,378,d.gen2_tel||'',62);
+            draw(p1,fnt2,108,354,d.gen2_indirizzo||'',316);draw(p1,fnt2,474,354,d.gen2_n_civico||'',63);
+            draw(p1,fnt2,108,331,d.gen2_citta||'',289);draw(p1,fnt2,401,331,d.gen2_cap||'',23);draw(p1,fnt2,468,331,d.gen2_provincia||'',69);
+            draw(p1,fnt2,127,308,d.gen2_email||'',230);draw(p1,fnt2,399,308,d.gen2_tel||'',138);}
+            draw(p1,fnt2,194,95,'AGESCI BRESCIA 7',223);
+            // p2 minore
+            if(p2){draw(p2,fnt2,136,644,(d.nome||'')+' '+(d.cognome||''),321);draw(p2,fnt2,461,644,d.sesso||'',76);draw(p2,fnt2,181,621,d.luogo_nascita||'',203);draw(p2,fnt2,461,621,fmtD2(d.data_nascita),76);draw(p2,fnt2,155,597,d.cf||'',328);draw(p2,fnt2,241,574,d.indirizzo||'',190);draw(p2,fnt2,487,574,d.n_civico||'',50);draw(p2,fnt2,114,551,d.citta||'',280);draw(p2,fnt2,398,551,d.cap||'',32);draw(p2,fnt2,474,551,d.provincia||'',64);draw(p2,fnt2,120,528,d.gen1_email||'',234);draw(p2,fnt2,397,528,d.gen1_tel||'',140);}
+            if(p3){draw(p3,fnt2,341,195,'Brescia',183);draw(p3,fnt2,201,195,today,90);draw(p3,fnt2,67,157,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),224);draw(p3,fnt2,307,157,'Genitore/Tutore',224);}
+            // sp1 gen1
+            if(sp1){draw(sp1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);draw(sp1,fnt2,455,567,d.gen1_sesso||'',82);
+            draw(sp1,fnt2,175,544,d.gen1_luogo_nascita||'',202);draw(sp1,fnt2,386,544,d.gen1_prov_nascita||'',12);draw(sp1,fnt2,455,544,fmtD2(d.gen1_data_nascita),82);
+            draw(sp1,fnt2,175,521,d.gen1_cf||'',296);draw(sp1,fnt2,475,521,d.gen1_tel||'',62);
+            draw(sp1,fnt2,108,497,d.gen1_indirizzo||'',316);draw(sp1,fnt2,474,497,d.gen1_n_civico||'',63);
+            draw(sp1,fnt2,108,474,d.gen1_citta||'',245);draw(sp1,fnt2,375,474,d.gen1_cap||'',90);draw(sp1,fnt2,472,474,d.gen1_provincia||'',12);
+            draw(sp1,fnt2,127,451,d.gen1_email||'',230);draw(sp1,fnt2,399,451,d.gen1_tel||'',138);
+            // sp1 gen2
+            if(d.gen2_nome){draw(sp1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);draw(sp1,fnt2,455,424,d.gen2_sesso||'',82);
+            draw(sp1,fnt2,175,401,d.gen2_luogo_nascita||'',202);draw(sp1,fnt2,386,401,d.gen2_prov_nascita||'',12);draw(sp1,fnt2,455,401,fmtD2(d.gen2_data_nascita),82);
+            draw(sp1,fnt2,175,378,d.gen2_cf||'',296);draw(sp1,fnt2,475,378,d.gen2_tel||'',62);
+            draw(sp1,fnt2,108,354,d.gen2_indirizzo||'',316);draw(sp1,fnt2,474,354,d.gen2_n_civico||'',63);
+            draw(sp1,fnt2,108,331,d.gen2_citta||'',245);draw(sp1,fnt2,375,331,d.gen2_cap||'',90);draw(sp1,fnt2,472,331,d.gen2_provincia||'',12);
+            draw(sp1,fnt2,127,308,d.gen2_email||'',230);draw(sp1,fnt2,399,308,d.gen2_tel||'',138);}}
+            if(sp2b){draw(sp2b,fnt2,121,551,d.cognome||'',156);draw(sp2b,fnt2,428,551,d.nome||'',103);draw(sp2b,fnt2,108,534,d.luogo_nascita||'',250);draw(sp2b,fnt2,428,534,d.data_nascita||'',103);draw(sp2b,fnt2,141,516,d.cf||'',200);draw(sp2b,fnt2,195,499,d.emerg_nome||'',156);draw(sp2b,fnt2,355,499,d.emerg_tel||'',176);draw(sp2b,fnt2,320,463,d.tessera_sanitaria||'',210,8);if(d.antitetanica==='SI')draw(sp2b,fnt2,97,445,'X',15,9);if(d.antitetanica==='NO')draw(sp2b,fnt2,147,445,'X',15,9);if(d.allergie){draw(sp2b,fnt2,68,346,d.allergie,463);if(d.allergie.length>85)draw(sp2b,fnt2,68,328,d.allergie.substring(85),463);}if(d.profilassi){draw(sp2b,fnt2,68,317,d.profilassi,463,8);if(d.profilassi.length>85)draw(sp2b,fnt2,68,299,d.profilassi.substring(85),463,8);}if(d.note_sanitarie){draw(sp2b,fnt2,215,287,d.note_sanitarie,316);if(d.note_sanitarie.length>65)draw(sp2b,fnt2,68,269,d.note_sanitarie.substring(65),463);}draw(sp2b,fnt2,107,218,today,77);draw(sp2b,fnt2,227,218,'Brescia',303);draw(sp2b,fnt2,67,170,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),224);draw(sp2b,fnt2,307,170,'Genitore/Tutore',224);}
+            doc2.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc2.setAuthor('AGESCI Brescia 7');
+            var byt2=await doc2.save();var bl2=new Blob([byt2],{type:'application/pdf'});var ul2=URL.createObjectURL(bl2);var al2=document.createElement('a');al2.href=ul2;al2.download='Iscrizione_'+(d.nome||'')+'_'+(d.cognome||'')+'_BS7.pdf';document.body.appendChild(al2);al2.click();document.body.removeChild(al2);URL.revokeObjectURL(ul2);
+        } catch(e) { console.warn('[pdf-lib] errore:',e); iscrGeneraPDF(submission); }
+    };
+
+    // ── Email via EmailJS ─────────────────────────────────────
+    const EMAILJS_SERVICE  = 'service_rtxg48l';
+    const EMAILJS_TEMPLATE = 'template_fc1c77j';
+    const EMAILJS_KEY      = '2-7fs3VQpyEDJMonD';
+
+    window.iscrSendEmail = function(submission) {
+        var d = submission.dati || {};
+        var toEmail = d.email || d.gen1_email || '';
+        if (!window.emailjs || !toEmail) return;
+        window.emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+            to_email:   toEmail,
+            nome:       (d.nome||'')+' '+(d.cognome||''),
+            tipo:       submission.tipo,
+            timestamp:  new Date().toLocaleDateString('it-IT'),
+            iban:       'IT 70 Y 08575 11201 000000184420',
+        }).then(function(){ console.log('[EmailJS] inviata a', toEmail); }).catch(function(e){ console.error('[EmailJS] errore:', e); });
+    };
+    window.sendConfirmationEmail = window.iscrSendEmail;
+    window.generateAndDownloadPDF = window.iscrGeneraPDF;
+</script>
+
+<!-- pdf-lib (official PDF filling) -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<!-- jsPDF (fallback) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Signature Pad -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+<script>window.addEventListener('load', function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
+<!-- Firebase SDK (solo Firestore: nessun login richiesto per iscriversi) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script>
+    firebase.initializeApp({
+        apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
+        authDomain: "agescibrescia7-508b0.firebaseapp.com",
+        projectId: "agescibrescia7-508b0",
+        storageBucket: "agescibrescia7-508b0.firebasestorage.app",
+        messagingSenderId: "738190317173",
+        appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
+    });
+    window.db = firebase.firestore();
+</script>
+
+<!-- ── CODICE FISCALE AUTO-CALC ────────────────────────────────── -->
+<script>
+// ── CODICE FISCALE AUTO-CALC ──────────────────────────────────────
+(function() {
+    const MESI = 'ABCDEHLMPRST';
+    const COMUNI = {
+        'BRESCIA':'B157','BERGAMO':'A794','CREMONA':'D142','MANTOVA':'E897',
+        'LECCO':'E507','COMO':'C933','VARESE':'L682','MONZA':'F704',
+        'MILANO':'F205','TORINO':'L219','GENOVA':'D969','BOLOGNA':'A944',
+        'FIRENZE':'D612','ROMA':'H501','NAPOLI':'F839','BARI':'A662',
+        'PALERMO':'G273','CATANIA':'C351','VENEZIA':'L736','VERONA':'L781',
+        'PADOVA':'G224','TRIESTE':'L424','TARANTO':'L049','MESSINA':'F158',
+        'PERUGIA':'G478','ANCONA':'A271','CAGLIARI':'B354','TRENTO':'L378',
+        'BOLZANO':'A952','REGGIO CALABRIA':'H224','REGGIO EMILIA':'H223',
+        'MODENA':'F257','PARMA':'G337','PIACENZA':'G535','FERRARA':'D548',
+        'RAVENNA':'H199','RIMINI':'H294','CESENA':'C573','FORLÌ':'D704',
+        'SIENA':'I726','AREZZO':'A390','PISA':'G702','LIVORNO':'E625',
+        'LUCCA':'E715','PISTOIA':'G713','PRATO':'G999','GROSSETO':'E202',
+        'PESCARA':'G482','CHIETI':'C632','LAQUILA':'A345','TERAMO':'L103',
+        'CAMPOBASSO':'B519','POTENZA':'G942','MATERA':'F052','COSENZA':'D086',
+        'CATANZARO':'C352','REGGIO DI CALABRIA':'H224','CROTONE':'D122',
+        'VIBO VALENTIA':'F537','FOGGIA':'D643','BRINDISI':'B180',
+        'LECCE':'E506','ANDRIA':'A285','BARLETTA':'A669',
+        'TRANI':'L328','SALERNO':'H703','AVELLINO':'A509','BENEVENTO':'A783',
+        'CASERTA':'B963','POZZUOLI':'G964','TORRE DEL GRECO':'L259',
+        'SASSARI':'I452','NUORO':'F979','ORISTANO':'G113',
+        'UDINE':'L483','PORDENONE':'G888','GORIZIA':'E098',
+        'AOSTA':'A326','CUNEO':'D205','ASTI':'A479','ALESSANDRIA':'A182',
+        'NOVARA':'F952','VERCELLI':'L750','BIELLA':'A859','VERBANIA':'L746',
+        // Brescia province
+        'ADRO':'A060','AGNOSINE':'A080','ALFIANELLO':'A189','ANFO':'A288',
+        'ANGOLO TERME':'A293','ARTOGNE':'A451','AZZANO MELLA':'A528',
+        'BAGNOLO MELLA':'A573','BARGHE':'A660','BASSANO BRESCIANO':'A704',
+        'BEDIZZOLE':'A728','BERLINGO':'A799','BORGOSATOLLO':'B030',
+        'BORNO':'B054','BOTTICINO':'B091','BOVEGNO':'B101','BOVEZZO':'B102',
+        'BRANDICO':'B119','BRENO':'B149','BROZZO':'B207','BUFFALORA':'B247',
+        'CAINO':'B368','CALCINATO':'B394','CALVISANO':'B452',
+        'CAPRIOLO':'B712','CARPENEDOLO':'B820','CASTEGNATO':'C055',
+        'CASTELCOVATI':'C072','CASTENEDOLO':'C293','CASTREZZATO':'C332',
+        'CAZZAGO SAN MARTINO':'C408','CEDEGOLO':'C418','CELLATICA':'C439',
+        'CERVENO':'C549','CHIARI':'C618','CIGOLE':'C681','CIMBERGO':'C691',
+        'COCCAGLIO':'C806','COLLEBEATO':'C850','COLOGNE':'C893',
+        'COMEZZANO CIZZAGO':'C925','CONCESIO':'C948','CORTE FRANCA':'D058',
+        'CORTENO GOLGI':'D064','CORZANO':'D082','DARFO BOARIO TERME':'D251',
+        'DELLO':'D270','DESENZANO DEL GARDA':'D284','EDOLO':'E280',
+        'ERBUSCO':'D421','ESINE':'D434','FIESSE':'D575','FLERO':'D634',
+        'GAMBARA':'D895','GARDONE RIVIERA':'D917','GARDONE VAL TROMPIA':'D920',
+        'GARGNANO':'D924','GAVARDO':'D940','GHEDI':'D999','GIANICO':'E009',
+        'GOTTOLENGO':'E116','GUSSAGO':'E271','IDRO':'E280','INCUDINE':'E297',
+        'IRMA':'E323','ISORELLA':'E364','LAVENONE':'E497','LENO':'E525',
+        'LIMONE SUL GARDA':'E596','LODRINO':'E652','LONATO DEL GARDA':'E675',
+        'LONGHENA':'E676','LOSINE':'E699','LOZIO':'E706','LUMEZZANE':'E743',
+        'MACLODIO':'E789','MAGASA':'E799','MAIRANO':'E840','MANERBIO':'E858',
+        'MARCHENO':'E928','MARMENTINO':'E961','MARONE':'E967','MAZZANO':'F065',
+        'MILZANO':'F216','MONIGA DEL GARDA':'F373','MONTE ISOLA':'F532',
+        'MONTICELLI BRUSATI':'F672','MONTICHIARI':'F471','MONTIRONE':'F680',
+        'MURA':'F806','MUSCOLINE':'F820','NAVE':'F851','NIARDO':'F884',
+        'NUVOLENTO':'F989','NUVOLERA':'F990','ODOLO':'G000','OFFLAGA':'G006',
+        'OME':'G061','ONO SAN PIETRO':'G074','ORZINUOVI':'G149',
+        'ORZIVECCHI':'G150','OSPITALETTO':'G170','OSSIMO':'G178',
+        'PADENGHE SUL GARDA':'G213','PADERNO FRANCIACORTA':'G217',
+        'PALAZZOLO SULLOGLIO':'G264','PARATICO':'G327','PASSIRANO':'G358',
+        'PAVONE DEL MELLA':'G392','PIAN CAMUNO':'G546','PIANCOGNO':'G548',
+        'PISOGNE':'G710','POLAVENO':'G779','PONTEVICO':'G859','PONTOGLIO':'G869',
+        'POZZOLENGO':'G961','PRALBOINO':'G977','PRESEGLIE':'H043',
+        'PREVALLE':'H055','PROVAGLIO DISEO':'H078','PROVAGLIO VAL SABBIA':'H079',
+        'QUINZANO DOLIO':'H140','REMEDELLO':'H229','ROE VOLCIANO':'H484',
+        'RONCADELLE':'H524','ROVATO':'H598','RUDIANO':'H630','SABBIO CHIESE':'H650',
+        'SALE MARASINO':'H699','SALO':'H717','SAN FELICE DEL BENACO':'H836',
+        'SAN GERVASIO BRESCIANO':'H865','SAN PAOLO':'I073','SAN ZENO NAVIGLIO':'I412',
+        'SAREZZO':'I433','SAVIORE DELLADALELLO':'I476','SELLERO':'I588',
+        'SENIGA':'I608','SERLE':'I629','SIRMIONE':'I633','SOIANO DEL LAGO':'I782',
+        'SONICO':'I828','SULZANO':'L002','TAVERNOLE SUL MELLA':'L073',
+        'TEMU':'L094','TIGNALE':'L169','TIMOLINE':'L173','TORBOLE CASAGLIA':'L210',
+        'TOSCOLANO MADERNO':'L312','TRAVAGLIATO':'L339','TREMOSINE SUL GARDA':'L372',
+        'TRENZANO':'L381','TREVISO BRESCIANO':'L406','URAGO DOLGIO':'L494',
+        'VALLIO TERME':'L655','VALVESTINO':'L468','VEROLANUOVA':'L779',
+        'VEROLAVECCHIA':'L780','VESTONE':'L812','VEZZA DOLIGO':'L816',
+        'VILLA CARCINA':'L912','VILLACHIARA':'L923','VILLANUOVA SUL CLISI':'L995',
+        'VIONE':'M065','VISANO':'M063','VOBARNO':'M104','ZONE':'M188',
+    };
+
+    function normCity(s) { return s.toUpperCase().trim().replace(/\s+/g,' ').replace(/[''`]/g,"'"); }
+
+    function getCodComune(luogo) {
+        const k = normCity(luogo);
+        if (COMUNI[k]) return COMUNI[k];
+        // Try partial match
+        for (const [name, cod] of Object.entries(COMUNI)) {
+            if (k.startsWith(name) || name.startsWith(k)) return cod;
+        }
+        return '????';
+    }
+
+    function cfCognome(cog) {
+        cog = cog.toUpperCase().replace(/[^A-Z]/g,'');
+        const cons = cog.split('').filter(c=>!'AEIOU'.includes(c));
+        const voc  = cog.split('').filter(c=> 'AEIOU'.includes(c));
+        return ([...cons,...voc,'X','X','X']).join('').substring(0,3);
+    }
+
+    function cfNome(nom) {
+        nom = nom.toUpperCase().replace(/[^A-Z]/g,'');
+        const cons = nom.split('').filter(c=>!'AEIOU'.includes(c));
+        const voc  = nom.split('').filter(c=> 'AEIOU'.includes(c));
+        if (cons.length >= 4) return cons[0]+cons[2]+cons[3];
+        return ([...cons,...voc,'X','X','X']).join('').substring(0,3);
+    }
+
+    function cfData(dataNascita, sesso) {
+        const d = new Date(dataNascita);
+        if (isNaN(d)) return '??????';
+        const yy  = d.getFullYear().toString().slice(-2);
+        const mm  = MESI[d.getMonth()];
+        const gg  = sesso.toUpperCase()==='F' ? (d.getDate()+40).toString().padStart(2,'0') : d.getDate().toString().padStart(2,'0');
+        return yy+mm+gg;
+    }
+
+    function cfChecksum(cf15) {
+        const ODD  = {0:1,1:0,2:5,3:7,4:9,5:13,6:15,7:17,8:19,9:21,A:1,B:0,C:5,D:7,E:9,F:13,G:15,H:17,I:19,J:21,K:2,L:4,M:18,N:20,O:11,P:3,Q:6,R:8,S:12,T:14,U:16,V:10,W:22,X:25,Y:24,Z:23};
+        const EVEN = {0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,A:0,B:1,C:2,D:3,E:4,F:5,G:6,H:7,I:8,J:9,K:10,L:11,M:12,N:13,O:14,P:15,Q:16,R:17,S:18,T:19,U:20,V:21,W:22,X:23,Y:24,Z:25};
+        let sum = 0;
+        for (let i=0;i<15;i++) { const c=cf15[i]; sum += i%2===0 ? (ODD[c]??0) : (EVEN[c]??0); }
+        return String.fromCharCode(65+(sum%26));
+    }
+
+    // Esponi helper CF a iscrAutoCalcCF (che vive fuori da questo IIFE)
+    window._cfCognome    = cfCognome;
+    window._cfNome       = cfNome;
+    window._cfData       = cfData;
+    window._getCodComune = getCodComune;
+    window._cfChecksum   = cfChecksum;
+
+    window.autoCalcCF = function(btn, nomeN, cognomeN, nascitaN, luogoN, sessoN) {
+        const panel = btn.closest('.step-panel') || btn.closest('form');
+        const inp   = btn.closest('.mb-4').querySelector('input[type="text"]');
+        const g = n => (panel.querySelector(`[name="${n}"]`)?.value || '').trim();
+        const nome = g(nomeN), cognome = g(cognomeN), nascita = g(nascitaN), luogo = g(luogoN);
+        let sesso = g(sessoN);
+
+        if (!nome||!cognome||!nascita||!luogo) {
+            alert('Compila prima: Nome, Cognome, Data di nascita e Luogo di nascita.'); return;
+        }
+        if (!sesso) {
+            sesso = prompt('Sesso (M o F)?', 'M');
+            if (!sesso) return;
+        }
+        const c15 = cfCognome(cognome) + cfNome(nome) + cfData(nascita,sesso) + getCodComune(luogo);
+        if (c15.includes('????')) {
+            const full = c15 + cfChecksum(c15.replace('????','A000'));
+            inp.value = full;
+            inp.style.borderColor = '#f59e0b';
+            inp.title = 'Comune "'+luogo+'" non trovato: verifica manualmente il codice catastale (ultime 4 cifre prima del carattere di controllo)';
+            alert('Comune "'+luogo+'" non trovato nel database.\nIl CF è parzialmente calcolato — verifica le ultime 5 cifre (codice comune + carattere di controllo).');
+        } else {
+            const cf = c15 + cfChecksum(c15);
+            inp.value = cf;
+            inp.style.borderColor = '#22c55e';
+            inp.title = 'CF calcolato automaticamente — verifica prima di inviare';
+        }
+    };
+})();
+</script>
+
+<!-- Modal firma digitale -->
+<div id="firma-modal" class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg">
+    <h3 class="text-lg font-black text-scout mb-1"><i class="fas fa-pen-nib mr-2"></i>Firma digitale</h3>
+    <p class="text-sm text-gray-500 mb-4">Firma con il dito o con il mouse nel riquadro. La firma verrà inserita nel PDF.</p>
+    <div class="border-2 border-gray-300 rounded-xl bg-gray-50 mb-4 relative" style="touch-action:none">
+      <canvas id="firma-canvas" style="width:100%;height:130px;display:block;border-radius:0.75rem;"></canvas>
+    </div>
+    <div class="flex gap-3 mb-3">
+      <button onclick="firmaClear()" class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all">
+        <i class="fas fa-eraser mr-1"></i>Pulisci
+      </button>
+      <button onclick="firmaConferma()" class="flex-[2] bg-scout text-white py-3 px-6 rounded-xl text-sm font-black hover:bg-scout/90 transition-all">
+        <i class="fas fa-check mr-1"></i>Conferma firma e genera PDF
+      </button>
+    </div>
+    <p class="text-xs text-gray-400 text-center">Oppure <button onclick="firmaConferma(true)" class="underline text-gray-500 font-medium">salta la firma</button> — la firmerai a mano sul PDF stampato</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var _sigPad = null;
+  var _firmaCallback = null;
+
+  function initCanvas() {
+    var canvas = document.getElementById('firma-canvas');
+    if (!canvas || !window.SignaturePad) return;
+    // Adatta dimensioni al display
+    var ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext('2d').scale(ratio, ratio);
+    _sigPad = new SignaturePad(canvas, { penColor: '#003366', backgroundColor: 'rgba(249,250,251,1)' });
+  }
+
+  window.iscrMostraFirma = function(callback) {
+    _firmaCallback = callback;
+    var modal = document.getElementById('firma-modal');
+    modal.classList.remove('hidden');
+    // Inizializza (o resetta) il canvas al momento dell'apertura
+    setTimeout(function() {
+      if (!_sigPad) { initCanvas(); } else { _sigPad.clear(); }
+    }, 50);
+  };
+
+  window.firmaClear = function() { if (_sigPad) _sigPad.clear(); };
+
+  window.firmaConferma = function(skip) {
+    var png = null;
+    if (!skip && _sigPad && !_sigPad.isEmpty()) {
+      png = _sigPad.toDataURL('image/png');
+    }
+    document.getElementById('firma-modal').classList.add('hidden');
+    if (_firmaCallback) _firmaCallback(png);
+  };
+})();
+</script>
+
 
 <!-- TORNA SU -->
 <button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
