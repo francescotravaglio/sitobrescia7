@@ -139,7 +139,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="font-bold text-scout">Modulo di Iscrizione</div>
-                    <div class="text-xs text-gray-400 mt-0.5">Compila e invia il modulo ufficiale AGESCI online, qui sotto – ricevi il PDF via email</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Compila il modulo ufficiale AGESCI online, qui sotto, e scarica subito il PDF</div>
                 </div>
                 <i class="fas fa-arrow-down text-gray-300 group-hover:text-scout transition text-lg"></i>
             </a>
@@ -315,7 +315,7 @@
           </div>
 
           <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 mb-6">
-            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria. Riceverai anche una copia via email.
+            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria.
           </div>
           <button type="button" onclick="iscrSubmit('maggiorenne')" class="w-full bg-scout text-white font-black py-4 px-8 rounded-2xl hover:bg-scout/90 transition-all text-sm tracking-widest uppercase shadow-lg">
             <i class="fas fa-file-pdf mr-2"></i>Genera PDF e invia
@@ -326,7 +326,7 @@
         <div id="mag-success" class="hidden text-center py-10">
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-green-600 text-2xl"></i></div>
           <h4 class="text-2xl font-black text-scout mb-2">Modulo generato!</h4>
-          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Riceverai una copia via email. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
+          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
           <button onclick="iscrReset('maggiorenne')" class="mt-2 text-scout underline text-sm font-semibold">Nuovo modulo</button>
         </div>
       </div>
@@ -524,7 +524,7 @@
           </div>
 
           <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 mb-6">
-            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria. Riceverai anche una copia via email.
+            <i class="fas fa-info-circle mr-1"></i> Verrà generato un PDF da <strong>stampare, firmare e consegnare ai capi</strong>. La firma è obbligatoria.
           </div>
           <button type="button" onclick="iscrSubmit('minorenne')" class="w-full bg-scout text-white font-black py-4 px-8 rounded-2xl hover:bg-scout/90 transition-all text-sm tracking-widest uppercase shadow-lg">
             <i class="fas fa-file-pdf mr-2"></i>Genera PDF e invia
@@ -535,7 +535,7 @@
         <div id="min-success" class="hidden text-center py-10">
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-green-600 text-2xl"></i></div>
           <h4 class="text-2xl font-black text-scout mb-2">Modulo generato!</h4>
-          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente.<br>Riceverai una copia via email. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
+          <p class="text-gray-500 text-sm mb-4">Il PDF è stato scaricato automaticamente. <strong>Stampalo, firmalo e consegnalo ai capi.</strong></p>
           <button onclick="iscrReset('minorenne')" class="mt-2 text-scout underline text-sm font-semibold">Nuovo modulo</button>
         </div>
       </div>
@@ -700,19 +700,13 @@
             else if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
             else { data[el.name] = el.value; }
         });
-        var submission = { tipo: tipo, dati: data, timestamp: new Date().toISOString(), letta: false, stato: 'nuova' };
-        function proceed(firmaPng) {
+        var submission = { tipo: tipo, dati: data, timestamp: new Date().toISOString() };
+        window.iscrMostraFirma(function(firmaPng) {
             submission.dati._firma_png = firmaPng || null;
             iscrGeneraPDF(submission);
-            iscrSendEmail(submission);
             form.classList.add('hidden');
             var successId = tipo === 'maggiorenne' ? 'mag-success' : 'min-success';
             document.getElementById(successId).classList.remove('hidden');
-        }
-        window.iscrMostraFirma(function(firmaPng) {
-            if (window.db) {
-                window.db.collection('iscrizioni').add(submission).then(function(){ proceed(firmaPng); }).catch(function(err) { console.error('Firestore:', err); proceed(firmaPng); });
-            } else { proceed(firmaPng); }
         });
     };
     window.iscrReset = function(tipo) {
@@ -879,24 +873,6 @@
         } catch(e) { console.warn('[pdf-lib] errore:',e); iscrGeneraPDF(submission); }
     };
 
-    // ── Email via EmailJS ─────────────────────────────────────
-    const EMAILJS_SERVICE  = 'service_rtxg48l';
-    const EMAILJS_TEMPLATE = 'template_fc1c77j';
-    const EMAILJS_KEY      = '2-7fs3VQpyEDJMonD';
-
-    window.iscrSendEmail = function(submission) {
-        var d = submission.dati || {};
-        var toEmail = d.email || d.gen1_email || '';
-        if (!window.emailjs || !toEmail) return;
-        window.emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
-            to_email:   toEmail,
-            nome:       (d.nome||'')+' '+(d.cognome||''),
-            tipo:       submission.tipo,
-            timestamp:  new Date().toLocaleDateString('it-IT'),
-            iban:       'IT 70 Y 08575 11201 000000184420',
-        }).then(function(){ console.log('[EmailJS] inviata a', toEmail); }).catch(function(e){ console.error('[EmailJS] errore:', e); });
-    };
-    window.sendConfirmationEmail = window.iscrSendEmail;
     window.generateAndDownloadPDF = window.iscrGeneraPDF;
 </script>
 
@@ -906,23 +882,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
-<script>window.addEventListener('load', function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
-<!-- Firebase SDK (solo Firestore: nessun login richiesto per iscriversi) -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-<script>
-    firebase.initializeApp({
-        apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
-        authDomain: "agescibrescia7-508b0.firebaseapp.com",
-        projectId: "agescibrescia7-508b0",
-        storageBucket: "agescibrescia7-508b0.firebasestorage.app",
-        messagingSenderId: "738190317173",
-        appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
-    });
-    window.db = firebase.firestore();
-</script>
 
 <!-- ── CODICE FISCALE AUTO-CALC ────────────────────────────────── -->
 <script>
