@@ -30,6 +30,8 @@
         return '<div class="tb-page-inner"><ul class="tb-entry-list">' + html + '</ul></div><div class="tb-page-num">' + pageNum + '</div>';
     }
 
+    var MAX_PER_PAGE = 6;
+
     function buildPages(entries) {
         entries = entries.slice().sort(function (a, b) {
             return String(a.anno).localeCompare(String(b.anno), 'it', { numeric: true }) || String(a.nome).localeCompare(String(b.nome), 'it');
@@ -37,8 +39,9 @@
         if (!entries.length) return [[]];
         var out = [], lastAnno = null;
         entries.forEach(function (e) {
-            if (e.anno !== lastAnno) { out.push([]); lastAnno = e.anno; }
-            out[out.length - 1].push(e);
+            var current = out.length ? out[out.length - 1] : null;
+            if (e.anno !== lastAnno || current.length >= MAX_PER_PAGE) { out.push([]); current = out[out.length - 1]; lastAnno = e.anno; }
+            current.push(e);
         });
         return out;
     }
