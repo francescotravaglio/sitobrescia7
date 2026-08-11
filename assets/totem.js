@@ -5,6 +5,18 @@
 
     function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
+    // "mario rossi" -> "Mario" (tiene solo il nome, scarta il cognome se c'è)
+    function firstNameCapitalized(s) {
+        var first = String(s).trim().split(/\s+/)[0] || '';
+        return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+    }
+    // "scoiattolo LIETO" -> "Scoiattolo Lieto" (iniziale maiuscola per ogni parola)
+    function titleCase(s) {
+        return String(s).trim().split(/\s+/).map(function (w) {
+            return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+        }).join(' ');
+    }
+
     var annoInput = document.getElementById('tf-anno');
     if (annoInput) annoInput.max = new Date().getFullYear();
 
@@ -166,11 +178,14 @@
         if (Date.now() - last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
 
         var anno = document.getElementById('tf-anno').value.trim();
-        var nome = document.getElementById('tf-nome').value.trim();
-        var totemNome = document.getElementById('tf-totem').value.trim();
+        var nomeRaw = document.getElementById('tf-nome').value.trim();
+        var totemRaw = document.getElementById('tf-totem').value.trim();
         var errEl = document.getElementById('tf-error');
-        if (!anno || !nome || !totemNome) { errEl.classList.remove('hidden'); return; }
+        if (!anno || !nomeRaw || !totemRaw) { errEl.classList.remove('hidden'); return; }
         errEl.classList.add('hidden');
+
+        var nome = firstNameCapitalized(nomeRaw);
+        var totemNome = titleCase(totemRaw);
 
         window.db.collection('totem').add({
             anno: anno, nome: nome, totem: totemNome,
