@@ -100,8 +100,6 @@
         updateLeaves(); updateControls();
     };
     window.totemOpenBook = function () {
-        var cover = document.getElementById('tb-cover');
-        if (cover) cover.classList.add('opened');
         var book = document.getElementById('tb-book');
         book.classList.remove('closed');
         book.classList.add('open');
