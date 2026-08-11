@@ -115,9 +115,9 @@
     render([]);
     window.addEventListener('load', function () {
         if (!window.db) return;
-        window.db.collection('totem').get().then(function (snap) {
+        window.db.collection('totem').where('approvato', '==', true).get().then(function (snap) {
             var ok = [];
-            snap.forEach(function (d) { var t = d.data(); if (t.approvato) ok.push(t); });
+            snap.forEach(function (d) { ok.push(d.data()); });
             render(ok);
         }).catch(function (err) { console.error(err); });
     });
