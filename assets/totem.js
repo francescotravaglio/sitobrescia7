@@ -157,15 +157,6 @@
             document.getElementById('form-totem').classList.add('hidden');
             document.getElementById('tf-success').classList.remove('hidden');
             if (typeof gtag !== 'undefined') gtag('event', 'totem_inviato', { event_category: 'engagement' });
-            if (typeof emailjs !== 'undefined') {
-                emailjs.send('service_rtxg48l', 'template_fc1c77j', {
-                    to_email: 'brescia7@lombardia.agesci.it',
-                    nome: 'Nuovo Totem da approvare',
-                    tipo: 'Libro dei Totem',
-                    timestamp: new Date().toLocaleDateString('it-IT'),
-                    iban: nome + ' — Totem "' + totemNome + '" (' + anno + ')\n\nPer approvarlo: admin.html → Libro dei Totem → Approva'
-                }).catch(function (e) { console.error('[EmailJS]', e); });
-            }
         }).catch(function (err) { console.error(err); alert('Errore. Riprova.'); });
     };
 })();
