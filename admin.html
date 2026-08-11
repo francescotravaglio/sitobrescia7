@@ -446,27 +446,7 @@
             <section id="tab-admins" class="tab-panel space-y-6">
                 <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
                     <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
-                    Questo è un elenco <strong>di riferimento</strong> di chi ha accesso al pannello: aggiungere una persona qui <strong>non crea l'accesso vero</strong>. L'account va comunque creato in <strong>Firebase Console → Authentication → Add user</strong>, con la stessa email <code>@agescibrescia7.com</code>.
-                </div>
-                <div class="panel">
-                    <div class="panel-head">
-                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-user-plus"></i></span>Aggiungi amministratore</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label>Nome *</label>
-                                <input type="text" id="adm-nome" placeholder="Es. Mario Rossi">
-                            </div>
-                            <div>
-                                <label>Email *</label>
-                                <input type="email" id="adm-email" placeholder="mario@agescibrescia7.com">
-                            </div>
-                        </div>
-                        <button onclick="addAdminEntry()" class="btn btn-primary mt-5">
-                            <i class="fas fa-plus"></i>Aggiungi
-                        </button>
-                    </div>
+                    Elenco <strong>di riferimento</strong> di chi ha accesso al pannello. Per dare accesso a una nuova persona, crea il suo account in <strong>Firebase Console → Authentication → Add user</strong>, con la stessa email <code>@agescibrescia7.com</code>.
                 </div>
 
                 <div class="panel overflow-hidden">
@@ -795,18 +775,6 @@ function renderAdmins() {
     }).catch(err => {
         console.error(err);
         list.innerHTML = '<div class="empty-state text-red-400"><i class="fas fa-triangle-exclamation"></i><p>Errore nel caricamento.</p></div>';
-    });
-}
-function addAdminEntry() {
-    const nome = document.getElementById('adm-nome').value.trim();
-    const email = document.getElementById('adm-email').value.trim().toLowerCase();
-    if (!nome || !email) { alert('Compila nome ed email.'); return; }
-    if (!email.endsWith('@agescibrescia7.com')) { alert("L'email deve essere del dominio @agescibrescia7.com."); return; }
-    const dbRef = window.firestoreDb || window.db;
-    dbRef.collection('admins').add({ nome, email, aggiunto: new Date().toISOString() }).then(() => {
-        document.getElementById('adm-nome').value = '';
-        document.getElementById('adm-email').value = '';
-        renderAdmins();
     });
 }
 function deleteAdminEntry(id) {
