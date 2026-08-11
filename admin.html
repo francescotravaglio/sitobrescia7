@@ -667,7 +667,7 @@ function renderTotem() {
             <div class="px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div class="flex-1 min-w-[240px]">
-                        <p class="text-gray-700 text-sm mb-1"><strong class="text-scout">${escapeHtml(r.nome||'')}</strong> — Totem &ldquo;${escapeHtml(r.totem||'')}&rdquo;</p>
+                        <p class="text-gray-700 text-sm mb-1"><strong class="text-scout">${escapeHtml(r.nome||'')}</strong> ${escapeHtml(r.totem||'')}</p>
                         <div class="text-xs text-gray-400">Anno ${escapeHtml(r.anno||'')} · ${data}</div>
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
