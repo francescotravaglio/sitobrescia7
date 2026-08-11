@@ -62,6 +62,17 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // ── Libro dei Totem: lettura pubblica, invio pubblico con validazione ──
+    match /totem/{doc} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
+        request.resource.data.totem is string && request.resource.data.totem.size() > 0 && request.resource.data.totem.size() < 60 &&
+        request.resource.data.anno is string  && request.resource.data.anno.size() > 0  && request.resource.data.anno.size() < 10 &&
+        request.resource.data.approvato == false;
+      allow update, delete: if isAdmin();
+    }
+
     // ── Area soci ──
     // soci_attivazione: NESSUN dato anagrafico. Solo { pin, usato, creato } per Codice
     // Socio, generato dall'admin e comunicato di persona/telefono al socio. Il PIN non è

@@ -226,6 +226,10 @@
                 <i class="fas fa-quote-left"></i> Testimonianze
                 <span id="badge-testi" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
+            <div onclick="showTab('totem')" class="sidebar-link" id="nav-totem">
+                <i class="fas fa-scroll"></i> Libro dei Totem
+                <span id="badge-totem" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
         </nav>
 
         <!-- Footer sidebar -->
@@ -413,7 +417,22 @@
 
 
 
-            
+            <!-- ──────────────────── LIBRO DEI TOTEM ─────────────── -->
+            <section id="tab-totem" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    I Totem proposti dal sito arrivano qui. <strong>Solo quelli approvati</strong> compaiono nel Libro dei Totem. Controlla che non ci siano dati sensibili o voci scherzose prima di approvare.
+                </div>
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-scroll"></i></span>Totem proposti</h3>
+                        <button onclick="renderTotem()" class="icon-btn" title="Aggiorna"><i class="fas fa-rotate-right"></i></button>
+                    </div>
+                    <div id="totem-list">
+                        <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Caricamento…</p></div>
+                    </div>
+                </div>
+            </section>
 
         </div><!-- /p-8 -->
     </main>
@@ -521,6 +540,7 @@ const TAB_META = {
     eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
+    totem:             { title: 'Libro dei Totem',     sub: 'Totem proposti dal sito: approva per pubblicarli nel Libro' },
 };
 
 // Sidebar mobile: apri/chiudi drawer
@@ -553,6 +573,7 @@ function showTab(name) {
     if (name === 'dashboard')   renderDashboard();
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
     if (name === 'testimonianze')   renderTestimonianze();
+    if (name === 'totem')           renderTotem();
 }
 
 // ── TESTIMONIANZE ────────────────────────────────────────────────
@@ -611,6 +632,61 @@ function deleteTestimonianza(id) {
 }
 function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── LIBRO DEI TOTEM ──────────────────────────────────────────────
+function renderTotem() {
+    const list = document.getElementById('totem-list');
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('totem').get().then(snap => {
+        const rows = [];
+        snap.forEach(doc => rows.push({ id: doc.id, ...doc.data() }));
+        rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
+
+        const inAttesa = rows.filter(r => !r.approvato).length;
+        const badge = document.getElementById('badge-totem');
+        if (badge) { badge.textContent = inAttesa; badge.classList.toggle('hidden', inAttesa === 0); }
+
+        if (!rows.length) {
+            list.innerHTML = '<div class="empty-state"><i class="fas fa-scroll"></i><p>Nessun Totem proposto.</p></div>';
+            return;
+        }
+        list.innerHTML = rows.map(r => {
+            const data = r.timestamp ? new Date(r.timestamp).toLocaleDateString('it-IT') : '—';
+            const stato = r.approvato
+                ? '<span class="badge" style="background:#dcfce7;color:#15803d">Pubblicato</span>'
+                : '<span class="badge badge-new" style="background:#fef3c7;color:#b45309">In attesa</span>';
+            const azione = r.approvato
+                ? `<button onclick="setTotemApprovato('${r.id}', false)" class="btn btn-outline btn-sm"><i class="fas fa-eye-slash"></i>Nascondi</button>`
+                : `<button onclick="setTotemApprovato('${r.id}', true)" class="btn btn-primary btn-sm"><i class="fas fa-check"></i>Approva e pubblica</button>`;
+            return `
+            <div class="px-6 py-5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div class="flex-1 min-w-[240px]">
+                        <p class="text-gray-700 text-sm mb-1"><strong class="text-scout">${escapeHtml(r.nome||'')}</strong> — Totem &ldquo;${escapeHtml(r.totem||'')}&rdquo;</p>
+                        <div class="text-xs text-gray-400">Anno ${escapeHtml(r.anno||'')} · ${data}</div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        ${stato}
+                        ${azione}
+                        <button onclick="deleteTotem('${r.id}')" class="icon-btn danger" title="Elimina"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }).catch(err => {
+        console.error(err);
+        list.innerHTML = '<div class="empty-state text-red-400"><i class="fas fa-triangle-exclamation"></i><p>Errore nel caricamento.</p></div>';
+    });
+}
+function setTotemApprovato(id, val) {
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('totem').doc(id).update({ approvato: val }).then(renderTotem);
+}
+function deleteTotem(id) {
+    if (!confirm('Eliminare definitivamente questo Totem?')) return;
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('totem').doc(id).delete().then(renderTotem);
 }
 
 // ── Refresh globale ───────────────────────────────────────────────
