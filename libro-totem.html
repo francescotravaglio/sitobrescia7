@@ -39,10 +39,10 @@
             background: linear-gradient(135deg, #003366 0%, #001a3d 55%, #00142e 100%);
             box-shadow: 0 30px 60px -18px rgba(0,0,0,.55), inset 0 0 0 2px rgba(252,196,0,.35), inset 0 0 40px rgba(0,0,0,.35);
             display: flex; align-items: center; justify-content: center;
-            transform-origin: left center; transform-style: preserve-3d;
+            transform-origin: left center; transform-style: preserve-3d; backface-visibility: hidden;
             transition: transform 1s cubic-bezier(.65,0,.35,1);
         }
-        .tb-book.open .tb-cover { transform: rotateY(-160deg); box-shadow: none; }
+        .tb-book.open .tb-cover { transform: rotateY(-180deg); box-shadow: none; pointer-events: none; }
         .tb-cover-inner { text-align: center; padding: 2rem; color: #fff; }
         .tb-cover-icon { font-size: clamp(2.2rem, 6vw, 3.25rem); color: #fcc400; margin-bottom: 1rem; opacity: .95; }
         .tb-cover-title { font-family: 'Patrick Hand', cursive; font-size: clamp(1.6rem, 5.5vw, 2.75rem); line-height: 1.15; }
