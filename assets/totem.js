@@ -22,8 +22,7 @@
 
     function pageHtml(entries, pageNum) {
         if (!entries.length) {
-            return '<div class="tb-empty"><i class="fas fa-feather-alt"></i><p>Questa pagina è ancora bianca.<br>Sii tu a scriverla.</p></div>' +
-                   '<div class="tb-page-num">' + pageNum + '</div>';
+            return '<div class="tb-page-num">' + pageNum + '</div>';
         }
         var lastAnno = null, html = '';
         entries.forEach(function (e) {

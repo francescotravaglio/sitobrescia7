@@ -80,10 +80,6 @@
         .tb-entry-nome { font-weight: 700; color: #003366; }
         .tb-entry-sep { font-size: 9px; color: #c9b77e; }
         .tb-entry-totem { font-family: 'Patrick Hand', cursive; font-size: 1rem; color: #1a5276; }
-        .tb-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #b7a978; padding: 1.5rem; }
-        .tb-empty i { font-size: 1.75rem; margin-bottom: .75rem; opacity: .6; }
-        .tb-empty p { font-size: .8rem; line-height: 1.5; }
-
         .tb-controls { display: none; align-items: center; justify-content: center; gap: 1.25rem; margin-top: 1.5rem; }
         .tb-nav-btn { width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #003366; color: #fff; display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .2s; flex-shrink: 0; }
         .tb-nav-btn:hover:not(:disabled) { transform: scale(1.08); }
@@ -182,13 +178,10 @@
             <div id="tb-book" class="tb-book closed">
                 <div class="tb-base">
                     <div class="tb-base-half">
-                        <i class="fas fa-scroll"></i>
-                        <p><strong>Ex Libris</strong><br>Gruppo Scout AGESCI Brescia 7</p>
-                    </div>
-                    <div class="tb-base-half">
                         <i class="fas fa-feather-alt"></i>
-                        <p>Sei arrivato in fondo.<br><strong>Il tuo Totem non c'è ancora?</strong><br>Aggiungilo qui sotto ↓</p>
+                        <p><strong>Vuoi inserire il tuo Totem?</strong><br>Aggiungilo qui sotto ↓</p>
                     </div>
+                    <div class="tb-base-half"></div>
                 </div>
                 <div id="tb-pages" class="tb-pages"></div>
                 <div class="tb-cover-spine-fill"></div>
