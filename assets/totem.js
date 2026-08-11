@@ -8,7 +8,6 @@
     var annoInput = document.getElementById('tf-anno');
     if (annoInput) annoInput.max = new Date().getFullYear();
 
-    var PER_PAGE = 5;
     var pages = [];
     var leaves = 0;
     var currentFlipped = -1; // -1 = libro chiuso; 0..leaves-1 = pagina visibile
@@ -35,9 +34,12 @@
         entries = entries.slice().sort(function (a, b) {
             return String(a.anno).localeCompare(String(b.anno), 'it', { numeric: true }) || String(a.nome).localeCompare(String(b.nome), 'it');
         });
-        var out = [];
         if (!entries.length) return [[]];
-        for (var i = 0; i < entries.length; i += PER_PAGE) out.push(entries.slice(i, i + PER_PAGE));
+        var out = [], lastAnno = null;
+        entries.forEach(function (e) {
+            if (e.anno !== lastAnno) { out.push([]); lastAnno = e.anno; }
+            out[out.length - 1].push(e);
+        });
         return out;
     }
 
