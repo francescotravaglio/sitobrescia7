@@ -52,12 +52,6 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    // ── Amministratori: elenco di riferimento (non gli account Firebase Auth veri
-    //    e propri), visibile e modificabile solo dagli admin già autenticati ──
-    match /admins/{doc} {
-      allow read, write: if isAdmin();
-    }
-
     // ── Testimonianze: lettura pubblica, invio pubblico con validazione ──
     match /testimonianze/{doc} {
       allow read: if true;
