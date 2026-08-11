@@ -25,8 +25,7 @@
     var currentFlipped = -1; // -1 = libro chiuso; 0..leaves-1 = pagina visibile
 
     function entryRow(e) {
-        return '<li class="tb-entry"><span class="tb-entry-anno">' + esc(e.anno) + '</span>' +
-            '<span class="tb-entry-nome">' + esc(e.nome) + '</span>' +
+        return '<li class="tb-entry"><span class="tb-entry-nome">' + esc(e.nome) + '</span>' +
             '<span class="tb-entry-totem">' + esc(e.totem) + '</span></li>';
     }
 
