@@ -30,13 +30,11 @@
 
         /* ── Libro dei Totem: libro 3D apribile e sfogliabile ── */
         .tb-stage { perspective: 2600px; display: flex; justify-content: center; align-items: center; padding: 1rem 0; position: relative; }
-        /* chiuso: verticale, come un vero libro sul dorso; aperto: si allarga nella doppia pagina 8:5 */
+        /* stesse misure della copertina, chiuso o aperto: verticale come l'immagine di copertina */
         .tb-book {
             position: relative;
             width: min(58vw, 430px); height: calc(min(58vw, 430px) * 1.41443);
-            transition: width .7s cubic-bezier(.65,0,.35,1), height .7s cubic-bezier(.65,0,.35,1);
         }
-        .tb-book.open { width: min(94vw, 820px); height: calc(min(94vw, 820px) * .625); }
 
         /* copertina: un'unica immagine, cerniera sul bordo sinistro (la costa) */
         .tb-cover {
@@ -95,11 +93,9 @@
         .tb-page-counter { font-size: 12px; font-weight: 700; color: #6b7280; letter-spacing: .05em; min-width: 9rem; text-align: center; }
 
         @media (max-width: 640px) {
-            .tb-page-inner { padding: 1rem .9rem .3rem; }
-            .tb-entry { font-size: .72rem; }
-            .tb-entry-totem { font-size: .9rem; }
-            /* aperto, guadagna altezza extra per leggere comodamente le voci */
-            .tb-book.open { height: min(78vh, 640px); }
+            .tb-page-inner { padding: .75rem .6rem .3rem; }
+            .tb-entry { font-size: .68rem; }
+            .tb-entry-totem { font-size: .85rem; }
         }
     </style><style>.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}.reveal.visible{opacity:1;transform:none;}.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s;}.reveal-delay-3{transition-delay:.35s;}</style>
 </head>
