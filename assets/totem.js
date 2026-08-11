@@ -11,7 +11,7 @@
     var PER_PAGE = 7;
     var pages = [];
     var leaves = 0;
-    var currentFlipped = 0;
+    var currentFlipped = -1; // -1 = libro chiuso; 0..leaves-1 = pagina visibile
 
     function entryRow(e) {
         return '<li class="tb-entry"><span class="tb-entry-anno">' + esc(e.anno) + '</span>' +
@@ -37,23 +37,21 @@
             return String(a.anno).localeCompare(String(b.anno), 'it', { numeric: true }) || String(a.nome).localeCompare(String(b.nome), 'it');
         });
         var out = [];
-        if (!entries.length) return [[], []];
+        if (!entries.length) return [[]];
         for (var i = 0; i < entries.length; i += PER_PAGE) out.push(entries.slice(i, i + PER_PAGE));
-        if (out.length % 2 === 1) out.push([]);
         return out;
     }
 
     function render(entries) {
         pages = buildPages(entries);
-        leaves = pages.length / 2;
-        currentFlipped = 0;
+        leaves = pages.length;
+        currentFlipped = -1;
 
         var wrap = document.getElementById('tb-pages');
         var html = '';
         for (var i = 0; i < leaves; i++) {
             html += '<div class="tb-leaf" id="tb-leaf-' + i + '">' +
-                '<div class="tb-leaf-face tb-leaf-front">' + pageHtml(pages[i * 2], i * 2 + 1) + '</div>' +
-                '<div class="tb-leaf-face tb-leaf-back">' + pageHtml(pages[i * 2 + 1], i * 2 + 2) + '</div>' +
+                '<div class="tb-leaf-face">' + pageHtml(pages[i], i + 1) + '</div>' +
                 '</div>';
         }
         wrap.innerHTML = html;
@@ -75,26 +73,19 @@
         var prevBtn = document.getElementById('tb-prev-btn');
         var nextBtn = document.getElementById('tb-next-btn');
         if (!counter) return;
-        if (!leaves) { counter.textContent = ''; return; }
-        var total = leaves * 2;
-        if (currentFlipped === 0) {
-            counter.textContent = '1 di ' + total;
-        } else if (currentFlipped === leaves) {
-            counter.textContent = total + ' di ' + total;
-        } else {
-            counter.textContent = (currentFlipped * 2) + '–' + (currentFlipped * 2 + 1) + ' di ' + total;
-        }
-        if (prevBtn) prevBtn.disabled = currentFlipped === 0;
-        if (nextBtn) nextBtn.disabled = currentFlipped === leaves;
+        if (currentFlipped < 0 || !leaves) { counter.textContent = ''; return; }
+        counter.textContent = (currentFlipped + 1) + ' di ' + leaves;
+        if (prevBtn) prevBtn.disabled = false;
+        if (nextBtn) nextBtn.disabled = currentFlipped >= leaves - 1;
     }
 
     window.totemNextPage = function () {
-        if (currentFlipped >= leaves) return;
+        if (currentFlipped < 0 || currentFlipped >= leaves - 1) return;
         currentFlipped++;
         updateLeaves(); updateControls();
     };
     window.totemPrevPage = function () {
-        if (currentFlipped <= 0) return;
+        if (currentFlipped <= 0) { window.totemCloseBook(); return; }
         currentFlipped--;
         updateLeaves(); updateControls();
     };
@@ -102,7 +93,17 @@
         var book = document.getElementById('tb-book');
         book.classList.remove('closed');
         book.classList.add('open');
+        currentFlipped = 0;
+        updateLeaves(); updateControls();
         document.getElementById('tb-controls').style.display = 'flex';
+    };
+    window.totemCloseBook = function () {
+        var book = document.getElementById('tb-book');
+        book.classList.remove('open');
+        book.classList.add('closed');
+        document.getElementById('tb-controls').style.display = 'none';
+        currentFlipped = -1;
+        updateLeaves(); updateControls();
     };
 
     document.addEventListener('keydown', function (e) {
