@@ -231,6 +231,11 @@
                 <i class="fas fa-scroll"></i> Libro dei Totem
                 <span id="badge-totem" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
+
+            <div class="sidebar-group-label">Gestione</div>
+            <div onclick="showTab('admins')" class="sidebar-link" id="nav-admins">
+                <i class="fas fa-user-shield"></i> Amministratori
+            </div>
         </nav>
 
         <!-- Footer sidebar -->
@@ -435,6 +440,46 @@
                 </div>
             </section>
 
+
+
+            <!-- ──────────────────── AMMINISTRATORI ──────────────── -->
+            <section id="tab-admins" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Questo è un elenco <strong>di riferimento</strong> di chi ha accesso al pannello: aggiungere una persona qui <strong>non crea l'accesso vero</strong>. L'account va comunque creato in <strong>Firebase Console → Authentication → Add user</strong>, con la stessa email <code>@agescibrescia7.com</code>.
+                </div>
+                <div class="panel">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-user-plus"></i></span>Aggiungi amministratore</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label>Nome *</label>
+                                <input type="text" id="adm-nome" placeholder="Es. Mario Rossi">
+                            </div>
+                            <div>
+                                <label>Email *</label>
+                                <input type="email" id="adm-email" placeholder="mario@agescibrescia7.com">
+                            </div>
+                        </div>
+                        <button onclick="addAdminEntry()" class="btn btn-primary mt-5">
+                            <i class="fas fa-plus"></i>Aggiungi
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-users"></i></span>Amministratori registrati</h3>
+                        <button onclick="renderAdmins()" class="icon-btn" title="Aggiorna"><i class="fas fa-rotate-right"></i></button>
+                    </div>
+                    <div id="admins-list">
+                        <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Caricamento…</p></div>
+                    </div>
+                </div>
+            </section>
+
         </div><!-- /p-8 -->
     </main>
 </div><!-- /app -->
@@ -542,6 +587,7 @@ const TAB_META = {
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
     totem:             { title: 'Libro dei Totem',     sub: 'Totem proposti dal sito: approva per pubblicarli nel Libro' },
+    admins:            { title: 'Amministratori',      sub: "Elenco di riferimento di chi ha accesso al pannello" },
 };
 
 // Sidebar mobile: apri/chiudi drawer
@@ -575,6 +621,7 @@ function showTab(name) {
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
     if (name === 'testimonianze')   renderTestimonianze();
     if (name === 'totem')           renderTotem();
+    if (name === 'admins')          renderAdmins();
 }
 
 // ── TESTIMONIANZE ────────────────────────────────────────────────
@@ -719,6 +766,53 @@ function deleteTotem(id) {
     if (!confirm('Eliminare definitivamente questo Totem?')) return;
     const dbRef = window.firestoreDb || window.db;
     dbRef.collection('totem').doc(id).delete().then(renderTotem);
+}
+
+// ── AMMINISTRATORI (elenco di riferimento) ─────────────────────────
+function renderAdmins() {
+    const list = document.getElementById('admins-list');
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('admins').get().then(snap => {
+        const rows = [];
+        snap.forEach(doc => rows.push({ id: doc.id, ...doc.data() }));
+        rows.sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+
+        if (!rows.length) {
+            list.innerHTML = '<div class="empty-state"><i class="fas fa-user-shield"></i><p>Nessun amministratore registrato.</p></div>';
+            return;
+        }
+        list.innerHTML = rows.map(r => {
+            const data = r.aggiunto ? new Date(r.aggiunto).toLocaleDateString('it-IT') : '—';
+            return `
+            <div class="px-6 py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition flex items-center justify-between gap-4 flex-wrap">
+                <div>
+                    <div class="font-bold text-scout text-sm">${escapeHtml(r.nome || '')}</div>
+                    <div class="text-xs text-gray-400">${escapeHtml(r.email || '')} · aggiunto il ${data}</div>
+                </div>
+                <button onclick="deleteAdminEntry('${r.id}')" class="icon-btn danger" title="Rimuovi dall'elenco"><i class="fas fa-trash"></i></button>
+            </div>`;
+        }).join('');
+    }).catch(err => {
+        console.error(err);
+        list.innerHTML = '<div class="empty-state text-red-400"><i class="fas fa-triangle-exclamation"></i><p>Errore nel caricamento.</p></div>';
+    });
+}
+function addAdminEntry() {
+    const nome = document.getElementById('adm-nome').value.trim();
+    const email = document.getElementById('adm-email').value.trim().toLowerCase();
+    if (!nome || !email) { alert('Compila nome ed email.'); return; }
+    if (!email.endsWith('@agescibrescia7.com')) { alert("L'email deve essere del dominio @agescibrescia7.com."); return; }
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('admins').add({ nome, email, aggiunto: new Date().toISOString() }).then(() => {
+        document.getElementById('adm-nome').value = '';
+        document.getElementById('adm-email').value = '';
+        renderAdmins();
+    });
+}
+function deleteAdminEntry(id) {
+    if (!confirm("Rimuovere questo amministratore dall'elenco? (Non elimina l'account Firebase, solo la voce da questa lista)")) return;
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('admins').doc(id).delete().then(renderAdmins);
 }
 
 // ── Refresh globale ───────────────────────────────────────────────
