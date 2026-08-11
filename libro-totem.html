@@ -67,7 +67,7 @@
         .tb-pages { position: absolute; inset: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 25px 55px -18px rgba(0,0,0,.4); }
         .tb-leaf { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: left center; transition: transform .85s cubic-bezier(.65,0,.35,1); }
         .tb-leaf.flipped { transform: rotateY(-180deg); }
-        .tb-leaf-face { position: absolute; inset: 0; backface-visibility: hidden; background: #faf6ea; overflow-y: auto; box-shadow: 0 0 20px -14px rgba(0,0,0,.3) inset; }
+        .tb-leaf-face { position: absolute; inset: 0; backface-visibility: hidden; background: #faf6ea; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; box-shadow: 0 0 20px -14px rgba(0,0,0,.3) inset; }
         .tb-page-inner { padding: 1.5rem 1.4rem 0.5rem; }
         .tb-page-num { position: absolute; bottom: .6rem; left: 0; right: 0; text-align: center; font-size: 10px; color: #b7a978; letter-spacing: .1em; }
 
