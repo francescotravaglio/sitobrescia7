@@ -77,9 +77,14 @@
         var nextBtn = document.getElementById('tb-next-btn');
         if (!counter) return;
         if (!leaves) { counter.textContent = ''; return; }
-        var left = currentFlipped === 0 ? '—' : String(currentFlipped * 2);
-        var right = currentFlipped === leaves ? '—' : String(currentFlipped * 2 + 1);
-        counter.textContent = 'Pagine ' + left + '–' + right + ' di ' + (leaves * 2);
+        var total = leaves * 2;
+        if (currentFlipped === 0) {
+            counter.textContent = '1 di ' + total;
+        } else if (currentFlipped === leaves) {
+            counter.textContent = total + ' di ' + total;
+        } else {
+            counter.textContent = (currentFlipped * 2) + '–' + (currentFlipped * 2 + 1) + ' di ' + total;
+        }
         if (prevBtn) prevBtn.disabled = currentFlipped === 0;
         if (nextBtn) nextBtn.disabled = currentFlipped === leaves;
     }
