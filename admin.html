@@ -635,6 +635,8 @@ function escapeHtml(s) {
 }
 
 // ── LIBRO DEI TOTEM ──────────────────────────────────────────────
+let totemEditingId = null;
+
 function renderTotem() {
     const list = document.getElementById('totem-list');
     const dbRef = window.firestoreDb || window.db;
@@ -652,6 +654,7 @@ function renderTotem() {
             return;
         }
         list.innerHTML = rows.map(r => {
+            if (r.id === totemEditingId) return totemEditRow(r);
             const data = r.timestamp ? new Date(r.timestamp).toLocaleDateString('it-IT') : '—';
             const stato = r.approvato
                 ? '<span class="badge" style="background:#dcfce7;color:#15803d">Pubblicato</span>'
@@ -669,6 +672,7 @@ function renderTotem() {
                     <div class="flex items-center gap-2 flex-shrink-0">
                         ${stato}
                         ${azione}
+                        <button onclick="editTotemStart('${r.id}')" class="icon-btn" title="Modifica"><i class="fas fa-pen"></i></button>
                         <button onclick="deleteTotem('${r.id}')" class="icon-btn danger" title="Elimina"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
@@ -677,6 +681,33 @@ function renderTotem() {
     }).catch(err => {
         console.error(err);
         list.innerHTML = '<div class="empty-state text-red-400"><i class="fas fa-triangle-exclamation"></i><p>Errore nel caricamento.</p></div>';
+    });
+}
+function totemEditRow(r) {
+    return `
+    <div class="px-6 py-5 border-b border-gray-50 last:border-0 bg-blue-50/40">
+        <div class="grid sm:grid-cols-3 gap-3 mb-3">
+            <div><label>Anno</label><input type="text" id="totem-edit-anno-${r.id}" value="${escapeHtml(r.anno||'')}"></div>
+            <div><label>Nome</label><input type="text" id="totem-edit-nome-${r.id}" value="${escapeHtml(r.nome||'')}"></div>
+            <div><label>Totem</label><input type="text" id="totem-edit-totem-${r.id}" value="${escapeHtml(r.totem||'')}"></div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="editTotemSave('${r.id}')" class="btn btn-primary btn-sm"><i class="fas fa-check"></i>Salva</button>
+            <button onclick="editTotemCancel()" class="btn btn-outline btn-sm">Annulla</button>
+        </div>
+    </div>`;
+}
+function editTotemStart(id) { totemEditingId = id; renderTotem(); }
+function editTotemCancel() { totemEditingId = null; renderTotem(); }
+function editTotemSave(id) {
+    const anno  = document.getElementById('totem-edit-anno-' + id).value.trim();
+    const nome  = document.getElementById('totem-edit-nome-' + id).value.trim();
+    const totem = document.getElementById('totem-edit-totem-' + id).value.trim();
+    if (!anno || !nome || !totem) { alert('Compila tutti i campi.'); return; }
+    const dbRef = window.firestoreDb || window.db;
+    dbRef.collection('totem').doc(id).update({ anno, nome, totem }).then(() => {
+        totemEditingId = null;
+        renderTotem();
     });
 }
 function setTotemApprovato(id, val) {
