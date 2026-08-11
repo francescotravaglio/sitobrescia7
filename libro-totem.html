@@ -63,18 +63,11 @@
         .tb-cover-hint i { animation: tb-pulse 1.6s ease-in-out infinite; }
         @keyframes tb-pulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
 
-        /* corpo del libro: base + fogli */
-        .tb-base { position: absolute; inset: 0; z-index: 1; display: flex; border-radius: 6px; overflow: hidden; box-shadow: 0 25px 55px -18px rgba(0,0,0,.4); background: #f6efdc; }
-        .tb-base-half { flex: 1 1 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem; color: #8a7a52; }
-        .tb-base-half i { font-size: 1.75rem; color: #c9b77e; margin-bottom: .75rem; }
-        .tb-base-half strong { color: #6b5d3a; }
-
-        .tb-pages { position: absolute; inset: 0; }
-        .tb-leaf { position: absolute; top: 0; bottom: 0; left: 50%; width: 50%; transform-style: preserve-3d; transform-origin: left center; transition: transform .85s cubic-bezier(.65,0,.35,1); }
+        /* corpo del libro: una pagina alla volta, a piena larghezza */
+        .tb-pages { position: absolute; inset: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 25px 55px -18px rgba(0,0,0,.4); }
+        .tb-leaf { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: left center; transition: transform .85s cubic-bezier(.65,0,.35,1); }
         .tb-leaf.flipped { transform: rotateY(-180deg); }
         .tb-leaf-face { position: absolute; inset: 0; backface-visibility: hidden; background: #faf6ea; overflow-y: auto; box-shadow: 0 0 20px -14px rgba(0,0,0,.3) inset; }
-        .tb-leaf-front { box-shadow: inset 10px 0 18px -16px rgba(0,0,0,.25); }
-        .tb-leaf-back  { transform: rotateY(180deg); box-shadow: inset -10px 0 18px -16px rgba(0,0,0,.25); }
         .tb-page-inner { padding: 1.5rem 1.4rem 0.5rem; }
         .tb-page-num { position: absolute; bottom: .6rem; left: 0; right: 0; text-align: center; font-size: 10px; color: #b7a978; letter-spacing: .1em; }
 
@@ -182,13 +175,6 @@
     <div class="max-w-4xl mx-auto px-6">
         <div class="tb-stage">
             <div id="tb-book" class="tb-book closed">
-                <div class="tb-base">
-                    <div class="tb-base-half">
-                        <i class="fas fa-feather-alt"></i>
-                        <p><strong>Vuoi inserire il tuo Totem?</strong><br>Aggiungilo qui sotto ↓</p>
-                    </div>
-                    <div class="tb-base-half"></div>
-                </div>
                 <div id="tb-pages" class="tb-pages"></div>
                 <div id="tb-cover" class="tb-cover" onclick="totemOpenBook()">
                     <div class="tb-cover-face">
