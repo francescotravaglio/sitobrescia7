@@ -49,13 +49,17 @@
     function render(entries) {
         pages = buildPages(entries);
         leaves = pages.length;
-        currentFlipped = -1;
+        // se i dati arrivano/si aggiornano mentre il libro è già aperto (es.
+        // dopo un ripristino da bfcache), resta aperto sulla prima pagina
+        // invece di disallinearsi rispetto allo stato visivo della copertina
+        var book = document.getElementById('tb-book');
+        currentFlipped = (book && book.classList.contains('open')) ? 0 : -1;
 
         var wrap = document.getElementById('tb-pages');
         var html = '';
         for (var i = 0; i < leaves; i++) {
             html += '<div class="tb-leaf" id="tb-leaf-' + i + '">' +
-                '<div class="tb-leaf-face">' + pageHtml(pages[i], i + 1) + '</div>' +
+                '<div class="tb-leaf-face" onclick="totemNextPage()">' + pageHtml(pages[i], i + 1) + '</div>' +
                 '</div>';
         }
         wrap.innerHTML = html;
@@ -118,14 +122,19 @@
     });
 
     render([]);
-    window.addEventListener('load', function () {
+    function loadTotemEntries() {
         if (!window.db) return;
         window.db.collection('totem').where('approvato', '==', true).get().then(function (snap) {
             var ok = [];
             snap.forEach(function (d) { ok.push(d.data()); });
             render(ok);
         }).catch(function (err) { console.error(err); });
-    });
+    }
+    window.addEventListener('load', loadTotemEntries);
+    // Se la pagina viene ripristinata dalla bfcache (es. tasto "indietro" del
+    // browser), "load" non si ripete: senza questo, il libro resterebbe bloccato
+    // sulla pagina vuota iniziale invece di ricaricare i Totem.
+    window.addEventListener('pageshow', function (e) { if (e.persisted) loadTotemEntries(); });
 
     // ── Form invio ──────────────────────────────────────────────
     window.submitTotem = function () {
