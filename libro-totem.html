@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Il Libro dei Totem | AGESCI Brescia 7</title>
-    <meta name="description" content="Il Libro dei Totem del Gruppo Scout AGESCI Brescia 7: sfoglia i Totem di chi ha concluso il proprio cammino in Reparto e in Clan, e aggiungi il tuo.">
+    <meta name="description" content="Il Libro dei Totem del Gruppo Scout AGESCI Brescia 7: sfoglia i Totem di chi ha concluso il proprio cammino in Reparto, e aggiungi il tuo.">
     <link rel="canonical" href="https://agescibrescia7.com/libro-totem.html">
     <meta name="google-site-verification" content="t87HK9BnKuVXYPXU6CekSgJE78uAteIvuwoTqN3Vxig" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -29,26 +29,26 @@
         .form-label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
 
         /* ── Libro dei Totem: libro 3D apribile e sfogliabile ── */
-        .tb-stage { perspective: 2600px; display: flex; justify-content: center; padding: 1rem 0; }
-        .tb-book { position: relative; width: min(94vw, 820px); aspect-ratio: 8 / 5; }
+        .tb-stage { perspective: 2600px; display: flex; justify-content: center; align-items: center; padding: 1rem 0; position: relative; }
+        .tb-book { position: relative; width: min(94vw, 820px); aspect-ratio: 8 / 5; opacity: 0; transform: scale(.94); transition: opacity .6s ease .15s, transform .6s ease .15s; }
+        .tb-book.open { opacity: 1; transform: scale(1); }
 
-        /* copertina */
+        /* copertina: immagine reale, in formato "pagina singola" */
+        .tb-cover-pos { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
         .tb-cover {
-            position: absolute; inset: 0; z-index: 60; cursor: pointer;
-            border-radius: 6px 16px 16px 6px;
-            background: linear-gradient(135deg, #003366 0%, #001a3d 55%, #00142e 100%);
-            box-shadow: 0 30px 60px -18px rgba(0,0,0,.55), inset 0 0 0 2px rgba(252,196,0,.35), inset 0 0 40px rgba(0,0,0,.35);
-            display: flex; align-items: center; justify-content: center;
-            transform-origin: left center; transform-style: preserve-3d; backface-visibility: hidden;
-            transition: transform 1s cubic-bezier(.65,0,.35,1);
+            position: relative; width: min(58vw, 430px); aspect-ratio: 1414 / 2000;
+            border-radius: 8px; overflow: hidden; cursor: pointer; pointer-events: auto;
+            box-shadow: 0 30px 60px -18px rgba(0,0,0,.55);
+            transition: opacity .55s ease, transform .55s cubic-bezier(.65,0,.35,1);
         }
-        .tb-book.open .tb-cover { transform: rotateY(-180deg); box-shadow: none; pointer-events: none; }
-        .tb-cover-inner { text-align: center; padding: 2rem; color: #fff; }
-        .tb-cover-icon { font-size: clamp(2.2rem, 6vw, 3.25rem); color: #fcc400; margin-bottom: 1rem; opacity: .95; }
-        .tb-cover-title { font-family: 'Patrick Hand', cursive; font-size: clamp(1.6rem, 5.5vw, 2.75rem); line-height: 1.15; }
-        .tb-cover-sub { font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: #fcc400; opacity: .85; margin-top: .6rem; }
-        .tb-cover-cta { margin-top: 1.75rem; font-size: 12px; color: #fff; opacity: .65; }
-        .tb-cover-cta i { animation: tb-pulse 1.6s ease-in-out infinite; }
+        .tb-cover.opened { opacity: 0; transform: scale(.85) rotateY(-35deg); pointer-events: none; }
+        .tb-cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .tb-cover-hint {
+            position: absolute; left: 0; right: 0; bottom: 0; padding: 1.1rem .75rem .9rem; text-align: center;
+            font-size: 12px; letter-spacing: .04em; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.7);
+            background: linear-gradient(to top, rgba(0,0,0,.5), transparent);
+        }
+        .tb-cover-hint i { animation: tb-pulse 1.6s ease-in-out infinite; }
         @keyframes tb-pulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
 
         /* corpo del libro: base + fogli */
@@ -165,7 +165,7 @@
     <div class="max-w-4xl mx-auto text-center">
         <div class="inline-block bg-white/20 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Una tradizione scout</div>
         <h1 class="text-4xl md:text-6xl font-black mb-4">Il Libro dei Totem</h1>
-        <p class="text-white/70 text-lg max-w-2xl mx-auto">Al termine del proprio cammino in Reparto e in Clan, ogni scout riceve il proprio Totem: un nome che porterà per sempre. Qui raccogliamo la memoria di tutti i Totem del Brescia 7.</p>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto">Al termine del proprio cammino in Reparto, ogni scout riceve il proprio Totem: un nome che porterà per sempre. Qui raccogliamo la memoria di tutti i Totem del Brescia 7.</p>
     </div>
 </div>
 
@@ -185,13 +185,11 @@
                     </div>
                 </div>
                 <div id="tb-pages" class="tb-pages"></div>
+            </div>
+            <div class="tb-cover-pos">
                 <div id="tb-cover" class="tb-cover" onclick="totemOpenBook()">
-                    <div class="tb-cover-inner">
-                        <i class="fas fa-scroll tb-cover-icon"></i>
-                        <div class="tb-cover-title">Libro dei Totem</div>
-                        <div class="tb-cover-sub">AGESCI Brescia 7</div>
-                        <div class="tb-cover-cta">Tocca per aprire <i class="fas fa-hand-pointer ml-1"></i></div>
-                    </div>
+                    <img src="images/libro-totem-copertina.jpg" alt="Copertina del Libro dei Totem — Gruppo Scout AGESCI Brescia 7" class="tb-cover-img" width="1414" height="2000" loading="lazy">
+                    <div class="tb-cover-hint">Tocca per aprire <i class="fas fa-hand-pointer ml-1"></i></div>
                 </div>
             </div>
         </div>
