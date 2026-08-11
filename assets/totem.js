@@ -67,12 +67,34 @@
         updateControls();
     }
 
-    function updateLeaves() {
+    function restingZ(i) {
+        return i < currentFlipped ? 20 + i : 20 + (leaves - i);
+    }
+
+    // activeIndex: la pagina che sta girando in questo momento. Il suo
+    // z-index normale a fine animazione può essere più basso di quello della
+    // pagina successiva (che resta ferma sopra di lei), il che nasconderebbe
+    // subito la rotazione: per questo durante il transition la teniamo
+    // temporaneamente sopra a tutte, per poi riportarla al valore definitivo
+    // a transizione conclusa.
+    function updateLeaves(activeIndex) {
         for (var i = 0; i < leaves; i++) {
             var leaf = document.getElementById('tb-leaf-' + i);
             if (!leaf) continue;
-            if (i < currentFlipped) { leaf.style.zIndex = 20 + i; leaf.classList.add('flipped'); }
-            else { leaf.style.zIndex = 20 + (leaves - i); leaf.classList.remove('flipped'); }
+            if (i < currentFlipped) leaf.classList.add('flipped');
+            else leaf.classList.remove('flipped');
+
+            if (i === activeIndex) {
+                leaf.style.zIndex = 100;
+                leaf.addEventListener('transitionend', (function (el, z) {
+                    return function (e) {
+                        if (e.propertyName !== 'transform') return;
+                        el.style.zIndex = z;
+                    };
+                })(leaf, restingZ(i)), { once: true });
+            } else {
+                leaf.style.zIndex = restingZ(i);
+            }
         }
     }
 
@@ -89,13 +111,14 @@
 
     window.totemNextPage = function () {
         if (currentFlipped < 0 || currentFlipped >= leaves - 1) return;
+        var active = currentFlipped;
         currentFlipped++;
-        updateLeaves(); updateControls();
+        updateLeaves(active); updateControls();
     };
     window.totemPrevPage = function () {
         if (currentFlipped <= 0) { window.totemCloseBook(); return; }
         currentFlipped--;
-        updateLeaves(); updateControls();
+        updateLeaves(currentFlipped); updateControls();
     };
     window.totemOpenBook = function () {
         var book = document.getElementById('tb-book');
