@@ -16,7 +16,6 @@
     function entryRow(e) {
         return '<li class="tb-entry"><span class="tb-entry-anno">' + esc(e.anno) + '</span>' +
             '<span class="tb-entry-nome">' + esc(e.nome) + '</span>' +
-            '<i class="fas fa-paw tb-entry-sep"></i>' +
             '<span class="tb-entry-totem">' + esc(e.totem) + '</span></li>';
     }
 
