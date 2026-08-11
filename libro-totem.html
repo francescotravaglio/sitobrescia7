@@ -30,7 +30,7 @@
 
         /* ── Libro dei Totem: libro 3D apribile e sfogliabile ── */
         .tb-stage { perspective: 2600px; display: flex; justify-content: center; align-items: center; padding: 1rem 0; position: relative; }
-        .tb-book { position: relative; width: min(94vw, 820px); aspect-ratio: 8 / 5; }
+        .tb-book { position: relative; width: min(94vw, 820px); aspect-ratio: 8 / 5; transition: height .5s ease; }
 
         /* copertina: si comporta come il foglio più esterno, con la stessa cerniera sulla costa */
         .tb-cover-spine-fill {
@@ -60,6 +60,7 @@
         /* corpo del libro: base + fogli */
         .tb-base { position: absolute; inset: 0; z-index: 1; display: flex; border-radius: 6px; overflow: hidden; box-shadow: 0 25px 55px -18px rgba(0,0,0,.4); background: #f6efdc; }
         .tb-base-half { flex: 1 1 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem; color: #8a7a52; }
+        .tb-base-half-back { background: url('images/libro-totem-copertina-retro.jpg') center/cover; }
         .tb-base-half i { font-size: 1.75rem; color: #c9b77e; margin-bottom: .75rem; }
         .tb-base-half strong { color: #6b5d3a; }
 
@@ -90,6 +91,9 @@
             .tb-page-inner { padding: 1rem .9rem .3rem; }
             .tb-entry { font-size: .72rem; }
             .tb-entry-totem { font-size: .9rem; }
+            /* a libro chiuso resta 8:5 (la copertina non si deforma);
+               una volta aperto guadagna altezza per leggere comodamente */
+            .tb-book.open { height: min(78vh, 640px); }
         }
     </style><style>.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}.reveal.visible{opacity:1;transform:none;}.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s;}.reveal-delay-3{transition-delay:.35s;}</style>
 </head>
@@ -181,7 +185,7 @@
                         <i class="fas fa-feather-alt"></i>
                         <p><strong>Vuoi inserire il tuo Totem?</strong><br>Aggiungilo qui sotto ↓</p>
                     </div>
-                    <div class="tb-base-half"></div>
+                    <div class="tb-base-half tb-base-half-back"></div>
                 </div>
                 <div id="tb-pages" class="tb-pages"></div>
                 <div class="tb-cover-spine-fill"></div>
