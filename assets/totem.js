@@ -8,7 +8,7 @@
     var annoInput = document.getElementById('tf-anno');
     if (annoInput) annoInput.max = new Date().getFullYear();
 
-    var PER_PAGE = 7;
+    var PER_PAGE = 5;
     var pages = [];
     var leaves = 0;
     var currentFlipped = -1; // -1 = libro chiuso; 0..leaves-1 = pagina visibile
