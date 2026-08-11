@@ -52,12 +52,6 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    // ── Amministratori: elenco di riferimento (non gli account Firebase Auth veri
-    //    e propri), visibile e modificabile solo dagli admin già autenticati ──
-    match /admins/{doc} {
-      allow read, write: if isAdmin();
-    }
-
     // ── Testimonianze: lettura pubblica, invio pubblico con validazione ──
     match /testimonianze/{doc} {
       allow read: if true;
@@ -68,9 +62,14 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // ── Libro dei Totem: lettura pubblica, invio pubblico con validazione ──
+    // ── Libro dei Totem: lettura pubblica solo delle voci approvate (quelle in
+    //    attesa di moderazione sono leggibili solo dagli admin), invio pubblico
+    //    con validazione. Il client pubblico deve interrogare con
+    //    where('approvato','==',true): senza quel filtro nella query, Firestore
+    //    nega l'intera lettura ai non-admin (non filtra silenziosamente) perché
+    //    non può garantire che ogni documento restituito rispetti la regola ──
     match /totem/{doc} {
-      allow read: if true;
+      allow read: if resource.data.approvato == true || isAdmin();
       allow create: if
         request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
         request.resource.data.totem is string && request.resource.data.totem.size() > 0 && request.resource.data.totem.size() < 60 &&
