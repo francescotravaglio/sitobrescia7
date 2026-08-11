@@ -59,7 +59,7 @@
         var html = '';
         for (var i = 0; i < leaves; i++) {
             html += '<div class="tb-leaf" id="tb-leaf-' + i + '">' +
-                '<div class="tb-leaf-face">' + pageHtml(pages[i], i + 1) + '</div>' +
+                '<div class="tb-leaf-face" onclick="totemNextPage()">' + pageHtml(pages[i], i + 1) + '</div>' +
                 '</div>';
         }
         wrap.innerHTML = html;
