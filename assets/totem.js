@@ -41,7 +41,7 @@
         return '<div class="tb-page-inner"><ul class="tb-entry-list">' + html + '</ul></div><div class="tb-page-num">' + pageNum + '</div>';
     }
 
-    var MAX_PER_PAGE = 6;
+    var MAX_PER_PAGE = 8;
 
     function buildPages(entries) {
         entries = entries.slice().sort(function (a, b) {
