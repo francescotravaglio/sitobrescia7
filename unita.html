@@ -178,8 +178,9 @@
 
             <!-- CERCHIO -->
             <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('cerchio')">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="images/cerchio.jpg" alt="Cerchio" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="relative h-64 overflow-hidden" data-unit-slideshow="cerchio">
+                    <img src="images/cerchio.jpg" alt="Cerchio" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:1">
+                    <img src="images/cerchio.jpg" alt="Cerchio" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:0">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-5 left-5">
                         <span class="bg-yellow-400 text-gray-900 text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wide">8 – 11 anni</span>
@@ -204,8 +205,9 @@
 
             <!-- REPARTO -->
             <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('reparto')">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="images/reparto.jpg" alt="Reparto" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="relative h-64 overflow-hidden" data-unit-slideshow="reparto">
+                    <img src="images/reparto.jpg" alt="Reparto" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:1">
+                    <img src="images/reparto.jpg" alt="Reparto" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:0">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-5 left-5">
                         <span class="bg-green-500 text-white text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wide">12 – 16 anni</span>
@@ -230,8 +232,9 @@
 
             <!-- CLAN -->
             <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('clan')">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="images/clan.jpg" alt="Clan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="relative h-64 overflow-hidden" data-unit-slideshow="clan">
+                    <img src="images/clan.jpg" alt="Clan" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:1">
+                    <img src="images/clan.jpg" alt="Clan" class="unit-slide absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105" style="opacity:0">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-5 left-5">
                         <span class="bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wide">16 – 21 anni</span>
@@ -423,6 +426,26 @@ document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') window.closeUnitaGallery();
     if (e.key === 'ArrowRight') window.galleryNext(1);
     if (e.key === 'ArrowLeft') window.galleryNext(-1);
+});
+
+// Slideshow automatico nella card di ogni unità (sopra la descrizione):
+// se la cartella ha più di una foto, le fa scorrere da sole con un
+// dissolvenza incrociata tra due <img> sovrapposte.
+document.querySelectorAll('[data-unit-slideshow]').forEach(function (container) {
+    var unit = container.getAttribute('data-unit-slideshow');
+    probeUnitPhotos('images/' + unit + '/').then(function (photos) {
+        if (photos.length < 2) return;
+        var layers = container.querySelectorAll('.unit-slide');
+        var active = 0, idx = 0;
+        setInterval(function () {
+            idx = (idx + 1) % photos.length;
+            var next = 1 - active;
+            layers[next].src = photos[idx];
+            layers[next].style.opacity = '1';
+            layers[active].style.opacity = '0';
+            active = next;
+        }, 4000);
+    });
 });
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
