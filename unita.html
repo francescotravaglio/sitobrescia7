@@ -141,6 +141,22 @@
   </div></div>
 </div>
 
+<!-- MODAL GALLERIA FOTO UNITÀ -->
+<div id="modal-gallery" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/90" onclick="closeUnitaGallery()"></div>
+  <div class="relative h-full flex flex-col items-center justify-center px-4">
+    <button onclick="closeUnitaGallery()" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition"><i class="fas fa-times"></i></button>
+    <div id="gallery-loading" class="text-white/70 text-sm hidden"><i class="fas fa-spinner fa-spin mr-2"></i>Caricamento foto…</div>
+    <div id="gallery-empty" class="text-white/70 text-sm hidden">Nessuna foto disponibile per ora.</div>
+    <img id="gallery-img" src="" alt="" class="max-h-[75vh] max-w-full rounded-xl shadow-2xl hidden">
+    <div id="gallery-nav" class="flex items-center gap-6 mt-6 hidden">
+      <button onclick="galleryNext(-1)" aria-label="Foto precedente" class="w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition"><i class="fas fa-chevron-left"></i></button>
+      <span id="gallery-counter" class="text-white/70 text-sm font-medium"></span>
+      <button onclick="galleryNext(1)" aria-label="Foto successiva" class="w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE HERO -->
 <div class="bg-scout text-white py-16 px-6">
     <div class="max-w-4xl mx-auto text-center">
@@ -161,7 +177,7 @@
         <div class="grid lg:grid-cols-3 gap-8">
 
             <!-- CERCHIO -->
-            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openPreIscrizione()">
+            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('cerchio')">
                 <div class="relative h-64 overflow-hidden">
                     <img src="images/cerchio.jpg" alt="Cerchio" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -180,14 +196,14 @@
                     </div>
                     <div class="mt-6 pt-6 border-t border-gray-100">
                         <button class="w-full bg-white text-scout font-black py-3 rounded-xl text-sm hover:bg-gray-100 transition border border-gray-100">
-                            <i class="fas fa-info-circle mr-2"></i>Voglio saperne di più
+                            <i class="fas fa-images mr-2"></i>Guarda le foto
                         </button>
                     </div>
                 </div>
             </div>
 
             <!-- REPARTO -->
-            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openPreIscrizione()">
+            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('reparto')">
                 <div class="relative h-64 overflow-hidden">
                     <img src="images/reparto.jpg" alt="Reparto" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -206,14 +222,14 @@
                     </div>
                     <div class="mt-6 pt-6 border-t border-gray-100">
                         <button class="w-full bg-scout text-white font-black py-3 rounded-xl text-sm hover:bg-scout-dark transition">
-                            <i class="fas fa-info-circle mr-2"></i>Voglio saperne di più
+                            <i class="fas fa-images mr-2"></i>Guarda le foto
                         </button>
                     </div>
                 </div>
             </div>
 
             <!-- CLAN -->
-            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openPreIscrizione()">
+            <div class="card-hover group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer reveal" onclick="openUnitaGallery('clan')">
                 <div class="relative h-64 overflow-hidden">
                     <img src="images/clan.jpg" alt="Clan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -232,7 +248,7 @@
                     </div>
                     <div class="mt-6 pt-6 border-t border-gray-100">
                         <button class="w-full bg-gray-900 text-white font-black py-3 rounded-xl text-sm hover:bg-gray-700 transition">
-                            <i class="fas fa-info-circle mr-2"></i>Voglio saperne di più
+                            <i class="fas fa-images mr-2"></i>Guarda le foto
                         </button>
                     </div>
                 </div>
@@ -346,6 +362,68 @@ window.closePreIscrizione = function() {
     document.getElementById('pre-success').classList.add('hidden');
     document.getElementById('pre-error').classList.add('hidden');
 };
+
+// ── Galleria foto unità ─────────────────────────────────────────
+// Ogni unità ha una cartella images/<unità>/ con le foto numerate
+// 1.jpg, 2.jpg, 3.jpg... Per aggiungerne di nuove basta caricare il
+// file successivo con il numero giusto, senza toccare il codice: la
+// pagina prova a caricarle in sequenza e si ferma al primo numero mancante.
+var galleryPhotos = [];
+var galleryIndex = 0;
+
+function probeUnitPhotos(folder) {
+    return new Promise(function (resolve) {
+        var found = [];
+        var i = 1;
+        var MAX = 20;
+        (function tryNext() {
+            if (i > MAX) { resolve(found); return; }
+            var img = new Image();
+            img.onload = function () { found.push(folder + i + '.jpg'); i++; tryNext(); };
+            img.onerror = function () { resolve(found); };
+            img.src = folder + i + '.jpg';
+        })();
+    });
+}
+
+function showGalleryPhoto() {
+    document.getElementById('gallery-img').src = galleryPhotos[galleryIndex];
+    document.getElementById('gallery-counter').textContent = (galleryIndex + 1) + ' / ' + galleryPhotos.length;
+}
+
+window.openUnitaGallery = function (unit) {
+    document.getElementById('modal-gallery').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    var imgEl = document.getElementById('gallery-img');
+    var loadingEl = document.getElementById('gallery-loading');
+    var emptyEl = document.getElementById('gallery-empty');
+    var navEl = document.getElementById('gallery-nav');
+    imgEl.classList.add('hidden'); emptyEl.classList.add('hidden'); navEl.classList.add('hidden');
+    loadingEl.classList.remove('hidden');
+    probeUnitPhotos('images/' + unit + '/').then(function (photos) {
+        loadingEl.classList.add('hidden');
+        galleryPhotos = photos; galleryIndex = 0;
+        if (!photos.length) { emptyEl.classList.remove('hidden'); return; }
+        imgEl.classList.remove('hidden');
+        if (photos.length > 1) navEl.classList.remove('hidden');
+        showGalleryPhoto();
+    });
+};
+window.closeUnitaGallery = function () {
+    document.getElementById('modal-gallery').classList.add('hidden');
+    document.body.style.overflow = '';
+};
+window.galleryNext = function (dir) {
+    if (!galleryPhotos.length) return;
+    galleryIndex = (galleryIndex + dir + galleryPhotos.length) % galleryPhotos.length;
+    showGalleryPhoto();
+};
+document.addEventListener('keydown', function (e) {
+    if (document.getElementById('modal-gallery').classList.contains('hidden')) return;
+    if (e.key === 'Escape') window.closeUnitaGallery();
+    if (e.key === 'ArrowRight') window.galleryNext(1);
+    if (e.key === 'ArrowLeft') window.galleryNext(-1);
+});
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
