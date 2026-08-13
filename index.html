@@ -148,7 +148,7 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
     <!-- EmailJS: defer per non bloccare il rendering -->
-    <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" onload="emailjs.init('2-7fs3VQpyEDJMonD')"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" integrity="sha384-2BNGrQ48jXhJZb0u9FfgOUGJQsbuoecOc1/bdu0oRviV7oc0g5gFTyYsSd7YICDP" crossorigin="anonymous" onload="emailjs.init('2-7fs3VQpyEDJMonD')"></script>
     <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
         html { scroll-behavior: smooth; }
@@ -1302,8 +1302,8 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <!-- Firebase SDK: defer per non bloccare il rendering -->
-<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js" integrity="sha384-Nc5ARm3RyW8KveEJE95Jpt7ImqwhlOwGfqVpFGgF4Ao//x1qi8KIDcSj+OLG4ekb" crossorigin="anonymous"></script>
+<script defer src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js" integrity="sha384-7KEsLxyAvzBXN/Ln39jh2knr7dO7QETWBRvJaSYB+KoJOUipOi6LS4Hxi7hIclWO" crossorigin="anonymous"></script>
 <script>
 window.addEventListener('load', function() {
     firebase.initializeApp({

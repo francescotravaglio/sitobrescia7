@@ -18,7 +18,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NJR3QFZP7"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});gtag('config','G-4NJR3QFZP7');</script>
     <link rel="stylesheet" href="assets/tailwind.css">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" integrity="sha384-2BNGrQ48jXhJZb0u9FfgOUGJQsbuoecOc1/bdu0oRviV7oc0g5gFTyYsSd7YICDP" crossorigin="anonymous"></script>
     <script>window.addEventListener('load',function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -592,8 +592,8 @@ window.closePreIscrizione = function() {
     setTimeout(function(){ els.forEach(function(el){ el.classList.add('visible'); }); }, 2500);
 })();
 </script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js" integrity="sha384-Nc5ARm3RyW8KveEJE95Jpt7ImqwhlOwGfqVpFGgF4Ao//x1qi8KIDcSj+OLG4ekb" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js" integrity="sha384-7KEsLxyAvzBXN/Ln39jh2knr7dO7QETWBRvJaSYB+KoJOUipOi6LS4Hxi7hIclWO" crossorigin="anonymous"></script>
 <script>
 firebase.initializeApp({ apiKey:"AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III", authDomain:"agescibrescia7-508b0.firebaseapp.com", projectId:"agescibrescia7-508b0", storageBucket:"agescibrescia7-508b0.firebasestorage.app", messagingSenderId:"738190317173", appId:"1:738190317173:web:6ee596fc6e09494f04ca3c" });
 window.db = firebase.firestore();
