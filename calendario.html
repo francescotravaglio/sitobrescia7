@@ -708,6 +708,29 @@
     <i class="fab fa-whatsapp text-2xl"></i>
     <span class="text-sm hidden sm:inline">Scrivici</span>
 </a>
+
+<script>
+// Il sito registrava un Service Worker (sw.js) che è stato rimosso dalle
+// pagine tempo fa: chi lo aveva già installato prima della rimozione
+// continua ad averlo attivo sul dispositivo, e quel SW resta a servire
+// versioni vecchie di pagine/asset dalla sua cache anche dopo un deploy
+// nuovo — nessuna pulizia della cache del browser lo tocca, perché vive
+// a un livello più profondo. Qui lo disinstalliamo per chi lo avesse
+// ancora, poi ricarichiamo una sola volta (mai in loop) per far sì che
+// quella stessa visita prenda subito la versione fresca.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (regs) {
+        if (!regs.length) return;
+        Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+            if ('caches' in window) caches.keys().then(function (keys) { keys.forEach(function (k) { caches.delete(k); }); });
+            if (!sessionStorage.getItem('sw_cleanup_reload')) {
+                sessionStorage.setItem('sw_cleanup_reload', '1');
+                location.reload();
+            }
+        });
+    });
+}
+</script>
 <!-- SITE-FOOTER:END -->
 
 <script>
