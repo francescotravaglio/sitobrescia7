@@ -44,10 +44,14 @@ service cloud.firestore {
     // ── Pre-iscrizioni: il pubblico può solo CREARE (con validazione) ──
     match /pre_iscrizioni/{doc} {
       allow create: if
+        request.resource.data.keys().hasOnly(['genitore_nome','genitore_cognome','bambino_nome','data_nascita','email','telefono','timestamp','letta']) &&
         request.resource.data.genitore_nome is string    && request.resource.data.genitore_nome.size() > 0    && request.resource.data.genitore_nome.size() < 100 &&
         request.resource.data.genitore_cognome is string && request.resource.data.genitore_cognome.size() < 100 &&
         request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
+        request.resource.data.data_nascita is string     && request.resource.data.data_nascita.size() < 20 &&
         request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.telefono is string         && request.resource.data.telefono.size() < 30 &&
+        request.resource.data.timestamp is string        && request.resource.data.timestamp.size() < 40 &&
         request.resource.data.letta == false;
       allow read, update, delete: if isAdmin();
     }
@@ -62,8 +66,11 @@ service cloud.firestore {
     match /testimonianze/{doc} {
       allow read: if true;
       allow create: if
+        request.resource.data.keys().hasOnly(['nome','ruolo','testo','timestamp','approvata']) &&
         request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
+        request.resource.data.ruolo is string && request.resource.data.ruolo.size() < 50 &&
         request.resource.data.testo is string && request.resource.data.testo.size() > 0 && request.resource.data.testo.size() < 400 &&
+        request.resource.data.timestamp is string && request.resource.data.timestamp.size() < 40 &&
         request.resource.data.approvata == false;
       allow update, delete: if isAdmin();
     }
@@ -77,9 +84,11 @@ service cloud.firestore {
     match /totem/{doc} {
       allow read: if resource.data.approvato == true || isAdmin();
       allow create: if
+        request.resource.data.keys().hasOnly(['nome','totem','anno','timestamp','approvato']) &&
         request.resource.data.nome is string  && request.resource.data.nome.size() > 0  && request.resource.data.nome.size() < 50 &&
         request.resource.data.totem is string && request.resource.data.totem.size() > 0 && request.resource.data.totem.size() < 60 &&
         request.resource.data.anno is string  && request.resource.data.anno.size() > 0  && request.resource.data.anno.size() < 10 &&
+        request.resource.data.timestamp is string && request.resource.data.timestamp.size() < 40 &&
         request.resource.data.approvato == false;
       allow update, delete: if isAdmin();
     }
