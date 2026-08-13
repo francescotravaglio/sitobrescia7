@@ -716,17 +716,14 @@
 // versioni vecchie di pagine/asset dalla sua cache anche dopo un deploy
 // nuovo — nessuna pulizia della cache del browser lo tocca, perché vive
 // a un livello più profondo. Qui lo disinstalliamo per chi lo avesse
-// ancora, poi ricarichiamo una sola volta (mai in loop) per far sì che
-// quella stessa visita prenda subito la versione fresca.
+// ancora. Niente ricarica automatica (avrebbe interrotto chi sta già
+// interagendo con la pagina, es. aprendo il Libro dei Totem): la pulizia
+// resta silenziosa, la visita successiva prende già la versione fresca.
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function (regs) {
         if (!regs.length) return;
         Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
             if ('caches' in window) caches.keys().then(function (keys) { keys.forEach(function (k) { caches.delete(k); }); });
-            if (!sessionStorage.getItem('sw_cleanup_reload')) {
-                sessionStorage.setItem('sw_cleanup_reload', '1');
-                location.reload();
-            }
         });
     });
 }
