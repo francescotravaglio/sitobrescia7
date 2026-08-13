@@ -77,6 +77,20 @@
         .tb-entry { display: flex; align-items: baseline; gap: .4rem; padding: .3rem 0; font-size: .8rem; border-bottom: 1px dotted #e6dcc0; flex-wrap: wrap; }
         .tb-entry-nome { font-weight: 700; color: #003366; }
         .tb-entry-totem { font-family: 'Patrick Hand', cursive; font-size: 1rem; color: #1a5276; }
+
+        /* Restringimento automatico: pagine con più voci usano testo via via più
+           piccolo (ma sempre leggibile) invece di andare in scroll. La soglia
+           oltre cui si passa comunque a una pagina aggiuntiva è calibrata sul
+           punto più stretto (il libro più piccolo, su schermo di telefono). */
+        .tb-page-inner.tb-d1 .tb-year-divider { font-size: 1rem;   margin: .6rem 0 .25rem; }
+        .tb-page-inner.tb-d1 .tb-entry        { font-size: .72rem; padding: .22rem 0; }
+        .tb-page-inner.tb-d1 .tb-entry-totem  { font-size: .9rem; }
+        .tb-page-inner.tb-d2 .tb-year-divider { font-size: .9rem;  margin: .45rem 0 .2rem; }
+        .tb-page-inner.tb-d2 .tb-entry        { font-size: .64rem; padding: .16rem 0; }
+        .tb-page-inner.tb-d2 .tb-entry-totem  { font-size: .8rem; }
+        .tb-page-inner.tb-d3 .tb-year-divider { font-size: .8rem;  margin: .35rem 0 .15rem; }
+        .tb-page-inner.tb-d3 .tb-entry        { font-size: .58rem; padding: .12rem 0; }
+        .tb-page-inner.tb-d3 .tb-entry-totem  { font-size: .72rem; }
         .tb-controls { display: none; align-items: center; justify-content: center; gap: 1.25rem; margin-top: 1.5rem; }
         .tb-nav-btn { width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #003366; color: #fff; display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .2s; flex-shrink: 0; }
         .tb-nav-btn:hover:not(:disabled) { transform: scale(1.08); }

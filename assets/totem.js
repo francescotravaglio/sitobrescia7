@@ -29,6 +29,15 @@
             '<span class="tb-entry-totem">' + esc(e.totem) + '</span></li>';
     }
 
+    // Sopra le 3 voci il testo si restringe via via (invece di andare in
+    // scroll), fino alla soglia più piccola ancora leggibile: MAX_PER_PAGE.
+    function densityClass(count) {
+        if (count > 9) return 'tb-d3';
+        if (count > 4) return 'tb-d2';
+        if (count > 3) return 'tb-d1';
+        return '';
+    }
+
     function pageHtml(entries, pageNum) {
         if (!entries.length) {
             return '<div class="tb-page-num">' + pageNum + '</div>';
@@ -38,10 +47,10 @@
             if (e.anno !== lastAnno) { html += '<div class="tb-year-divider">' + esc(e.anno) + '</div>'; lastAnno = e.anno; }
             html += entryRow(e);
         });
-        return '<div class="tb-page-inner"><ul class="tb-entry-list">' + html + '</ul></div><div class="tb-page-num">' + pageNum + '</div>';
+        return '<div class="tb-page-inner ' + densityClass(entries.length) + '"><ul class="tb-entry-list">' + html + '</ul></div><div class="tb-page-num">' + pageNum + '</div>';
     }
 
-    var MAX_PER_PAGE = 8;
+    var MAX_PER_PAGE = 11;
 
     function buildPages(entries) {
         entries = entries.slice().sort(function (a, b) {
