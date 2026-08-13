@@ -1,4 +1,4 @@
-const CACHE = 'bs7-v3';
+const CACHE = 'bs7-v4';
 const SHELL = [
     './documenti.html',
     './index.html',
@@ -34,18 +34,17 @@ self.addEventListener('fetch', e => {
     // pagine riservate: sempre dalla rete, mai dalla cache del SW
     if (NO_CACHE.some(p => url.includes(p))) return;
 
+    // Sempre prima la rete: la cache serve solo come riserva se sei offline.
+    // (In precedenza gli asset statici — JS/CSS/immagini — erano "prima la
+    // cache", quindi dopo un deploy restavano bloccati alla versione vecchia
+    // finché non si ricaricava una seconda volta.)
     e.respondWith(
-        caches.match(e.request).then(cached => {
-            const networkFetch = fetch(e.request).then(res => {
-                if (res && res.status === 200 && res.type !== 'opaque') {
-                    const clone = res.clone();
-                    caches.open(CACHE).then(c => c.put(e.request, clone));
-                }
-                return res;
-            }).catch(() => cached);
-            // Network-first per HTML, cache-first per assets statici
-            if (e.request.destination === 'document') return networkFetch;
-            return cached || networkFetch;
-        })
+        fetch(e.request).then(res => {
+            if (res && res.status === 200 && res.type !== 'opaque') {
+                const clone = res.clone();
+                caches.open(CACHE).then(c => c.put(e.request, clone));
+            }
+            return res;
+        }).catch(() => caches.match(e.request))
     );
 });
