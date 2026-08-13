@@ -493,6 +493,9 @@ window.db = firebase.firestore();
   if(!els.length) return;
   var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); }, {threshold:0.12});
   els.forEach(function(el){ io.observe(el); });
+  // rete di sicurezza: se l'observer non scattasse mai (script bloccato,
+  // errore altrove nella pagina), il contenuto resta comunque visibile
+  setTimeout(function(){ els.forEach(function(el){ el.classList.add('visible'); }); }, 2500);
 })();
 </script><script src="assets/lead.js"></script>
 <script src="assets/cookie-consent.js"></script>

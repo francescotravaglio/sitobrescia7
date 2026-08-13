@@ -584,8 +584,12 @@ window.closePreIscrizione = function() {
 };
 // Scroll reveal
 (function(){
+    var els = document.querySelectorAll('.reveal');
     var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); },{threshold:0.1});
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    els.forEach(function(el){ io.observe(el); });
+    // rete di sicurezza: se l'observer non scattasse mai (script bloccato,
+    // errore altrove nella pagina), il contenuto resta comunque visibile
+    setTimeout(function(){ els.forEach(function(el){ el.classList.add('visible'); }); }, 2500);
 })();
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
