@@ -522,6 +522,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 errEl.classList.remove('hidden');
                 return;
             }
+            if (!user.emailVerified) {
+                firebase.auth().signOut();
+                const errEl = document.getElementById('login-error');
+                errEl.textContent = 'Email non verificata. Controlla la posta e clicca il link di verifica prima di accedere.';
+                errEl.classList.remove('hidden');
+                return;
+            }
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('app').classList.remove('hidden');
             document.getElementById('app').classList.add('flex');
