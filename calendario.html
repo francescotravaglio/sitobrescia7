@@ -617,7 +617,27 @@
         URL.revokeObjectURL(url);
     }
 
+    // Promise riutilizzabile: garantisce che eventiAll sia stato caricato da
+    // Firestore prima di generare un PDF, anche se il pulsante viene premuto
+    // subito dopo l'apertura della pagina (altrimenti eventiAll è ancora
+    // vuoto e il PDF risulterebbe sempre senza eventi, qualunque metodo usi).
+    var eventiLoadPromise = null;
+    function loadEventi() {
+        if (!eventiLoadPromise) {
+            eventiLoadPromise = (window.db ? window.db.collection('eventi').get() : Promise.resolve({ docs: [] }))
+                .then(function(snap) {
+                    eventiAll = snap.docs.map(function(doc){ return doc.data(); });
+                    renderCalendar();
+                    renderProssimi();
+                })
+                .catch(function(e){ console.error('[cal]', e); renderProssimi(); });
+        }
+        return eventiLoadPromise;
+    }
+
     window.scaricaCalendarioPdf = async function(branca) {
+        await loadEventi();
+
         var now = new Date(); now.setHours(0,0,0,0);
         var eventi = eventiAll
             .filter(function(ev){ return ev.unita === branca || ev.unita === 'tutto'; })
@@ -636,14 +656,7 @@
 
     renderCalendar(); // prima render struttura (senza eventi)
 
-    window.addEventListener('load', function() {
-        if (!window.db) return;
-        window.db.collection('eventi').get().then(function(snap) {
-            eventiAll = snap.docs.map(function(doc){ return doc.data(); });
-            renderCalendar();
-            renderProssimi();
-        }).catch(function(e){ console.error('[cal]', e); renderProssimi(); });
-    });
+    window.addEventListener('load', loadEventi);
 })();
 </script>
 
