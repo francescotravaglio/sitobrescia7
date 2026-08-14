@@ -417,6 +417,13 @@
     var PDF_MARGIN = 15;
     var PDF_PURPLE = [91,45,130];
 
+    // I font standard usati da pdf-lib/jsPDF (WinAnsi) coprono solo Latin-1:
+    // rimuove emoji e altri caratteri fuori da quel set per evitare errori
+    // di generazione o glifi corrotti nel PDF.
+    function sanitizePdfText(s) {
+        return String(s == null ? '' : s).replace(/[^\x00-\xFF]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
     function drawLetterhead(doc, logoData, titolo, branca) {
         var pageW = doc.internal.pageSize.getWidth();
         var barH = 5, steps = 100;
@@ -642,7 +649,19 @@
         var eventi = eventiAll
             .filter(function(ev){ return ev.unita === branca || ev.unita === 'tutto'; })
             .filter(function(ev){ return new Date(ev.data) >= now; })
-            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); });
+            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); })
+            .map(function(ev){
+                // I font standard usati nei PDF (WinAnsi) non sanno codificare emoji o
+                // altri caratteri fuori da Latin-1: se il titolo/luogo/descrizione di un
+                // evento ne contiene, pdf-lib va in errore (facendo scattare il fallback)
+                // e jsPDF stampa glifi corrotti. Li rimuoviamo qui, una volta sola, prima
+                // di passare gli eventi a entrambi i generatori di PDF.
+                return Object.assign({}, ev, {
+                    titolo: sanitizePdfText(ev.titolo),
+                    luogo: sanitizePdfText(ev.luogo),
+                    descrizione: sanitizePdfText(ev.descrizione)
+                });
+            });
 
         try {
             if (typeof PDFLib === 'undefined') throw new Error('pdf-lib non disponibile');
