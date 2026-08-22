@@ -380,9 +380,14 @@
                             <textarea id="ev-descr" rows="2" placeholder="Breve descrizione dell'evento..."></textarea>
                         </div>
                     </div>
-                    <button onclick="addEvento()" class="btn btn-primary mt-5">
-                        <i class="fas fa-plus"></i>Aggiungi evento
-                    </button>
+                    <div class="flex gap-2 mt-5">
+                        <button id="ev-submit-btn" onclick="addEvento()" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>Aggiungi evento
+                        </button>
+                        <button id="ev-cancel-btn" onclick="annullaModificaEvento()" class="btn btn-outline hidden">
+                            Annulla modifica
+                        </button>
+                    </div>
                     </div>
                 </div>
 
@@ -949,13 +954,16 @@ function setLuogoSede() {
     document.getElementById('ev-luogo').value = 'Via Giovanni Cimabue 271, 25134 Brescia (San Polo)';
 }
 
+let eventEditingId = null;
+
 function addEvento() {
     const titolo    = document.getElementById('ev-titolo').value.trim();
     const data      = document.getElementById('ev-data').value;
     const dataFine  = document.getElementById('ev-data-fine').value;
     if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
     if (dataFine && dataFine < data) { toast('La data fine non può essere prima della data inizio.', false); return; }
-    const id = Date.now();
+    const id = eventEditingId || Date.now();
+    const stavaModificando = !!eventEditingId;
     const ev = { id, titolo, data,
         data_fine:   dataFine || null,
         unita:       document.getElementById('ev-unita').value,
@@ -964,11 +972,19 @@ function addEvento() {
     };
     window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
         .then(() => {
-            ['ev-titolo','ev-data','ev-data-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
-            document.getElementById('ev-unita').selectedIndex = 0;
-            toast('Evento aggiunto!');
+            annullaModificaEvento(true);
+            toast(stavaModificando ? 'Evento aggiornato!' : 'Evento aggiunto!');
         })
         .catch(e => { console.error(e); toast('Errore salvataggio evento.', false); });
+}
+
+function annullaModificaEvento(silenzioso) {
+    eventEditingId = null;
+    ['ev-titolo','ev-data','ev-data-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('ev-unita').selectedIndex = 0;
+    document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
+    document.getElementById('ev-cancel-btn').classList.add('hidden');
+    if (!silenzioso) toast('Modifica annullata.');
 }
 
 function renderEventi() {
@@ -1006,7 +1022,10 @@ function eventRow(ev) {
             </div>
             ${ev.descrizione ? `<div class="text-xs text-gray-400 mt-1">${escapeHtml(ev.descrizione)}</div>` : ''}
         </div>
-        <button onclick="duplicaEvento(${ev.id})" class="icon-btn ml-2" title="Ripeti questo evento">
+        <button onclick="modificaEvento(${ev.id})" class="icon-btn ml-2" title="Modifica">
+            <i class="fas fa-pen"></i>
+        </button>
+        <button onclick="duplicaEvento(${ev.id})" class="icon-btn" title="Ripeti questo evento">
             <i class="fas fa-copy"></i>
         </button>
         <button onclick="deleteEvento(${ev.id})" class="icon-btn danger" title="Elimina">
@@ -1015,9 +1034,29 @@ function eventRow(ev) {
     </div>`;
 }
 
+function modificaEvento(id) {
+    const ev = (window.eventiCache || []).find(e => e.id === id);
+    if (!ev) return;
+    eventEditingId = id;
+    document.getElementById('ev-titolo').value    = ev.titolo || '';
+    document.getElementById('ev-data').value      = ev.data || '';
+    document.getElementById('ev-data-fine').value = ev.data_fine || '';
+    document.getElementById('ev-unita').value     = ev.unita || 'tutto';
+    document.getElementById('ev-luogo').value     = ev.luogo || '';
+    document.getElementById('ev-descr').value     = ev.descrizione || '';
+    document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-check"></i>Salva modifiche';
+    document.getElementById('ev-cancel-btn').classList.remove('hidden');
+    document.getElementById('ev-titolo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('ev-data').focus();
+    toast('Modifica evento: aggiorna i campi e salva.');
+}
+
 function duplicaEvento(id) {
     const ev = (window.eventiCache || []).find(e => e.id === id);
     if (!ev) return;
+    eventEditingId = null;
+    document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
+    document.getElementById('ev-cancel-btn').classList.add('hidden');
     document.getElementById('ev-titolo').value    = ev.titolo || '';
     document.getElementById('ev-data').value      = ev.data || '';
     document.getElementById('ev-data-fine').value = ev.data_fine || '';
