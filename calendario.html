@@ -376,6 +376,7 @@
             var dateStr = ev.data_fine
                 ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})
                 : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long'});
+            if (ev.ora) dateStr += ' · ore ' + esc(ev.ora) + (ev.ora_fine ? '–' + esc(ev.ora_fine) : '');
             return '<div class="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">'
                 + '<div class="flex-shrink-0 text-center w-14 rounded-xl p-2" style="background:#f0f4fa">'
                 +   '<div class="text-2xl font-black leading-none" style="color:#003366">'+day+'</div>'
@@ -490,6 +491,7 @@
                 var dateStr = ev.data_fine
                     ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})
                     : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+                if (ev.ora) dateStr += ' · ore ' + ev.ora + (ev.ora_fine ? '–' + ev.ora_fine : '');
 
                 var blockH = 16 + (ev.luogo?5:0) + (ev.descrizione ? doc.splitTextToSize(ev.descrizione, pageW-2*PDF_MARGIN-4).length*4.2 : 0);
                 if (y + blockH > pageH - 22) { doc.addPage(); y = drawLetterhead(doc, logoData, titolo, branca); }
@@ -597,6 +599,7 @@
             var dateStr = ev.data_fine
                 ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})
                 : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+            if (ev.ora) dateStr += ' · ore ' + ev.ora + (ev.ora_fine ? '–' + ev.ora_fine : '');
 
             var maxTextW = pageW - 2*(CONTENT_MARGIN);
             var descLines = ev.descrizione ? wrapPdfLibText(ev.descrizione, fontR, 9, maxTextW) : [];

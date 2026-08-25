@@ -358,6 +358,14 @@
                             <input type="date" id="ev-data-fine">
                         </div>
                         <div>
+                            <label>Ora inizio <span class="font-normal text-gray-400">(facoltativa)</span></label>
+                            <input type="time" id="ev-ora">
+                        </div>
+                        <div>
+                            <label>Ora fine <span class="font-normal text-gray-400">(facoltativa)</span></label>
+                            <input type="time" id="ev-ora-fine">
+                        </div>
+                        <div>
                             <label>Unità</label>
                             <select id="ev-unita">
                                 <option value="tutto">Tutto il gruppo</option>
@@ -370,10 +378,16 @@
                         <div>
                             <label>Luogo</label>
                             <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga..." class="max-w-xs">
-                            <button type="button" onclick="setLuogoSede()"
-                                    class="mt-2 text-xs text-scout font-bold border border-scout/20 bg-scout/5 px-3 py-1.5 rounded-lg hover:bg-scout/10 transition">
-                                <i class="fas fa-map-marker-alt mr-1"></i>In sede — Via Giovanni Cimabue 271, 25134 Brescia (San Polo)
-                            </button>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <button type="button" onclick="setLuogoSede()"
+                                        class="text-xs text-scout font-bold border border-scout/20 bg-scout/5 px-3 py-1.5 rounded-lg hover:bg-scout/10 transition">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>In sede — Via Giovanni Cimabue 271, 25134 Brescia (San Polo)
+                                </button>
+                                <button type="button" onclick="setLuogoDaDefinire()"
+                                        class="text-xs text-gray-500 font-bold border border-gray-200 bg-gray-50 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition">
+                                    <i class="fas fa-question-circle mr-1"></i>Da Definire
+                                </button>
+                            </div>
                         </div>
                         <div class="sm:col-span-2">
                             <label>Descrizione</label>
@@ -953,6 +967,9 @@ function exportPreIscrizioniExcel() {
 function setLuogoSede() {
     document.getElementById('ev-luogo').value = 'Via Giovanni Cimabue 271, 25134 Brescia (San Polo)';
 }
+function setLuogoDaDefinire() {
+    document.getElementById('ev-luogo').value = 'Da Definire';
+}
 
 let eventEditingId = null;
 
@@ -960,12 +977,18 @@ function addEvento() {
     const titolo    = document.getElementById('ev-titolo').value.trim();
     const data      = document.getElementById('ev-data').value;
     const dataFine  = document.getElementById('ev-data-fine').value;
+    const ora       = document.getElementById('ev-ora').value;
+    const oraFine   = document.getElementById('ev-ora-fine').value;
     if (!titolo || !data) { toast('Titolo e data sono obbligatori.', false); return; }
     if (dataFine && dataFine < data) { toast('La data fine non può essere prima della data inizio.', false); return; }
+    if (!ora && oraFine) { toast('Inserisci anche l\'ora di inizio.', false); return; }
+    if (ora && oraFine && oraFine <= ora) { toast('L\'ora fine deve essere dopo l\'ora inizio.', false); return; }
     const id = eventEditingId || Date.now();
     const stavaModificando = !!eventEditingId;
     const ev = { id, titolo, data,
         data_fine:   dataFine || null,
+        ora:         ora || null,
+        ora_fine:    oraFine || null,
         unita:       document.getElementById('ev-unita').value,
         luogo:       document.getElementById('ev-luogo').value.trim(),
         descrizione: document.getElementById('ev-descr').value.trim(),
@@ -980,7 +1003,7 @@ function addEvento() {
 
 function annullaModificaEvento(silenzioso) {
     eventEditingId = null;
-    ['ev-titolo','ev-data','ev-data-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
+    ['ev-titolo','ev-data','ev-data-fine','ev-ora','ev-ora-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
     document.getElementById('ev-unita').selectedIndex = 0;
     document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
     document.getElementById('ev-cancel-btn').classList.add('hidden');
@@ -1007,6 +1030,7 @@ function eventRow(ev) {
     const dateLabel = ev.data_fine
         ? `${d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'})} → ${new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}`
         : d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+    const oraLabel = ev.ora ? ` · ore ${escapeHtml(ev.ora)}${ev.ora_fine ? '–' + escapeHtml(ev.ora_fine) : ''}` : '';
 
     return `<div class="flex items-center gap-5 px-6 py-4 hover:bg-gray-50 border-b border-gray-50 last:border-0 ${past ? 'opacity-50' : ''}">
         <div class="bg-scout text-white rounded-xl px-3 py-2 text-center flex-shrink-0 w-14">
@@ -1015,7 +1039,7 @@ function eventRow(ev) {
         </div>
         <div class="flex-1 min-w-0">
             <div class="font-bold text-gray-800">${escapeHtml(ev.titolo||'')}</div>
-            <div class="text-xs text-gray-400 mt-0.5">${dateLabel}</div>
+            <div class="text-xs text-gray-400 mt-0.5">${dateLabel}${oraLabel}</div>
             <div class="flex flex-wrap gap-2 mt-1">
                 <span class="badge ${uc}">${escapeHtml(ev.unita||'')}</span>
                 ${ev.luogo ? `<span class="text-xs text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i>${escapeHtml(ev.luogo)}</span>` : ''}
@@ -1041,6 +1065,8 @@ function modificaEvento(id) {
     document.getElementById('ev-titolo').value    = ev.titolo || '';
     document.getElementById('ev-data').value      = ev.data || '';
     document.getElementById('ev-data-fine').value = ev.data_fine || '';
+    document.getElementById('ev-ora').value       = ev.ora || '';
+    document.getElementById('ev-ora-fine').value  = ev.ora_fine || '';
     document.getElementById('ev-unita').value     = ev.unita || 'tutto';
     document.getElementById('ev-luogo').value     = ev.luogo || '';
     document.getElementById('ev-descr').value     = ev.descrizione || '';
@@ -1060,6 +1086,8 @@ function duplicaEvento(id) {
     document.getElementById('ev-titolo').value    = ev.titolo || '';
     document.getElementById('ev-data').value      = ev.data || '';
     document.getElementById('ev-data-fine').value = ev.data_fine || '';
+    document.getElementById('ev-ora').value       = ev.ora || '';
+    document.getElementById('ev-ora-fine').value  = ev.ora_fine || '';
     document.getElementById('ev-unita').value     = ev.unita || 'tutto';
     document.getElementById('ev-luogo').value     = ev.luogo || '';
     document.getElementById('ev-descr').value     = ev.descrizione || '';
