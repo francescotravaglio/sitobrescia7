@@ -388,11 +388,7 @@
                                     <i class="fas fa-question-circle mr-1"></i>Da Definire
                                 </button>
                             </div>
-                        </div>
-                        <div>
-                            <label>Link Google Maps <span class="font-normal text-gray-400">(facoltativo)</span></label>
-                            <input type="url" id="ev-maps" placeholder="Incolla qui il link Google Maps per la posizione esatta">
-                            <p class="text-xs text-gray-400 mt-1.5">Se lo lasci vuoto, sul sito si userà una ricerca Google Maps basata sul testo del luogo.</p>
+                            <p class="text-xs text-gray-400 mt-2">La posizione su Google Maps viene generata automaticamente dal testo del luogo.</p>
                         </div>
                         <div class="sm:col-span-2">
                             <label>Descrizione</label>
@@ -980,11 +976,9 @@ function exportPreIscrizioniExcel() {
 // ── EVENTI ────────────────────────────────────────────────────────
 function setLuogoSede() {
     document.getElementById('ev-luogo').value = 'Via Giovanni Cimabue 271, 25134 Brescia (San Polo)';
-    document.getElementById('ev-maps').value = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Via Giovanni Cimabue 271, 25134 Brescia');
 }
 function setLuogoDaDefinire() {
     document.getElementById('ev-luogo').value = 'Da Definire';
-    document.getElementById('ev-maps').value = '';
 }
 
 let eventEditingId = null;
@@ -1003,8 +997,6 @@ function addEvento() {
     // pur essendo dopo nel calendario (es. inizio ore 16 il 3, fine ore 14 il 4).
     const stessoGiorno = !dataFine || dataFine === data;
     if (stessoGiorno && ora && oraFine && oraFine <= ora) { toast('L\'ora fine deve essere dopo l\'ora inizio.', false); return; }
-    const maps = document.getElementById('ev-maps').value.trim();
-    if (maps && !/^https:\/\//i.test(maps)) { toast('Il link Maps deve iniziare con https://', false); return; }
     const id = eventEditingId || Date.now();
     const stavaModificando = !!eventEditingId;
     const ev = { id, titolo, data,
@@ -1013,7 +1005,6 @@ function addEvento() {
         ora_fine:    oraFine || null,
         unita:       document.getElementById('ev-unita').value,
         luogo:       document.getElementById('ev-luogo').value.trim(),
-        maps:        maps || null,
         descrizione: document.getElementById('ev-descr').value.trim(),
     };
     window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
@@ -1026,7 +1017,7 @@ function addEvento() {
 
 function annullaModificaEvento(silenzioso) {
     eventEditingId = null;
-    ['ev-titolo','ev-data','ev-data-fine','ev-ora','ev-ora-fine','ev-luogo','ev-maps','ev-descr'].forEach(i => document.getElementById(i).value = '');
+    ['ev-titolo','ev-data','ev-data-fine','ev-ora','ev-ora-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
     document.getElementById('ev-unita').selectedIndex = 0;
     document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
     document.getElementById('ev-cancel-btn').classList.add('hidden');
@@ -1096,7 +1087,6 @@ function modificaEvento(id) {
     document.getElementById('ev-ora-fine').value  = ev.ora_fine || '';
     document.getElementById('ev-unita').value     = ev.unita || 'tutto';
     document.getElementById('ev-luogo').value     = ev.luogo || '';
-    document.getElementById('ev-maps').value      = ev.maps || '';
     document.getElementById('ev-descr').value     = ev.descrizione || '';
     document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-check"></i>Salva modifiche';
     document.getElementById('ev-cancel-btn').classList.remove('hidden');
@@ -1118,7 +1108,6 @@ function duplicaEvento(id) {
     document.getElementById('ev-ora-fine').value  = ev.ora_fine || '';
     document.getElementById('ev-unita').value     = ev.unita || 'tutto';
     document.getElementById('ev-luogo').value     = ev.luogo || '';
-    document.getElementById('ev-maps').value      = ev.maps || '';
     document.getElementById('ev-descr').value     = ev.descrizione || '';
     document.getElementById('ev-titolo').scrollIntoView({ behavior: 'smooth', block: 'center' });
     document.getElementById('ev-data').focus();
