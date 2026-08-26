@@ -250,6 +250,15 @@
 
     function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 
+    // Link Maps di un evento: quello inserito in admin se c'è, altrimenti una
+    // ricerca Google Maps generata dal testo del luogo (nessun link per "Da
+    // Definire", che non è una posizione reale).
+    function mapsUrlPer(ev) {
+        if (ev.maps) return ev.maps;
+        if (!ev.luogo || ev.luogo.trim().toLowerCase() === 'da definire') return null;
+        return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.luogo);
+    }
+
     function pad(n) { return n < 10 ? '0'+n : n; }
 
     // ── Link "Aggiungi a Google Calendar" per singolo evento ──────────
@@ -377,6 +386,12 @@
                 ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})
                 : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long'});
             if (ev.ora) dateStr += ' · ore ' + esc(ev.ora) + (ev.ora_fine ? '–' + esc(ev.ora_fine) : '');
+            var mapsUrl = mapsUrlPer(ev);
+            var luogoHtml = ev.luogo
+                ? (mapsUrl
+                    ? '<a href="'+esc(mapsUrl)+'" target="_blank" rel="noopener" class="text-xs mt-1 inline-flex items-center hover:text-scout transition" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</a>'
+                    : '<div class="text-xs mt-1" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</div>')
+                : '';
             return '<div class="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">'
                 + '<div class="flex-shrink-0 text-center w-14 rounded-xl p-2" style="background:#f0f4fa">'
                 +   '<div class="text-2xl font-black leading-none" style="color:#003366">'+day+'</div>'
@@ -385,7 +400,7 @@
                 + '<div class="flex-1 min-w-0">'
                 +   '<div class="font-black text-sm" style="color:#003366">'+esc(ev.titolo)+'</div>'
                 +   '<div class="text-xs mt-0.5" style="color:#9ca3af">'+dateStr+'</div>'
-                +   (ev.luogo ? '<div class="text-xs mt-1" style="color:#9ca3af"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>'+esc(ev.luogo)+'</div>' : '')
+                +   luogoHtml
                 +   (ev.descrizione ? '<div class="text-xs mt-1.5 leading-relaxed" style="color:#6b7280">'+esc(ev.descrizione)+'</div>' : '')
                 + '</div>'
                 + '<div class="flex-shrink-0 flex flex-col items-end gap-2">'
