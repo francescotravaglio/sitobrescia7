@@ -664,11 +664,13 @@ function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// Link Maps di un evento: quello inserito a mano se c'è, altrimenti una
+// Link Maps di un evento: quello salvato se c'è ed è davvero un link https
+// (mai fidarsi ciecamente di un valore letto da Firestore: potrebbe essere
+// stato scritto a mano da console, es. "javascript:..."), altrimenti una
 // ricerca Google Maps generata dal testo del luogo (nessun link per "Da
 // Definire", che non è una posizione reale).
 function mapsUrlPer(ev) {
-    if (ev.maps) return ev.maps;
+    if (ev.maps && /^https:\/\//i.test(ev.maps)) return ev.maps;
     if (!ev.luogo || ev.luogo.trim().toLowerCase() === 'da definire') return null;
     return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.luogo);
 }
