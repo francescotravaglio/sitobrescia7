@@ -1018,7 +1018,11 @@ function onLuogoInput() {
 }
 
 function cercaSuggerimentiLuogo(query) {
-    const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=0&limit=5&countrycodes=it&q=' + encodeURIComponent(query);
+    // viewbox+bounded=0: dà priorità ai risultati nella provincia di Brescia
+    // senza escludere gli altri (utile per uscite fuori zona).
+    const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=0&limit=5&countrycodes=it'
+        + '&viewbox=9.6,46.3,10.8,45.0&bounded=0'
+        + '&q=' + encodeURIComponent(query);
     fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(r => r.json())
         .then(risultati => mostraSuggerimentiLuogo(risultati || []))
