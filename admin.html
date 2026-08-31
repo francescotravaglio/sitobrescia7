@@ -375,9 +375,11 @@
                                 <option value="capi">Capi</option>
                             </select>
                         </div>
-                        <div>
+                        <div class="relative">
                             <label>Luogo</label>
-                            <input type="text" id="ev-luogo" placeholder="Es. Sede, Malga..." class="max-w-xs">
+                            <input type="text" id="ev-luogo" placeholder="Scrivi un indirizzo per vedere i suggerimenti..." class="max-w-xs" autocomplete="off"
+                                   oninput="onLuogoInput()" onblur="setTimeout(nascondiSuggerimentiLuogo, 150)">
+                            <div id="ev-luogo-suggerimenti" class="hidden absolute z-20 left-0 right-0 max-w-xs mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"></div>
                             <div class="flex flex-wrap gap-2 mt-2">
                                 <button type="button" onclick="setLuogoSede()"
                                         class="text-xs text-scout font-bold border border-scout/20 bg-scout/5 px-3 py-1.5 rounded-lg hover:bg-scout/10 transition">
@@ -388,7 +390,7 @@
                                     <i class="fas fa-question-circle mr-1"></i>Da Definire
                                 </button>
                             </div>
-                            <p class="text-xs text-gray-400 mt-2">La posizione su Google Maps viene generata automaticamente dal testo del luogo.</p>
+                            <p class="text-xs text-gray-400 mt-2">Scrivendo compaiono suggerimenti di indirizzi reali (OpenStreetMap): sceglierne uno dà la posizione precisa su Maps. Se non scegli un suggerimento, la posizione si genera comunque dal testo scritto.</p>
                         </div>
                         <div class="sm:col-span-2">
                             <label>Descrizione</label>
@@ -976,12 +978,74 @@ function exportPreIscrizioniExcel() {
 // ── EVENTI ────────────────────────────────────────────────────────
 function setLuogoSede() {
     document.getElementById('ev-luogo').value = 'Via Giovanni Cimabue 271, 25134 Brescia (San Polo)';
+    resetSelezioneLuogo();
 }
 function setLuogoDaDefinire() {
     document.getElementById('ev-luogo').value = 'Da Definire';
+    resetSelezioneLuogo();
+}
+
+// ── Suggerimenti Luogo (ricerca indirizzi OpenStreetMap/Nominatim) ──
+// Gratuito, nessuna chiave API. Se l'admin sceglie un suggerimento dalla
+// tendina, salviamo le coordinate esatte per generare un link Maps preciso;
+// se scrive solo testo libero, il link Maps si genera dal testo (vedi
+// mapsUrlPer). Il debounce e il limite di risultati rispettano l'uso
+// corretto del servizio pubblico di Nominatim (max ~1 richiesta al secondo).
+let luogoCoordSelezionate = null;
+let luogoValoreAllaSelezione = null;
+let luogoRicercaTimer = null;
+
+function resetSelezioneLuogo() {
+    luogoCoordSelezionate = null;
+    luogoValoreAllaSelezione = null;
+    nascondiSuggerimentiLuogo();
+}
+
+function nascondiSuggerimentiLuogo() {
+    const box = document.getElementById('ev-luogo-suggerimenti');
+    box.classList.add('hidden');
+    box.innerHTML = '';
+}
+
+function onLuogoInput() {
+    luogoCoordSelezionate = null; // il testo è cambiato: la posizione esatta precedente non è più valida
+    const query = document.getElementById('ev-luogo').value.trim();
+    clearTimeout(luogoRicercaTimer);
+    if (query.length < 3) { nascondiSuggerimentiLuogo(); return; }
+    luogoRicercaTimer = setTimeout(() => cercaSuggerimentiLuogo(query), 500);
+}
+
+function cercaSuggerimentiLuogo(query) {
+    const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=0&limit=5&countrycodes=it&q=' + encodeURIComponent(query);
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(r => r.json())
+        .then(risultati => mostraSuggerimentiLuogo(risultati || []))
+        .catch(e => { console.warn('[luogo] ricerca indirizzi non disponibile', e); nascondiSuggerimentiLuogo(); });
+}
+
+function mostraSuggerimentiLuogo(risultati) {
+    const box = document.getElementById('ev-luogo-suggerimenti');
+    // la ricerca potrebbe rispondere dopo che l'admin ha già cambiato scheda/svuotato il campo
+    if (document.getElementById('ev-luogo').value.trim().length < 3) { nascondiSuggerimentiLuogo(); return; }
+    if (!risultati.length) { nascondiSuggerimentiLuogo(); return; }
+    box.innerHTML = risultati.map((r, i) =>
+        `<button type="button" onclick="scegliSuggerimentoLuogo(${i})" class="block w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 border-b border-gray-50 last:border-0">${escapeHtml(r.display_name)}</button>`
+    ).join('');
+    window.__luogoRisultati = risultati;
+    box.classList.remove('hidden');
+}
+
+function scegliSuggerimentoLuogo(i) {
+    const r = (window.__luogoRisultati || [])[i];
+    if (!r) return;
+    document.getElementById('ev-luogo').value = r.display_name;
+    luogoValoreAllaSelezione = r.display_name;
+    luogoCoordSelezionate = { lat: r.lat, lon: r.lon };
+    nascondiSuggerimentiLuogo();
 }
 
 let eventEditingId = null;
+let eventEditingOriginale = null;
 
 function addEvento() {
     const titolo    = document.getElementById('ev-titolo').value.trim();
@@ -999,12 +1063,25 @@ function addEvento() {
     if (stessoGiorno && ora && oraFine && oraFine <= ora) { toast('L\'ora fine deve essere dopo l\'ora inizio.', false); return; }
     const id = eventEditingId || Date.now();
     const stavaModificando = !!eventEditingId;
+    const luogo = document.getElementById('ev-luogo').value.trim();
+    // Link Maps preciso: se il testo del luogo corrisponde ancora a un
+    // suggerimento appena scelto usiamo le sue coordinate esatte; se si sta
+    // modificando un evento e il luogo non è stato toccato manteniamo il link
+    // già salvato in precedenza; altrimenti niente (mapsUrlPer genererà una
+    // ricerca dal testo al momento di mostrare il luogo).
+    let maps = null;
+    if (luogoCoordSelezionate && luogo === luogoValoreAllaSelezione) {
+        maps = 'https://www.google.com/maps/search/?api=1&query=' + luogoCoordSelezionate.lat + ',' + luogoCoordSelezionate.lon;
+    } else if (eventEditingOriginale && luogo === eventEditingOriginale.luogo) {
+        maps = eventEditingOriginale.maps || null;
+    }
     const ev = { id, titolo, data,
         data_fine:   dataFine || null,
         ora:         ora || null,
         ora_fine:    oraFine || null,
         unita:       document.getElementById('ev-unita').value,
-        luogo:       document.getElementById('ev-luogo').value.trim(),
+        luogo:       luogo,
+        maps:        maps,
         descrizione: document.getElementById('ev-descr').value.trim(),
     };
     window.firestoreDb.collection('eventi').doc(String(id)).set(ev)
@@ -1017,6 +1094,8 @@ function addEvento() {
 
 function annullaModificaEvento(silenzioso) {
     eventEditingId = null;
+    eventEditingOriginale = null;
+    resetSelezioneLuogo();
     ['ev-titolo','ev-data','ev-data-fine','ev-ora','ev-ora-fine','ev-luogo','ev-descr'].forEach(i => document.getElementById(i).value = '');
     document.getElementById('ev-unita').selectedIndex = 0;
     document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
@@ -1080,6 +1159,8 @@ function modificaEvento(id) {
     const ev = (window.eventiCache || []).find(e => e.id === id);
     if (!ev) return;
     eventEditingId = id;
+    eventEditingOriginale = ev;
+    resetSelezioneLuogo();
     document.getElementById('ev-titolo').value    = ev.titolo || '';
     document.getElementById('ev-data').value      = ev.data || '';
     document.getElementById('ev-data-fine').value = ev.data_fine || '';
@@ -1099,6 +1180,8 @@ function duplicaEvento(id) {
     const ev = (window.eventiCache || []).find(e => e.id === id);
     if (!ev) return;
     eventEditingId = null;
+    eventEditingOriginale = ev; // se il luogo resta invariato, riusa lo stesso link Maps preciso
+    resetSelezioneLuogo();
     document.getElementById('ev-submit-btn').innerHTML = '<i class="fas fa-plus"></i>Aggiungi evento';
     document.getElementById('ev-cancel-btn').classList.add('hidden');
     document.getElementById('ev-titolo').value    = ev.titolo || '';
