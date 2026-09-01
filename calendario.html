@@ -6,6 +6,11 @@
     <title>Calendario attività scout a Brescia | AGESCI Brescia 7</title>
     <meta name="description" content="Il calendario delle attività del Gruppo Scout AGESCI Brescia 7: riunioni, uscite, campi ed eventi.">
     <link rel="canonical" href="https://agescibrescia7.com/calendario.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://agescibrescia7.com/calendario.html">
+    <meta property="og:title" content="Calendario attività scout a Brescia | AGESCI Brescia 7">
+    <meta property="og:description" content="Il calendario delle attività del Gruppo Scout AGESCI Brescia 7: riunioni, uscite, campi ed eventi.">
+    <meta property="og:image" content="https://agescibrescia7.com/images/montagna.jpg">
     <meta name="google-site-verification" content="t87HK9BnKuVXYPXU6CekSgJE78uAteIvuwoTqN3Vxig" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -417,6 +422,51 @@
         }).join('');
     }
 
+    // ── Dati strutturati Schema.org/Event per i prossimi eventi ────────
+    // Aiuta Google a mostrare gli eventi come "rich result" nei risultati
+    // di ricerca. Rigenerato a ogni caricamento eventi; il tag precedente
+    // viene rimosso per evitare duplicati in caso di ricaricamento (bfcache).
+    function isoDateOra(data, ora) {
+        return ora ? data + 'T' + ora + ':00' : data;
+    }
+    function iniettaEventiSchema() {
+        var now = new Date(); now.setHours(0,0,0,0);
+        var upcoming = eventiAll
+            .filter(function(ev){ return new Date(ev.data) >= now; })
+            .sort(function(a,b){ return new Date(a.data)-new Date(b.data); })
+            .slice(0, 10);
+
+        var precedente = document.getElementById('eventi-schema-org');
+        if (precedente) precedente.remove();
+        if (!upcoming.length) return;
+
+        var eventi = upcoming.map(function(ev) {
+            var luogo = ev.luogo && ev.luogo.trim().toLowerCase() !== 'da definire' ? ev.luogo : null;
+            var location = luogo
+                ? (/cimabue/i.test(luogo)
+                    ? { '@type': 'Place', name: luogo, address: { '@type': 'PostalAddress', streetAddress: 'Via Giovanni Cimabue 271', addressLocality: 'Brescia', addressRegion: 'BS', postalCode: '25134', addressCountry: 'IT' } }
+                    : { '@type': 'Place', name: luogo })
+                : { '@type': 'Place', name: 'Da definire' };
+            return {
+                '@type': 'Event',
+                name: ev.titolo || '',
+                startDate: isoDateOra(ev.data, ev.ora),
+                endDate: isoDateOra(ev.data_fine || ev.data, ev.ora_fine || ev.ora),
+                eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+                eventStatus: 'https://schema.org/EventScheduled',
+                location: location,
+                description: ev.descrizione || ev.titolo || '',
+                organizer: { '@type': 'Organization', name: 'Gruppo Scout AGESCI Brescia 7', url: 'https://agescibrescia7.com' }
+            };
+        });
+
+        var script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.id = 'eventi-schema-org';
+        script.textContent = JSON.stringify(eventi.length === 1 ? eventi[0] : eventi);
+        document.head.appendChild(script);
+    }
+
     window.calPrev = function() { month--; if (month < 0) { month = 11; year--; } renderCalendar(); };
     window.calNext = function() { month++; if (month > 11) { month = 0; year++; } renderCalendar(); };
 
@@ -655,6 +705,7 @@
                     eventiAll = snap.docs.map(function(doc){ return doc.data(); });
                     renderCalendar();
                     renderProssimi();
+                    iniettaEventiSchema();
                 })
                 .catch(function(e){ console.error('[cal]', e); renderProssimi(); });
         }
