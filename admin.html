@@ -313,8 +313,9 @@
             <section id="tab-pre-iscrizioni" class="tab-panel space-y-6">
                 <div class="flex flex-wrap gap-3 items-center justify-between">
                     <div class="flex gap-2">
-                        <button onclick="filterPreIscrizioni('tutte')"  class="tab-btn active" id="pf-tutte">Tutte</button>
-                        <button onclick="filterPreIscrizioni('nuove')"  class="tab-btn" id="pf-nuove">Non lette</button>
+                        <button onclick="filterPreIscrizioni('tutte')"      class="tab-btn active" id="pf-tutte">Tutte</button>
+                        <button onclick="filterPreIscrizioni('nuove')"      class="tab-btn" id="pf-nuove">Non lette</button>
+                        <button onclick="filterPreIscrizioni('archiviate')" class="tab-btn" id="pf-archiviate">Archiviate</button>
                     </div>
                     <div class="flex flex-wrap gap-2 items-center">
                         <span class="text-xs text-gray-400 font-semibold" id="pre-count-label"></span>
@@ -774,7 +775,7 @@ function renderDashboard() {
     const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
 
     document.getElementById('stat-eventi').textContent = prossimi;
-    document.getElementById('stat-pre').textContent    = (window.preIscrizioniCache || []).length;
+    document.getElementById('stat-pre').textContent    = (window.preIscrizioniCache || []).filter(r => !r.archiviata).length;
 
     // Prossimi 3 eventi
     const evEl = document.getElementById('dashboard-events');
@@ -801,7 +802,7 @@ let currentPreFilter = 'tutte';
 
 function filterPreIscrizioni(f) {
     currentPreFilter = f;
-    ['tutte','nuove'].forEach(k => {
+    ['tutte','nuove','archiviate'].forEach(k => {
         document.getElementById('pf-' + k)?.classList.toggle('active', k === f);
     });
     renderPreIscrizioni(f);
@@ -810,7 +811,11 @@ function filterPreIscrizioni(f) {
 function renderPreIscrizioni(filtro) {
     filtro = filtro || currentPreFilter;
     let all = window.preIscrizioniCache || [];
-    if (filtro === 'nuove') all = all.filter(r => !r.letta);
+    if (filtro === 'archiviate') all = all.filter(r => r.archiviata);
+    else {
+        all = all.filter(r => !r.archiviata);
+        if (filtro === 'nuove') all = all.filter(r => !r.letta);
+    }
 
     const lbl = document.getElementById('pre-count-label');
     if (lbl) lbl.textContent = all.length + (all.length !== 1 ? ' richieste' : ' richiesta');
@@ -858,7 +863,10 @@ function preIscrizioneRow(r) {
         <td class="px-6 py-4">${stato}</td>
         <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
             <div class="flex gap-2 items-center justify-end">
-                ${!r.letta ? `<button onclick="markPreLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
+                ${!r.letta && !r.archiviata ? `<button onclick="markPreLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
+                ${r.archiviata
+                    ? `<button onclick="ripristinaPre('${safeId}')" class="icon-btn" title="Ripristina tra le attive"><i class="fas fa-box-open"></i></button>`
+                    : `<button onclick="archiviaPre('${safeId}')" class="icon-btn" title="Archivia"><i class="fas fa-archive"></i></button>`}
                 <button onclick="deletePreIscrizione('${safeId}')" class="icon-btn danger" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -870,6 +878,20 @@ function preIscrizioneRow(r) {
 function markPreLetta(id) {
     window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ letta: true })
         .catch(e => console.error('Errore markPreLetta:', e));
+}
+
+function archiviaPre(id) {
+    // Archiviare implica anche "letta": una richiesta archiviata è per
+    // definizione già gestita, non deve continuare a contare come nuova.
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ archiviata: true, letta: true })
+        .then(() => toast('Pre-iscrizione archiviata.'))
+        .catch(e => { console.error('Errore archiviaPre:', e); toast('Errore archiviazione.', false); });
+}
+
+function ripristinaPre(id) {
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ archiviata: false })
+        .then(() => toast('Pre-iscrizione ripristinata tra le attive.'))
+        .catch(e => { console.error('Errore ripristinaPre:', e); toast('Errore ripristino.', false); });
 }
 
 function openPreIscrizione(id) {
@@ -910,6 +932,9 @@ function openPreIscrizione(id) {
                 <a href="mailto:${emailSafe}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
                     <i class="fas fa-envelope mr-2"></i>Rispondi
                 </a>
+                ${r.archiviata
+                    ? `<button onclick="ripristinaPre('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Ripristina tra le attive"><i class="fas fa-box-open"></i></button>`
+                    : `<button onclick="archiviaPre('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Archivia"><i class="fas fa-archive"></i></button>`}
                 <button onclick="deletePreIscrizione('${safeId}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
