@@ -187,6 +187,7 @@
             <button onclick="scaricaCalendarioPdf('cerchio')" title="Scarica il calendario PDF del Cerchio" class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-scout hover:text-scout transition"><img src="images/logo-lc.png" alt="" class="w-4 h-4 object-contain">Cerchio<i class="fas fa-download text-[10px] text-gray-300"></i></button>
             <button onclick="scaricaCalendarioPdf('reparto')" title="Scarica il calendario PDF del Reparto" class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-scout hover:text-scout transition"><img src="images/logo-eg.png" alt="" class="w-4 h-4 object-contain">Reparto<i class="fas fa-download text-[10px] text-gray-300"></i></button>
             <button onclick="scaricaCalendarioPdf('clan')"    title="Scarica il calendario PDF del Clan"    class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-scout hover:text-scout transition"><img src="images/logo-rs.png" alt="" class="w-4 h-4 object-contain">Clan<i class="fas fa-download text-[10px] text-gray-300"></i></button>
+            <button onclick="scaricaCalendarioPdf('noviziato')" title="Scarica il calendario PDF del Noviziato" class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-scout hover:text-scout transition"><img src="images/logo-rs.png" alt="" class="w-4 h-4 object-contain">Noviziato<i class="fas fa-download text-[10px] text-gray-300"></i></button>
         </div>
 
         <!-- Calendario mensile -->
@@ -244,10 +245,10 @@
 <script>
 (function () {
     const MESI = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-    const UNITA_COLOR = { tutto:'#9ca3af', cerchio:'#eab308', reparto:'#22c55e', clan:'#ef4444', capi:'#7c3aed' };
-    const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', capi:'Capi' };
-    const UNITA_TITOLO_PDF = { cerchio:'Cerchio "Ali di Speranza"', reparto:'Reparto "Alce Mite Val Brandet"', clan:'Clan "Azimuth"' };
-    const UNITA_SOTTOTITOLO_PDF = { cerchio:'Avverti le coccinelle anziane in caso di assenza', reparto:'Avverti i capi in caso di assenza', clan:'Avverti i capi in caso di assenza' };
+    const UNITA_COLOR = { tutto:'#9ca3af', cerchio:'#eab308', reparto:'#22c55e', clan:'#ef4444', noviziato:'#f97316', capi:'#7c3aed' };
+    const UNITA_LABEL = { tutto:'Tutto il gruppo', cerchio:'Cerchio', reparto:'Reparto', clan:'Clan', noviziato:'Noviziato', capi:'Capi' };
+    const UNITA_TITOLO_PDF = { cerchio:'Cerchio "Ali di Speranza"', reparto:'Reparto "Alce Mite Val Brandet"', clan:'Clan "Azimuth"', noviziato:'Noviziato' };
+    const UNITA_SOTTOTITOLO_PDF = { cerchio:'Avverti le coccinelle anziane in caso di assenza', reparto:'Avverti i capi in caso di assenza', clan:'Avverti i capi in caso di assenza', noviziato:'Avverti i capi in caso di assenza' };
 
     var cur = new Date();
     var year = cur.getFullYear(), month = cur.getMonth();
@@ -588,7 +589,7 @@
 
     // ── Generazione sulla vera carta intestata ufficiale (pdf-lib) ──
     var LETTERHEAD_URL  = 'documents/carta-intestata-bs7.pdf';
-    var BRANCH_LOGO_URL = { cerchio:'images/logo-lc.png', reparto:'images/logo-eg.png', clan:'images/logo-rs.png' };
+    var BRANCH_LOGO_URL = { cerchio:'images/logo-lc.png', reparto:'images/logo-eg.png', clan:'images/logo-rs.png', noviziato:'images/logo-rs.png' };
     var CONTENT_TOP    = 138; // spazio (pt, da cima pagina) riservato a logo/intestazione
     var FOOTER_RESERVE = 70;  // spazio (pt, da fondo pagina) riservato al footer della carta intestata
     var CONTENT_MARGIN = 34;  // margine sinistro/destro (pt) del testo sulla carta intestata

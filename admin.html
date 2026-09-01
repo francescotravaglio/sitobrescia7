@@ -373,6 +373,7 @@
                                 <option value="cerchio">Cerchio</option>
                                 <option value="reparto">Reparto</option>
                                 <option value="clan">Clan</option>
+                                <option value="noviziato">Noviziato</option>
                                 <option value="capi">Capi</option>
                             </select>
                         </div>
@@ -1149,7 +1150,7 @@ function eventRow(ev) {
     const past  = (ev.data_fine ? new Date(ev.data_fine) : d) < new Date();
     const day   = d.toLocaleDateString('it-IT', {day:'2-digit'});
     const mon   = d.toLocaleDateString('it-IT', {month:'short'}).toUpperCase();
-    const unitaColors = {cerchio:'bg-yellow-100 text-yellow-700', reparto:'bg-green-100 text-green-700', clan:'bg-red-100 text-red-600', capi:'bg-purple-100 text-purple-700', tutto:'bg-gray-100 text-gray-500'};
+    const unitaColors = {cerchio:'bg-yellow-100 text-yellow-700', reparto:'bg-green-100 text-green-700', clan:'bg-red-100 text-red-600', noviziato:'bg-orange-100 text-orange-600', capi:'bg-purple-100 text-purple-700', tutto:'bg-gray-100 text-gray-500'};
     const uc = unitaColors[ev.unita] || unitaColors.tutto;
     const dateLabel = ev.data_fine
         ? `${d.toLocaleDateString('it-IT',{day:'2-digit',month:'short'})} → ${new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}`
