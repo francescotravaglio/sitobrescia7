@@ -159,6 +159,16 @@
   </div></div>
 </div>
 
+<!-- MODAL DETTAGLIO EVENTO -->
+<div id="modal-evento" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="chiudiDettaglioEvento()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-5 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
+    <button onclick="chiudiDettaglioEvento()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"><i class="fas fa-times text-sm"></i></button>
+    <div id="evento-dettaglio-body"></div>
+  </div></div>
+</div>
+
 <!-- PAGE HERO -->
 <div class="bg-scout text-white py-16 px-6">
     <div class="max-w-4xl mx-auto text-center">
@@ -363,7 +373,7 @@
             }
             evs.forEach(function(ev) {
                 var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
-                html += '<div class="cal-event-chip" style="background:'+col+';cursor:default" title="'+esc(ev.titolo)+'">'+esc(ev.titolo)+'</div>';
+                html += '<div class="cal-event-chip" style="background:'+col+';cursor:pointer" title="'+esc(ev.titolo)+'" onclick="apriDettaglioEvento(\''+esc(String(ev.id))+'\')">'+esc(ev.titolo)+'</div>';
             });
             html += '</div>';
         }
@@ -423,6 +433,45 @@
                 + '</div>';
         }).join('');
     }
+
+    // ── Modal dettaglio evento (click su un evento nel calendario) ─────
+    window.apriDettaglioEvento = function(id) {
+        var ev = eventiAll.find(function(e){ return String(e.id) === String(id); });
+        if (!ev) return;
+        var d = new Date(ev.data);
+        var col = UNITA_COLOR[ev.unita] || UNITA_COLOR.tutto;
+        var label = UNITA_LABEL[ev.unita] || 'Tutto il gruppo';
+        var dateStr = ev.data_fine
+            ? d.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) + ' – ' + new Date(ev.data_fine).toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'})
+            : d.toLocaleDateString('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+        if (ev.ora) dateStr += ' · ore ' + esc(ev.ora) + (ev.ora_fine ? '–' + esc(ev.ora_fine) : '');
+        var mapsUrl = mapsUrlPer(ev);
+        var luogoHtml = ev.luogo
+            ? '<div class="flex items-start gap-2 text-sm mt-3" style="color:#4b5563">'
+                + '<i class="fas fa-map-marker-alt mt-0.5" style="color:#9ca3af"></i>'
+                + (mapsUrl
+                    ? '<a href="'+esc(mapsUrl)+'" target="_blank" rel="noopener" class="hover:text-scout transition">'+esc(ev.luogo)+'</a>'
+                    : '<span>'+esc(ev.luogo)+'</span>')
+              + '</div>'
+            : '';
+        var descrHtml = ev.descrizione
+            ? '<p class="text-sm mt-3 leading-relaxed" style="color:#6b7280">'+esc(ev.descrizione)+'</p>'
+            : '';
+        document.getElementById('evento-dettaglio-body').innerHTML =
+            '<span style="background:'+col+';color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px">'+esc(label)+'</span>'
+            + '<h3 class="text-xl font-black mt-3" style="color:#003366">'+esc(ev.titolo)+'</h3>'
+            + '<div class="flex items-start gap-2 text-sm mt-2" style="color:#4b5563"><i class="fas fa-calendar-alt mt-0.5" style="color:#9ca3af"></i><span>'+dateStr+'</span></div>'
+            + luogoHtml
+            + descrHtml
+            + '<div class="flex gap-3 mt-5 pt-4 border-t border-gray-100">'
+            +   '<a href="'+gcalAddUrl(ev)+'" target="_blank" rel="noopener" class="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-scout transition"><i class="fab fa-google"></i>Google Calendar</a>'
+            +   '<a href="'+icsDataUrl(ev)+'" target="_blank" rel="noopener" class="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-scout transition"><i class="fab fa-apple"></i>Calendario iPhone</a>'
+            + '</div>';
+        document.getElementById('modal-evento').classList.remove('hidden');
+    };
+    window.chiudiDettaglioEvento = function() {
+        document.getElementById('modal-evento').classList.add('hidden');
+    };
 
     // ── Dati strutturati Schema.org/Event per i prossimi eventi ────────
     // Aiuta Google a mostrare gli eventi come "rich result" nei risultati
