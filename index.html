@@ -723,26 +723,35 @@
     });
   }
 
-  /* ---- TENDA ---- */
+  /* ---- TENDA (tenda canadese: pareti basse + tettuccio a due falde + tettoia
+     d'ingresso sporgente, come una vera tenda scout, non una semplice piramide) ---- */
   function drawTent(){
-    const apex={x:TX, y:TY-105};
-    const bl  ={x:TX-85, y:TY};
-    const br  ={x:TX+85, y:TY};
+    const apex = {x:TX,    y:TY-105};   // colmo del tetto
+    const wl   = {x:TX-70, y:TY-26};    // sommità parete sinistra
+    const wr   = {x:TX+70, y:TY-26};    // sommità parete destra
+    const bl   = {x:TX-85, y:TY};
+    const br   = {x:TX+85, y:TY};
+    // tettoia d'ingresso: sporge verso chi guarda, sorretta da due pali
+    const awnApex = {x:TX,    y:TY-72};
+    const awnL    = {x:TX-52, y:TY-18};
+    const awnR    = {x:TX+52, y:TY-18};
 
-    // alone luce porta
     const gp = glowPhase;
-    const glowR = ctx.createRadialGradient(TX, TY-18, 2, TX, TY-18, 48);
+
+    // alone luce che filtra sotto la tettoia
+    const glowR = ctx.createRadialGradient(TX, TY-14, 2, TX, TY-14, 44);
     glowR.addColorStop(0,  `rgba(255,210,90,${.55+Math.sin(gp)*.12})`);
     glowR.addColorStop(.4, `rgba(255,140,30,${.28+Math.sin(gp)*.08})`);
     glowR.addColorStop(1,  'rgba(0,0,0,0)');
     ctx.beginPath();
-    ctx.ellipse(TX, TY-14, 38, 50, 0, 0, Math.PI*2);
+    ctx.ellipse(TX, TY-12, 34, 44, 0, 0, Math.PI*2);
     ctx.fillStyle = glowR;
     ctx.fill();
 
-    // corpo tenda — lato sx (più scuro)
+    // corpo tenda (tetto + parete in un'unica sagoma) — lato sx, più scuro
     ctx.beginPath();
     ctx.moveTo(apex.x, apex.y);
+    ctx.lineTo(wl.x, wl.y);
     ctx.lineTo(bl.x, bl.y);
     ctx.lineTo(TX, TY);
     ctx.closePath();
@@ -754,33 +763,56 @@
     ctx.moveTo(apex.x, apex.y);
     ctx.lineTo(TX, TY);
     ctx.lineTo(br.x, br.y);
+    ctx.lineTo(wr.x, wr.y);
     ctx.closePath();
     ctx.fillStyle = '#101012';
     ctx.fill();
 
-    // porta con luce interna
+    // porta con luce interna (sotto la tettoia)
     ctx.save();
     ctx.beginPath();
-    ctx.ellipse(TX, TY-10, 22, 30, 0, 0, Math.PI*2);
+    ctx.ellipse(TX, TY-8, 19, 26, 0, 0, Math.PI*2);
     ctx.clip();
-    const door = ctx.createRadialGradient(TX, TY+5, 1, TX, TY-5, 28);
+    const door = ctx.createRadialGradient(TX, TY+5, 1, TX, TY-5, 26);
     door.addColorStop(0,   `rgba(255,245,180,${.92+Math.sin(gp*.7)*.06})`);
     door.addColorStop(.3,  `rgba(255,200,80, ${.75+Math.sin(gp*.9)*.1})`);
     door.addColorStop(.7,  `rgba(255,130,30, .5)`);
     door.addColorStop(1,   'rgba(0,0,0,0)');
     ctx.fillStyle = door;
-    ctx.fillRect(TX-30, TY-42, 60, 50);
+    ctx.fillRect(TX-28, TY-38, 56, 46);
     ctx.restore();
 
-    // cresta e bordi
+    // tettoia d'ingresso: disegnata sopra, dà profondità e la riconoscibile
+    // sagoma "a tenda canadese" invece di una semplice piramide
+    ctx.beginPath();
+    ctx.moveTo(awnApex.x, awnApex.y);
+    ctx.lineTo(awnL.x, awnL.y);
+    ctx.lineTo(awnR.x, awnR.y);
+    ctx.closePath();
+    ctx.fillStyle = '#131110';
+    ctx.fill();
+    // filo di luce del fuoco sul bordo della tettoia
+    ctx.strokeStyle = `rgba(255,175,90,${.3+Math.sin(gp*.8)*.08})`;
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(awnApex.x,awnApex.y); ctx.lineTo(awnL.x,awnL.y);
+    ctx.moveTo(awnApex.x,awnApex.y); ctx.lineTo(awnR.x,awnR.y);
+    ctx.stroke();
+
+    // pali della tettoia
+    ctx.strokeStyle = '#1e1e22'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(awnL.x,awnL.y); ctx.lineTo(awnL.x,TY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(awnR.x,awnR.y); ctx.lineTo(awnR.x,TY); ctx.stroke();
+
+    // cresta, spioventi e spigoli delle pareti
     ctx.strokeStyle = '#1e1e22';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(apex.x,apex.y); ctx.lineTo(bl.x,bl.y);
-    ctx.moveTo(apex.x,apex.y); ctx.lineTo(br.x,br.y);
+    ctx.moveTo(apex.x,apex.y); ctx.lineTo(wl.x,wl.y); ctx.lineTo(bl.x,bl.y);
+    ctx.moveTo(apex.x,apex.y); ctx.lineTo(wr.x,wr.y); ctx.lineTo(br.x,br.y);
     ctx.stroke();
 
-    // corde tiranti (tratteggiate)
+    // corde tiranti posteriori (tratteggiate)
     ctx.strokeStyle = 'rgba(120,120,130,.35)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4,5]);
@@ -792,6 +824,8 @@
     ctx.strokeStyle='#2a2a2a'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(bl.x-20,TY+12); ctx.lineTo(bl.x-24,TY+22); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(br.x+20,TY+12); ctx.lineTo(br.x+24,TY+22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(awnL.x,TY); ctx.lineTo(awnL.x-6,TY+10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(awnR.x,TY); ctx.lineTo(awnR.x+6,TY+10); ctx.stroke();
   }
 
   /* ---- TRONCHI ---- */
