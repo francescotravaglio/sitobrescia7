@@ -804,8 +804,36 @@ if ('serviceWorker' in navigator) {
         if (!today) today = new Date().toLocaleDateString('it-IT');
         try {
             var PDFDocument = PDFLib.PDFDocument, StandardFonts = PDFLib.StandardFonts;
-            function clip(t,mw,sz){return String(t||'|').substring(0,Math.floor(mw/((sz||8)*0.45)));}
-            function draw(pg,fnt,x,y,t,mw,sz){var s=clip(t,mw,sz);if(!s||s==='|')return;pg.drawText(s,{x:x,y:y,size:sz||8,font:fnt,color:PDFLib.rgb(0,0,0),maxWidth:mw});}
+            // Misura la larghezza reale del testo nel font (invece di stimarla con un
+            // rapporto fisso carattere/dimensione): se il dato completo non entra nello
+            // spazio del modulo, prima si riduce la dimensione del carattere fino a un
+            // minimo leggibile, e solo come ultima risorsa si tronca (con "…") — così il
+            // testo non esce mai dal riquadro stampato, qualunque sia la lunghezza reale
+            // del dato inserito.
+            function fitText(fnt,t,mw,sz){
+                t = String(t==null?'':t).trim();
+                if (!t) return null;
+                sz = sz || 8;
+                var w;
+                try { w = fnt.widthOfTextAtSize(t,sz); } catch(e) { return { text:t, size:sz }; }
+                if (w <= mw) return { text:t, size:sz };
+                var minSz = 5.5, trySz = sz;
+                while (trySz > minSz) {
+                    trySz -= 0.5;
+                    if (fnt.widthOfTextAtSize(t,trySz) <= mw) return { text:t, size:trySz };
+                }
+                var lo = 0, hi = t.length;
+                while (lo < hi) {
+                    var mid = Math.ceil((lo+hi)/2);
+                    if (fnt.widthOfTextAtSize(t.substring(0,mid)+'…',minSz) <= mw) lo = mid; else hi = mid-1;
+                }
+                return { text: t.substring(0,lo) + (lo<t.length ? '…' : ''), size: minSz };
+            }
+            function draw(pg,fnt,x,y,t,mw,sz){
+                var f = fitText(fnt,t,mw,sz);
+                if (!f) return;
+                pg.drawText(f.text,{x:x,y:y,size:f.size,font:fnt,color:PDFLib.rgb(0,0,0)});
+            }
             if (tipo === 'maggiorenne') {
                 // Brescia7-SchedaAdulti.pdf (8 pagine, header gia compilato): 0-1 richiesta, 2-3 sanitaria, 4-7 gdpr
                 var buf = await fetch('documents/Brescia7-SchedaAdulti.pdf').then(function(r){ if(!r.ok) throw r.status; return r.arrayBuffer(); });
@@ -846,7 +874,7 @@ if ('serviceWorker' in navigator) {
                 if(sp1){if(d.note_sanitarie){draw(sp1,fnt,47,641,d.note_sanitarie,490,8);if(d.note_sanitarie.length>85)draw(sp1,fnt,47,623,d.note_sanitarie.substring(85),490,8);}draw(sp1,fnt,82,583,today,77);draw(sp1,fnt,208,583,'Brescia',295);}
                 // g4: pagina 8 GDPR - coord da pdfplumber (y=842-bottom): nome=591 luogo=569 residente=548 cap=526
                 // date: blank1 bottom=412→y=430; blank2 bottom=661→y=181; blank3 bottom=759→y=83
-                if(g4){if(d.codice_socio){var cs=String(d.codice_socio).substring(0,7);var bx=[388,406,425,443,462,480,499];for(var ci=0;ci<cs.length;ci++)draw(g4,fnt,bx[ci],668,cs[ci],18,10);}draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,430,today,120);draw(g4,fnt,68,181,today,120);draw(g4,fnt,68,83,today,120);}
+                if(g4){if(d.codice_socio){var cs=String(d.codice_socio).substring(0,7);var bx=[388,406,425,443,462,480,499];for(var ci=0;ci<cs.length;ci++)draw(g4,fnt,bx[ci],668,cs[ci],18,10);}draw(g4,fnt,178,591,(d.nome||'')+' '+(d.cognome||''),320);draw(g4,fnt,101,569,d.luogo_nascita||'',150);draw(g4,fnt,256,569,fmtD(d.data_nascita),72);draw(g4,fnt,381,569,d.cf||'',120);draw(g4,fnt,114,548,d.citta||'',128);draw(g4,fnt,260,548,d.indirizzo||'',206);draw(g4,fnt,480,548,d.n_civico||'',22);draw(g4,fnt,82,526,d.cap||'',60);draw(g4,fnt,173,526,d.email||'',196);draw(g4,fnt,391,526,d.cellulare||'',115);draw(g4,fnt,68,435,today,120);draw(g4,fnt,68,186,today,120);if(d.consenso_c==='si')draw(g4,fnt,68,88,today,120);}
                 // Embedding firma digitale
                 if (d._firma_png) {
                     try {
@@ -857,8 +885,11 @@ if ('serviceWorker' in navigator) {
                         if(rp1) rp1.drawImage(sigImg,{x:100,y:224,width:sW,height:sH});
                         // sp1 pag4: stessa struttura → y_pdfl≈525-553
                         if(sp1) sp1.drawImage(sigImg,{x:260,y:525,width:sW,height:sH});
-                        // g4 pag8: 3 firme — blank a y=430, y=181, y=83
-                        if(g4){g4.drawImage(sigImg,{x:310,y:421,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:172,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:74,width:sW,height:sH});}
+                        // g4 pag8: 3 firme — blank a y=430 (consenso a, obbligatorio), y=181
+                        // (consenso b, obbligatorio), y=83 (consenso c, facoltativo: firmato
+                        // solo se è stato davvero dato, altrimenti il modulo mostrerebbe una
+                        // firma su un consenso mai prestato)
+                        if(g4){g4.drawImage(sigImg,{x:310,y:426,width:sW,height:sH});g4.drawImage(sigImg,{x:310,y:177,width:sW,height:sH});if(d.consenso_c==='si')g4.drawImage(sigImg,{x:310,y:79,width:sW,height:sH});}
                     } catch(sigErr) { console.warn('Firma embed:', sigErr); }
                 }
                 doc.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc.setAuthor('AGESCI Brescia 7');
@@ -869,7 +900,7 @@ if ('serviceWorker' in navigator) {
             var doc2 = await PDFDocument.load(buf2);
             var fnt2 = await doc2.embedFont(StandardFonts.Helvetica);
             var pg2 = doc2.getPages();
-            var p1=pg2[0], p2=pg2[1], p3=pg2[2], sp1=pg2[5], sp2b=pg2[6];
+            var p1=pg2[0], p2=pg2[1], p3=pg2[2], sp1=pg2[5], sp2b=pg2[6], g1=pg2[10], g2=pg2[11];
             var fmtD2=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
             // p1 gen1
             draw(p1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);draw(p1,fnt2,455,567,d.gen1_sesso||'',82);
@@ -903,7 +934,58 @@ if ('serviceWorker' in navigator) {
             draw(sp1,fnt2,108,354,d.gen2_indirizzo||'',316);draw(sp1,fnt2,474,354,d.gen2_n_civico||'',63);
             draw(sp1,fnt2,108,331,d.gen2_citta||'',245);draw(sp1,fnt2,375,331,d.gen2_cap||'',90);draw(sp1,fnt2,472,331,d.gen2_provincia||'',12);
             draw(sp1,fnt2,127,308,d.gen2_email||'',230);draw(sp1,fnt2,399,308,d.gen2_tel||'',138);}}
-            if(sp2b){draw(sp2b,fnt2,121,551,d.cognome||'',156);draw(sp2b,fnt2,428,551,d.nome||'',103);draw(sp2b,fnt2,108,534,d.luogo_nascita||'',250);draw(sp2b,fnt2,428,534,d.data_nascita||'',103);draw(sp2b,fnt2,141,516,d.cf||'',200);draw(sp2b,fnt2,195,499,d.emerg_nome||'',156);draw(sp2b,fnt2,355,499,d.emerg_tel||'',176);draw(sp2b,fnt2,320,463,d.tessera_sanitaria||'',210,8);if(d.antitetanica==='SI')draw(sp2b,fnt2,97,445,'X',15,9);if(d.antitetanica==='NO')draw(sp2b,fnt2,147,445,'X',15,9);if(d.allergie){draw(sp2b,fnt2,68,346,d.allergie,463);if(d.allergie.length>85)draw(sp2b,fnt2,68,328,d.allergie.substring(85),463);}if(d.profilassi){draw(sp2b,fnt2,68,317,d.profilassi,463,8);if(d.profilassi.length>85)draw(sp2b,fnt2,68,299,d.profilassi.substring(85),463,8);}if(d.note_sanitarie){draw(sp2b,fnt2,215,287,d.note_sanitarie,316);if(d.note_sanitarie.length>65)draw(sp2b,fnt2,68,269,d.note_sanitarie.substring(65),463);}draw(sp2b,fnt2,107,218,today,77);draw(sp2b,fnt2,227,218,'Brescia',303);draw(sp2b,fnt2,67,170,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),224);draw(sp2b,fnt2,307,170,'Genitore/Tutore',224);}
+            if(sp2b){draw(sp2b,fnt2,121,551,d.cognome||'',156);draw(sp2b,fnt2,428,551,d.nome||'',103);
+            draw(sp2b,fnt2,108,534,d.luogo_nascita||'',250);draw(sp2b,fnt2,380,534,d.prov_nascita||'',13,7);
+            var dpm=fmtD2(d.data_nascita).split('/');draw(sp2b,fnt2,413,534,dpm[0]||'',20,8);draw(sp2b,fnt2,438,534,dpm[1]||'',8,8);draw(sp2b,fnt2,450,534,dpm[2]||'',80,8);
+            draw(sp2b,fnt2,141,516,d.cf||'',200);draw(sp2b,fnt2,352,516,d.tessera_sanitaria||'',179,8);
+            draw(sp2b,fnt2,195,499,d.emerg_nome||'',156);draw(sp2b,fnt2,355,499,d.emerg_tel||'',176);
+            if(d.antitetanica==='SI')draw(sp2b,fnt2,218,463,'X',15,9);if(d.antitetanica==='NO')draw(sp2b,fnt2,307,463,'X',15,9);
+            if(d.allergie){draw(sp2b,fnt2,68,346,d.allergie,463);if(d.allergie.length>85)draw(sp2b,fnt2,68,328,d.allergie.substring(85),463);}if(d.profilassi){draw(sp2b,fnt2,68,317,d.profilassi,463,8);if(d.profilassi.length>85)draw(sp2b,fnt2,68,299,d.profilassi.substring(85),463,8);}if(d.note_sanitarie){draw(sp2b,fnt2,215,287,d.note_sanitarie,316);if(d.note_sanitarie.length>65)draw(sp2b,fnt2,68,269,d.note_sanitarie.substring(65),463);}draw(sp2b,fnt2,107,218,today,77);draw(sp2b,fnt2,227,218,'Brescia',303);draw(sp2b,fnt2,67,170,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),224);draw(sp2b,fnt2,307,170,'Genitore/Tutore',224);}
+
+            // g1/g2: pagine 11-12 — MODULO PER L'ESPRESSIONE DEL CONSENSO (GDPR), finora
+            // mai compilato (il genitore firmava online ma il PDF restava con questa
+            // sezione completamente vuota). Coordinate da pdfplumber (y=842-bottom).
+            if (g1) {
+                draw(g1,fnt2,332,564,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),199);
+                draw(g1,fnt2,128,543,d.gen1_luogo_nascita||'',140);draw(g1,fnt2,277,543,fmtD2(d.gen1_data_nascita),62);draw(g1,fnt2,391,543,d.gen1_cf||'',141);
+                draw(g1,fnt2,141,521,d.gen1_citta||'',128);draw(g1,fnt2,285,521,d.gen1_indirizzo||'',206);draw(g1,fnt2,504,521,d.gen1_n_civico||'',28);
+                draw(g1,fnt2,109,499,d.gen1_cap||'',52);draw(g1,fnt2,191,499,d.gen1_email||'',192);draw(g1,fnt2,404,499,d.gen1_tel||'',128);
+                if (d.gen2_nome) {
+                    draw(g1,fnt2,332,456,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),199);
+                    draw(g1,fnt2,128,434,d.gen2_luogo_nascita||'',140);draw(g1,fnt2,277,434,fmtD2(d.gen2_data_nascita),62);draw(g1,fnt2,391,434,d.gen2_cf||'',141);
+                    draw(g1,fnt2,141,412,d.gen2_citta||'',128);draw(g1,fnt2,285,412,d.gen2_indirizzo||'',206);draw(g1,fnt2,504,412,d.gen2_n_civico||'',28);
+                    draw(g1,fnt2,109,391,d.gen2_cap||'',52);draw(g1,fnt2,191,391,d.gen2_email||'',192);draw(g1,fnt2,404,391,d.gen2_tel||'',128);
+                }
+                draw(g1,fnt2,274,281,(d.nome||'')+' '+(d.cognome||''),254);
+                draw(g1,fnt2,128,259,d.luogo_nascita||'',140);draw(g1,fnt2,288,259,fmtD2(d.data_nascita),62);draw(g1,fnt2,403,259,d.cf||'',126);
+                draw(g1,fnt2,141,237,d.citta||'',123);draw(g1,fnt2,282,237,d.indirizzo||'',211);draw(g1,fnt2,507,237,d.n_civico||'',22);
+                draw(g1,fnt2,109,216,d.cap||'',52);draw(g1,fnt2,191,216,d.email||'',197);draw(g1,fnt2,409,216,d.cellulare||'',123);
+                draw(g1,fnt2,105,169,today,60); // consenso a (trattamento dati) — sempre obbligatorio
+            }
+            if (g2) {
+                draw(g2,fnt2,105,455,today,60); // consenso b (immagini) — sempre obbligatorio
+                if (d.consenso_c==='si') draw(g2,fnt2,105,314,today,60); // consenso c (facoltativo)
+            }
+
+            // Embedding firma digitale (mancava del tutto per il modulo minorenne: il
+            // genitore firmava online ma la firma non veniva mai inserita nel PDF)
+            if (d._firma_png) {
+                try {
+                    var sigBuf2 = await fetch(d._firma_png).then(function(r){return r.arrayBuffer();});
+                    var sigImg2 = await doc2.embedPng(sigBuf2);
+                    var sW2=150, sH2=20;
+                    // p3/sp2b: righe "In fede" molto strette (nome stampato subito sotto),
+                    // quindi la firma va bassa e schiacciata per non sovrapporsi al testo
+                    if (p3)   p3.drawImage(sigImg2,{x:70,y:167,width:110,height:11});
+                    if (sp2b) sp2b.drawImage(sigImg2,{x:70,y:180,width:110,height:11});
+                    if (g1)   g1.drawImage(sigImg2,{x:331,y:160,width:sW2,height:sH2});
+                    if (g2) {
+                        g2.drawImage(sigImg2,{x:331,y:446,width:sW2,height:sH2});
+                        if (d.consenso_c==='si') g2.drawImage(sigImg2,{x:331,y:305,width:sW2,height:sH2});
+                    }
+                } catch(sigErr2) { console.warn('Firma embed (minorenne):', sigErr2); }
+            }
+
             doc2.setTitle('Iscrizione AGESCI BS7 - '+(d.nome||'')+' '+(d.cognome||''));doc2.setAuthor('AGESCI Brescia 7');
             var byt2=await doc2.save();var bl2=new Blob([byt2],{type:'application/pdf'});var ul2=URL.createObjectURL(bl2);var al2=document.createElement('a');al2.href=ul2;al2.download='Iscrizione_'+(d.nome||'')+'_'+(d.cognome||'')+'_BS7.pdf';document.body.appendChild(al2);al2.click();document.body.removeChild(al2);URL.revokeObjectURL(ul2);
         } catch(e) { console.warn('[pdf-lib] errore:',e); iscrGeneraPDF(submission); }
