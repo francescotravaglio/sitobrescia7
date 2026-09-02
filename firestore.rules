@@ -44,13 +44,14 @@ service cloud.firestore {
     // ── Pre-iscrizioni: il pubblico può solo CREARE (con validazione) ──
     match /pre_iscrizioni/{doc} {
       allow create: if
-        request.resource.data.keys().hasOnly(['genitore_nome','genitore_cognome','bambino_nome','data_nascita','email','telefono','timestamp','letta']) &&
+        request.resource.data.keys().hasOnly(['genitore_nome','genitore_cognome','bambino_nome','data_nascita','email','telefono','privacy_accettata','timestamp','letta']) &&
         request.resource.data.genitore_nome is string    && request.resource.data.genitore_nome.size() > 0    && request.resource.data.genitore_nome.size() < 100 &&
         request.resource.data.genitore_cognome is string && request.resource.data.genitore_cognome.size() < 100 &&
         request.resource.data.bambino_nome is string     && request.resource.data.bambino_nome.size() < 100 &&
         request.resource.data.data_nascita is string     && request.resource.data.data_nascita.size() < 20 &&
         request.resource.data.email is string            && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
         request.resource.data.telefono is string         && request.resource.data.telefono.size() < 30 &&
+        request.resource.data.privacy_accettata == true &&
         request.resource.data.timestamp is string        && request.resource.data.timestamp.size() < 40 &&
         request.resource.data.letta == false;
       allow read, update, delete: if isAdmin();

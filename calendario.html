@@ -147,6 +147,10 @@
       </div>
       <div><label class="form-label">Email genitore *</label><input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field"></div>
       <div><label class="form-label">Telefono</label><input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field"></div>
+      <label class="flex items-start gap-2 text-xs text-gray-500 leading-snug">
+        <input type="checkbox" id="pre-privacy" required class="mt-0.5 flex-shrink-0">
+        <span>Ho letto l'<a href="privacy.html" target="_blank" rel="noopener" class="text-scout underline">informativa privacy</a> e acconsento al trattamento dei dati per gestire questa richiesta. *</span>
+      </label>
       <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
       <button type="button" onclick="submitPreIscrizione()" class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia richiesta</button>
     </form>

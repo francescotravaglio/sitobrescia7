@@ -13,9 +13,15 @@ window.submitPreIscrizione = function() {
     const nascita   = document.getElementById('pre-bimbo-nascita').value;
     const email     = document.getElementById('pre-email').value.trim();
     const tel       = document.getElementById('pre-tel').value.trim();
+    const privacyOk = document.getElementById('pre-privacy').checked;
     const errEl     = document.getElementById('pre-error');
 
     if (!genNome || !genCognome || !bimboNome || !nascita || !email) {
+        errEl.textContent = 'Compila tutti i campi obbligatori.';
+        errEl.classList.remove('hidden'); return;
+    }
+    if (!privacyOk) {
+        errEl.textContent = 'Devi accettare l\'informativa privacy per continuare.';
         errEl.classList.remove('hidden'); return;
     }
     errEl.classList.add('hidden');
@@ -23,7 +29,7 @@ window.submitPreIscrizione = function() {
     window.db.collection('pre_iscrizioni').add({
         genitore_nome: genNome, genitore_cognome: genCognome,
         bambino_nome: bimboNome, data_nascita: nascita,
-        email, telefono: tel,
+        email, telefono: tel, privacy_accettata: true,
         timestamp: new Date().toISOString(), letta: false
     }).then(() => {
         localStorage.setItem('pre_last', Date.now());
