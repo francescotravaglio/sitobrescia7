@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy e Cookie Policy | AGESCI Brescia 7</title>
     <meta name="description" content="Informativa privacy e cookie del sito del Gruppo Scout AGESCI Brescia 7: quali dati raccogliamo, come li usiamo e i tuoi diritti.">
-    <link rel="canonical" href="https://agescibrescia7.com/privacy.html">
+    <link rel="canonical" href="https://agescibrescia7.com/privacy">
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -61,13 +61,13 @@
                 </div>
             </a>
             <div class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-600">
-                <a href="chi-siamo.html"        class="nav-link hover:text-scout transition">Chi siamo</a>
-                <a href="unita.html"            class="nav-link hover:text-scout transition">Le Unità</a>
-                <a href="libro-totem.html"      class="nav-link hover:text-scout transition">Libro dei Totem</a>
-                <a href="calendario.html"       class="nav-link hover:text-scout transition">Calendario</a>
-                <a href="faq.html"              class="nav-link hover:text-scout transition">FAQ</a>
-                <a href="rassegna-stampa.html"  class="nav-link hover:text-scout transition">Parlano di noi</a>
-                <a href="documenti.html"        class="nav-link hover:text-scout transition">Documenti</a>
+                <a href="chi-siamo"        class="nav-link hover:text-scout transition">Chi siamo</a>
+                <a href="unita"            class="nav-link hover:text-scout transition">Le Unità</a>
+                <a href="libro-totem"      class="nav-link hover:text-scout transition">Libro dei Totem</a>
+                <a href="calendario"       class="nav-link hover:text-scout transition">Calendario</a>
+                <a href="faq"              class="nav-link hover:text-scout transition">FAQ</a>
+                <a href="rassegna-stampa"  class="nav-link hover:text-scout transition">Parlano di noi</a>
+                <a href="documenti"        class="nav-link hover:text-scout transition">Documenti</a>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="toggleMobileMenu()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
@@ -78,13 +78,13 @@
     </div>
     <div id="mobile-menu" class="hidden lg:hidden bg-scout text-white overflow-hidden">
         <div class="px-6 py-6 flex flex-col gap-1">
-            <a href="chi-siamo.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
-            <a href="unita.html"            class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
-            <a href="libro-totem.html"      class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Libro dei Totem</a>
-            <a href="calendario.html"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
-            <a href="faq.html"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
-            <a href="rassegna-stampa.html"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Parlano di noi</a>
-            <a href="documenti.html"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
+            <a href="chi-siamo"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Chi siamo</a>
+            <a href="unita"            class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Le Unità</a>
+            <a href="libro-totem"      class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Libro dei Totem</a>
+            <a href="calendario"       class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Calendario</a>
+            <a href="faq"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
+            <a href="rassegna-stampa"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Parlano di noi</a>
+            <a href="documenti"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
         </div>
     </div>
 </nav>
@@ -92,7 +92,7 @@
 <script>
 // evidenzia il link della pagina corrente
 (function(){
-    var page = location.pathname.split('/').pop() || 'index.html';
+    var page = location.pathname.split('/').pop().replace(/\.html$/,'') || 'index';
     document.querySelectorAll('#navbar a.nav-link').forEach(function(a){
         if (a.getAttribute('href') === page) a.classList.add('active');
     });
@@ -214,13 +214,13 @@
             <div class="md:col-span-3">
                 <h4 class="font-black text-gold uppercase text-xs tracking-widest mb-6">Navigazione</h4>
                 <ul class="space-y-3 text-sm text-gray-400">
-                    <li><a href="chi-siamo.html"        class="hover:text-white transition">Chi siamo</a></li>
-                    <li><a href="unita.html"            class="hover:text-white transition">Le Unità</a></li>
-                    <li><a href="libro-totem.html"      class="hover:text-white transition">Libro dei Totem</a></li>
-                    <li><a href="calendario.html"       class="hover:text-white transition">Calendario</a></li>
-                    <li><a href="faq.html"              class="hover:text-white transition">FAQ</a></li>
-                    <li><a href="rassegna-stampa.html"  class="hover:text-white transition">Parlano di noi</a></li>
-                    <li><a href="documenti.html"        class="hover:text-white transition">Documenti</a></li>
+                    <li><a href="chi-siamo"        class="hover:text-white transition">Chi siamo</a></li>
+                    <li><a href="unita"            class="hover:text-white transition">Le Unità</a></li>
+                    <li><a href="libro-totem"      class="hover:text-white transition">Libro dei Totem</a></li>
+                    <li><a href="calendario"       class="hover:text-white transition">Calendario</a></li>
+                    <li><a href="faq"              class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="rassegna-stampa"  class="hover:text-white transition">Parlano di noi</a></li>
+                    <li><a href="documenti"        class="hover:text-white transition">Documenti</a></li>
                 </ul>
             </div>
             <div class="md:col-span-4">
@@ -237,9 +237,9 @@
         <div class="border-t border-white/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-xs text-gray-600">© 2026 Gruppo Scout AGESCI Brescia 7. Tutti i diritti riservati.</p>
             <div class="flex items-center gap-4">
-                <a href="privacy.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Privacy &amp; Cookie</a>
+                <a href="privacy" class="text-xs text-gray-700 hover:text-gray-500 transition">Privacy &amp; Cookie</a>
                 <button onclick="if(window.riapriCookie)riapriCookie()" class="text-xs text-gray-700 hover:text-gray-500 transition">Gestisci cookie</button>
-                <a href="admin.html" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
+                <a href="admin" class="text-xs text-gray-700 hover:text-gray-500 transition">Area riservata</a>
                 <span class="font-scout text-xl text-gold/50 italic">Semel Scout, Semper Scout</span>
             </div>
         </div>
