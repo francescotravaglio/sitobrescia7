@@ -15,14 +15,6 @@
         });
     }
 
-    var scelta = null;
-    try { scelta = localStorage.getItem(KEY); } catch(e){}
-
-    if (scelta === 'accettato' || scelta === 'rifiutato') {
-        applica(scelta);              // rispetta la scelta precedente
-        return;                       // niente banner
-    }
-
     // ── mostra il banner ──
     function salva(stato){
         try { localStorage.setItem(KEY, stato); } catch(e){}
@@ -55,9 +47,19 @@
         document.getElementById('cookie-no').onclick = function(){ salva('rifiutato'); };
     }
 
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
-    else render();
+    var scelta = null;
+    try { scelta = localStorage.getItem(KEY); } catch(e){}
 
-    // permette un eventuale link "Gestisci cookie" nel footer
+    if (scelta === 'accettato' || scelta === 'rifiutato') {
+        applica(scelta);              // rispetta la scelta precedente, niente banner
+    } else if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', render);
+    } else {
+        render();
+    }
+
+    // Permette il link "Gestisci cookie" nel footer: deve funzionare sempre,
+    // anche per chi ha già scelto in passato — per questo è definita qui,
+    // fuori da qualunque ramo condizionale sulla scelta precedente.
     window.riapriCookie = function(){ try { localStorage.removeItem(KEY); } catch(e){} render(); };
 })();
