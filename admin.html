@@ -1154,30 +1154,47 @@ function isPastEvento(ev) {
     return (ev.data_fine ? new Date(ev.data_fine) : d) < new Date();
 }
 
+let pastEventiCache = [];
+
 function renderEventi() {
     const all = (window.eventiCache || []).slice();
     const el  = document.getElementById('eventi-list');
+    pastEventiCache = [];
     if (!all.length) {
         el.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nessun evento. Aggiungine uno sopra.</p></div>';
         return;
     }
     // Gli eventi conclusi vanno in una sezione a fisarmonica separata e chiusa
     // di default: con anni di storico altrimenti la lista cresce senza limiti
-    // e diventa via via più pesante da renderizzare e scorrere.
+    // e diventa via via più pesante da renderizzare e scorrere. Il contenuto
+    // della fisarmonica viene generato solo alla prima apertura (vedi
+    // renderEventiConclusiSeAperto), non ad ogni renderEventi(): così anche
+    // con moltissimi anni di storico il costo extra resta pagato solo da chi
+    // apre davvero la sezione, non ad ogni aggiornamento della lista.
     const upcoming = all.filter(ev => !isPastEvento(ev)).sort((a,b) => new Date(a.data)-new Date(b.data));
     const past     = all.filter(ev => isPastEvento(ev)).sort((a,b) => new Date(b.data)-new Date(a.data));
+    pastEventiCache = past;
 
     let html = upcoming.length
         ? upcoming.map(eventRow).join('')
         : '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>Nessun evento in programma.</p></div>';
 
     if (past.length) {
-        html += `<details class="eventi-conclusi">
+        html += `<details class="eventi-conclusi" ontoggle="renderEventiConclusiSeAperto(this)">
             <summary>Eventi conclusi (${past.length})</summary>
-            <div>${past.map(eventRow).join('')}</div>
+            <div class="eventi-conclusi-body"></div>
         </details>`;
     }
     el.innerHTML = html;
+}
+
+function renderEventiConclusiSeAperto(details) {
+    if (!details.open) return;
+    const body = details.querySelector('.eventi-conclusi-body');
+    if (body && !body.dataset.rendered) {
+        body.innerHTML = pastEventiCache.map(eventRow).join('');
+        body.dataset.rendered = '1';
+    }
 }
 
 function eventRow(ev) {
