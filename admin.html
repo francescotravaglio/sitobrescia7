@@ -994,7 +994,7 @@ function markAllPreLette() {
 }
 
 function exportPreIscrizioniExcel() {
-    const all = window.preIscrizioniCache || [];
+    const all = (window.preIscrizioniCache || []).filter(r => !r.archiviata);
     if (!all.length) { toast('Nessuna pre-iscrizione da esportare.'); return; }
     const rows = all
         .slice()
