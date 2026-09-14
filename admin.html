@@ -51,6 +51,12 @@
         .badge-iscrizione { background: #eff6ff; color: #2563eb; }
         .badge-info   { background: #fefce8; color: #ca8a04; }
 
+        .year-divider td {
+            background: #f8fafc; font-weight: 800; font-size: .75rem;
+            color: #475569; padding: .7rem 1.5rem; text-transform: uppercase; letter-spacing: .04em;
+        }
+        .year-divider .year-count { color: #94a3b8; font-weight: 700; text-transform: none; letter-spacing: 0; }
+
         .tab-btn { padding: .5rem 1.25rem; border-radius: .6rem; font-size: .8rem; font-weight: 700;
                    transition: background .2s, color .2s; cursor: pointer; }
         .tab-btn.active { background: #003366; color: #fff; }
@@ -290,7 +296,7 @@
             <section id="tab-dashboard" class="tab-panel active space-y-8">
 
                 <!-- Stats -->
-                <div class="grid grid-cols-2 gap-5 max-w-xl" id="stats-grid">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-5 max-w-2xl" id="stats-grid">
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
@@ -298,6 +304,14 @@
                         </div>
                         <div class="text-3xl font-black text-amber-500" id="stat-pre">0</div>
                         <div class="text-xs text-gray-400 mt-1">Richieste pre-iscrizione</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-yellow-50 p-2.5 rounded-xl"><i class="fas fa-hourglass-half text-yellow-600"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Lista d'attesa</span>
+                        </div>
+                        <div class="text-3xl font-black text-yellow-600" id="stat-attesa">0</div>
+                        <div class="text-xs text-gray-400 mt-1">In lista d'attesa</div>
                     </div>
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
@@ -328,7 +342,6 @@
                 <div class="flex flex-wrap gap-3 items-center justify-between">
                     <div class="flex gap-2">
                         <button onclick="filterPreIscrizioni('tutte')"      class="tab-btn active" id="pf-tutte">Tutte</button>
-                        <button onclick="filterPreIscrizioni('nuove')"      class="tab-btn" id="pf-nuove">Non lette</button>
                         <button onclick="filterPreIscrizioni('attesa')"     class="tab-btn" id="pf-attesa">Lista d'attesa</button>
                         <button onclick="filterPreIscrizioni('archiviate')" class="tab-btn" id="pf-archiviate">Archiviate</button>
                     </div>
@@ -791,7 +804,8 @@ function renderDashboard() {
     const prossimi  = eventi.filter(e => new Date(e.data) >= now).length;
 
     document.getElementById('stat-eventi').textContent = prossimi;
-    document.getElementById('stat-pre').textContent    = (window.preIscrizioniCache || []).filter(r => !r.archiviata).length;
+    document.getElementById('stat-pre').textContent    = (window.preIscrizioniCache || []).filter(r => !r.archiviata && !r.lista_attesa).length;
+    document.getElementById('stat-attesa').textContent = (window.preIscrizioniCache || []).filter(r => r.lista_attesa && !r.archiviata).length;
 
     // Prossimi 3 eventi
     const evEl = document.getElementById('dashboard-events');
@@ -818,7 +832,7 @@ let currentPreFilter = 'tutte';
 
 function filterPreIscrizioni(f) {
     currentPreFilter = f;
-    ['tutte','nuove','attesa','archiviate'].forEach(k => {
+    ['tutte','attesa','archiviate'].forEach(k => {
         document.getElementById('pf-' + k)?.classList.toggle('active', k === f);
     });
     renderPreIscrizioni(f);
@@ -829,10 +843,7 @@ function renderPreIscrizioni(filtro) {
     let all = window.preIscrizioniCache || [];
     if (filtro === 'archiviate') all = all.filter(r => r.archiviata);
     else if (filtro === 'attesa') all = all.filter(r => r.lista_attesa && !r.archiviata);
-    else {
-        all = all.filter(r => !r.archiviata && !r.lista_attesa);
-        if (filtro === 'nuove') all = all.filter(r => !r.letta);
-    }
+    else all = all.filter(r => !r.archiviata && !r.lista_attesa);
 
     const lbl = document.getElementById('pre-count-label');
     if (lbl) lbl.textContent = all.length + (all.length !== 1 ? ' richieste' : ' richiesta');
@@ -842,6 +853,9 @@ function renderPreIscrizioni(filtro) {
         el.innerHTML = '<div class="empty-state"><i class="fas fa-child"></i><p>Nessuna pre-iscrizione in questa categoria.</p></div>';
         return;
     }
+    const righe = filtro === 'attesa'
+        ? preIscrizioniRaggruppatePerAnno(all)
+        : all.map(r => preIscrizioneRow(r)).join('');
     el.innerHTML = `
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
@@ -856,9 +870,36 @@ function renderPreIscrizioni(filtro) {
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
-                ${all.map(r => preIscrizioneRow(r)).join('')}
+                ${righe}
             </tbody>
         </table>`;
+}
+
+function annoNascitaPre(r) {
+    if (!r.data_nascita) return null;
+    const d = new Date(r.data_nascita);
+    return isNaN(d) ? null : d.getFullYear();
+}
+
+function preIscrizioniRaggruppatePerAnno(all) {
+    const gruppi = new Map();
+    all.forEach(r => {
+        const anno = annoNascitaPre(r);
+        const key = anno === null ? '—' : anno;
+        if (!gruppi.has(key)) gruppi.set(key, []);
+        gruppi.get(key).push(r);
+    });
+    const chiavi = Array.from(gruppi.keys()).sort((a, b) => {
+        if (a === '—') return 1;
+        if (b === '—') return -1;
+        return a - b;
+    });
+    return chiavi.map(k => {
+        const gruppo = gruppi.get(k);
+        const titolo = k === '—' ? 'Anno di nascita non specificato' : `Nati nel ${k}`;
+        return `<tr class="year-divider"><td colspan="7">${titolo} <span class="year-count">(${gruppo.length})</span></td></tr>`
+            + gruppo.map(r => preIscrizioneRow(r)).join('');
+    }).join('');
 }
 
 function preIscrizioneRow(r) {
