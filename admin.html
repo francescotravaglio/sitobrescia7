@@ -253,6 +253,11 @@
                 <i class="fas fa-scroll"></i> Libro dei Totem
                 <span id="badge-totem" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
+
+            <div class="sidebar-group-label">Aiuto</div>
+            <div onclick="showTab('guida')" class="sidebar-link" id="nav-guida">
+                <i class="fas fa-circle-question"></i> Guida
+            </div>
         </nav>
 
         <!-- Footer sidebar -->
@@ -489,6 +494,63 @@
                 </div>
             </section>
 
+            <!-- ──────────────────────── GUIDA ───────────────────── -->
+            <section id="tab-guida" class="tab-panel space-y-6">
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-purple-50 text-purple-600"><i class="fas fa-home"></i></span>Dashboard</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
+                        <p>La schermata iniziale mostra un riepilogo veloce: quante <strong>pre-iscrizioni</strong> attive ci sono, quante sono in <strong>lista d'attesa</strong> e quanti <strong>eventi</strong> sono in programma. Sotto trovi i prossimi 3 eventi del calendario, con link diretto alla gestione completa.</p>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-amber-50 text-amber-500"><i class="fas fa-child"></i></span>Pre-iscrizioni</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-3 leading-relaxed">
+                        <p>Qui arrivano le richieste di pre-iscrizione compilate dal sito. Sono divise in tre categorie:</p>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Tutte</strong>: le pre-iscrizioni attive, non ancora archiviate né messe in lista d'attesa. Cliccando su una riga si apre il dettaglio completo.</li>
+                            <li><strong>Lista d'attesa</strong>: le famiglie messe in attesa (es. unità al completo). Sono raggruppate automaticamente per <strong>anno di nascita</strong> del bambino/a, per aiutarti a capire quanti posti servirebbero per fascia d'età. Da qui puoi sempre rispostarle tra le pre-iscrizioni attive con l'apposito pulsante.</li>
+                            <li><strong>Archiviate</strong>: richieste già gestite che vuoi mettere da parte. È l'unica sezione da cui è possibile <strong>eliminare</strong> definitivamente una pre-iscrizione (singolarmente o selezionandone più di una con le checkbox e il pulsante "Elimina selezionate"). Nelle altre due sezioni l'eliminazione non è disponibile, per evitare di perdere per errore una richiesta ancora da gestire.</li>
+                        </ul>
+                        <p>Su ogni pre-iscrizione con un numero di telefono trovi il pulsante <i class="fab fa-whatsapp" style="color:#25D366"></i> <strong>WhatsApp</strong>: apre una chat con il genitore con un messaggio di conferma già scritto. Il pulsante <i class="fas fa-envelope text-scout"></i> "Rispondi" fa lo stesso ma via email.</p>
+                        <p>"Scarica Excel" esporta tutte le pre-iscrizioni non archiviate in un unico foglio, utile per condividerle con gli altri capi o stamparle.</p>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-calendar-alt"></i></span>Calendario eventi</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
+                        <p>Da qui aggiungi, modifichi o elimini gli eventi che compaiono nella pagina Calendario del sito. Gli eventi già conclusi (data passata) non restano mescolati con quelli futuri: scivolano automaticamente in una sezione a fisarmonica <strong>"Eventi conclusi"</strong> in fondo alla lista, che si apre solo quando la clicchi — così il pannello resta veloce anche con tanti eventi passati accumulati negli anni.</p>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-quote-left"></i></span>Testimonianze</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
+                        <p>Le frasi che i genitori inviano dal sito arrivano qui in attesa di approvazione. <strong>Solo quelle approvate</strong> compaiono nella homepage: controllale prima di pubblicarle.</p>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-scroll"></i></span>Libro dei Totem</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
+                        <p>Funziona come le Testimonianze: i totem proposti dal sito restano in attesa finché non li approvi, dopodiché compaiono nella pagina pubblica del Libro dei Totem. Controlla che non ci siano dati sensibili o voci scherzose prima di approvare.</p>
+                    </div>
+                </div>
+
+            </section>
+
         </div><!-- /p-8 -->
     </main>
 </div><!-- /app -->
@@ -603,6 +665,7 @@ const TAB_META = {
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
     totem:             { title: 'Libro dei Totem',     sub: 'Totem proposti dal sito: approva per pubblicarli nel Libro' },
+    guida:             { title: 'Guida',              sub: 'Come funziona il pannello di amministrazione' },
 };
 
 // Sidebar mobile: apri/chiudi drawer
@@ -955,7 +1018,7 @@ function telefonoWhatsAppDigits(tel) {
 function waLinkPre(r) {
     const digits = telefonoWhatsAppDigits(r.telefono);
     if (!digits) return null;
-    const testo = encodeURIComponent("Buongiorno, abbiamo ricevuto l'iscrizione per il gruppo scout \u{1F601}");
+    const testo = encodeURIComponent("Buongiorno, abbiamo ricevuto l'iscrizione per il gruppo scout, quando preferisce posso sentirci al telefono.");
     return `https://wa.me/${digits}?text=${testo}`;
 }
 
