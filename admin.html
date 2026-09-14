@@ -1018,7 +1018,7 @@ function telefonoWhatsAppDigits(tel) {
 function waLinkPre(r) {
     const digits = telefonoWhatsAppDigits(r.telefono);
     if (!digits) return null;
-    const testo = encodeURIComponent("Buongiorno, abbiamo ricevuto l'iscrizione per il gruppo scout, quando preferisce posso sentirci al telefono.");
+    const testo = encodeURIComponent("Buongiorno, abbiamo ricevuto l'iscrizione per il gruppo scout, quando preferisce possiamo sentirci al telefono per ulteriori informazioni.");
     return `https://wa.me/${digits}?text=${testo}`;
 }
 
