@@ -329,6 +329,7 @@
                     <div class="flex gap-2">
                         <button onclick="filterPreIscrizioni('tutte')"      class="tab-btn active" id="pf-tutte">Tutte</button>
                         <button onclick="filterPreIscrizioni('nuove')"      class="tab-btn" id="pf-nuove">Non lette</button>
+                        <button onclick="filterPreIscrizioni('attesa')"     class="tab-btn" id="pf-attesa">Lista d'attesa</button>
                         <button onclick="filterPreIscrizioni('archiviate')" class="tab-btn" id="pf-archiviate">Archiviate</button>
                     </div>
                     <div class="flex flex-wrap gap-2 items-center">
@@ -817,7 +818,7 @@ let currentPreFilter = 'tutte';
 
 function filterPreIscrizioni(f) {
     currentPreFilter = f;
-    ['tutte','nuove','archiviate'].forEach(k => {
+    ['tutte','nuove','attesa','archiviate'].forEach(k => {
         document.getElementById('pf-' + k)?.classList.toggle('active', k === f);
     });
     renderPreIscrizioni(f);
@@ -827,8 +828,9 @@ function renderPreIscrizioni(filtro) {
     filtro = filtro || currentPreFilter;
     let all = window.preIscrizioniCache || [];
     if (filtro === 'archiviate') all = all.filter(r => r.archiviata);
+    else if (filtro === 'attesa') all = all.filter(r => r.lista_attesa && !r.archiviata);
     else {
-        all = all.filter(r => !r.archiviata);
+        all = all.filter(r => !r.archiviata && !r.lista_attesa);
         if (filtro === 'nuove') all = all.filter(r => !r.letta);
     }
 
@@ -865,9 +867,11 @@ function preIscrizioneRow(r) {
     const email = escapeHtml(r.email || '—');
     const tel = escapeHtml(r.telefono || '—');
     const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
-    const stato = r.letta
-        ? '<span class="badge badge-read">Letta</span>'
-        : '<span class="badge badge-new">Nuova</span>';
+    const stato = r.lista_attesa
+        ? '<span class="badge badge-info">In lista d\'attesa</span>'
+        : r.letta
+            ? '<span class="badge badge-read">Letta</span>'
+            : '<span class="badge badge-new">Nuova</span>';
     const safeId = escapeHtml(r.id);
     return `<tr class="table-row cursor-pointer" onclick="openPreIscrizione('${safeId}')">
         <td class="px-6 py-4 font-semibold text-gray-800">${bimbo}</td>
@@ -878,10 +882,13 @@ function preIscrizioneRow(r) {
         <td class="px-6 py-4">${stato}</td>
         <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
             <div class="flex gap-2 items-center justify-end">
-                ${!r.letta && !r.archiviata ? `<button onclick="markPreLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
+                ${!r.letta && !r.archiviata && !r.lista_attesa ? `<button onclick="markPreLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
                 ${r.archiviata
                     ? `<button onclick="ripristinaPre('${safeId}')" class="icon-btn" title="Ripristina tra le attive"><i class="fas fa-box-open"></i></button>`
-                    : `<button onclick="archiviaPre('${safeId}')" class="icon-btn" title="Archivia"><i class="fas fa-archive"></i></button>`}
+                    : r.lista_attesa
+                        ? `<button onclick="rimuoviDaListaAttesa('${safeId}')" class="icon-btn" title="Sposta in pre-iscrizione"><i class="fas fa-arrow-rotate-left"></i></button>`
+                        : `<button onclick="metteInListaAttesa('${safeId}')" class="icon-btn" title="Metti in lista d'attesa"><i class="fas fa-hourglass-half"></i></button>`}
+                ${!r.archiviata ? `<button onclick="archiviaPre('${safeId}')" class="icon-btn" title="Archivia"><i class="fas fa-archive"></i></button>` : ''}
                 <button onclick="deletePreIscrizione('${safeId}')" class="icon-btn danger" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -907,6 +914,18 @@ function ripristinaPre(id) {
     window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ archiviata: false })
         .then(() => toast('Pre-iscrizione ripristinata tra le attive.'))
         .catch(e => { console.error('Errore ripristinaPre:', e); toast('Errore ripristino.', false); });
+}
+
+function metteInListaAttesa(id) {
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ lista_attesa: true, letta: true })
+        .then(() => toast('Pre-iscrizione messa in lista d\'attesa.'))
+        .catch(e => { console.error('Errore metteInListaAttesa:', e); toast('Errore.', false); });
+}
+
+function rimuoviDaListaAttesa(id) {
+    window.firestoreDb.collection('pre_iscrizioni').doc(id).update({ lista_attesa: false })
+        .then(() => toast('Pre-iscrizione spostata tra le pre-iscrizioni attive.'))
+        .catch(e => { console.error('Errore rimuoviDaListaAttesa:', e); toast('Errore.', false); });
 }
 
 function openPreIscrizione(id) {
@@ -943,13 +962,16 @@ function openPreIscrizione(id) {
                     <a href="tel:${telSafe}" class="font-semibold">${telSafe || '—'}</a>
                 </div>
             </div>
-            <div class="flex gap-3 pt-2">
+            <div class="flex gap-3 pt-2 flex-wrap">
                 <a href="mailto:${emailSafe}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
                     <i class="fas fa-envelope mr-2"></i>Rispondi
                 </a>
                 ${r.archiviata
                     ? `<button onclick="ripristinaPre('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Ripristina tra le attive"><i class="fas fa-box-open"></i></button>`
-                    : `<button onclick="archiviaPre('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Archivia"><i class="fas fa-archive"></i></button>`}
+                    : r.lista_attesa
+                        ? `<button onclick="rimuoviDaListaAttesa('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Sposta in pre-iscrizione"><i class="fas fa-arrow-rotate-left"></i></button>`
+                        : `<button onclick="metteInListaAttesa('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Metti in lista d'attesa"><i class="fas fa-hourglass-half"></i></button>`}
+                ${!r.archiviata ? `<button onclick="archiviaPre('${safeId}'); closePreModal();" class="text-gray-500 border border-gray-200 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition text-sm" title="Archivia"><i class="fas fa-archive"></i></button>` : ''}
                 <button onclick="deletePreIscrizione('${safeId}'); closePreModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
