@@ -291,7 +291,7 @@
                 <a href="faq"              class="nav-link hover:text-scout transition">FAQ</a>
                 <a href="rassegna-stampa"  class="nav-link hover:text-scout transition">Parlano di noi</a>
                 <a href="documenti"        class="nav-link hover:text-scout transition">Documenti</a>
-                <a href="/#sez-contatti"   class="nav-link hover:text-scout transition">Contatti</a>
+                <a href="contatti"         class="nav-link hover:text-scout transition">Contatti</a>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="toggleMobileMenu()" aria-label="Apri menu di navigazione" aria-expanded="false" aria-controls="mobile-menu" id="menu-btn" class="lg:hidden p-2 text-scout rounded-lg hover:bg-gray-100 transition">
@@ -309,7 +309,7 @@
             <a href="faq"              class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">FAQ</a>
             <a href="rassegna-stampa"  class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Parlano di noi</a>
             <a href="documenti"        class="py-3 border-b border-white/10 hover:text-gold transition font-semibold">Documenti</a>
-            <a href="/#sez-contatti"   class="py-3 hover:text-gold transition font-semibold">Contatti</a>
+            <a href="contatti"         class="py-3 hover:text-gold transition font-semibold">Contatti</a>
         </div>
     </div>
 </nav>
@@ -545,75 +545,6 @@
     <i class="fas fa-chevron-down text-2xl"></i>
   </a>
 </header>
-
-<!-- ── SEZIONE CONTATTI ──────────────────────────────────────────── -->
-<section id="sez-contatti" class="py-20 bg-gray-50 border-t border-gray-100">
-    <div class="max-w-5xl mx-auto px-6">
-        <div class="text-center mb-12">
-            <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Contatti</div>
-            <h2 class="text-3xl md:text-4xl font-black text-scout mb-3">Parliamone</h2>
-            <p class="text-gray-500 max-w-xl mx-auto">Scegli il canale che preferisci: ti rispondiamo il prima possibile.</p>
-        </div>
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-            <a id="contatto-whatsapp-link" href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20informazioni%20sulle%20attivit%C3%A0%20scout%20del%20Brescia%207." target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('sezione_contatti')" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl text-white" style="background:#25D366"><i class="fab fa-whatsapp"></i></div>
-                <div class="font-black text-scout">WhatsApp</div>
-                <div id="contatto-whatsapp-text" class="text-gray-500 text-sm">+39 340 874 0678</div>
-            </a>
-            <a id="contatto-email-link" href="mailto:info@agescibrescia7.com" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-scout"><i class="fas fa-envelope"></i></div>
-                <div class="font-black text-scout">Email</div>
-                <div id="contatto-email-text" class="text-gray-500 text-sm">info@agescibrescia7.com</div>
-            </a>
-            <a id="contatto-tel-link" href="tel:+393408740678" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-scout"><i class="fas fa-phone"></i></div>
-                <div class="font-black text-scout">Telefono</div>
-                <div id="contatto-tel-text" class="text-gray-500 text-sm">+39 340 874 0678</div>
-            </a>
-            <a href="https://www.instagram.com/agesci_brescia7" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-2xl text-pink-500"><i class="fab fa-instagram"></i></div>
-                <div class="font-black text-scout">Instagram</div>
-                <div class="text-gray-500 text-sm">@agesci_brescia7</div>
-            </a>
-            <a href="https://www.facebook.com/scoutbrescia7" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-blue-600"><i class="fab fa-facebook"></i></div>
-                <div class="font-black text-scout">Facebook</div>
-                <div class="text-gray-500 text-sm">AGESCI Brescia 7</div>
-            </a>
-            <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
-                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl text-amber-500"><i class="fas fa-map-marker-alt"></i></div>
-                <div class="font-black text-scout">Dove siamo</div>
-                <div class="text-gray-500 text-sm">Via Cimabue 271, San Polo</div>
-            </a>
-        </div>
-    </div>
-</section>
-
-<script>
-(function(){
-    window.addEventListener('load', function() {
-        if (!window.db) return;
-        window.db.collection('config').doc('site').get().then(function(doc) {
-            if (!doc.exists) return;
-            var d = doc.data();
-            if (d.telefono) {
-                var digits = String(d.telefono).replace(/\D/g, '');
-                var waLink = document.getElementById('contatto-whatsapp-link');
-                var telLink = document.getElementById('contatto-tel-link');
-                if (waLink) waLink.href = 'https://wa.me/' + (digits.startsWith('39') ? digits : '39' + digits) + '?text=' + encodeURIComponent('Ciao! Vorrei informazioni sulle attività scout del Brescia 7.');
-                if (telLink) telLink.href = 'tel:' + (d.telefono.startsWith('+') ? d.telefono : '+' + digits);
-                var waText = document.getElementById('contatto-whatsapp-text'); if (waText) waText.textContent = d.telefono;
-                var telText = document.getElementById('contatto-tel-text'); if (telText) telText.textContent = d.telefono;
-            }
-            if (d.email) {
-                var emailLink = document.getElementById('contatto-email-link');
-                if (emailLink) emailLink.href = 'mailto:' + d.email;
-                var emailText = document.getElementById('contatto-email-text'); if (emailText) emailText.textContent = d.email;
-            }
-        }).catch(function() {});
-    });
-})();
-</script>
 
 <!-- ── SCRIPT CAROSELLO FOTO HERO ──────────────────────────────────── -->
 <script>
@@ -1026,6 +957,7 @@
                     <li><a href="faq"              class="hover:text-white transition">FAQ</a></li>
                     <li><a href="rassegna-stampa"  class="hover:text-white transition">Parlano di noi</a></li>
                     <li><a href="documenti"        class="hover:text-white transition">Documenti</a></li>
+                    <li><a href="contatti"         class="hover:text-white transition">Contatti</a></li>
                 </ul>
             </div>
             <div class="md:col-span-4">
