@@ -893,9 +893,6 @@
     <div class="max-w-4xl mx-auto px-6 text-center relative">
         <div class="text-6xl mb-6">🥾</div>
         <h2 class="text-3xl md:text-5xl font-black mb-4">Non sei sicuro? <span class="text-white/80">Vieni a provare.</span></h2>
-        <div id="prossimo-sabato-badge" class="hidden inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-5 py-2 text-sm font-bold mb-6">
-            <i class="fas fa-calendar-day"></i> <span id="prossimo-sabato-data"></span>
-        </div>
         <p class="text-white/75 text-lg max-w-2xl mx-auto mb-3">
             Un sabato pomeriggio con noi, <strong class="text-white">senza alcun impegno</strong>: tuo figlio o tua figlia
             partecipa alle attività, tu conosci i capi e ti fai un'idea dal vivo.
@@ -915,20 +912,6 @@
         <p class="mt-8 text-white/40 text-xs">Rispondiamo in giornata · Nessun modulo da compilare</p>
     </div>
 </section>
-<script>
-(function(){
-    var badge = document.getElementById('prossimo-sabato-badge');
-    var el = document.getElementById('prossimo-sabato-data');
-    if (!badge || !el) return;
-    var mesi = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
-    var oggi = new Date();
-    var diff = (6 - oggi.getDay() + 7) % 7;
-    var prossimo = new Date(oggi);
-    prossimo.setDate(oggi.getDate() + diff);
-    el.textContent = (diff === 0 ? 'Ti aspettiamo oggi, sabato ' : 'Prossimo incontro: sabato ') + prossimo.getDate() + ' ' + mesi[prossimo.getMonth()];
-    badge.classList.remove('hidden');
-})();
-</script>
 
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
