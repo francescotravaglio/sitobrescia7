@@ -407,7 +407,7 @@
 <!-- ── MODAL RICHIESTA INFORMAZIONI (email + telefono) ─────────────── -->
 <div id="modal-info" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closeInfoModal()">
   <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10">
+  <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10" style="max-height:92vh;overflow-y:auto">
     <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">×</button>
     <div class="text-center mb-6">
       <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -427,8 +427,22 @@
           <label class="form-label">Telefono *</label>
           <input id="info-tel" type="tel" placeholder="+39 340 123 4567" class="input-field" required>
         </div>
+        <div>
+          <label class="form-label">La tua richiesta (facoltativo)</label>
+          <textarea id="info-msg" rows="3" placeholder="Scrivi qui la tua domanda, oppure scegline una qui sotto..." class="input-field resize-none"></textarea>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            <button type="button" onclick="infoUsaDomanda(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-2.5 py-1.5 rounded-full transition">Quanto costa l'iscrizione?</button>
+            <button type="button" onclick="infoUsaDomanda(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-2.5 py-1.5 rounded-full transition">A che età si può iniziare?</button>
+            <button type="button" onclick="infoUsaDomanda(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-2.5 py-1.5 rounded-full transition">Quando sono le riunioni?</button>
+            <button type="button" onclick="infoUsaDomanda(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-2.5 py-1.5 rounded-full transition">Possiamo venire a provare prima?</button>
+          </div>
+        </div>
+        <label class="flex items-start gap-2 text-xs text-gray-500 leading-snug">
+          <input type="checkbox" id="info-privacy" required class="mt-0.5 flex-shrink-0">
+          <span>Ho letto l'<a href="privacy" target="_blank" rel="noopener" class="text-scout underline">informativa privacy</a> e acconsento al trattamento dei dati per gestire questa richiesta. *</span>
+        </label>
       </div>
-      <p id="info-error" class="text-red-500 text-xs mt-3 hidden">Compila email e telefono.</p>
+      <p id="info-error" class="text-red-500 text-xs mt-3 hidden">Compila email, telefono e accetta l'informativa privacy.</p>
       <button onclick="submitInfoRapida()" class="mt-5 w-full bg-scout text-white font-black py-3.5 rounded-2xl hover:bg-scout-dark transition flex items-center justify-center gap-2">
         <i class="fas fa-paper-plane"></i> Invia richiesta
       </button>
@@ -480,8 +494,6 @@
   <!-- ② SILHOUETTE FORESTA (SVG) -->
   <div class="absolute bottom-0 inset-x-0 pointer-events-none" style="z-index:3">
     <svg viewBox="0 0 1440 280" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto">
-      <!-- montagne sfondo -->
-      <polygon points="0,280 0,180 200,80 400,180 600,60 800,170 1000,50 1200,160 1440,90 1440,280" fill="#020d06"/>
       <!-- alberi sinistra -->
       <polygon points="  0,280  45,120  90,280" fill="#010905"/>
       <polygon points=" 30,280  85, 90 140,280" fill="#010b05"/>
@@ -551,7 +563,6 @@
          style="text-shadow:0 0 40px rgba(255,255,255,.25),0 2px 8px rgba(0,0,0,.8)">
       Gruppo Scout<br><span class="text-white" style="text-shadow:0 0 60px rgba(255,255,255,.4)">Brescia 7</span>
     </div>
-    <div class="fade-up delay-1 text-white/70 text-sm font-semibold tracking-widest uppercase mb-6">Buona Strada</div>
     <h1 class="fade-up delay-2 text-xl md:text-2xl font-light opacity-90 mb-10 max-w-2xl mx-auto leading-relaxed">
       Il gruppo scout di Brescia — AGESCI Brescia 7<br>
       <strong class="font-semibold">Bambini e ragazzi dagli 8 ai 21 anni, da tutta la città</strong>
@@ -560,7 +571,7 @@
       <button onclick="openInfoModal()" class="bg-white text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
         <i class="fas fa-info-circle mr-2"></i>Voglio saperne di più
       </button>
-      <a href="#contatti" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
+      <a href="#sez-contatti" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
         <i class="fas fa-envelope mr-2"></i>Contattaci
       </a>
     </div>
@@ -1144,6 +1155,49 @@
 })();
 </script>
 
+<!-- ── SEZIONE CONTATTI ──────────────────────────────────────────── -->
+<section id="sez-contatti" class="py-20 bg-gray-50 border-t border-gray-100">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Contatti</div>
+            <h2 class="text-3xl md:text-4xl font-black text-scout mb-3">Parliamone</h2>
+            <p class="text-gray-500 max-w-xl mx-auto">Scegli il canale che preferisci: ti rispondiamo il prima possibile.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
+            <a href="https://wa.me/393408740678?text=Ciao!%20Vorrei%20informazioni%20sulle%20attivit%C3%A0%20scout%20del%20Brescia%207." target="_blank" rel="noopener" onclick="if(window.trackWhatsApp)trackWhatsApp('sezione_contatti')" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl text-white" style="background:#25D366"><i class="fab fa-whatsapp"></i></div>
+                <div class="font-black text-scout">WhatsApp</div>
+                <div class="text-gray-500 text-sm">+39 340 874 0678</div>
+            </a>
+            <a href="mailto:info@agescibrescia7.com" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-scout"><i class="fas fa-envelope"></i></div>
+                <div class="font-black text-scout">Email</div>
+                <div class="text-gray-500 text-sm">info@agescibrescia7.com</div>
+            </a>
+            <a href="tel:+393408740678" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-scout"><i class="fas fa-phone"></i></div>
+                <div class="font-black text-scout">Telefono</div>
+                <div class="text-gray-500 text-sm">+39 340 874 0678</div>
+            </a>
+            <a href="https://www.instagram.com/agesci_brescia7" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-2xl text-pink-500"><i class="fab fa-instagram"></i></div>
+                <div class="font-black text-scout">Instagram</div>
+                <div class="text-gray-500 text-sm">@agesci_brescia7</div>
+            </a>
+            <a href="https://www.facebook.com/scoutbrescia7" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl text-blue-600"><i class="fab fa-facebook"></i></div>
+                <div class="font-black text-scout">Facebook</div>
+                <div class="text-gray-500 text-sm">AGESCI Brescia 7</div>
+            </a>
+            <a href="https://maps.google.com/?q=Via+Cimabue+271+Brescia" target="_blank" rel="noopener" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition flex flex-col items-center text-center gap-3">
+                <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl text-amber-500"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="font-black text-scout">Dove siamo</div>
+                <div class="text-gray-500 text-sm">Via Cimabue 271, San Polo</div>
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
 <footer id="contatti" class="bg-gray-950 text-white">
@@ -1281,21 +1335,28 @@ if ('serviceWorker' in navigator) {
         document.getElementById('info-error').classList.add('hidden');
         document.getElementById('info-email').value = '';
         document.getElementById('info-tel').value = '';
+        document.getElementById('info-msg').value = '';
+        document.getElementById('info-privacy').checked = false;
+    };
+    window.infoUsaDomanda = function(btn) {
+        document.getElementById('info-msg').value = btn.textContent;
     };
     window.submitInfoRapida = function() {
         var hp = document.getElementById('info-hp'); if (hp && hp.value) return;
         var last = +localStorage.getItem('info_last') || 0;
         if (Date.now() - last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
 
-        const email = document.getElementById('info-email').value.trim();
-        const tel   = document.getElementById('info-tel').value.trim();
-        const errEl = document.getElementById('info-error');
-        if (!email || !tel) { errEl.classList.remove('hidden'); return; }
+        const email     = document.getElementById('info-email').value.trim();
+        const tel       = document.getElementById('info-tel').value.trim();
+        const msg       = document.getElementById('info-msg').value.trim();
+        const privacyOk = document.getElementById('info-privacy').checked;
+        const errEl     = document.getElementById('info-error');
+        if (!email || !tel || !privacyOk) { errEl.classList.remove('hidden'); return; }
         errEl.classList.add('hidden');
 
         const db = window.db || firebase.firestore();
         db.collection('richieste_informazioni').add({
-            email, telefono: tel,
+            email, telefono: tel, messaggio: msg, privacy_accettata: true,
             timestamp: new Date().toISOString(), letta: false
         }).then(function() {
             localStorage.setItem('info_last', Date.now());
@@ -1313,7 +1374,7 @@ if ('serviceWorker' in navigator) {
                 nome:      'Nuova richiesta di informazioni',
                 tipo:      'Richiesta informazioni (sito)',
                 timestamp: dataStr,
-                iban:      'Email: ' + email + '\nTelefono: ' + tel
+                iban:      'Email: ' + email + '\nTelefono: ' + tel + (msg ? '\nRichiesta: ' + msg : '')
             }).catch(function(e){ console.error('[EmailJS]', e); });
         }).catch(function(err) {
             console.error(err);

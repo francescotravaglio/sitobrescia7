@@ -67,9 +67,11 @@ service cloud.firestore {
     //    il pubblico può solo CREARE (con validazione) ──
     match /richieste_informazioni/{doc} {
       allow create: if
-        request.resource.data.keys().hasOnly(['email','telefono','timestamp','letta']) &&
-        request.resource.data.email is string    && request.resource.data.email.size() > 0 && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
-        request.resource.data.telefono is string && request.resource.data.telefono.size() > 0 && request.resource.data.telefono.size() < 30 &&
+        request.resource.data.keys().hasOnly(['email','telefono','messaggio','privacy_accettata','timestamp','letta']) &&
+        request.resource.data.email is string     && request.resource.data.email.size() > 0 && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.telefono is string  && request.resource.data.telefono.size() > 0 && request.resource.data.telefono.size() < 30 &&
+        request.resource.data.messaggio is string && request.resource.data.messaggio.size() < 500 &&
+        request.resource.data.privacy_accettata == true &&
         request.resource.data.timestamp is string && request.resource.data.timestamp.size() < 40 &&
         request.resource.data.letta == false;
       allow read, update, delete: if isAdmin();
