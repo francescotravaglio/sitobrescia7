@@ -575,7 +575,7 @@
                         <h3><span class="panel-icon bg-amber-50 text-amber-500"><i class="fas fa-comment-dots"></i></span>Richieste info</h3>
                     </div>
                     <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
-                        <p>Qui arrivano le richieste inviate dal pulsante <strong>"Voglio saperne di più"</strong> in homepage: email, telefono ed eventuale domanda scritta dalla famiglia. Puoi segnarle come lette, rispondere via WhatsApp o email direttamente dalla riga, oppure eliminarle quando le hai gestite.</p>
+                        <p>Qui arrivano le richieste inviate dal pulsante <strong>"Voglio saperne di più"</strong> in homepage: email, telefono ed eventuale domanda scritta dalla famiglia. Clicca su una riga per vedere la domanda completa (in tabella è troncata). Puoi segnarle come lette, rispondere via WhatsApp o email, oppure eliminarle quando le hai gestite.</p>
                     </div>
                 </div>
 
@@ -629,6 +629,17 @@
             <button onclick="closePreModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
         </div>
         <div id="modal-pre-body"></div>
+    </div>
+</div>
+
+<!-- ── MODAL DETTAGLIO RICHIESTA INFO ──────────────────────────── -->
+<div id="modal-richiesta-info" class="modal-overlay hidden" onclick="if(event.target===this)closeRichiestaInfoModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Richiesta info</h3>
+            <button onclick="closeRichiestaInfoModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-richiesta-info-body"></div>
     </div>
 </div>
 
@@ -1322,13 +1333,13 @@ function richiestaInfoRow(r) {
         : '<span class="badge badge-new">Nuova</span>';
     const safeId = escapeHtml(r.id);
     const waLink = waLinkRichiestaInfo(r);
-    return `<tr class="table-row">
+    return `<tr class="table-row cursor-pointer" onclick="openRichiestaInfo('${safeId}')">
         <td class="px-6 py-4 font-semibold text-gray-800">${email}</td>
         <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${tel}</td>
         <td class="px-6 py-4 text-gray-500 hidden lg:table-cell truncate max-w-[240px]" title="${msg}">${msg}</td>
         <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${data}</td>
         <td class="px-6 py-4">${stato}</td>
-        <td class="px-6 py-4 text-right">
+        <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
             <div class="flex gap-2 items-center justify-end">
                 ${!r.letta ? `<button onclick="markRichiestaInfoLetta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
                 ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" class="icon-btn whatsapp" title="Contatta su WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
@@ -1339,6 +1350,53 @@ function richiestaInfoRow(r) {
             </div>
         </td>
     </tr>`;
+}
+
+function openRichiestaInfo(id) {
+    const r = (window.richiesteInfoCache || []).find(x => x.id === id);
+    if (!r) return;
+    if (!r.letta) markRichiestaInfoLetta(id);
+    const email = escapeHtml(r.email || '—');
+    const tel = escapeHtml(r.telefono || '—');
+    const msg = escapeHtml(r.messaggio || '');
+    const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
+    const safeId = escapeHtml(r.id);
+    const waLink = waLinkRichiestaInfo(r);
+    document.getElementById('modal-richiesta-info-body').innerHTML = `
+        <div class="space-y-3 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${email}" class="font-semibold text-scout hover:underline">${email}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <a href="tel:${tel}" class="font-semibold">${tel}</a>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-4">
+                <div class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">Domanda</div>
+                <div class="text-gray-700 leading-relaxed">${msg || '<span class="text-gray-400">Nessuna domanda scritta, solo email e telefono.</span>'}</div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-1">Inviata il</div>
+                <div class="font-semibold">${data}</div>
+            </div>
+            <div class="flex gap-3 pt-2 flex-wrap">
+                <a href="mailto:${email}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
+                    <i class="fas fa-envelope mr-2"></i>Rispondi
+                </a>
+                ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" class="text-center text-white font-bold py-2.5 px-4 rounded-xl transition text-sm" style="background:#25D366" title="Contatta su WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+                <button onclick="deleteRichiestaInfo('${safeId}'); closeRichiestaInfoModal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-richiesta-info').classList.remove('hidden');
+}
+
+function closeRichiestaInfoModal() {
+    document.getElementById('modal-richiesta-info').classList.add('hidden');
 }
 
 function markRichiestaInfoLetta(id) {
