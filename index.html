@@ -961,6 +961,227 @@
     </div>
 </section>
 
+<!-- ── ISOLA SCOUT (illustrazione 2.5D interattiva) ──────────────── -->
+<style>
+    #isola-scout .isola-wrap { position: relative; max-width: 720px; margin: 0 auto; }
+    #isola-scout .isola-svg  { width: 100%; height: auto; display: block; overflow: visible; }
+    #isola-scout .isola-zona { cursor: pointer; transition: transform .25s ease; transform-box: fill-box; transform-origin: center; outline: none; }
+    #isola-scout .isola-zona:hover,
+    #isola-scout .isola-zona.active { transform: scale(1.06); }
+    #isola-scout .isola-zona:focus-visible .isola-ring { opacity: .55; stroke-dasharray: 6 5; }
+    #isola-scout .isola-hotspot-bg { fill: #fff; stroke-width: 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,.18)); }
+    #isola-scout .isola-zona[data-zona="cerchio"] .isola-hotspot-bg { stroke: #d97706; }
+    #isola-scout .isola-zona[data-zona="reparto"] .isola-hotspot-bg { stroke: #059669; }
+    #isola-scout .isola-zona[data-zona="clan"]    .isola-hotspot-bg { stroke: #dc2626; }
+    #isola-scout .isola-zona.active .isola-hotspot-bg { stroke-width: 4; }
+    #isola-scout .isola-ring { fill: none; stroke-width: 2; opacity: 0; transition: opacity .25s ease; }
+    #isola-scout .isola-zona.active .isola-ring { opacity: .55; }
+    #isola-scout .isola-zona[data-zona="cerchio"] .isola-ring { stroke: #d97706; }
+    #isola-scout .isola-zona[data-zona="reparto"] .isola-ring { stroke: #059669; }
+    #isola-scout .isola-zona[data-zona="clan"]    .isola-ring { stroke: #dc2626; }
+    #isola-scout .isola-caption { min-height: 92px; }
+    @media (prefers-reduced-motion: no-preference) {
+        #isola-scout .isola-ball      { animation: isola-bounce .9s cubic-bezier(.5,0,.5,1) infinite; }
+        #isola-scout .isola-kid-a     { animation: isola-hop .9s ease-in-out infinite; }
+        #isola-scout .isola-kid-b     { animation: isola-hop .9s ease-in-out infinite .3s; }
+        #isola-scout .isola-flame-1   { animation: isola-flicker .7s ease-in-out infinite; }
+        #isola-scout .isola-flame-2   { animation: isola-flicker .9s ease-in-out infinite .15s; }
+        #isola-scout .isola-flame-3   { animation: isola-flicker .8s ease-in-out infinite .3s; }
+        #isola-scout .isola-seduto-a  { animation: isola-sway 3.2s ease-in-out infinite; }
+        #isola-scout .isola-seduto-b  { animation: isola-sway 2.8s ease-in-out infinite .4s; }
+        #isola-scout .isola-seduto-c  { animation: isola-sway 3.6s ease-in-out infinite .8s; }
+        #isola-scout .isola-leg-a     { animation: isola-passo .55s ease-in-out infinite alternate; transform-origin: 50% 0%; transform-box: fill-box; }
+        #isola-scout .isola-leg-b     { animation: isola-passo .55s ease-in-out infinite alternate .275s; transform-origin: 50% 0%; transform-box: fill-box; }
+        #isola-scout .isola-clan-figura { animation: isola-cammina 3.6s ease-in-out infinite; }
+        #isola-scout .isola-layer-nuvole { animation: isola-deriva 40s linear infinite; }
+    }
+    @keyframes isola-bounce  { 0%,100% { transform: translateY(0) scaleY(.9); } 45% { transform: translateY(-20px) scaleY(1.05); } }
+    @keyframes isola-hop     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes isola-flicker { 0%,100% { transform: scaleY(1) translateY(0); opacity: 1; } 50% { transform: scaleY(1.18) translateY(-2px); opacity: .82; } }
+    @keyframes isola-sway    { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(2deg); } }
+    @keyframes isola-passo   { 0% { transform: rotate(-16deg); } 100% { transform: rotate(16deg); } }
+    @keyframes isola-cammina { 0%,100% { transform: translate(0,0); } 25% { transform: translate(10px,0); } 50% { transform: translate(18px,-1px); } 75% { transform: translate(10px,0); } }
+    @keyframes isola-deriva  { 0% { transform: translateX(-30px); } 100% { transform: translateX(30px); } }
+</style>
+<section id="isola-scout" class="py-20 bg-gradient-to-b from-sky-50 to-white border-t border-gray-100 overflow-hidden">
+    <div class="max-w-5xl mx-auto px-6 text-center mb-10">
+        <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">Scopri le unità</div>
+        <h2 class="text-2xl md:text-4xl font-black text-scout">Un'isola tutta da esplorare</h2>
+        <p class="text-gray-500 mt-3 max-w-xl mx-auto text-sm leading-relaxed">Tocca Cerchio, Reparto o Clan e scopri cosa facciamo insieme ogni settimana.</p>
+    </div>
+
+    <div class="isola-wrap px-4">
+        <svg class="isola-svg" viewBox="0 0 800 520" role="img" aria-label="Isola scout illustrata con le tre unità: Cerchio, Reparto e Clan">
+            <defs>
+                <linearGradient id="isolaSky" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#cfeeff"/>
+                    <stop offset="100%" stop-color="#f3fbff"/>
+                </linearGradient>
+                <linearGradient id="isolaMare" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#bdeaf2"/>
+                    <stop offset="100%" stop-color="#8fd0e0"/>
+                </linearGradient>
+            </defs>
+
+            <!-- cielo -->
+            <rect class="isola-layer-sky" x="0" y="0" width="800" height="520" fill="url(#isolaSky)"/>
+            <g class="isola-layer-nuvole" opacity=".8" fill="#ffffff">
+                <ellipse cx="130" cy="70" rx="48" ry="16"/><ellipse cx="170" cy="62" rx="34" ry="14"/>
+                <ellipse cx="620" cy="50" rx="40" ry="14"/><ellipse cx="660" cy="60" rx="28" ry="11"/>
+                <ellipse cx="420" cy="90" rx="30" ry="10"/>
+            </g>
+
+            <!-- mare -->
+            <ellipse cx="400" cy="440" rx="360" ry="66" fill="url(#isolaMare)"/>
+
+            <!-- isola: base "sotto" più scura per l'effetto isola sospesa, poi sabbia ed erba sopra -->
+            <g class="isola-layer-terra">
+            <path d="M150,392 C118,350 138,276 222,254 C284,232 344,202 424,208 C526,214 606,234 654,286 C696,328 686,390 634,420 C562,462 480,472 398,466 C296,460 188,452 150,392 Z" fill="#cda86a"/>
+            <path d="M150,378 C118,336 138,262 222,240 C284,218 344,188 424,194 C526,200 606,220 654,272 C696,314 686,376 634,406 C562,448 480,458 398,452 C296,446 188,438 150,378 Z" fill="#f0d9a8"/>
+            <path d="M198,352 C176,318 194,266 254,248 C304,232 356,214 416,220 C494,228 552,246 584,282 C610,312 600,354 562,376 C508,406 448,414 386,408 C312,400 232,396 198,352 Z" fill="#8bc76a"/>
+
+            <!-- alberi -->
+            <g fill="#2f9e6e">
+                <g transform="translate(232,238) scale(.9)"><rect x="-3" y="0" width="6" height="16" fill="#8b5e3c"/><circle cx="0" cy="-8" r="15"/></g>
+                <g transform="translate(560,228) scale(1.05)"><rect x="-3" y="0" width="6" height="16" fill="#8b5e3c"/><circle cx="0" cy="-8" r="15"/></g>
+                <g transform="translate(470,206) scale(.75)"><rect x="-3" y="0" width="6" height="16" fill="#8b5e3c"/><circle cx="0" cy="-8" r="15"/></g>
+                <g transform="translate(300,218) scale(.7)"><rect x="-3" y="0" width="6" height="16" fill="#8b5e3c"/><circle cx="0" cy="-8" r="15"/></g>
+            </g>
+            </g>
+
+            <!-- ═══ ZONA CERCHIO ═══ -->
+            <g class="isola-zona active" data-zona="cerchio" tabindex="0" role="button" aria-label="Cerchio: scopri le attività (8-11 anni)">
+                <ellipse cx="230" cy="352" rx="72" ry="24" fill="#a8dd8a" opacity=".9"/>
+                <circle class="isola-ring" cx="230" cy="352" r="66"/>
+                <!-- bambino A -->
+                <g class="isola-kid-a">
+                    <rect x="192" y="330" width="20" height="24" rx="9" fill="#f2b134"/>
+                    <circle cx="202" cy="322" r="10" fill="#f0c39a"/>
+                </g>
+                <!-- bambino B -->
+                <g class="isola-kid-b">
+                    <rect x="248" y="330" width="20" height="24" rx="9" fill="#f2b134"/>
+                    <circle cx="258" cy="322" r="10" fill="#f0c39a"/>
+                </g>
+                <!-- palla -->
+                <g class="isola-ball">
+                    <circle cx="230" cy="338" r="8" fill="#fff" stroke="#dc2626" stroke-width="2"/>
+                </g>
+                <g transform="translate(230,300)">
+                    <circle class="isola-hotspot-bg" r="16"/>
+                    <image href="images/logo-lc.png" x="-11" y="-11" width="22" height="22"/>
+                </g>
+            </g>
+
+            <!-- ═══ ZONA REPARTO ═══ -->
+            <g class="isola-zona" data-zona="reparto" tabindex="0" role="button" aria-label="Reparto: scopri le attività (12-16 anni)">
+                <ellipse cx="420" cy="292" rx="70" ry="22" fill="#7cb96a" opacity=".7"/>
+                <circle class="isola-ring" cx="420" cy="292" r="64"/>
+                <!-- seduti attorno al fuoco -->
+                <g class="isola-seduto-a" style="transform-origin:392px 300px"><path d="M382,300 q10,-16 20,0 z" fill="#2f9e6e"/><circle cx="392" cy="288" r="7" fill="#f0c39a"/></g>
+                <g class="isola-seduto-b" style="transform-origin:452px 300px"><path d="M442,300 q10,-16 20,0 z" fill="#2f9e6e"/><circle cx="452" cy="288" r="7" fill="#f0c39a"/></g>
+                <g class="isola-seduto-c" style="transform-origin:420px 268px"><path d="M410,268 q10,-16 20,0 z" fill="#2f9e6e"/><circle cx="420" cy="256" r="7" fill="#f0c39a"/></g>
+                <!-- falò -->
+                <g transform="translate(420,296)">
+                    <rect x="-14" y="-2" width="28" height="5" rx="2" fill="#8b5e3c" transform="rotate(18)"/>
+                    <rect x="-14" y="-2" width="28" height="5" rx="2" fill="#6e4a2e" transform="rotate(-18)"/>
+                    <path class="isola-flame-1" d="M0,-4 C-6,-14 -3,-22 0,-28 C3,-22 6,-14 0,-4 Z" fill="#f2b134" style="transform-origin:0px -4px"/>
+                    <path class="isola-flame-2" d="M-5,-4 C-9,-11 -7,-16 -5,-20 C-2,-15 -1,-9 -5,-4 Z" fill="#e8622c" style="transform-origin:-5px -4px"/>
+                    <path class="isola-flame-3" d="M5,-4 C1,-11 3,-16 5,-20 C8,-15 9,-9 5,-4 Z" fill="#e8622c" style="transform-origin:5px -4px"/>
+                </g>
+                <g transform="translate(420,240)">
+                    <circle class="isola-hotspot-bg" r="16"/>
+                    <image href="images/logo-eg.png" x="-11" y="-11" width="22" height="22"/>
+                </g>
+            </g>
+
+            <!-- ═══ ZONA CLAN ═══ -->
+            <g class="isola-zona" data-zona="clan" tabindex="0" role="button" aria-label="Clan: scopri le attività (17-21 anni)">
+                <circle class="isola-ring" cx="565" cy="330" r="72"/>
+                <path d="M520,382 Q556,344 556,306 T614,262" fill="none" stroke="#cda86a" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 12"/>
+                <ellipse cx="614" cy="256" rx="46" ry="18" fill="#79b559"/>
+                <g transform="translate(556,306)">
+                    <!-- il posizionamento statico resta su questo gruppo esterno: un attributo
+                         transform SVG e un'animazione CSS su transform sullo stesso elemento non
+                         si sommano, la CSS sovrascriverebbe del tutto la posizione -->
+                    <g class="isola-clan-figura">
+                        <rect x="-7" y="8" width="14" height="10" fill="#8b5e3c"/>
+                        <rect class="isola-leg-a" x="-6" y="16" width="5" height="14" rx="2" fill="#7a4b2e"/>
+                        <rect class="isola-leg-b" x="1"  y="16" width="5" height="14" rx="2" fill="#7a4b2e"/>
+                        <rect x="-8" y="-6" width="16" height="22" rx="7" fill="#d63447"/>
+                        <circle cx="0" cy="-14" r="9" fill="#f0c39a"/>
+                    </g>
+                </g>
+                <g transform="translate(565,270)">
+                    <circle class="isola-hotspot-bg" r="16"/>
+                    <image href="images/logo-rs.png" x="-11" y="-11" width="22" height="22"/>
+                </g>
+            </g>
+        </svg>
+
+        <div id="isola-caption" class="isola-caption text-center mt-4"></div>
+    </div>
+</section>
+<script>
+(function(){
+    var sezione = document.getElementById('isola-scout');
+    if (!sezione) return;
+    var caption = document.getElementById('isola-caption');
+    var zone = sezione.querySelectorAll('.isola-zona');
+
+    var INFO = {
+        cerchio: { titolo: 'Cerchio', eta: '8 – 11 anni', colore: '#d97706',
+            testo: 'Giochi, avventure e le prime scoperte nella natura, un pomeriggio alla settimana.', link: 'unita.html#cerchio' },
+        reparto: { titolo: 'Reparto', eta: '12 – 16 anni', colore: '#059669',
+            testo: 'Uscite in autonomia, tecniche di campo e serate attorno al fuoco: si cresce in squadriglia.', link: 'unita.html#reparto' },
+        clan:    { titolo: 'Clan', eta: '17 – 21 anni', colore: '#dc2626',
+            testo: 'Cammini, servizio alla comunità e scelte importanti: la strada dei rover verso l\'autonomia.', link: 'unita.html#clan' }
+    };
+
+    function attiva(nome) {
+        var info = INFO[nome];
+        if (!info) return;
+        zone.forEach(function(z){ z.classList.toggle('active', z.getAttribute('data-zona') === nome); });
+        caption.innerHTML =
+            '<div class="font-black text-lg" style="color:' + info.colore + '">' + info.titolo +
+            ' <span class="text-gray-400 font-bold text-sm">· ' + info.eta + '</span></div>' +
+            '<p class="text-gray-500 text-sm mt-1 leading-relaxed max-w-md mx-auto">' + info.testo + '</p>' +
+            '<a href="' + info.link + '" class="inline-flex items-center gap-1 text-scout font-black text-xs mt-2">Scopri di più <i class="fas fa-arrow-right text-[10px]"></i></a>';
+    }
+
+    zone.forEach(function(z){
+        z.addEventListener('click', function(){ attiva(z.getAttribute('data-zona')); });
+        z.addEventListener('keydown', function(e){
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); attiva(z.getAttribute('data-zona')); }
+        });
+    });
+
+    attiva('cerchio');
+
+    // Parallasse leggera allo scroll: l'isola si sposta un po' più lentamente
+    // del resto mentre la sezione scorre, per dare profondità (disattivata se
+    // l'utente preferisce meno movimento).
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        var terra = sezione.querySelector('.isola-layer-terra');
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function(){
+                var rect = sezione.getBoundingClientRect();
+                var vh = window.innerHeight || document.documentElement.clientHeight;
+                var progress = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
+                var shift = (progress - 0.5) * 30;
+                if (terra) terra.style.transform = 'translateY(' + (shift * -0.4) + 'px)';
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
+})();
+</script>
+
 <!-- ── TESTIMONIANZE GENITORI (marquee scorrevole) ── -->
 <section id="sez-testimonianze" class="py-16 bg-gray-50 overflow-hidden border-t border-gray-100">
     <div class="max-w-5xl mx-auto px-6 text-center mb-10">
