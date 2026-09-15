@@ -10,6 +10,8 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="assets/tailwind.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js" integrity="sha384-gx12pQMMYnabkTgbCHqqrT65RwDnXI/f/dU2H9JUmT0KUeiMF5bf+yroQBmX0Nuk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" integrity="sha384-2BNGrQ48jXhJZb0u9FfgOUGJQsbuoecOc1/bdu0oRviV7oc0g5gFTyYsSd7YICDP" crossorigin="anonymous"></script>
+    <script>window.addEventListener('load',function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -525,7 +527,7 @@
                         <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-address-book"></i></span>Contatti del sito</h3>
                     </div>
                     <div class="panel-body space-y-4">
-                        <p class="text-xs text-gray-400 -mt-1">Numero e email mostrati su TUTTO il sito: menu, footer, pulsanti WhatsApp e pagina Contatti (WhatsApp e Telefono usano lo stesso numero).</p>
+                        <p class="text-xs text-gray-400 -mt-1">Numero e email mostrati su TUTTO il sito: menu, footer, pulsanti WhatsApp e pagina Contatti (WhatsApp e Telefono usano lo stesso numero). Il salvataggio richiede un codice di conferma via email.</p>
                         <div>
                             <label>Telefono (con prefisso, es. +39 340 874 0678)</label>
                             <input type="text" id="imp-telefono" placeholder="+39 340 874 0678">
@@ -611,7 +613,7 @@
                         <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-gear"></i></span>Impostazioni</h3>
                     </div>
                     <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
-                        <p>Da qui puoi modificare il numero di telefono e l'email mostrati su tutto il sito (menu in alto, footer, pulsanti WhatsApp e pagina Contatti), senza dover toccare il codice. Ti viene chiesta conferma prima di salvare perché la modifica è visibile subito a tutti i visitatori.</p>
+                        <p>Da qui puoi modificare il numero di telefono e l'email mostrati su tutto il sito (menu in alto, footer, pulsanti WhatsApp e pagina Contatti), senza dover toccare il codice. Per sicurezza, dopo aver confermato il salvataggio ti arriva un codice via email (all'indirizzo con cui hai fatto login) da inserire prima che la modifica diventi effettiva.</p>
                     </div>
                 </div>
 
@@ -640,6 +642,24 @@
             <button onclick="closeRichiestaInfoModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
         </div>
         <div id="modal-richiesta-info-body"></div>
+    </div>
+</div>
+
+<!-- ── MODAL CODICE DI CONFERMA (cambio contatti) ──────────────── -->
+<div id="modal-otp-impostazioni" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:26rem">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="font-black text-scout text-xl">Conferma la modifica</h3>
+            <button onclick="closeOtpImpostazioni()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">Ti abbiamo inviato un codice a <strong id="otp-dest-email"></strong>. Inseriscilo per confermare il cambio dei contatti pubblici del sito.</p>
+        <label>Codice di conferma</label>
+        <input type="text" id="otp-input" inputmode="numeric" maxlength="6" placeholder="123456" class="text-center tracking-[0.4em] font-black text-lg">
+        <p id="otp-error" class="text-red-500 text-xs mt-2 hidden"></p>
+        <div class="flex gap-3 mt-4">
+            <button onclick="confermaOtpImpostazioni()" class="btn btn-primary btn-sm flex-1 justify-center">Conferma</button>
+            <button onclick="closeOtpImpostazioni()" class="btn btn-outline btn-sm">Annulla</button>
+        </div>
     </div>
 </div>
 
@@ -1431,17 +1451,75 @@ function caricaImpostazioni() {
     }).catch(e => console.error('Errore caricaImpostazioni:', e));
 }
 
+let otpPendingValues = null;
+let otpCode = null;
+let otpExpiry = null;
+
 function salvaImpostazioni() {
     const telefono = document.getElementById('imp-telefono').value.trim();
     const email = document.getElementById('imp-email').value.trim();
-    if (!confirm('Confermi di voler cambiare telefono ed email mostrati su TUTTO il sito (menu, footer, pulsanti WhatsApp, pagina Contatti)? La modifica sarà visibile subito a tutti i visitatori.')) return;
+    if (!/^\+?[0-9\s]{8,20}$/.test(telefono)) { toast('Numero di telefono non valido.', false); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Email non valida.', false); return; }
+    if (!confirm('Confermi di voler cambiare telefono ed email mostrati su TUTTO il sito (menu, footer, pulsanti WhatsApp, pagina Contatti)? La modifica sarà visibile subito a tutti i visitatori, dopo la conferma via email.')) return;
+
+    const user = firebase.auth().currentUser;
+    if (!user || !user.email) { toast('Sessione non valida: rieffettua il login.', false); return; }
+    if (typeof emailjs === 'undefined') { toast('Servizio email non disponibile, riprova tra poco.', false); return; }
+
+    otpPendingValues = { telefono, email };
+    otpCode = String(Math.floor(100000 + Math.random() * 900000));
+    otpExpiry = Date.now() + 10 * 60 * 1000;
+
+    emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+        to_email:  user.email,
+        nome:      'Codice di conferma modifica contatti',
+        tipo:      'Sicurezza admin',
+        timestamp: new Date().toLocaleString('it-IT'),
+        iban:      'Codice di conferma: ' + otpCode + '\n\n' +
+                   'Qualcuno (probabilmente tu) sta per cambiare i contatti pubblici del sito in:\n' +
+                   'Telefono: ' + telefono + '\nEmail: ' + email + '\n\n' +
+                   'Il codice scade tra 10 minuti. Se non sei stato tu, ignora questa email e non condividere il codice con nessuno.'
+    }).then(() => {
+        document.getElementById('otp-input').value = '';
+        document.getElementById('otp-error').classList.add('hidden');
+        document.getElementById('otp-dest-email').textContent = user.email;
+        document.getElementById('modal-otp-impostazioni').classList.remove('hidden');
+        document.getElementById('otp-input').focus();
+    }).catch(e => {
+        console.error('Errore invio OTP:', e);
+        otpPendingValues = null; otpCode = null; otpExpiry = null;
+        toast('Errore nell\'invio del codice di conferma. Riprova.', false);
+    });
+}
+
+function confermaOtpImpostazioni() {
+    const inserito = document.getElementById('otp-input').value.trim();
+    const errEl = document.getElementById('otp-error');
+    if (!otpCode || !otpExpiry || Date.now() > otpExpiry) {
+        errEl.textContent = 'Codice scaduto: clicca di nuovo su "Salva" per riceverne uno nuovo.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+    if (inserito !== otpCode) {
+        errEl.textContent = 'Codice errato. Riprova.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+    errEl.classList.add('hidden');
+    const { telefono, email } = otpPendingValues;
     window.firestoreDb.collection('config').doc('site').set({ telefono, email }, { merge: true })
         .then(() => {
+            closeOtpImpostazioni();
             const ok = document.getElementById('imp-salvato');
             ok.classList.remove('hidden');
             setTimeout(() => ok.classList.add('hidden'), 2500);
         })
         .catch(e => { console.error('Errore salvaImpostazioni:', e); toast('Errore nel salvataggio.', false); });
+}
+
+function closeOtpImpostazioni() {
+    document.getElementById('modal-otp-impostazioni').classList.add('hidden');
+    otpPendingValues = null; otpCode = null; otpExpiry = null;
 }
 
 // ── EVENTI ────────────────────────────────────────────────────────
