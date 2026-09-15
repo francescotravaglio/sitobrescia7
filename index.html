@@ -404,54 +404,42 @@
   </div>
 </div>
 
-<!-- ── MODAL CONTATTO ────────────────────────────────────────────── -->
-<div id="modal-contatto" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closeModalContatto()">
+<!-- ── MODAL RICHIESTA INFORMAZIONI (email + telefono) ─────────────── -->
+<div id="modal-info" class="fixed inset-0 z-[9000] flex items-center justify-center p-4 hidden" onclick="if(event.target===this)closeInfoModal()">
   <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
   <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 z-10">
-    <button onclick="closeModalContatto()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">×</button>
+    <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition">×</button>
     <div class="text-center mb-6">
       <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-        <i class="fas fa-envelope text-scout text-2xl"></i>
+        <i class="fas fa-info-circle text-scout text-2xl"></i>
       </div>
-      <h3 class="text-2xl font-black text-scout">Chiedi informazioni</h3>
-      <p class="text-gray-500 text-sm mt-1">Ti risponderemo entro 24 ore</p>
+      <h3 class="text-2xl font-black text-scout">Ricevi tutte le informazioni</h3>
+      <p class="text-gray-500 text-sm mt-1">Lasciaci un recapito, ti ricontattiamo noi — senza impegno</p>
     </div>
-    <div id="contatto-form-wrap">
+    <div id="info-form-wrap">
       <div class="space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="form-label">Nome *</label>
-            <input id="cnt-nome" type="text" placeholder="Mario" class="input-field" required>
-          </div>
-          <div>
-            <label class="form-label">Cognome *</label>
-            <input id="cnt-cognome" type="text" placeholder="Rossi" class="input-field" required>
-          </div>
-        </div>
+        <input type="text" id="info-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div>
           <label class="form-label">Email *</label>
-          <input id="cnt-email" type="email" placeholder="mario@email.com" class="input-field" required>
+          <input id="info-email" type="email" placeholder="mario@email.com" class="input-field" required>
         </div>
         <div>
-          <label class="form-label">Telefono</label>
-          <input id="cnt-tel" type="tel" placeholder="+39 340 123 4567" class="input-field">
-        </div>
-        <div>
-          <label class="form-label">Messaggio *</label>
-          <textarea id="cnt-msg" rows="3" placeholder="Vorrei sapere di più sulle attività scout per mio figlio..." class="input-field resize-none"></textarea>
+          <label class="form-label">Telefono *</label>
+          <input id="info-tel" type="tel" placeholder="+39 340 123 4567" class="input-field" required>
         </div>
       </div>
-      <button onclick="submitContatto()" class="mt-5 w-full bg-scout text-white font-black py-3.5 rounded-2xl hover:bg-scout-dark transition flex items-center justify-center gap-2">
-        <i class="fas fa-paper-plane"></i> Invia messaggio
+      <p id="info-error" class="text-red-500 text-xs mt-3 hidden">Compila email e telefono.</p>
+      <button onclick="submitInfoRapida()" class="mt-5 w-full bg-scout text-white font-black py-3.5 rounded-2xl hover:bg-scout-dark transition flex items-center justify-center gap-2">
+        <i class="fas fa-paper-plane"></i> Invia richiesta
       </button>
       <p class="text-xs text-gray-400 text-center mt-3">oppure chiamaci al <a href="tel:+393408740678" class="text-scout font-bold hover:underline">+39 340 874 0678</a></p>
     </div>
-    <div id="contatto-success" class="hidden text-center py-6">
+    <div id="info-success" class="hidden text-center py-6">
       <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
         <i class="fas fa-check text-green-500 text-2xl"></i>
       </div>
-      <h4 class="font-black text-scout text-xl mb-2">Messaggio inviato!</h4>
-      <p class="text-gray-500 text-sm">Ti risponderemo presto all'indirizzo indicato.</p>
+      <h4 class="font-black text-scout text-xl mb-2">Richiesta inviata!</h4>
+      <p class="text-gray-500 text-sm">Ti ricontatteremo presto. Buona strada!</p>
     </div>
   </div>
 </div>
@@ -462,9 +450,29 @@
   @keyframes fireflicker { 0%,100%{opacity:.7;transform:scaleY(1) scaleX(1);}33%{opacity:1;transform:scaleY(1.12) scaleX(.92);}66%{opacity:.85;transform:scaleY(.95) scaleX(1.08);} }
   @keyframes glowpulse  { 0%,100%{opacity:.5;r:22;}50%{opacity:.85;r:28;} }
   @keyframes tentglow   { 0%,100%{opacity:.5;}50%{opacity:.9;} }
+  .hero-photo-slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 3s ease-in-out;
+      filter: brightness(.5) saturate(1.05);
+  }
+  .hero-photo-slide.active { opacity: 1; }
 </style>
 
 <header id="hero-night" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+
+  <!-- ⓪ CAROSELLO FOTO DI SFONDO -->
+  <div class="absolute inset-0" style="z-index:0" aria-hidden="true">
+    <div class="hero-photo-slide active" style="background-image:url('images/carosello/foto-1.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-2.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-3.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-4.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-5.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-6.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-7.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-9.webp')"></div>
+    <div class="hero-photo-slide" style="background-image:url('images/carosello/foto-10.webp')"></div>
+  </div>
 
   <!-- ① CANVAS stelle + stelle cadenti -->
   <canvas id="sky-canvas" class="absolute inset-0 w-full h-full" style="z-index:1"></canvas>
@@ -549,10 +557,10 @@
       <strong class="font-semibold">Bambini e ragazzi dagli 8 ai 21 anni, da tutta la città</strong>
     </h1>
     <div class="fade-up delay-3 flex flex-wrap justify-center gap-4">
-      <button onclick="openPreIscrizione()" class="bg-white text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
+      <button onclick="openInfoModal()" class="bg-white text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-2xl cursor-pointer">
         <i class="fas fa-info-circle mr-2"></i>Voglio saperne di più
       </button>
-      <a href="mailto:info@agescibrescia7.com" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
+      <a href="#contatti" class="bg-white/10 backdrop-blur text-white font-bold px-8 py-4 rounded-full border border-white/25 hover:bg-white/20 transition text-base">
         <i class="fas fa-envelope mr-2"></i>Contattaci
       </a>
     </div>
@@ -565,6 +573,20 @@
     <i class="fas fa-chevron-down text-2xl"></i>
   </a>
 </header>
+
+<!-- ── SCRIPT CAROSELLO FOTO HERO ──────────────────────────────────── -->
+<script>
+(function(){
+    var slides = document.querySelectorAll('.hero-photo-slide');
+    if (slides.length < 2) return;
+    var idx = 0;
+    setInterval(function(){
+        slides[idx].classList.remove('active');
+        idx = (idx + 1) % slides.length;
+        slides[idx].classList.add('active');
+    }, 6000);
+})();
+</script>
 
 <!-- ── SCRIPT CIELO STELLATO ──────────────────────────────────────── -->
 <script>
@@ -1246,30 +1268,55 @@ if ('serviceWorker' in navigator) {
         window.openPreIscrizione('preiscrizione');
     }
 
-    // ── Modal Contatto ────────────────────────────────────────────
-    window.openModalContatto = function() {
-        document.getElementById('modal-contatto').classList.remove('hidden');
+    // ── Modal Richiesta informazioni (email + telefono) ────────────
+    window.openInfoModal = function() {
+        document.getElementById('modal-info').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     };
-    window.closeModalContatto = function() {
-        document.getElementById('modal-contatto').classList.add('hidden');
+    window.closeInfoModal = function() {
+        document.getElementById('modal-info').classList.add('hidden');
         document.body.style.overflow = '';
+        document.getElementById('info-form-wrap').classList.remove('hidden');
+        document.getElementById('info-success').classList.add('hidden');
+        document.getElementById('info-error').classList.add('hidden');
+        document.getElementById('info-email').value = '';
+        document.getElementById('info-tel').value = '';
     };
-    window.submitContatto = function() {
-        const nome  = document.getElementById('cnt-nome').value.trim();
-        const email = document.getElementById('cnt-email').value.trim();
-        const msg   = document.getElementById('cnt-msg').value.trim();
-        if (!nome || !email || !msg) { alert('Compila i campi obbligatori (nome, email, messaggio).'); return; }
+    window.submitInfoRapida = function() {
+        var hp = document.getElementById('info-hp'); if (hp && hp.value) return;
+        var last = +localStorage.getItem('info_last') || 0;
+        if (Date.now() - last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
+
+        const email = document.getElementById('info-email').value.trim();
+        const tel   = document.getElementById('info-tel').value.trim();
+        const errEl = document.getElementById('info-error');
+        if (!email || !tel) { errEl.classList.remove('hidden'); return; }
+        errEl.classList.add('hidden');
+
         const db = window.db || firebase.firestore();
-        db.collection('informazioni').add({
-            nome, cognome: document.getElementById('cnt-cognome').value.trim(),
-            email, telefono: document.getElementById('cnt-tel').value.trim(),
-            messaggio: msg,
+        db.collection('richieste_informazioni').add({
+            email, telefono: tel,
             timestamp: new Date().toISOString(), letta: false
         }).then(function() {
-            document.getElementById('contatto-form-wrap').classList.add('hidden');
-            document.getElementById('contatto-success').classList.remove('hidden');
-        }).catch(function() {
+            localStorage.setItem('info_last', Date.now());
+            document.getElementById('info-form-wrap').classList.add('hidden');
+            document.getElementById('info-success').classList.remove('hidden');
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'generate_lead', { event_category: 'richiesta_informazioni', event_label: 'form_inviato' });
+            }
+
+            if (typeof emailjs === 'undefined') return;
+            const dataStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
+            emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                to_email:  'brescia7@lombardia.agesci.it',
+                nome:      'Nuova richiesta di informazioni',
+                tipo:      'Richiesta informazioni (sito)',
+                timestamp: dataStr,
+                iban:      'Email: ' + email + '\nTelefono: ' + tel
+            }).catch(function(e){ console.error('[EmailJS]', e); });
+        }).catch(function(err) {
+            console.error(err);
             alert('Errore nell\'invio. Riprova o chiamaci al +39 340 874 0678.');
         });
     };
