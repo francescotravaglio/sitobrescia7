@@ -14,7 +14,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
-        scout: ['Patrick Hand', 'cursive'],
+        scout: ['Baloo 2', 'cursive'],
       },
       opacity: { '8': '0.08', '15': '0.15' },
     },
