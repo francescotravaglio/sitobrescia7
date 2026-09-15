@@ -653,6 +653,50 @@ if ('serviceWorker' in navigator) {
     });
 }
 </script>
+
+<script>
+// Recapiti dinamici: se in admin → Impostazioni è stato salvato un telefono/email
+// diverso da quello di default, sostituisce automaticamente tutti i link
+// tel:/mailto:/wa.me che puntano al recapito di default in ogni pagina del sito
+// (menu, footer, pulsante WhatsApp flottante, testi con link diretti), senza
+// dover modificare manualmente ogni pagina.
+(function(){
+    var DEFAULT_TEL_DIGITS  = '393408740678';
+    var DEFAULT_TEL_DISPLAY = '+39 340 874 0678';
+    var DEFAULT_EMAIL       = 'info@agescibrescia7.com';
+
+    window.addEventListener('load', function() {
+        if (!window.db) return;
+        window.db.collection('config').doc('site').get().then(function(doc) {
+            if (!doc.exists) return;
+            var d = doc.data();
+            if (!d.telefono && !d.email) return;
+
+            if (d.telefono) {
+                var telDigits = d.telefono.replace(/\D/g, '');
+                if (telDigits && !telDigits.startsWith('39')) telDigits = '39' + telDigits;
+                var telHref = 'tel:' + (d.telefono.trim().startsWith('+') ? d.telefono.replace(/\s+/g,'') : '+' + telDigits);
+
+                document.querySelectorAll('a[href^="tel:"]').forEach(function(a){
+                    if (a.getAttribute('href').replace(/\D/g,'') === DEFAULT_TEL_DIGITS) {
+                        a.setAttribute('href', telHref);
+                        if (a.textContent.trim() === DEFAULT_TEL_DISPLAY) a.textContent = d.telefono;
+                    }
+                });
+                document.querySelectorAll('a[href*="wa.me/' + DEFAULT_TEL_DIGITS + '"]').forEach(function(a){
+                    a.setAttribute('href', a.getAttribute('href').replace(DEFAULT_TEL_DIGITS, telDigits));
+                });
+            }
+            if (d.email) {
+                document.querySelectorAll('a[href^="mailto:' + DEFAULT_EMAIL + '"]').forEach(function(a){
+                    a.setAttribute('href', a.getAttribute('href').replace(DEFAULT_EMAIL, d.email));
+                    if (a.textContent.trim() === DEFAULT_EMAIL) a.textContent = d.email;
+                });
+            }
+        }).catch(function(){});
+    });
+})();
+</script>
 <!-- SITE-FOOTER:END -->
 
 <!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
