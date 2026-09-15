@@ -525,7 +525,7 @@
                         <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-address-book"></i></span>Contatti del sito</h3>
                     </div>
                     <div class="panel-body space-y-4">
-                        <p class="text-xs text-gray-400 -mt-1">Numero e email mostrati nella sezione "Contatti" della homepage (WhatsApp e Telefono usano lo stesso numero).</p>
+                        <p class="text-xs text-gray-400 -mt-1">Numero e email mostrati su TUTTO il sito: menu, footer, pulsanti WhatsApp e pagina Contatti (WhatsApp e Telefono usano lo stesso numero).</p>
                         <div>
                             <label>Telefono (con prefisso, es. +39 340 874 0678)</label>
                             <input type="text" id="imp-telefono" placeholder="+39 340 874 0678">
@@ -611,7 +611,7 @@
                         <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-gear"></i></span>Impostazioni</h3>
                     </div>
                     <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
-                        <p>Da qui puoi modificare il numero di telefono e l'email mostrati nella sezione "Contatti" della homepage (WhatsApp e Telefono usano lo stesso numero), senza dover toccare il codice del sito. Le modifiche sono visibili sul sito dopo un ricaricamento della pagina.</p>
+                        <p>Da qui puoi modificare il numero di telefono e l'email mostrati su tutto il sito (menu in alto, footer, pulsanti WhatsApp e pagina Contatti), senza dover toccare il codice. Ti viene chiesta conferma prima di salvare perché la modifica è visibile subito a tutti i visitatori.</p>
                     </div>
                 </div>
 
@@ -1434,6 +1434,7 @@ function caricaImpostazioni() {
 function salvaImpostazioni() {
     const telefono = document.getElementById('imp-telefono').value.trim();
     const email = document.getElementById('imp-email').value.trim();
+    if (!confirm('Confermi di voler cambiare telefono ed email mostrati su TUTTO il sito (menu, footer, pulsanti WhatsApp, pagina Contatti)? La modifica sarà visibile subito a tutti i visitatori.')) return;
     window.firestoreDb.collection('config').doc('site').set({ telefono, email }, { merge: true })
         .then(() => {
             const ok = document.getElementById('imp-salvato');
