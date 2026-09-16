@@ -59,6 +59,30 @@
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
+    <datalist id="province-it">
+        <option value="AG" label="Agrigento (AG)"><option value="AL" label="Alessandria (AL)"><option value="AN" label="Ancona (AN)"><option value="AO" label="Aosta (AO)"><option value="AP" label="Ascoli Piceno (AP)">
+        <option value="AQ" label="L'Aquila (AQ)"><option value="AR" label="Arezzo (AR)"><option value="AT" label="Asti (AT)"><option value="AV" label="Avellino (AV)"><option value="BA" label="Bari (BA)">
+        <option value="BG" label="Bergamo (BG)"><option value="BI" label="Biella (BI)"><option value="BL" label="Belluno (BL)"><option value="BN" label="Benevento (BN)"><option value="BO" label="Bologna (BO)">
+        <option value="BR" label="Brindisi (BR)"><option value="BS" label="Brescia (BS)"><option value="BT" label="Barletta-Andria-Trani (BT)"><option value="BZ" label="Bolzano (BZ)"><option value="CA" label="Cagliari (CA)">
+        <option value="CB" label="Campobasso (CB)"><option value="CE" label="Caserta (CE)"><option value="CH" label="Chieti (CH)"><option value="CL" label="Caltanissetta (CL)"><option value="CN" label="Cuneo (CN)">
+        <option value="CO" label="Como (CO)"><option value="CR" label="Cremona (CR)"><option value="CS" label="Cosenza (CS)"><option value="CT" label="Catania (CT)"><option value="CZ" label="Catanzaro (CZ)">
+        <option value="EN" label="Enna (EN)"><option value="FC" label="Forlì-Cesena (FC)"><option value="FE" label="Ferrara (FE)"><option value="FG" label="Foggia (FG)"><option value="FI" label="Firenze (FI)">
+        <option value="FM" label="Fermo (FM)"><option value="FR" label="Frosinone (FR)"><option value="GE" label="Genova (GE)"><option value="GO" label="Gorizia (GO)"><option value="GR" label="Grosseto (GR)">
+        <option value="IM" label="Imperia (IM)"><option value="IS" label="Isernia (IS)"><option value="KR" label="Crotone (KR)"><option value="LC" label="Lecco (LC)"><option value="LE" label="Lecce (LE)">
+        <option value="LI" label="Livorno (LI)"><option value="LO" label="Lodi (LO)"><option value="LT" label="Latina (LT)"><option value="LU" label="Lucca (LU)"><option value="MB" label="Monza e Brianza (MB)">
+        <option value="MC" label="Macerata (MC)"><option value="ME" label="Messina (ME)"><option value="MI" label="Milano (MI)"><option value="MN" label="Mantova (MN)"><option value="MO" label="Modena (MO)">
+        <option value="MS" label="Massa-Carrara (MS)"><option value="MT" label="Matera (MT)"><option value="NA" label="Napoli (NA)"><option value="NO" label="Novara (NO)"><option value="NU" label="Nuoro (NU)">
+        <option value="OR" label="Oristano (OR)"><option value="PA" label="Palermo (PA)"><option value="PC" label="Piacenza (PC)"><option value="PD" label="Padova (PD)"><option value="PE" label="Pescara (PE)">
+        <option value="PG" label="Perugia (PG)"><option value="PI" label="Pisa (PI)"><option value="PN" label="Pordenone (PN)"><option value="PO" label="Prato (PO)"><option value="PR" label="Parma (PR)">
+        <option value="PT" label="Pistoia (PT)"><option value="PU" label="Pesaro e Urbino (PU)"><option value="PV" label="Pavia (PV)"><option value="PZ" label="Potenza (PZ)"><option value="RA" label="Ravenna (RA)">
+        <option value="RC" label="Reggio Calabria (RC)"><option value="RE" label="Reggio Emilia (RE)"><option value="RG" label="Ragusa (RG)"><option value="RI" label="Rieti (RI)"><option value="RM" label="Roma (RM)">
+        <option value="RN" label="Rimini (RN)"><option value="RO" label="Rovigo (RO)"><option value="SA" label="Salerno (SA)"><option value="SI" label="Siena (SI)"><option value="SO" label="Sondrio (SO)">
+        <option value="SP" label="La Spezia (SP)"><option value="SR" label="Siracusa (SR)"><option value="SS" label="Sassari (SS)"><option value="SU" label="Sud Sardegna (SU)"><option value="SV" label="Savona (SV)">
+        <option value="TA" label="Taranto (TA)"><option value="TE" label="Teramo (TE)"><option value="TN" label="Trento (TN)"><option value="TO" label="Torino (TO)"><option value="TP" label="Trapani (TP)">
+        <option value="TR" label="Terni (TR)"><option value="TS" label="Trieste (TS)"><option value="TV" label="Treviso (TV)"><option value="UD" label="Udine (UD)"><option value="VA" label="Varese (VA)">
+        <option value="VB" label="Verbano-Cusio-Ossola (VB)"><option value="VC" label="Vercelli (VC)"><option value="VE" label="Venezia (VE)"><option value="VI" label="Vicenza (VI)"><option value="VR" label="Verona (VR)">
+        <option value="VT" label="Viterbo (VT)"><option value="VV" label="Vibo Valentia (VV)">
+    </datalist>
 
 <!-- SITE-HEADER:START (generato da build.js — modificare partials/header.html) -->
 <!-- TOP BAR -->
@@ -286,13 +310,13 @@
           </div>
           <p class="text-lg font-black text-scout mb-4 mt-6 border-b border-gray-200 pb-2">Residenza</p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" autocomplete="section-adulto address-line1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" autocomplete="section-adulto address-line2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" autocomplete="section-adulto address-level2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" list="province-it" autocomplete="section-adulto address-level1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" autocomplete="section-adulto postal-code" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email *</label><input type="email" name="email" required placeholder="mario@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
@@ -408,13 +432,13 @@
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen1_indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen1_n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen1_indirizzo" placeholder="Via Roma" autocomplete="section-gen1 address-line1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen1_n_civico" placeholder="1" autocomplete="section-gen1 address-line2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen1_citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen1_provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen1_cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen1_citta" placeholder="Brescia" autocomplete="section-gen1 address-level2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen1_provincia" maxlength="2" placeholder="BS" list="province-it" autocomplete="section-gen1 address-level1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen1_cap" maxlength="5" placeholder="25100" autocomplete="section-gen1 postal-code" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email *</label><input type="email" name="gen1_email" required placeholder="giuseppe@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
@@ -449,13 +473,13 @@
               </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-              <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen2_indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen2_n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="gen2_indirizzo" placeholder="Via Roma" autocomplete="section-gen2 address-line1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="gen2_n_civico" placeholder="1" autocomplete="section-gen2 address-line2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen2_citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen2_provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
-              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen2_cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="gen2_citta" placeholder="Brescia" autocomplete="section-gen2 address-level2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="gen2_provincia" maxlength="2" placeholder="BS" list="province-it" autocomplete="section-gen2 address-level1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+              <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="gen2_cap" maxlength="5" placeholder="25100" autocomplete="section-gen2 postal-code" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email</label><input type="email" name="gen2_email" placeholder="anna@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
@@ -488,13 +512,13 @@
             <input type="text" name="cf" placeholder="RSSLCU10A01B157Z" maxlength="16" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase">
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div class="col-span-2"><label class="text-sm font-semibold text-gray-700 mb-1 block">Via/Viale/Piazza/Strada</label><input type="text" name="indirizzo" placeholder="Via Roma" autocomplete="section-minore address-line1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">N. civico</label><input type="text" name="n_civico" placeholder="1" autocomplete="section-minore address-line2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
-            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Città</label><input type="text" name="citta" placeholder="Brescia" autocomplete="section-minore address-level2" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Provincia</label><input type="text" name="provincia" maxlength="2" placeholder="BS" list="province-it" autocomplete="section-minore address-level1" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout uppercase"></div>
+            <div><label class="text-sm font-semibold text-gray-700 mb-1 block">CAP</label><input type="text" name="cap" maxlength="5" placeholder="25100" autocomplete="section-minore postal-code" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div><label class="text-sm font-semibold text-gray-700 mb-1 block">Email del minore (opzionale)</label><input type="email" name="email" placeholder="luca@email.com" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-scout/20 focus:border-scout"></div>
@@ -880,6 +904,15 @@ if ('serviceWorker' in navigator) {
                 if (!f) return;
                 pg.drawText(f.text,{x:x,y:y,size:f.size,font:fnt,color:PDFLib.rgb(0,0,0)});
             }
+            // Il template stampa "sesso M/F," con le due lettere una a ridosso
+            // dell'altra: non c'e spazio per scrivere un valore accanto, quindi la
+            // scelta va indicata cerchiando la lettera giusta (M o F) invece di
+            // sovrapporci del testo.
+            function circleSesso(pg,val,mx,fx,y){
+                var v = String(val||'').trim().toUpperCase();
+                if (v !== 'M' && v !== 'F') return;
+                pg.drawEllipse({ x: v === 'M' ? mx : fx, y: y, xScale: 6, yScale: 6.5, borderColor: PDFLib.rgb(0,0,0), borderWidth: 1.1 });
+            }
             if (tipo === 'maggiorenne') {
                 // Brescia7-SchedaAdulti.pdf (8 pagine, header gia compilato): 0-1 richiesta, 2-3 sanitaria, 4-7 gdpr
                 var buf = await fetch('documents/Brescia7-SchedaAdulti.pdf').then(function(r){ if(!r.ok) throw r.status; return r.arrayBuffer(); });
@@ -893,7 +926,7 @@ if ('serviceWorker' in navigator) {
                 // indirizzo: bottom=267.3 → y=575; citta: bottom=291.9 → y=550; email: bottom=316.5 → y=526
                 // pag1 city layout: "a [citta] (….prov….) CAP [cap]"
                 draw(rp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
-                draw(rp0,fnt,88,624,d.sesso||'',30);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,fmtD(d.data_nascita),87);
+                circleSesso(rp0,d.sesso,71.75,82,629);draw(rp0,fnt,130,624,d.luogo_nascita||'',256);draw(rp0,fnt,393,624,d.prov_nascita||'',14);draw(rp0,fnt,441,624,fmtD(d.data_nascita),87);
                 draw(rp0,fnt,113,599,d.cf||'',280);
                 draw(rp0,fnt,218,575,d.indirizzo||'',234);draw(rp0,fnt,469,575,d.n_civico||'',60);
                 draw(rp0,fnt,48,550,d.citta||'',336);draw(rp0,fnt,393,550,d.provincia||'',16);draw(rp0,fnt,449,550,d.cap||'',140);
@@ -902,7 +935,7 @@ if ('serviceWorker' in navigator) {
                 if(rp1){draw(rp1,fnt,200,274,today,120);draw(rp1,fnt,315,274,'Brescia',225);if(d.rivista==='SI')draw(rp1,fnt,49,315,'X',12,11);if(d.rivista==='NO')draw(rp1,fnt,290,315,'X',12,11);}
                 // sp0: pagina 3 - stessa anagrafica; city layout diverso: "a [citta] CAP [cap] (prov)"
                 draw(sp0,fnt,136,648,(d.nome||'')+' '+(d.cognome||''),406);
-                draw(sp0,fnt,88,624,d.sesso||'',30);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,fmtD(d.data_nascita),87);
+                circleSesso(sp0,d.sesso,71.75,82,629);draw(sp0,fnt,130,624,d.luogo_nascita||'',256);draw(sp0,fnt,393,624,d.prov_nascita||'',14);draw(sp0,fnt,441,624,fmtD(d.data_nascita),87);
                 draw(sp0,fnt,113,599,d.cf||'',280);
                 draw(sp0,fnt,218,575,d.indirizzo||'',234);draw(sp0,fnt,461,575,d.n_civico||'',60);
                 draw(sp0,fnt,48,550,d.citta||'',298);draw(sp0,fnt,371,550,d.cap||'',95);draw(sp0,fnt,474,550,d.provincia||'',8);
@@ -949,34 +982,34 @@ if ('serviceWorker' in navigator) {
             var p1=pg2[0], p2=pg2[1], p3=pg2[2], sp1=pg2[5], sp2b=pg2[6], g1=pg2[10], g2=pg2[11];
             var fmtD2=function(s){var p=(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:(s||'');};
             // p1 gen1
-            draw(p1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);draw(p1,fnt2,455,567,d.gen1_sesso||'',82);
+            draw(p1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);circleSesso(p1,d.gen1_sesso,93.25,103,563);
             draw(p1,fnt2,175,544,d.gen1_luogo_nascita||'',202);draw(p1,fnt2,394,544,d.gen1_prov_nascita||'',12);draw(p1,fnt2,455,544,fmtD2(d.gen1_data_nascita),82);
-            draw(p1,fnt2,175,521,d.gen1_cf||'',296);draw(p1,fnt2,475,521,d.gen1_tel||'',62);
+            draw(p1,fnt2,175,521,d.gen1_cf||'',296);
             draw(p1,fnt2,108,497,d.gen1_indirizzo||'',316);draw(p1,fnt2,474,497,d.gen1_n_civico||'',63);
-            draw(p1,fnt2,108,474,d.gen1_citta||'',289);draw(p1,fnt2,401,474,d.gen1_cap||'',23);draw(p1,fnt2,468,474,d.gen1_provincia||'',69);
+            draw(p1,fnt2,108,474,d.gen1_citta||'',289);draw(p1,fnt2,398,474,d.gen1_provincia||'',13);draw(p1,fnt2,450,474,d.gen1_cap||'',85);
             draw(p1,fnt2,127,451,d.gen1_email||'',230);draw(p1,fnt2,399,451,d.gen1_tel||'',138);
             // p1 gen2
-            if(d.gen2_nome){draw(p1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);draw(p1,fnt2,455,424,d.gen2_sesso||'',82);
+            if(d.gen2_nome){draw(p1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);circleSesso(p1,d.gen2_sesso,93.25,103,420);
             draw(p1,fnt2,175,401,d.gen2_luogo_nascita||'',202);draw(p1,fnt2,394,401,d.gen2_prov_nascita||'',12);draw(p1,fnt2,455,401,fmtD2(d.gen2_data_nascita),82);
-            draw(p1,fnt2,175,378,d.gen2_cf||'',296);draw(p1,fnt2,475,378,d.gen2_tel||'',62);
+            draw(p1,fnt2,175,378,d.gen2_cf||'',296);
             draw(p1,fnt2,108,354,d.gen2_indirizzo||'',316);draw(p1,fnt2,474,354,d.gen2_n_civico||'',63);
-            draw(p1,fnt2,108,331,d.gen2_citta||'',289);draw(p1,fnt2,401,331,d.gen2_cap||'',23);draw(p1,fnt2,468,331,d.gen2_provincia||'',69);
+            draw(p1,fnt2,108,331,d.gen2_citta||'',289);draw(p1,fnt2,398,331,d.gen2_provincia||'',13);draw(p1,fnt2,450,331,d.gen2_cap||'',85);
             draw(p1,fnt2,127,308,d.gen2_email||'',230);draw(p1,fnt2,399,308,d.gen2_tel||'',138);}
             draw(p1,fnt2,194,95,'AGESCI BRESCIA 7',223);
             // p2 minore
-            if(p2){draw(p2,fnt2,136,644,(d.nome||'')+' '+(d.cognome||''),321);draw(p2,fnt2,461,644,d.sesso||'',76);draw(p2,fnt2,181,621,d.luogo_nascita||'',203);draw(p2,fnt2,461,621,fmtD2(d.data_nascita),76);draw(p2,fnt2,155,597,d.cf||'',328);draw(p2,fnt2,241,574,d.indirizzo||'',190);draw(p2,fnt2,487,574,d.n_civico||'',50);draw(p2,fnt2,114,551,d.citta||'',280);draw(p2,fnt2,398,551,d.cap||'',32);draw(p2,fnt2,474,551,d.provincia||'',64);draw(p2,fnt2,120,528,d.gen1_email||'',234);draw(p2,fnt2,397,528,d.gen1_tel||'',140);}
+            if(p2){draw(p2,fnt2,136,644,(d.nome||'')+' '+(d.cognome||''),321);circleSesso(p2,d.sesso,100.1,110,629);draw(p2,fnt2,181,621,d.luogo_nascita||'',203);draw(p2,fnt2,401,621,d.prov_nascita||'',14);draw(p2,fnt2,461,621,fmtD2(d.data_nascita),76);draw(p2,fnt2,155,597,d.cf||'',328);draw(p2,fnt2,241,574,d.indirizzo||'',190);draw(p2,fnt2,487,574,d.n_civico||'',50);draw(p2,fnt2,114,551,d.citta||'',280);draw(p2,fnt2,405,551,d.provincia||'',13);draw(p2,fnt2,457,551,d.cap||'',78);draw(p2,fnt2,120,528,d.gen1_email||'',234);draw(p2,fnt2,397,528,d.gen1_tel||'',140);}
             if(p3){draw(p3,fnt2,341,195,'Brescia',183);draw(p3,fnt2,201,195,today,90);draw(p3,fnt2,67,157,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),224);draw(p3,fnt2,307,157,'Genitore/Tutore',224);}
             // sp1 gen1
-            if(sp1){draw(sp1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);draw(sp1,fnt2,455,567,d.gen1_sesso||'',82);
+            if(sp1){draw(sp1,fnt2,174,567,(d.gen1_nome||'')+' '+(d.gen1_cognome||''),277);circleSesso(sp1,d.gen1_sesso,93.25,103,553);
             draw(sp1,fnt2,175,544,d.gen1_luogo_nascita||'',202);draw(sp1,fnt2,386,544,d.gen1_prov_nascita||'',12);draw(sp1,fnt2,455,544,fmtD2(d.gen1_data_nascita),82);
-            draw(sp1,fnt2,175,521,d.gen1_cf||'',296);draw(sp1,fnt2,475,521,d.gen1_tel||'',62);
+            draw(sp1,fnt2,175,521,d.gen1_cf||'',296);
             draw(sp1,fnt2,108,497,d.gen1_indirizzo||'',316);draw(sp1,fnt2,474,497,d.gen1_n_civico||'',63);
             draw(sp1,fnt2,108,474,d.gen1_citta||'',245);draw(sp1,fnt2,375,474,d.gen1_cap||'',90);draw(sp1,fnt2,472,474,d.gen1_provincia||'',12);
             draw(sp1,fnt2,127,451,d.gen1_email||'',230);draw(sp1,fnt2,399,451,d.gen1_tel||'',138);
             // sp1 gen2
-            if(d.gen2_nome){draw(sp1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);draw(sp1,fnt2,455,424,d.gen2_sesso||'',82);
+            if(d.gen2_nome){draw(sp1,fnt2,174,424,(d.gen2_nome||'')+' '+(d.gen2_cognome||''),277);circleSesso(sp1,d.gen2_sesso,93.25,103,410);
             draw(sp1,fnt2,175,401,d.gen2_luogo_nascita||'',202);draw(sp1,fnt2,386,401,d.gen2_prov_nascita||'',12);draw(sp1,fnt2,455,401,fmtD2(d.gen2_data_nascita),82);
-            draw(sp1,fnt2,175,378,d.gen2_cf||'',296);draw(sp1,fnt2,475,378,d.gen2_tel||'',62);
+            draw(sp1,fnt2,175,378,d.gen2_cf||'',296);
             draw(sp1,fnt2,108,354,d.gen2_indirizzo||'',316);draw(sp1,fnt2,474,354,d.gen2_n_civico||'',63);
             draw(sp1,fnt2,108,331,d.gen2_citta||'',245);draw(sp1,fnt2,375,331,d.gen2_cap||'',90);draw(sp1,fnt2,472,331,d.gen2_provincia||'',12);
             draw(sp1,fnt2,127,308,d.gen2_email||'',230);draw(sp1,fnt2,399,308,d.gen2_tel||'',138);}}
