@@ -111,6 +111,15 @@
 </script>
 <!-- SITE-HEADER:END -->
 
+<!-- Mostrata solo se la sezione è disattivata da admin → Impostazioni -->
+<div id="pagina-50esimo-nascosta" class="hidden py-24 px-6 text-center">
+    <div class="text-5xl mb-5">🚧</div>
+    <h1 class="text-2xl md:text-3xl font-black text-scout mb-3">Pagina non disponibile</h1>
+    <p class="text-gray-500 max-w-md mx-auto mb-6">I festeggiamenti del 50° non sono ancora stati pubblicati. Torna a trovarci presto!</p>
+    <a href="/" class="inline-flex items-center gap-2 bg-scout text-white font-bold px-6 py-3 rounded-full hover:bg-scout-dark transition"><i class="fas fa-home"></i>Torna alla home</a>
+</div>
+
+<div id="pagina-50esimo-contenuto">
 <!-- PAGE HERO + COUNTDOWN -->
 <div class="text-white py-20 px-6 relative overflow-hidden" style="background-image:linear-gradient(rgba(0,51,102,.85),rgba(0,51,102,.9)), url('images/base-piazzole.webp'); background-size:cover; background-position:center;">
     <div class="max-w-4xl mx-auto text-center relative">
@@ -358,6 +367,20 @@
     });
 })();
 </script>
+</div><!-- /pagina-50esimo-contenuto -->
+
+<script>
+(function(){
+    if (!window.db) return;
+    window.db.collection('config').doc('site').get().then(function(doc) {
+        if (!doc.exists) return;
+        if (doc.data().mostra_50esimo === false) {
+            document.getElementById('pagina-50esimo-contenuto').classList.add('hidden');
+            document.getElementById('pagina-50esimo-nascosta').classList.remove('hidden');
+        }
+    }).catch(function(){});
+})();
+</script>
 
 <!-- FOOTER -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
@@ -458,6 +481,18 @@ if ('serviceWorker' in navigator) {
         window.db.collection('config').doc('site').get().then(function(doc) {
             if (!doc.exists) return;
             var d = doc.data();
+
+            // Sezione 50° Anniversario: se disattivata da admin → Impostazioni,
+            // sparisce dalla navigazione (menu desktop/mobile, footer) su tutte
+            // le pagine. La pagina 50esimo.html stessa mostra un avviso a chi
+            // ci arriva comunque con un link diretto (vedi script in quella pagina).
+            if (d.mostra_50esimo === false) {
+                document.querySelectorAll('a[href="50esimo"]').forEach(function(a){
+                    var li = a.closest('li');
+                    (li || a).remove();
+                });
+            }
+
             if (!d.telefono && !d.email) return;
 
             if (d.telefono) {

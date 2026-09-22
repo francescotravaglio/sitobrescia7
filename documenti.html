@@ -697,6 +697,18 @@ if ('serviceWorker' in navigator) {
         window.db.collection('config').doc('site').get().then(function(doc) {
             if (!doc.exists) return;
             var d = doc.data();
+
+            // Sezione 50° Anniversario: se disattivata da admin → Impostazioni,
+            // sparisce dalla navigazione (menu desktop/mobile, footer) su tutte
+            // le pagine. La pagina 50esimo.html stessa mostra un avviso a chi
+            // ci arriva comunque con un link diretto (vedi script in quella pagina).
+            if (d.mostra_50esimo === false) {
+                document.querySelectorAll('a[href="50esimo"]').forEach(function(a){
+                    var li = a.closest('li');
+                    (li || a).remove();
+                });
+            }
+
             if (!d.telefono && !d.email) return;
 
             if (d.telefono) {
