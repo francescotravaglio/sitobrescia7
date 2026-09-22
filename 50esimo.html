@@ -111,45 +111,6 @@
 </script>
 <!-- SITE-HEADER:END -->
 
-<!-- MODAL PRE-ISCRIZIONE -->
-<div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreIscrizione()"></div>
-  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
-  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-4 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
-    <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"><i class="fas fa-times text-sm"></i></button>
-    <div class="flex items-center gap-3 mb-3 sm:block sm:text-center sm:mb-6">
-      <div class="w-10 h-10 sm:w-14 sm:h-14 bg-scout rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-3"><i class="fas fa-feather-alt text-scout text-lg sm:text-2xl"></i></div>
-      <div><h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Ricevi tutte le informazioni</h3><p class="text-gray-400 text-xs sm:text-sm">Senza alcun impegno</p></div>
-    </div>
-    <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug"><i class="fas fa-info-circle mr-1 text-amber-500"></i>Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione.</div>
-    <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
-      <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="grid grid-cols-2 gap-2 sm:gap-3">
-        <div><label class="form-label">Nome *</label><input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field"></div>
-        <div><label class="form-label">Cognome *</label><input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2 sm:gap-3">
-        <div><label class="form-label">Nome bambino/a *</label><input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field"></div>
-        <div><label class="form-label">Data di nascita *</label><input type="date" id="pre-bimbo-nascita" required class="input-field"></div>
-      </div>
-      <div><label class="form-label">Email genitore *</label><input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field"></div>
-      <div><label class="form-label">Telefono</label><input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field"></div>
-      <label class="flex items-start gap-2 text-xs text-gray-500 leading-snug">
-        <input type="checkbox" id="pre-privacy" required class="mt-0.5 flex-shrink-0">
-        <span>Ho letto l'<a href="privacy" target="_blank" rel="noopener" class="text-scout underline">informativa privacy</a> e acconsento al trattamento dei dati per gestire questa richiesta. *</span>
-      </label>
-      <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
-      <button type="button" onclick="submitPreIscrizione()" class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia richiesta</button>
-    </form>
-    <div id="pre-success" class="hidden text-center py-4">
-      <div class="text-5xl mb-3">🎉</div>
-      <h4 class="text-xl font-black text-scout mb-2">Richiesta inviata!</h4>
-      <p class="text-gray-500 text-sm">Ti ricontatteremo presto con tutte le informazioni.<br>Buona strada!</p>
-      <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
-    </div>
-  </div></div>
-</div>
-
 <!-- PAGE HERO + COUNTDOWN -->
 <div class="bg-scout text-white py-20 px-6 relative overflow-hidden">
     <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image:radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 60%, white 1px, transparent 1px); background-size: 60px 60px;"></div>
@@ -411,24 +372,6 @@
 })();
 </script>
 
-<!-- CTA -->
-<section class="py-20 bg-scout">
-  <div class="max-w-3xl mx-auto px-6 text-center">
-    <div class="text-5xl mb-5">⛺</div>
-    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Vuoi essere parte della nostra storia?</h2>
-    <p class="text-white/70 text-lg mb-8 max-w-xl mx-auto">Compila la pre-iscrizione in pochi secondi, senza alcun impegno.</p>
-    <div class="flex flex-wrap gap-4 justify-center">
-      <button onclick="openPreIscrizione()" class="bg-white text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-xl">
-        <i class="fas fa-child mr-2"></i>Iscriviti ora
-      </button>
-      <a href="contatti" class="bg-white/10 border border-white/20 text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition">
-        <i class="fas fa-envelope mr-2"></i>Contattaci
-      </a>
-    </div>
-  </div>
-</section>
-
-
 <!-- FOOTER -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
 <footer id="contatti" class="bg-gray-950 text-white">
@@ -577,14 +520,6 @@ window.addEventListener('scroll', () => {
     if (window.scrollY > 400) b.classList.remove('opacity-0','pointer-events-none');
     else b.classList.add('opacity-0','pointer-events-none');
 });
-window.openPreIscrizione = function() { document.getElementById('modal-pre').classList.remove('hidden'); document.body.style.overflow='hidden'; };
-window.closePreIscrizione = function() {
-    document.getElementById('modal-pre').classList.add('hidden'); document.body.style.overflow='';
-    document.getElementById('form-pre').reset();
-    document.getElementById('form-pre').classList.remove('hidden');
-    document.getElementById('pre-success').classList.add('hidden');
-    document.getElementById('pre-error').classList.add('hidden');
-};
 // Scroll reveal
 (function(){
     var els = document.querySelectorAll('.reveal');
