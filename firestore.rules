@@ -57,6 +57,28 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    // ── Pre-registrazioni al campo del 50°: il pubblico può solo CREARE (con
+    //    validazione). "partecipanti" è un elenco di lunghezza variabile (una
+    //    persona può registrarne più di una): le regole di sicurezza di
+    //    Firestore non permettono di validare in profondità ogni elemento di
+    //    un array di mappe di lunghezza arbitraria, quindi qui si limita la
+    //    dimensione dell'elenco (1-30) oltre a validare i campi di primo
+    //    livello — coerente con il livello di validazione già usato per le
+    //    altre collection pubbliche di questo file ──
+    match /campo50_registrazioni/{doc} {
+      allow create: if
+        request.resource.data.keys().hasOnly(['referente_nome','referente_cognome','email','telefono','partecipanti','privacy_accettata','timestamp','letta']) &&
+        request.resource.data.referente_nome is string    && request.resource.data.referente_nome.size() > 0    && request.resource.data.referente_nome.size() < 100 &&
+        request.resource.data.referente_cognome is string && request.resource.data.referente_cognome.size() > 0 && request.resource.data.referente_cognome.size() < 100 &&
+        request.resource.data.email is string             && request.resource.data.email.size() < 200 && request.resource.data.email.matches('.*@.*') &&
+        request.resource.data.telefono is string          && request.resource.data.telefono.size() > 0 && request.resource.data.telefono.size() < 30 &&
+        request.resource.data.partecipanti is list        && request.resource.data.partecipanti.size() > 0 && request.resource.data.partecipanti.size() <= 30 &&
+        request.resource.data.privacy_accettata == true &&
+        request.resource.data.timestamp is string         && request.resource.data.timestamp.size() < 40 &&
+        request.resource.data.letta == false;
+      allow read, update, delete: if isAdmin();
+    }
+
     // ── Iscrizioni complete: il modulo in documenti.html genera solo il PDF in locale,
     //    non scrive più su Firestore. Collection mantenuta solo per lo storico esistente.
     match /iscrizioni/{doc} {
