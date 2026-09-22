@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Libro dei Totem | AGESCI Brescia 7</title>
-    <meta name="description" content="Il Libro dei Totem del Gruppo Scout AGESCI Brescia 7: sfoglia i Totem di chi ha concluso il proprio cammino in Reparto, e aggiungi il tuo.">
-    <link rel="canonical" href="https://agescibrescia7.com/libro-totem">
+    <title>Festeggiamenti del 50° | Gruppo Scout AGESCI Brescia 7</title>
+    <meta name="description" content="Nel 2027 il Gruppo Scout AGESCI Brescia 7 compie 50 anni! Scopri il countdown ai festeggiamenti del 50° anniversario e resta aggiornato sugli eventi.">
+    <link rel="canonical" href="https://agescibrescia7.com/50esimo">
     <meta name="google-site-verification" content="t87HK9BnKuVXYPXU6CekSgJE78uAteIvuwoTqN3Vxig" />
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://agescibrescia7.com/libro-totem">
-    <meta property="og:title" content="Il Libro dei Totem | AGESCI Brescia 7">
-    <meta property="og:description" content="Sfoglia i Totem di chi ha concluso il proprio cammino in Reparto, e aggiungi il tuo.">
-    <meta property="og:image" content="https://agescibrescia7.com/images/libro-totem-copertina.jpg">
+    <meta property="og:url" content="https://agescibrescia7.com/50esimo">
+    <meta property="og:title" content="Festeggiamenti del 50° | AGESCI Brescia 7">
+    <meta property="og:description" content="Nel 2027 il Gruppo Scout AGESCI Brescia 7 compie 50 anni! Countdown ai festeggiamenti del 50° anniversario.">
+    <meta property="og:image" content="https://agescibrescia7.com/images/montagna.jpg">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -19,9 +19,9 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});gtag('config','G-4NJR3QFZP7');</script>
     <link rel="stylesheet" href="assets/tailwind.css">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" integrity="sha384-2BNGrQ48jXhJZb0u9FfgOUGJQsbuoecOc1/bdu0oRviV7oc0g5gFTyYsSd7YICDP" crossorigin="anonymous"></script>
-    <script>emailjs.init('2-7fs3VQpyEDJMonD');</script>
+    <script>window.addEventListener('load',function(){ if(window.emailjs) emailjs.init('2-7fs3VQpyEDJMonD'); });</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- tailwind.config ora in tailwind.config.js (build statica) -->
     <style>
@@ -29,85 +29,14 @@
         .nav-link { position: relative; padding-bottom: 3px; }
         .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #fcc400; transition: width .3s; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .input-field { width: 100%; padding: .75rem 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; font-size: .875rem; transition: box-shadow .2s, border-color .2s; outline: none; font-family: 'Montserrat', sans-serif; }
+        .input-field { width: 100%; padding: .75rem 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; font-size: .875rem; outline: none; font-family: 'Montserrat', sans-serif; }
         .input-field:focus { border-color: #003366; box-shadow: 0 0 0 3px rgba(0,51,102,.1); }
         .form-label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
-
-        /* ── Libro dei Totem: libro 3D apribile e sfogliabile ── */
-        .tb-stage { perspective: 2600px; display: flex; justify-content: center; align-items: center; padding: 1rem 0; position: relative; }
-        /* stesse misure della copertina, chiuso o aperto: verticale come l'immagine di copertina */
-        .tb-book {
-            position: relative;
-            width: min(58vw, 430px); height: calc(min(58vw, 430px) * 1.41443);
-        }
-
-        /* copertina: un'unica immagine, cerniera sul bordo sinistro (la costa) */
-        .tb-cover {
-            position: absolute; inset: 0; z-index: 1000; cursor: pointer;
-            transform-style: preserve-3d; transform-origin: left center; backface-visibility: hidden;
-            transition: transform .5s ease;
-            box-shadow: 0 25px 55px -18px rgba(0,0,0,.5);
-            transform: rotateY(-10deg);
-        }
-        .tb-book:not(.open) .tb-cover:hover { transform: rotateY(-16deg); }
-        .tb-book.open .tb-cover { transform: rotateY(-180deg); transition: transform .9s cubic-bezier(.65,0,.35,1); box-shadow: none; pointer-events: none; }
-        .tb-cover-face { position: absolute; inset: 0; border-radius: 6px; overflow: hidden; backface-visibility: hidden; background: #894e39; }
-        .tb-cover-img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-        .tb-cover-hint {
-            position: absolute; left: 0; right: 0; bottom: 0; padding: .9rem .6rem .75rem; text-align: center;
-            font-size: 11px; letter-spacing: .04em; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.7);
-            background: linear-gradient(to top, rgba(0,0,0,.5), transparent);
-        }
-        /* bordo delle pagine: dà spessore reale alla copertina chiusa */
-        .tb-cover-pages {
-            position: absolute; top: 2%; bottom: 2%; left: 100%; width: 14px;
-            background: repeating-linear-gradient(to bottom, #fdfaf0 0, #fdfaf0 2px, #e4dcc4 2px, #e4dcc4 3px);
-            transform-origin: left center; transform: rotateY(90deg); backface-visibility: hidden;
-            box-shadow: inset -3px 0 4px rgba(0,0,0,.2);
-        }
-        .tb-cover-hint i { animation: tb-pulse 1.6s ease-in-out infinite; }
-        @keyframes tb-pulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
-
-        /* corpo del libro: una pagina alla volta, a piena larghezza */
-        .tb-pages { position: absolute; inset: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 25px 55px -18px rgba(0,0,0,.4); }
-        .tb-leaf { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: left center; transition: transform .85s cubic-bezier(.65,0,.35,1); }
-        .tb-leaf.flipped { transform: rotateY(-180deg); }
-        .tb-leaf-face { position: absolute; inset: 0; backface-visibility: hidden; background: #faf6ea; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; box-shadow: 0 0 20px -14px rgba(0,0,0,.3) inset; cursor: pointer; }
-        .tb-page-inner { padding: 1.5rem 1.4rem 0.5rem; }
-        .tb-page-num { position: absolute; bottom: .6rem; left: 0; right: 0; text-align: center; font-size: 10px; color: #b7a978; letter-spacing: .1em; }
-
-        .tb-entry-list { list-style: none; margin: 0; padding: 0; }
-        .tb-year-divider { font-family: 'Patrick Hand', cursive; font-size: 1.1rem; font-weight: 700; color: #003366; opacity: .8; margin: .85rem 0 .35rem; padding-bottom: .2rem; border-bottom: 1px dashed #d9cda3; }
-        .tb-year-divider:first-child { margin-top: 0; }
-        .tb-entry { display: flex; align-items: baseline; gap: .4rem; padding: .3rem 0; font-size: .8rem; border-bottom: 1px dotted #e6dcc0; flex-wrap: wrap; }
-        .tb-entry-nome { font-weight: 700; color: #003366; }
-        .tb-entry-totem { font-family: 'Patrick Hand', cursive; font-size: 1rem; color: #1a5276; }
-
-        /* Restringimento automatico: pagine con più voci usano testo via via più
-           piccolo (ma sempre leggibile) invece di andare in scroll. La soglia
-           oltre cui si passa comunque a una pagina aggiuntiva è calibrata sul
-           punto più stretto (il libro più piccolo, su schermo di telefono). */
-        .tb-page-inner.tb-d1 .tb-year-divider { font-size: 1rem;   margin: .6rem 0 .25rem; }
-        .tb-page-inner.tb-d1 .tb-entry        { font-size: .72rem; padding: .22rem 0; }
-        .tb-page-inner.tb-d1 .tb-entry-totem  { font-size: .9rem; }
-        .tb-page-inner.tb-d2 .tb-year-divider { font-size: .9rem;  margin: .45rem 0 .2rem; }
-        .tb-page-inner.tb-d2 .tb-entry        { font-size: .64rem; padding: .16rem 0; }
-        .tb-page-inner.tb-d2 .tb-entry-totem  { font-size: .8rem; }
-        .tb-page-inner.tb-d3 .tb-year-divider { font-size: .8rem;  margin: .35rem 0 .15rem; }
-        .tb-page-inner.tb-d3 .tb-entry        { font-size: .58rem; padding: .12rem 0; }
-        .tb-page-inner.tb-d3 .tb-entry-totem  { font-size: .72rem; }
-        .tb-controls { display: none; align-items: center; justify-content: center; gap: 1.25rem; margin-top: 1.5rem; }
-        .tb-nav-btn { width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #003366; color: #fff; display: flex; align-items: center; justify-content: center; transition: transform .15s, opacity .2s; flex-shrink: 0; }
-        .tb-nav-btn:hover:not(:disabled) { transform: scale(1.08); }
-        .tb-nav-btn:disabled { opacity: .3; cursor: default; }
-        .tb-page-counter { font-size: 12px; font-weight: 700; color: #6b7280; letter-spacing: .05em; min-width: 9rem; text-align: center; }
-
-        @media (max-width: 640px) {
-            .tb-page-inner { padding: .75rem .6rem .3rem; }
-            .tb-entry { font-size: .68rem; }
-            .tb-entry-totem { font-size: .85rem; }
-        }
-    </style><style>.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}.reveal.visible{opacity:1;transform:none;}.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s;}.reveal-delay-3{transition-delay:.35s;}</style>
+        .reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease,transform .7s ease; }
+        .reveal.visible { opacity:1; transform:none; }
+        .countdown-box { background: rgba(255,255,255,.08); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.15); }
+        .countdown-num { font-variant-numeric: tabular-nums; }
+    </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
 
@@ -182,63 +111,150 @@
 </script>
 <!-- SITE-HEADER:END -->
 
-<!-- PAGE HERO -->
-<div class="bg-scout text-white py-16 px-6">
-    <div class="max-w-4xl mx-auto text-center">
-        <div class="inline-block bg-white/20 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Una tradizione scout</div>
-        <h1 class="text-4xl md:text-6xl font-black mb-4">Il Libro dei Totem</h1>
-        <p class="text-white/70 text-lg max-w-2xl mx-auto">Al termine del proprio cammino in Reparto, ogni scout riceve il proprio Totem: un nome che porterà per sempre. Qui raccogliamo la memoria di tutti i Totem del Brescia 7.</p>
+<!-- MODAL PRE-ISCRIZIONE -->
+<div id="modal-pre" class="fixed inset-0 z-[9000] hidden">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closePreIscrizione()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none">
+  <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md p-4 sm:p-8 pointer-events-auto" style="max-height:92svh;overflow-y:auto">
+    <button onclick="closePreIscrizione()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"><i class="fas fa-times text-sm"></i></button>
+    <div class="flex items-center gap-3 mb-3 sm:block sm:text-center sm:mb-6">
+      <div class="w-10 h-10 sm:w-14 sm:h-14 bg-scout rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-3"><i class="fas fa-feather-alt text-scout text-lg sm:text-2xl"></i></div>
+      <div><h3 class="text-lg sm:text-2xl font-black text-scout leading-tight">Ricevi tutte le informazioni</h3><p class="text-gray-400 text-xs sm:text-sm">Senza alcun impegno</p></div>
+    </div>
+    <div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3 sm:mb-4 text-[10px] sm:text-xs text-amber-800 leading-snug"><i class="fas fa-info-circle mr-1 text-amber-500"></i>Questo modulo crea solo una lista di interesse. Non vincola all'iscrizione.</div>
+    <form id="form-pre" novalidate class="space-y-2.5 sm:space-y-4">
+      <input type="text" id="pre-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div><label class="form-label">Nome *</label><input type="text" id="pre-gen-nome" required placeholder="Mario" class="input-field"></div>
+        <div><label class="form-label">Cognome *</label><input type="text" id="pre-gen-cognome" required placeholder="Rossi" class="input-field"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 sm:gap-3">
+        <div><label class="form-label">Nome bambino/a *</label><input type="text" id="pre-bimbo-nome" required placeholder="Luca" class="input-field"></div>
+        <div><label class="form-label">Data di nascita *</label><input type="date" id="pre-bimbo-nascita" required class="input-field"></div>
+      </div>
+      <div><label class="form-label">Email genitore *</label><input type="email" id="pre-email" required placeholder="mario@email.com" class="input-field"></div>
+      <div><label class="form-label">Telefono</label><input type="tel" id="pre-tel" placeholder="+39 340 123 4567" class="input-field"></div>
+      <label class="flex items-start gap-2 text-xs text-gray-500 leading-snug">
+        <input type="checkbox" id="pre-privacy" required class="mt-0.5 flex-shrink-0">
+        <span>Ho letto l'<a href="privacy" target="_blank" rel="noopener" class="text-scout underline">informativa privacy</a> e acconsento al trattamento dei dati per gestire questa richiesta. *</span>
+      </label>
+      <p id="pre-error" class="text-red-500 text-xs hidden">Compila tutti i campi obbligatori.</p>
+      <button type="button" onclick="submitPreIscrizione()" class="w-full bg-scout text-white font-black py-3 sm:py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia richiesta</button>
+    </form>
+    <div id="pre-success" class="hidden text-center py-4">
+      <div class="text-5xl mb-3">🎉</div>
+      <h4 class="text-xl font-black text-scout mb-2">Richiesta inviata!</h4>
+      <p class="text-gray-500 text-sm">Ti ricontatteremo presto con tutte le informazioni.<br>Buona strada!</p>
+      <button onclick="closePreIscrizione()" class="mt-4 bg-scout text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-scout-dark transition">Chiudi</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- PAGE HERO + COUNTDOWN -->
+<div class="bg-scout text-white py-20 px-6 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image:radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 60%, white 1px, transparent 1px); background-size: 60px 60px;"></div>
+    <div class="max-w-4xl mx-auto text-center relative">
+        <div class="inline-block bg-gold text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">1977 – 2027</div>
+        <h1 class="text-4xl md:text-6xl font-black mb-4">Festeggiamenti del 50°</h1>
+        <p class="text-white/70 text-lg max-w-2xl mx-auto mb-12">Nel 2027 il Gruppo Scout AGESCI Brescia 7 spegne 50 candeline! Mezzo secolo di avventura, servizio e fede nel quartiere di San Polo.</p>
+
+        <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-2xl mx-auto" id="countdown" aria-live="polite">
+            <div class="countdown-box rounded-2xl py-4 sm:py-6 px-1 sm:px-2">
+                <div class="countdown-num text-3xl sm:text-5xl font-black" id="cd-giorni">–</div>
+                <div class="text-[10px] sm:text-xs uppercase tracking-widest text-white/60 mt-1 sm:mt-2">Giorni</div>
+            </div>
+            <div class="countdown-box rounded-2xl py-4 sm:py-6 px-1 sm:px-2">
+                <div class="countdown-num text-3xl sm:text-5xl font-black" id="cd-ore">–</div>
+                <div class="text-[10px] sm:text-xs uppercase tracking-widest text-white/60 mt-1 sm:mt-2">Ore</div>
+            </div>
+            <div class="countdown-box rounded-2xl py-4 sm:py-6 px-1 sm:px-2">
+                <div class="countdown-num text-3xl sm:text-5xl font-black" id="cd-minuti">–</div>
+                <div class="text-[10px] sm:text-xs uppercase tracking-widest text-white/60 mt-1 sm:mt-2">Minuti</div>
+            </div>
+            <div class="countdown-box rounded-2xl py-4 sm:py-6 px-1 sm:px-2">
+                <div class="countdown-num text-3xl sm:text-5xl font-black" id="cd-secondi">–</div>
+                <div class="text-[10px] sm:text-xs uppercase tracking-widest text-white/60 mt-1 sm:mt-2">Secondi</div>
+            </div>
+        </div>
+        <p class="text-white/50 text-xs mt-6" id="countdown-target">Countdown al 1° gennaio 2027</p>
     </div>
 </div>
 
-<!-- ── LIBRO 3D ───────────────────────────────────────────────────── -->
-<section class="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white border-b border-gray-100">
-    <div class="max-w-4xl mx-auto px-6">
-        <div class="tb-stage">
-            <div id="tb-book" class="tb-book closed">
-                <div id="tb-pages" class="tb-pages"></div>
-                <div id="tb-cover" class="tb-cover" onclick="totemOpenBook()">
-                    <div class="tb-cover-face">
-                        <img src="images/libro-totem-copertina.jpg?v=2" alt="Copertina del Libro dei Totem — Gruppo Scout AGESCI Brescia 7" class="tb-cover-img" width="1116" height="2000" loading="lazy">
-                        <div class="tb-cover-hint">Tocca per aprire <i class="fas fa-hand-pointer ml-1"></i></div>
-                    </div>
-                    <div class="tb-cover-pages"></div>
-                </div>
-            </div>
-        </div>
-        <div id="tb-controls" class="tb-controls">
-            <button id="tb-prev-btn" onclick="totemPrevPage()" class="tb-nav-btn" aria-label="Pagina precedente"><i class="fas fa-chevron-left"></i></button>
-            <span id="tb-page-counter" class="tb-page-counter"></span>
-            <button id="tb-next-btn" onclick="totemNextPage()" class="tb-nav-btn" aria-label="Pagina successiva"><i class="fas fa-chevron-right"></i></button>
+<script>
+(function(){
+    var target = new Date(2027, 0, 1, 0, 0, 0).getTime();
+    var elGiorni = document.getElementById('cd-giorni');
+    var elOre = document.getElementById('cd-ore');
+    var elMinuti = document.getElementById('cd-minuti');
+    var elSecondi = document.getElementById('cd-secondi');
+    var elTarget = document.getElementById('countdown-target');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick() {
+        var diff = target - Date.now();
+        if (diff <= 0) {
+            elGiorni.textContent = '0'; elOre.textContent = '00'; elMinuti.textContent = '00'; elSecondi.textContent = '00';
+            elTarget.textContent = 'È arrivato il 2027: buon 50° Brescia 7! 🎉';
+            clearInterval(timer);
+            return;
+        }
+        var giorni = Math.floor(diff / 86400000);
+        var ore = Math.floor((diff % 86400000) / 3600000);
+        var minuti = Math.floor((diff % 3600000) / 60000);
+        var secondi = Math.floor((diff % 60000) / 1000);
+        elGiorni.textContent = giorni;
+        elOre.textContent = pad(ore);
+        elMinuti.textContent = pad(minuti);
+        elSecondi.textContent = pad(secondi);
+    }
+    tick();
+    var timer = setInterval(tick, 1000);
+})();
+</script>
+
+<!-- ── SEZIONE STORIA ──────────────────────────────────────────── -->
+<section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center reveal">
+        <div class="inline-block bg-blue-50 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Mezzo secolo di strada</div>
+        <h2 class="text-3xl md:text-4xl font-black text-scout mb-6">50 anni di Brescia 7</h2>
+        <p class="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
+            Dal 1977 il nostro Gruppo accompagna bambini, ragazzi e giovani del quartiere di San Polo lungo un cammino di crescita fatto di gioco, avventura, servizio e fede. Nel 2027 festeggeremo insieme 50 anni di strada percorsa: un traguardo di tutte le persone, i capi e le famiglie che hanno reso possibile questa storia.
+        </p>
+        <a href="chi-siamo" class="inline-flex items-center gap-2 mt-6 text-scout font-bold hover:underline"><i class="fas fa-book-open"></i>Scopri la nostra storia</a>
+    </div>
+</section>
+
+<!-- ── SEZIONE AGGIORNAMENTI ──────────────────────────────────────────── -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-6 text-center reveal">
+        <div class="text-5xl mb-5">🎉</div>
+        <h2 class="text-3xl md:text-4xl font-black text-scout mb-4">Il programma è in preparazione</h2>
+        <p class="text-gray-500 text-lg mb-8 max-w-xl mx-auto">Le date e i dettagli dei festeggiamenti per il 50° anniversario saranno pubblicati su questa pagina e sui nostri canali social non appena disponibili. Seguici per non perderti nulla!</p>
+        <div class="flex flex-wrap gap-4 justify-center">
+            <a href="https://www.instagram.com/agesci_brescia7" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-scout font-bold px-6 py-3 rounded-full hover:shadow-md transition"><i class="fab fa-instagram mr-2"></i>Instagram</a>
+            <a href="https://www.facebook.com/scoutbrescia7" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-scout font-bold px-6 py-3 rounded-full hover:shadow-md transition"><i class="fab fa-facebook mr-2"></i>Facebook</a>
         </div>
     </div>
 </section>
 
-<!-- ── AGGIUNGITI AL LIBRO ────────────────────────────────────────── -->
-<section class="py-16 sm:py-20 bg-gray-50 border-b border-gray-100" id="tf-section">
-    <div class="max-w-lg mx-auto px-6">
-        <div class="text-center mb-8">
-            <div class="inline-block bg-scout/10 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">Aggiungiti al libro</div>
-            <h2 class="text-2xl md:text-3xl font-black text-scout mb-3">Il tuo Totem non c'è ancora?</h2>
-            <p class="text-gray-500 text-sm">Aggiungilo tu: comparirà nel Libro dopo una rapida verifica dei capi.</p>
-        </div>
-        <form id="form-totem" novalidate class="space-y-4 bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 shadow-sm">
-            <input type="text" id="tf-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <div class="grid grid-cols-2 gap-4">
-                <div><label class="form-label">Anno del Totem *</label><input type="number" id="tf-anno" required min="1977" placeholder="Es. 2019" class="input-field"></div>
-                <div><label class="form-label">Nome *</label><input type="text" id="tf-nome" required maxlength="40" placeholder="Es. Marco" class="input-field"></div>
-            </div>
-            <div><label class="form-label">Totem *</label><input type="text" id="tf-totem" required maxlength="60" placeholder="Es. Lupo Attento" class="input-field"></div>
-            <p id="tf-error" class="text-red-500 text-xs hidden">Compila tutti i campi.</p>
-            <button type="button" onclick="submitTotem()" class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-feather-alt mr-2"></i>Aggiungimi al Libro</button>
-        </form>
-        <div id="tf-success" class="hidden text-center py-8 bg-white border border-gray-100 rounded-3xl shadow-sm">
-            <div class="text-5xl mb-3">📖</div>
-            <h4 class="text-xl font-black text-scout mb-2">Grazie!</h4>
-            <p class="text-gray-500 text-sm px-6">Il tuo Totem è arrivato ai capi:<br>apparirà nel Libro dopo l'approvazione.</p>
-        </div>
+<!-- CTA -->
+<section class="py-20 bg-scout">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <div class="text-5xl mb-5">⛺</div>
+    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Vuoi essere parte della nostra storia?</h2>
+    <p class="text-white/70 text-lg mb-8 max-w-xl mx-auto">Compila la pre-iscrizione in pochi secondi, senza alcun impegno.</p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <button onclick="openPreIscrizione()" class="bg-white text-scout font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-xl">
+        <i class="fas fa-child mr-2"></i>Iscriviti ora
+      </button>
+      <a href="contatti" class="bg-white/10 border border-white/20 text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition">
+        <i class="fas fa-envelope mr-2"></i>Contattaci
+      </a>
     </div>
+  </div>
 </section>
+
 
 <!-- FOOTER -->
 <!-- SITE-FOOTER:START (generato da build.js — modificare partials/footer.html) -->
@@ -368,10 +384,15 @@ if ('serviceWorker' in navigator) {
 </script>
 <!-- SITE-FOOTER:END -->
 
+<!-- TORNA SU -->
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
+  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
+  <i class="fas fa-chevron-up text-sm"></i>
+</button>
+
 <script>
 function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const icon = document.getElementById('menu-icon');
+    const menu = document.getElementById('mobile-menu'), icon = document.getElementById('menu-icon');
     const isOpen = !menu.classList.contains('hidden');
     menu.classList.toggle('hidden');
     var mb=document.getElementById('menu-btn'); if(mb) mb.setAttribute('aria-expanded', String(!isOpen));
@@ -379,40 +400,36 @@ function toggleMobileMenu() {
 }
 window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('shadow-lg', window.scrollY > 40);
+    const b = document.getElementById('top-btn');
+    if (window.scrollY > 400) b.classList.remove('opacity-0','pointer-events-none');
+    else b.classList.add('opacity-0','pointer-events-none');
 });
+window.openPreIscrizione = function() { document.getElementById('modal-pre').classList.remove('hidden'); document.body.style.overflow='hidden'; };
+window.closePreIscrizione = function() {
+    document.getElementById('modal-pre').classList.add('hidden'); document.body.style.overflow='';
+    document.getElementById('form-pre').reset();
+    document.getElementById('form-pre').classList.remove('hidden');
+    document.getElementById('pre-success').classList.add('hidden');
+    document.getElementById('pre-error').classList.add('hidden');
+};
+// Scroll reveal
+(function(){
+    var els = document.querySelectorAll('.reveal');
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); },{threshold:0.1});
+    els.forEach(function(el){ io.observe(el); });
+    // rete di sicurezza: se l'observer non scattasse mai (script bloccato,
+    // errore altrove nella pagina), il contenuto resta comunque visibile
+    setTimeout(function(){ els.forEach(function(el){ el.classList.add('visible'); }); }, 2500);
+})();
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js" integrity="sha384-Nc5ARm3RyW8KveEJE95Jpt7ImqwhlOwGfqVpFGgF4Ao//x1qi8KIDcSj+OLG4ekb" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js" integrity="sha384-7KEsLxyAvzBXN/Ln39jh2knr7dO7QETWBRvJaSYB+KoJOUipOi6LS4Hxi7hIclWO" crossorigin="anonymous"></script>
 <script>
 firebase.initializeApp({ apiKey:"AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III", authDomain:"agescibrescia7-508b0.firebaseapp.com", projectId:"agescibrescia7-508b0", storageBucket:"agescibrescia7-508b0.firebasestorage.app", messagingSenderId:"738190317173", appId:"1:738190317173:web:6ee596fc6e09494f04ca3c" });
 window.db = firebase.firestore();
-</script>
-
-<!-- TORNA SU -->
-<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su"
-  class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-scout text-white rounded-full shadow-xl flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-scout-dark hover:scale-110">
-  <i class="fas fa-chevron-up text-sm"></i>
-</button>
-<script>
-(function(){
-  var b=document.getElementById('top-btn');
-  window.addEventListener('scroll',function(){ if(window.scrollY>400){b.classList.remove('opacity-0','pointer-events-none');}else{b.classList.add('opacity-0','pointer-events-none');} });
-})();
-</script>
-<script>
-(function(){
-  var els = document.querySelectorAll('.reveal');
-  if(!els.length) return;
-  var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }); }, {threshold:0.12});
-  els.forEach(function(el){ io.observe(el); });
-  // rete di sicurezza: se l'observer non scattasse mai (script bloccato,
-  // errore altrove nella pagina), il contenuto resta comunque visibile
-  setTimeout(function(){ els.forEach(function(el){ el.classList.add('visible'); }); }, 2500);
-})();
+/* submitPreIscrizione: vedi assets/lead.js */
 </script>
 <script src="assets/lead.js"></script>
 <script src="assets/cookie-consent.js"></script>
-<!-- IMPORTANTE: incrementare ?v= a ogni modifica di assets/totem.js, altrimenti i browser continuano a usare la copia in cache anche dopo il deploy -->
-<script src="assets/totem.js?v=3"></script>
 </body>
 </html>
