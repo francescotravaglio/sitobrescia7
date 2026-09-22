@@ -226,18 +226,190 @@
     </div>
 </section>
 
-<!-- ── SEZIONE AGGIORNAMENTI ──────────────────────────────────────────── -->
+<!-- ── SEZIONE EVENTO ──────────────────────────────────────────── -->
 <section class="py-20 bg-gray-50">
     <div class="max-w-3xl mx-auto px-6 text-center reveal">
-        <div class="text-5xl mb-5">🎉</div>
-        <h2 class="text-3xl md:text-4xl font-black text-scout mb-4">Il programma è in preparazione</h2>
-        <p class="text-gray-500 text-lg mb-8 max-w-xl mx-auto">Le date e i dettagli dei festeggiamenti per il 50° anniversario saranno pubblicati su questa pagina e sui nostri canali social non appena disponibili. Seguici per non perderti nulla!</p>
-        <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://www.instagram.com/agesci_brescia7" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-scout font-bold px-6 py-3 rounded-full hover:shadow-md transition"><i class="fab fa-instagram mr-2"></i>Instagram</a>
-            <a href="https://www.facebook.com/scoutbrescia7" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-scout font-bold px-6 py-3 rounded-full hover:shadow-md transition"><i class="fab fa-facebook mr-2"></i>Facebook</a>
+        <div class="text-5xl mb-5">⛺</div>
+        <div class="inline-block bg-blue-50 text-scout text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Il primo grande evento</div>
+        <h2 class="text-3xl md:text-4xl font-black text-scout mb-4">Campo raduno ex Brescia 7</h2>
+        <p class="text-gray-500 text-lg mb-6 max-w-xl mx-auto">Un campo aperto a <strong class="text-scout">tutti gli ex del Brescia 7</strong>, per ritrovarci e festeggiare insieme mezzo secolo di strada. Ti aspettiamo!</p>
+        <div class="flex flex-wrap gap-4 justify-center text-sm font-bold text-scout mb-8">
+            <span class="bg-white border border-gray-200 rounded-full px-5 py-2.5"><i class="fas fa-calendar-days text-gold mr-2"></i>29-30 maggio 2027</span>
+            <span class="bg-white border border-gray-200 rounded-full px-5 py-2.5"><i class="fas fa-location-dot text-gold mr-2"></i>Base scout di Piazzole</span>
+        </div>
+        <a href="#iscrizione-campo" class="inline-flex items-center gap-2 bg-scout text-white font-black px-8 py-4 rounded-full text-base hover:scale-105 transition-transform shadow-xl"><i class="fas fa-pen mr-1"></i>Pre-registrati al campo</a>
+    </div>
+</section>
+
+<!-- ── SEZIONE ISCRIZIONE CAMPO ──────────────────────────────────────────── -->
+<section id="iscrizione-campo" class="py-20 bg-white">
+    <div class="max-w-2xl mx-auto px-6">
+        <div class="text-center mb-10 reveal">
+            <h2 class="text-3xl md:text-4xl font-black text-scout mb-4">Pre-registrati al campo</h2>
+            <p class="text-gray-500 text-lg">Compila il modulo per te e per chi viene con te. Ti serviranno solo due minuti.</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6 text-sm text-amber-800 leading-snug reveal">
+            <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>Questa è solo una <strong>pre-registrazione</strong>: riceverai via email tutte le indicazioni per completare l'iscrizione al campo, insieme al programma e alle informazioni pratiche.
+        </div>
+
+        <form id="form-campo50" novalidate class="space-y-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 reveal">
+            <input type="text" id="c50-hp" name="website" style="position:absolute;left:-9999px;opacity:0;height:0" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div>
+                <p class="text-lg font-black text-scout mb-4">I tuoi dati</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label class="form-label">Nome *</label><input type="text" id="c50-nome" required placeholder="Mario" class="input-field"></div>
+                    <div><label class="form-label">Cognome *</label><input type="text" id="c50-cognome" required placeholder="Rossi" class="input-field"></div>
+                    <div><label class="form-label">Email *</label><input type="email" id="c50-email" required placeholder="mario@email.com" class="input-field"></div>
+                    <div><label class="form-label">Telefono *</label><input type="tel" id="c50-telefono" required placeholder="+39 340 123 4567" class="input-field"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <p class="text-lg font-black text-scout">Partecipanti</p>
+                    <span class="text-xs text-gray-400 font-semibold" id="c50-conteggio">1 partecipante</span>
+                </div>
+                <div id="c50-partecipanti" class="space-y-3"></div>
+                <button type="button" onclick="campo50AggiungiRiga()" class="mt-3 text-scout font-bold text-sm hover:underline"><i class="fas fa-plus mr-1"></i>Aggiungi un altro partecipante</button>
+            </div>
+
+            <label class="flex items-start gap-2 text-xs text-gray-500 leading-snug">
+                <input type="checkbox" id="c50-privacy" required class="mt-0.5 flex-shrink-0">
+                <span>Ho letto l'<a href="privacy" target="_blank" rel="noopener" class="text-scout underline">informativa privacy</a> e acconsento al trattamento dei dati per gestire questa pre-registrazione. *</span>
+            </label>
+            <p id="c50-error" class="text-red-500 text-xs hidden"></p>
+            <button type="button" onclick="submitCampo50()" class="w-full bg-scout text-white font-black py-4 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase shadow-lg"><i class="fas fa-paper-plane mr-2"></i>Invia pre-registrazione</button>
+        </form>
+
+        <div id="c50-success" class="hidden text-center py-10 bg-white rounded-2xl border border-gray-100 shadow-sm reveal">
+            <div class="text-5xl mb-3">🎉</div>
+            <h3 class="text-xl font-black text-scout mb-2">Pre-registrazione inviata!</h3>
+            <p class="text-gray-500 text-sm max-w-sm mx-auto">Ti abbiamo inviato una email di conferma. A ridosso del campo ti ricontatteremo con il programma e le indicazioni per completare l'iscrizione.<br>Buona strada!</p>
         </div>
     </div>
 </section>
+
+<script>
+(function(){
+    function rigaHtml() {
+        return '<div class="c50-riga grid grid-cols-1 sm:grid-cols-[1fr_140px_auto] gap-2 items-center">' +
+            '<input type="text" class="input-field c50-riga-nome" placeholder="Nome e cognome partecipante">' +
+            '<select class="input-field c50-riga-alloggio">' +
+                '<option value="tenda">Tenda</option>' +
+                '<option value="casa">Casa</option>' +
+            '</select>' +
+            '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
+        '</div>';
+    }
+
+    function aggiornaContatore() {
+        var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
+        var el = document.getElementById('c50-conteggio');
+        if (el) el.textContent = righe.length + (righe.length === 1 ? ' partecipante' : ' partecipanti');
+        righe.forEach(function(r, i){
+            var btn = r.querySelector('.c50-riga-rimuovi');
+            if (btn) btn.classList.toggle('invisible', righe.length === 1);
+        });
+    }
+
+    window.campo50AggiungiRiga = function() {
+        var wrap = document.getElementById('c50-partecipanti');
+        var div = document.createElement('div');
+        div.innerHTML = rigaHtml();
+        wrap.appendChild(div.firstChild);
+        aggiornaContatore();
+    };
+
+    window.campo50RimuoviRiga = function(btn) {
+        var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
+        if (righe.length <= 1) return;
+        btn.closest('.c50-riga').remove();
+        aggiornaContatore();
+    };
+
+    window.submitCampo50 = function() {
+        var hp = document.getElementById('c50-hp'); if (hp && hp.value) return;
+        var last = +localStorage.getItem('campo50_last') || 0;
+        if (Date.now() - last < 60000) { alert('Attendi un minuto prima di inviare di nuovo.'); return; }
+
+        var nome     = document.getElementById('c50-nome').value.trim();
+        var cognome  = document.getElementById('c50-cognome').value.trim();
+        var email    = document.getElementById('c50-email').value.trim();
+        var telefono = document.getElementById('c50-telefono').value.trim();
+        var privacyOk = document.getElementById('c50-privacy').checked;
+        var errEl = document.getElementById('c50-error');
+
+        var partecipanti = [];
+        document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
+            var n = r.querySelector('.c50-riga-nome').value.trim();
+            var a = r.querySelector('.c50-riga-alloggio').value;
+            if (n) partecipanti.push({ nome: n, alloggio: a });
+        });
+
+        if (!nome || !cognome || !email || !telefono) {
+            errEl.textContent = 'Compila tutti i campi obbligatori.';
+            errEl.classList.remove('hidden'); return;
+        }
+        if (!partecipanti.length) {
+            errEl.textContent = 'Indica almeno un partecipante.';
+            errEl.classList.remove('hidden'); return;
+        }
+        if (!privacyOk) {
+            errEl.textContent = 'Devi accettare l\'informativa privacy per continuare.';
+            errEl.classList.remove('hidden'); return;
+        }
+        errEl.classList.add('hidden');
+
+        var elencoTesto = partecipanti.map(function(p){ return '- ' + p.nome + ' (' + (p.alloggio === 'casa' ? 'casa' : 'tenda') + ')'; }).join('\n');
+
+        window.db.collection('campo50_registrazioni').add({
+            referente_nome: nome, referente_cognome: cognome,
+            email: email, telefono: telefono,
+            partecipanti: partecipanti,
+            privacy_accettata: true,
+            timestamp: new Date().toISOString(), letta: false
+        }).then(function() {
+            localStorage.setItem('campo50_last', Date.now());
+            document.getElementById('form-campo50').classList.add('hidden');
+            document.getElementById('c50-success').classList.remove('hidden');
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'generate_lead', { event_category: 'campo_50', event_label: 'pre_registrazione_inviata' });
+            }
+            if (typeof emailjs === 'undefined') return;
+            var dataStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
+            emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                to_email:  'brescia7@lombardia.agesci.it',
+                nome:      'Nuova pre-registrazione al campo del 50°',
+                tipo:      'Pre-registrazione campo 50°',
+                timestamp: dataStr,
+                iban:      'Referente: ' + nome + ' ' + cognome + '\n' +
+                           'Email: ' + email + '\n' +
+                           'Telefono: ' + telefono + '\n\n' +
+                           'Partecipanti (' + partecipanti.length + '):\n' + elencoTesto
+            }).then(function() {
+                return emailjs.send('service_rtxg48l', 'template_fc1c77j', {
+                    to_email:  email,
+                    nome:      'Ciao ' + nome + '!',
+                    tipo:      'Conferma pre-registrazione al campo del 50°',
+                    timestamp: dataStr,
+                    iban:      'Abbiamo ricevuto la tua pre-registrazione per il campo raduno ex Brescia 7 del 29-30 maggio 2027 alla base scout di Piazzole.\n\n' +
+                               'Partecipanti indicati (' + partecipanti.length + '):\n' + elencoTesto + '\n\n' +
+                               'Questa è solo una pre-registrazione: a ridosso del campo ti invieremo il programma, le informazioni pratiche e le indicazioni per completare l\'iscrizione.\n\n' +
+                               'Per qualsiasi domanda: info@agescibrescia7.com · +39 340 874 0678\n\n' +
+                               'Buona strada!\nGruppo Scout AGESCI Brescia 7'
+                });
+            }).catch(function(e) { console.error('[EmailJS]', JSON.stringify(e)); });
+        }).catch(function(err) { console.error(err); alert('Errore. Riprova.'); });
+    };
+
+    // prima riga già presente al caricamento
+    window.addEventListener('DOMContentLoaded', function(){
+        campo50AggiungiRiga();
+    });
+})();
+</script>
 
 <!-- CTA -->
 <section class="py-20 bg-scout">
