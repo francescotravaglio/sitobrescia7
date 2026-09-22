@@ -248,6 +248,10 @@
                 <i class="fas fa-comment-dots"></i> Richieste info
                 <span id="badge-richieste" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
             </div>
+            <div onclick="showTab('campo50')" class="sidebar-link" id="nav-campo50">
+                <i class="fas fa-campground"></i> Campo del 50°
+                <span id="badge-campo50" class="ml-auto bg-amber-400 text-white text-xs font-black px-1.5 py-0.5 rounded-full hidden"></span>
+            </div>
             <div onclick="showTab('eventi')" class="sidebar-link" id="nav-eventi">
                 <i class="fas fa-calendar-alt"></i> Calendario
             </div>
@@ -314,7 +318,7 @@
             <section id="tab-dashboard" class="tab-panel active space-y-8">
 
                 <!-- Stats -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-5 max-w-2xl" id="stats-grid">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 max-w-3xl" id="stats-grid">
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-4">
                             <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-child text-amber-500"></i></div>
@@ -338,6 +342,14 @@
                         </div>
                         <div class="text-3xl font-black text-purple-600" id="stat-eventi">0</div>
                         <div class="text-xs text-gray-400 mt-1">Eventi in programma</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-amber-50 p-2.5 rounded-xl"><i class="fas fa-campground text-amber-500"></i></div>
+                            <span class="text-xs text-gray-400 font-semibold">Campo del 50°</span>
+                        </div>
+                        <div class="text-3xl font-black text-amber-500" id="stat-campo50">0</div>
+                        <div class="text-xs text-gray-400 mt-1" id="stat-campo50-sub">Partecipanti pre-registrati</div>
                     </div>
                 </div>
 
@@ -394,6 +406,30 @@
                 <div class="panel overflow-hidden">
                     <div id="richieste-info-table">
                         <div class="empty-state"><i class="fas fa-comment-dots"></i><p>Nessuna richiesta.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ──────────────────────── CAMPO DEL 50° ────────────── -->
+            <section id="tab-campo50" class="tab-panel space-y-6">
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-sm text-amber-800">
+                    <i class="fas fa-info-circle mr-1.5 text-amber-500"></i>
+                    Pre-registrazioni al campo raduno ex Brescia 7 (29-30 maggio 2027, base scout di Piazzole) dal modulo su <strong>agescibrescia7.com/50esimo</strong>. Sono solo pre-registrazioni: l'iscrizione vera e propria si completa separatamente.
+                </div>
+                <div class="flex flex-wrap gap-3 items-center justify-between">
+                    <span class="text-xs text-gray-400 font-semibold" id="campo50-count-label"></span>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <button onclick="markAllCampo50Lette()" class="btn btn-outline btn-sm">
+                            <i class="fas fa-check-double"></i>Segna tutte lette
+                        </button>
+                        <button onclick="exportCampo50Excel()" class="btn btn-success-outline btn-sm">
+                            <i class="fas fa-file-excel"></i>Scarica Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="panel overflow-hidden">
+                    <div id="campo50-table">
+                        <div class="empty-state"><i class="fas fa-campground"></i><p>Nessuna pre-registrazione.</p></div>
                     </div>
                 </div>
             </section>
@@ -583,6 +619,15 @@
 
                 <div class="panel overflow-hidden">
                     <div class="panel-head">
+                        <h3><span class="panel-icon bg-amber-50 text-amber-500"><i class="fas fa-campground"></i></span>Campo del 50°</h3>
+                    </div>
+                    <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
+                        <p>Qui arrivano le pre-registrazioni al campo raduno ex Brescia 7 dal modulo su <strong>agescibrescia7.com/50esimo</strong>. Ogni riga è una persona che ha compilato il modulo (il "referente"), con l'elenco di tutti i partecipanti che ha indicato e la scelta di ciascuno tra tenda e casa. Clicca su una riga per vedere l'elenco completo dei partecipanti. "Scarica Excel" esporta ogni partecipante su una riga, utile per contare posti letto e organizzare la logistica del campo.</p>
+                    </div>
+                </div>
+
+                <div class="panel overflow-hidden">
+                    <div class="panel-head">
                         <h3><span class="panel-icon bg-blue-50 text-scout"><i class="fas fa-calendar-alt"></i></span>Calendario eventi</h3>
                     </div>
                     <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
@@ -642,6 +687,17 @@
             <button onclick="closeRichiestaInfoModal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
         </div>
         <div id="modal-richiesta-info-body"></div>
+    </div>
+</div>
+
+<!-- ── MODAL DETTAGLIO CAMPO 50° ───────────────────────────────── -->
+<div id="modal-campo50" class="modal-overlay hidden" onclick="if(event.target===this)closeCampo50Modal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-start mb-6">
+            <h3 class="font-black text-scout text-xl">Pre-registrazione campo 50°</h3>
+            <button onclick="closeCampo50Modal()" class="text-gray-400 hover:text-gray-700 text-xl leading-none">&times;</button>
+        </div>
+        <div id="modal-campo50-body"></div>
     </div>
 </div>
 
@@ -761,6 +817,7 @@ const TAB_META = {
     eventi:            { title: 'Calendario eventi',  sub: 'Gestione appuntamenti del gruppo' },
     'pre-iscrizioni':  { title: 'Pre-iscrizioni',     sub: 'Richieste di pre-iscrizione dal sito' },
     'richieste-info':  { title: 'Richieste info',     sub: 'Richieste rapide dal tasto "Voglio saperne di più"' },
+    campo50:           { title: 'Campo del 50°',      sub: 'Pre-registrazioni al campo raduno ex Brescia 7 (29-30 maggio 2027)' },
     testimonianze:     { title: 'Testimonianze',      sub: 'Frasi dei genitori: approva per pubblicarle in homepage' },
     totem:             { title: 'Libro dei Totem',     sub: 'Totem proposti dal sito: approva per pubblicarli nel Libro' },
     impostazioni:      { title: 'Impostazioni',       sub: 'Numero di telefono ed email mostrati nella sezione Contatti del sito' },
@@ -797,6 +854,7 @@ function showTab(name) {
     if (name === 'dashboard')   renderDashboard();
     if (name === 'pre-iscrizioni')  renderPreIscrizioni('tutte');
     if (name === 'richieste-info')  renderRichiesteInfo();
+    if (name === 'campo50')         renderCampo50();
     if (name === 'testimonianze')   renderTestimonianze();
     if (name === 'totem')           renderTotem();
     if (name === 'impostazioni')    caricaImpostazioni();
@@ -962,6 +1020,7 @@ function refreshAll() {
     renderDashboard();
     updatePreBadge();
     updateRichiesteBadge();
+    updateCampo50Badge();
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────────
@@ -1442,6 +1501,204 @@ function markAllRichiesteInfoLette() {
         .catch(err => { console.error(err); toast('Errore.', false); });
 }
 
+// ── CAMPO DEL 50° (pre-registrazioni dal modulo su /50esimo) ────────
+function updateCampo50Badge() {
+    const reg = window.campo50Cache || [];
+    const n = reg.filter(r => !r.letta).length;
+    const b = document.getElementById('badge-campo50');
+    if (b) { if (n > 0) { b.textContent = n; b.classList.remove('hidden'); } else b.classList.add('hidden'); }
+
+    const totPartecipanti = reg.reduce((tot, r) => tot + (Array.isArray(r.partecipanti) ? r.partecipanti.length : 0), 0);
+    const statEl = document.getElementById('stat-campo50');
+    if (statEl) statEl.textContent = totPartecipanti;
+    const subEl = document.getElementById('stat-campo50-sub');
+    if (subEl) subEl.textContent = reg.length + (reg.length !== 1 ? ' pre-registrazioni' : ' pre-registrazione');
+}
+
+function waLinkCampo50(r) {
+    const digits = telefonoWhatsAppDigits(r.telefono);
+    if (!digits) return null;
+    const testo = encodeURIComponent('Buongiorno, abbiamo ricevuto la sua pre-registrazione al campo del 50° del Brescia 7.');
+    return `https://wa.me/${digits}?text=${testo}`;
+}
+
+function renderCampo50() {
+    const all = (window.campo50Cache || []).slice()
+        .sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+
+    const totPartecipanti = all.reduce((tot, r) => tot + (Array.isArray(r.partecipanti) ? r.partecipanti.length : 0), 0);
+    const lbl = document.getElementById('campo50-count-label');
+    if (lbl) lbl.textContent = all.length + (all.length !== 1 ? ' pre-registrazioni' : ' pre-registrazione') + ' · ' + totPartecipanti + (totPartecipanti !== 1 ? ' partecipanti' : ' partecipante');
+
+    const el = document.getElementById('campo50-table');
+    if (!all.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-campground"></i><p>Nessuna pre-registrazione.</p></div>';
+        return;
+    }
+    el.innerHTML = `
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">Referente</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden md:table-cell">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Telefono</th>
+                    <th class="px-6 py-3 text-left font-semibold">Partecipanti</th>
+                    <th class="px-6 py-3 text-left font-semibold hidden lg:table-cell">Data invio</th>
+                    <th class="px-6 py-3 text-left font-semibold">Stato</th>
+                    <th class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                ${all.map(campo50Row).join('')}
+            </tbody>
+        </table>`;
+}
+
+function campo50Row(r) {
+    const nome = escapeHtml(((r.referente_nome || '') + ' ' + (r.referente_cognome || '')).trim() || '—');
+    const email = escapeHtml(r.email || '—');
+    const tel = escapeHtml(r.telefono || '—');
+    const n = Array.isArray(r.partecipanti) ? r.partecipanti.length : 0;
+    const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
+    const stato = r.letta
+        ? '<span class="badge badge-read">Letta</span>'
+        : '<span class="badge badge-new">Nuova</span>';
+    const safeId = escapeHtml(r.id);
+    const waLink = waLinkCampo50(r);
+    return `<tr class="table-row cursor-pointer" onclick="openCampo50('${safeId}')">
+        <td class="px-6 py-4 font-semibold text-gray-800">${nome}</td>
+        <td class="px-6 py-4 text-gray-600 hidden md:table-cell">${email}</td>
+        <td class="px-6 py-4 text-gray-600 hidden lg:table-cell">${tel}</td>
+        <td class="px-6 py-4 text-gray-600">${n}</td>
+        <td class="px-6 py-4 text-gray-400 text-xs hidden lg:table-cell">${data}</td>
+        <td class="px-6 py-4">${stato}</td>
+        <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
+            <div class="flex gap-2 items-center justify-end">
+                ${!r.letta ? `<button onclick="markCampo50Letta('${safeId}')" class="btn btn-primary btn-sm">Segna letta</button>` : ''}
+                ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" class="icon-btn whatsapp" title="Contatta su WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+                <a href="mailto:${email}" class="icon-btn" title="Rispondi via email"><i class="fas fa-envelope"></i></a>
+                <button onclick="deleteCampo50('${safeId}')" class="icon-btn danger" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
+}
+
+function openCampo50(id) {
+    const r = (window.campo50Cache || []).find(x => x.id === id);
+    if (!r) return;
+    if (!r.letta) markCampo50Letta(id);
+    const nome = escapeHtml(((r.referente_nome || '') + ' ' + (r.referente_cognome || '')).trim() || '—');
+    const email = escapeHtml(r.email || '—');
+    const tel = escapeHtml(r.telefono || '—');
+    const data = r.timestamp ? fmtDatetime(r.timestamp) : '—';
+    const safeId = escapeHtml(r.id);
+    const waLink = waLinkCampo50(r);
+    const partecipanti = Array.isArray(r.partecipanti) ? r.partecipanti : [];
+    const nTenda = partecipanti.filter(p => p && p.alloggio === 'tenda').length;
+    const nCasa = partecipanti.filter(p => p && p.alloggio === 'casa').length;
+    const listaPartecipanti = partecipanti.length
+        ? partecipanti.map(p => `<li class="flex items-center justify-between gap-3 py-1.5">
+                <span>${escapeHtml(p && p.nome || '—')}</span>
+                <span class="badge" style="background:${p && p.alloggio === 'casa' ? '#eff6ff;color:#1d4ed8' : '#fef3c7;color:#b45309'}"><i class="fas fa-${p && p.alloggio === 'casa' ? 'house' : 'campground'} mr-1"></i>${p && p.alloggio === 'casa' ? 'Casa' : 'Tenda'}</span>
+            </li>`).join('')
+        : '<li class="text-gray-400">Nessun partecipante indicato.</li>';
+    document.getElementById('modal-campo50-body').innerHTML = `
+        <div class="space-y-3 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Referente</div>
+                    <div class="font-semibold text-gray-800">${nome}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Inviata il</div>
+                    <div class="font-semibold">${data}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Email</div>
+                    <a href="mailto:${email}" class="font-semibold text-scout hover:underline">${email}</a>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <div class="text-xs text-gray-400 mb-1">Telefono</div>
+                    <a href="tel:${tel}" class="font-semibold">${tel}</a>
+                </div>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-amber-600 font-bold uppercase tracking-wider">Partecipanti (${partecipanti.length})</span>
+                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa</span>
+                </div>
+                <ul class="divide-y divide-amber-100">${listaPartecipanti}</ul>
+            </div>
+            <div class="flex gap-3 pt-2 flex-wrap">
+                <a href="mailto:${email}" class="flex-1 text-center bg-scout text-white font-bold py-2.5 rounded-xl hover:bg-scout-dark transition text-sm">
+                    <i class="fas fa-envelope mr-2"></i>Rispondi
+                </a>
+                ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" class="text-center text-white font-bold py-2.5 px-4 rounded-xl transition text-sm" style="background:#25D366" title="Contatta su WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+                <button onclick="deleteCampo50('${safeId}'); closeCampo50Modal();" class="text-red-400 border border-red-200 font-bold py-2.5 px-4 rounded-xl hover:bg-red-50 transition text-sm" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
+    document.getElementById('modal-campo50').classList.remove('hidden');
+}
+
+function closeCampo50Modal() {
+    document.getElementById('modal-campo50').classList.add('hidden');
+}
+
+function markCampo50Letta(id) {
+    window.firestoreDb.collection('campo50_registrazioni').doc(id).update({ letta: true })
+        .catch(e => console.error('Errore markCampo50Letta:', e));
+}
+
+function deleteCampo50(id) {
+    if (!confirm('Eliminare questa pre-registrazione?')) return;
+    window.firestoreDb.collection('campo50_registrazioni').doc(id).delete()
+        .then(() => toast('Pre-registrazione eliminata.'))
+        .catch(err => { console.error(err); toast('Errore eliminazione.', false); });
+}
+
+function markAllCampo50Lette() {
+    const nonLette = (window.campo50Cache || []).filter(r => !r.letta);
+    if (!nonLette.length) { toast('Nessuna nuova da segnare.'); return; }
+    const db = window.firestoreDb;
+    const batch = db.batch();
+    nonLette.forEach(r => batch.update(db.collection('campo50_registrazioni').doc(r.id), { letta: true }));
+    batch.commit()
+        .then(() => toast(nonLette.length + ' pre-registrazioni segnate lette.'))
+        .catch(err => { console.error(err); toast('Errore.', false); });
+}
+
+function exportCampo50Excel() {
+    const all = window.campo50Cache || [];
+    if (!all.length) { toast('Nessuna pre-registrazione da esportare.'); return; }
+    const rows = [];
+    all.slice()
+        .sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''))
+        .forEach(r => {
+            const partecipanti = Array.isArray(r.partecipanti) && r.partecipanti.length ? r.partecipanti : [null];
+            partecipanti.forEach(p => {
+                rows.push({
+                    'Referente':        ((r.referente_nome || '') + ' ' + (r.referente_cognome || '')).trim(),
+                    'Email referente':  r.email    || '',
+                    'Telefono referente': r.telefono || '',
+                    'Partecipante':     p ? (p.nome || '') : '',
+                    'Alloggio':         p ? (p.alloggio === 'casa' ? 'Casa' : 'Tenda') : '',
+                    'Data invio':       r.timestamp ? r.timestamp.slice(0, 10) : '',
+                    'Letta':            r.letta ? 'Sì' : 'No',
+                });
+            });
+        });
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [24,28,16,24,10,12,8].map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Campo 50');
+    XLSX.writeFile(wb, 'campo-50-partecipanti.xlsx');
+    toast('Excel scaricato.');
+}
+
 // ── IMPOSTAZIONI (contatti mostrati sul sito) ───────────────────────
 function caricaImpostazioni() {
     window.firestoreDb.collection('config').doc('site').get().then(doc => {
@@ -1811,9 +2068,11 @@ firebase.initializeApp({
 window.firestoreDb = firebase.firestore();
 window.preIscrizioniCache = [];
 window.richiesteInfoCache = [];
+window.campo50Cache = [];
 window.eventiCache = [];
 window.unsubscribePreIscrizioni = null;
 window.unsubscribeRichiesteInfo = null;
+window.unsubscribeCampo50 = null;
 window.unsubscribeEventi = null;
 
 function setupFirestoreListener() {
@@ -1838,6 +2097,17 @@ function setupFirestoreListener() {
                 renderRichiesteInfo();
             }
         }, err => console.error('Firestore richieste-info listener error:', err));
+
+    if (window.unsubscribeCampo50) window.unsubscribeCampo50();
+    window.unsubscribeCampo50 = window.firestoreDb.collection('campo50_registrazioni')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snap => {
+            window.campo50Cache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            updateCampo50Badge();
+            if (document.getElementById('tab-campo50')?.classList.contains('active')) {
+                renderCampo50();
+            }
+        }, err => console.error('Firestore campo50 listener error:', err));
 
     if (window.unsubscribeEventi) window.unsubscribeEventi();
     window.unsubscribeEventi = window.firestoreDb.collection('eventi')
