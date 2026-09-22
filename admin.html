@@ -578,6 +578,20 @@
                         <span id="imp-salvato" class="text-xs text-green-600 font-semibold hidden ml-2"><i class="fas fa-check"></i> Salvato</span>
                     </div>
                 </div>
+
+                <div class="panel overflow-hidden max-w-lg">
+                    <div class="panel-head">
+                        <h3><span class="panel-icon bg-amber-50 text-amber-500"><i class="fas fa-campground"></i></span>Sezione 50° Anniversario</h3>
+                    </div>
+                    <div class="panel-body space-y-3">
+                        <p class="text-xs text-gray-400 -mt-1">Se disattivata, la pagina "50° Anniversario" sparisce dal menu e dal footer di tutto il sito, e chi ci arriva comunque con un link diretto vede un avviso "pagina non disponibile" invece del countdown e del modulo. La modifica è visibile subito, senza codice di conferma.</p>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="imp-mostra-50esimo" onchange="toggleMostra50esimo(this.checked)" class="w-5 h-5 accent-scout">
+                            <span class="text-sm font-semibold text-gray-700">Sezione visibile sul sito</span>
+                        </label>
+                        <span id="imp-50esimo-salvato" class="text-xs text-green-600 font-semibold hidden"><i class="fas fa-check"></i> Salvato</span>
+                    </div>
+                </div>
             </section>
 
             <!-- ──────────────────────── GUIDA ───────────────────── -->
@@ -1705,7 +1719,22 @@ function caricaImpostazioni() {
         const d = doc.exists ? doc.data() : {};
         document.getElementById('imp-telefono').value = d.telefono || '';
         document.getElementById('imp-email').value = d.email || '';
+        document.getElementById('imp-mostra-50esimo').checked = d.mostra_50esimo !== false;
     }).catch(e => console.error('Errore caricaImpostazioni:', e));
+}
+
+function toggleMostra50esimo(visibile) {
+    window.firestoreDb.collection('config').doc('site').set({ mostra_50esimo: visibile }, { merge: true })
+        .then(() => {
+            const ok = document.getElementById('imp-50esimo-salvato');
+            ok.classList.remove('hidden');
+            setTimeout(() => ok.classList.add('hidden'), 2500);
+        })
+        .catch(e => {
+            console.error('Errore toggleMostra50esimo:', e);
+            document.getElementById('imp-mostra-50esimo').checked = !visibile;
+            toast('Errore nel salvataggio.', false);
+        });
 }
 
 let otpPendingValues = null;
