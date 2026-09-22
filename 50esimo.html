@@ -138,13 +138,13 @@
                 <div class="text-[10px] sm:text-xs uppercase tracking-widest text-white/60 mt-1 sm:mt-2">Secondi</div>
             </div>
         </div>
-        <p class="text-white/50 text-xs mt-6" id="countdown-target">Countdown al 1° gennaio 2027</p>
+        <p class="text-white/50 text-xs mt-6" id="countdown-target">Countdown al campo del 50° — 29 maggio 2027</p>
     </div>
 </div>
 
 <script>
 (function(){
-    var target = new Date(2027, 0, 1, 0, 0, 0).getTime();
+    var target = new Date(2027, 4, 29, 0, 0, 0).getTime();
     var elGiorni = document.getElementById('cd-giorni');
     var elOre = document.getElementById('cd-ore');
     var elMinuti = document.getElementById('cd-minuti');
@@ -157,7 +157,7 @@
         var diff = target - Date.now();
         if (diff <= 0) {
             elGiorni.textContent = '0'; elOre.textContent = '00'; elMinuti.textContent = '00'; elSecondi.textContent = '00';
-            elTarget.textContent = 'È arrivato il 2027: buon 50° Brescia 7! 🎉';
+            elTarget.textContent = 'Il campo è iniziato: buon 50° Brescia 7! 🎉';
             clearInterval(timer);
             return;
         }
