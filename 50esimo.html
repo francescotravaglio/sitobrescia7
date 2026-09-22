@@ -370,7 +370,11 @@
 </div><!-- /pagina-50esimo-contenuto -->
 
 <script>
-(function(){
+// window.db viene inizializzato più in basso nella pagina (dopo il caricamento
+// di Firebase): questo controllo deve aspettare l'evento "load" della pagina,
+// altrimenti "window.db" non esiste ancora a questo punto dello script e il
+// controllo verrebbe saltato ogni volta, lasciando la pagina sempre visibile.
+window.addEventListener('load', function(){
     if (!window.db) return;
     window.db.collection('config').doc('site').get().then(function(doc) {
         if (!doc.exists) return;
@@ -379,7 +383,7 @@
             document.getElementById('pagina-50esimo-nascosta').classList.remove('hidden');
         }
     }).catch(function(){});
-})();
+});
 </script>
 
 <!-- FOOTER -->
