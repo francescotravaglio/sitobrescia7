@@ -327,8 +327,16 @@
         var cognomeReferente = document.getElementById('c50-cognome').value.trim();
         nomeInput.value = (nomeReferente + ' ' + cognomeReferente).trim();
     }
-    document.getElementById('c50-nome').addEventListener('input', campo50SincronizzaPrimoPartecipante);
-    document.getElementById('c50-cognome').addEventListener('input', campo50SincronizzaPrimoPartecipante);
+    // "change" oltre a "input": l'autocompilamento del browser (nome/cognome
+    // salvati) su alcuni browser aggiorna il valore del campo senza sparare
+    // l'evento "input", solo "change" al momento in cui il campo perde il focus.
+    ['input', 'change'].forEach(function(evt){
+        document.getElementById('c50-nome').addEventListener(evt, campo50SincronizzaPrimoPartecipante);
+        document.getElementById('c50-cognome').addEventListener(evt, campo50SincronizzaPrimoPartecipante);
+    });
+    // Ricontrolla anche a pagina caricata: copre l'autocompilamento che il
+    // browser applica dopo il parsing dello script, senza sparare eventi.
+    window.addEventListener('load', function(){ setTimeout(campo50SincronizzaPrimoPartecipante, 300); });
 
     window.campo50RimuoviRiga = function(btn) {
         var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
