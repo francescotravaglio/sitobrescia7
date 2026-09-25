@@ -636,7 +636,7 @@
                         <h3><span class="panel-icon bg-amber-50 text-amber-500"><i class="fas fa-campground"></i></span>Campo del 50°</h3>
                     </div>
                     <div class="panel-body text-sm text-gray-600 space-y-2 leading-relaxed">
-                        <p>Qui arrivano le pre-registrazioni al campo raduno ex Brescia 7 dal modulo su <strong>agescibrescia7.com/50esimo</strong>. Ogni riga è una persona che ha compilato il modulo (il "referente"), con l'elenco di tutti i partecipanti che ha indicato e la scelta di ciascuno tra tenda e casa. Clicca su una riga per vedere l'elenco completo dei partecipanti. "Scarica Excel" esporta ogni partecipante su una riga, utile per contare posti letto e organizzare la logistica del campo.</p>
+                        <p>Qui arrivano le pre-registrazioni al campo raduno ex Brescia 7 dal modulo su <strong>agescibrescia7.com/50esimo</strong>. Ogni riga è una persona che ha compilato il modulo (il "referente"), con l'elenco di tutti i partecipanti che ha indicato: per ciascuno, la taglia della maglietta e se pernotta (e in tal caso in tenda o in casa). Clicca su una riga per vedere l'elenco completo dei partecipanti. "Scarica Excel" esporta ogni partecipante su una riga con taglia e pernotto, utile per contare posti letto, maglie e organizzare la logistica del campo.</p>
                     </div>
                 </div>
 
@@ -1610,13 +1610,24 @@ function openCampo50(id) {
     const safeId = escapeHtml(r.id);
     const waLink = waLinkCampo50(r);
     const partecipanti = Array.isArray(r.partecipanti) ? r.partecipanti : [];
-    const nTenda = partecipanti.filter(p => p && p.alloggio === 'tenda').length;
-    const nCasa = partecipanti.filter(p => p && p.alloggio === 'casa').length;
+    // pernotto assente = pre-registrazioni raccolte prima che il modulo lo chiedesse:
+    // avevano sempre un alloggio obbligatorio, quindi si comportavano come "pernotto: true".
+    const pernottaP = p => p && (p.pernotto === undefined ? true : p.pernotto);
+    const nTenda = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'tenda').length;
+    const nCasa = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'casa').length;
+    const nSenzaPernotto = partecipanti.filter(p => !pernottaP(p)).length;
     const listaPartecipanti = partecipanti.length
-        ? partecipanti.map(p => `<li class="flex items-center justify-between gap-3 py-1.5">
+        ? partecipanti.map(p => {
+            const pernotta = pernottaP(p);
+            const alloggioBadge = pernotta
+                ? `<span class="badge" style="background:${p && p.alloggio === 'casa' ? '#eff6ff;color:#1d4ed8' : '#fef3c7;color:#b45309'}"><i class="fas fa-${p && p.alloggio === 'casa' ? 'house' : 'campground'} mr-1"></i>${p && p.alloggio === 'casa' ? 'Casa' : 'Tenda'}</span>`
+                : `<span class="badge" style="background:#f3f4f6;color:#6b7280">Senza pernotto</span>`;
+            const tagliaBadge = p && p.taglia ? `<span class="badge" style="background:#ede9fe;color:#6d28d9">Taglia ${escapeHtml(p.taglia)}</span>` : '';
+            return `<li class="flex items-center justify-between gap-2 py-1.5 flex-wrap">
                 <span>${escapeHtml(p && p.nome || '—')}</span>
-                <span class="badge" style="background:${p && p.alloggio === 'casa' ? '#eff6ff;color:#1d4ed8' : '#fef3c7;color:#b45309'}"><i class="fas fa-${p && p.alloggio === 'casa' ? 'house' : 'campground'} mr-1"></i>${p && p.alloggio === 'casa' ? 'Casa' : 'Tenda'}</span>
-            </li>`).join('')
+                <span class="flex items-center gap-1.5">${tagliaBadge}${alloggioBadge}</span>
+            </li>`;
+        }).join('')
         : '<li class="text-gray-400">Nessun partecipante indicato.</li>';
     document.getElementById('modal-campo50-body').innerHTML = `
         <div class="space-y-3 text-sm">
@@ -1641,7 +1652,7 @@ function openCampo50(id) {
             <div class="bg-amber-50 rounded-xl p-4">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs text-amber-600 font-bold uppercase tracking-wider">Partecipanti (${partecipanti.length})</span>
-                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa</span>
+                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa · ${nSenzaPernotto} senza pernotto</span>
                 </div>
                 <ul class="divide-y divide-amber-100">${listaPartecipanti}</ul>
             </div>
@@ -1694,19 +1705,22 @@ function exportCampo50Excel() {
         .forEach(r => {
             const partecipanti = Array.isArray(r.partecipanti) && r.partecipanti.length ? r.partecipanti : [null];
             partecipanti.forEach(p => {
+                const pernotta = p && (p.pernotto === undefined ? true : p.pernotto);
                 rows.push({
                     'Referente':        ((r.referente_nome || '') + ' ' + (r.referente_cognome || '')).trim(),
                     'Email referente':  r.email    || '',
                     'Telefono referente': r.telefono || '',
                     'Partecipante':     p ? (p.nome || '') : '',
-                    'Alloggio':         p ? (p.alloggio === 'casa' ? 'Casa' : 'Tenda') : '',
+                    'Taglia maglietta': p ? (p.taglia || '') : '',
+                    'Pernotto':         p ? (pernotta ? 'Sì' : 'No') : '',
+                    'Alloggio':         pernotta ? (p.alloggio === 'casa' ? 'Casa' : 'Tenda') : '',
                     'Data invio':       r.timestamp ? r.timestamp.slice(0, 10) : '',
                     'Letta':            r.letta ? 'Sì' : 'No',
                 });
             });
         });
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [24,28,16,24,10,12,8].map(w => ({ wch: w }));
+    ws['!cols'] = [24,28,16,24,14,10,10,12,8].map(w => ({ wch: w }));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Campo 50');
     XLSX.writeFile(wb, 'campo-50-partecipanti.xlsx');
