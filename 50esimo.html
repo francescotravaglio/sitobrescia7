@@ -250,15 +250,42 @@
 <script>
 (function(){
     function rigaHtml() {
-        return '<div class="c50-riga grid grid-cols-1 sm:grid-cols-[1fr_140px_auto] gap-2 items-center">' +
-            '<input type="text" class="input-field c50-riga-nome" placeholder="Nome e cognome partecipante">' +
-            '<select class="input-field c50-riga-alloggio">' +
-                '<option value="tenda">Tenda</option>' +
-                '<option value="casa">Casa</option>' +
-            '</select>' +
-            '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
+        return '<div class="c50-riga border border-gray-200 rounded-xl p-4 space-y-3">' +
+            '<div class="flex items-center gap-2">' +
+                '<input type="text" class="input-field c50-riga-nome flex-1" placeholder="Nome e cognome partecipante">' +
+                '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+                '<div>' +
+                    '<label class="form-label">Taglia maglietta</label>' +
+                    '<select class="input-field c50-riga-taglia">' +
+                        '<option value="XS">XS</option>' +
+                        '<option value="S">S</option>' +
+                        '<option value="M" selected>M</option>' +
+                        '<option value="L">L</option>' +
+                        '<option value="XL">XL</option>' +
+                        '<option value="XXL">XXL</option>' +
+                    '</select>' +
+                '</div>' +
+                '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer sm:mt-6">' +
+                    '<input type="checkbox" class="c50-riga-pernotto w-4 h-4 accent-scout" onchange="campo50TogglePernotto(this)">' +
+                    'Pernotto (si ferma a dormire)' +
+                '</label>' +
+            '</div>' +
+            '<div class="c50-riga-alloggio-wrap hidden">' +
+                '<label class="form-label">Dove dorme</label>' +
+                '<select class="input-field c50-riga-alloggio">' +
+                    '<option value="tenda">Tenda</option>' +
+                    '<option value="casa">Casa</option>' +
+                '</select>' +
+            '</div>' +
         '</div>';
     }
+
+    window.campo50TogglePernotto = function(checkbox) {
+        var wrap = checkbox.closest('.c50-riga').querySelector('.c50-riga-alloggio-wrap');
+        wrap.classList.toggle('hidden', !checkbox.checked);
+    };
 
     function aggiornaContatore() {
         var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
@@ -300,8 +327,10 @@
         var partecipanti = [];
         document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
             var n = r.querySelector('.c50-riga-nome').value.trim();
-            var a = r.querySelector('.c50-riga-alloggio').value;
-            if (n) partecipanti.push({ nome: n, alloggio: a });
+            var taglia = r.querySelector('.c50-riga-taglia').value;
+            var pernotto = r.querySelector('.c50-riga-pernotto').checked;
+            var alloggio = pernotto ? r.querySelector('.c50-riga-alloggio').value : null;
+            if (n) partecipanti.push({ nome: n, taglia: taglia, pernotto: pernotto, alloggio: alloggio });
         });
 
         if (!nome || !cognome || !email || !telefono) {
@@ -318,7 +347,10 @@
         }
         errEl.classList.add('hidden');
 
-        var elencoTesto = partecipanti.map(function(p){ return '- ' + p.nome + ' (' + (p.alloggio === 'casa' ? 'casa' : 'tenda') + ')'; }).join('\n');
+        var elencoTesto = partecipanti.map(function(p){
+            var pernottoTxt = p.pernotto ? ('pernotto in ' + (p.alloggio === 'casa' ? 'casa' : 'tenda')) : 'senza pernotto';
+            return '- ' + p.nome + ' — taglia maglietta ' + p.taglia + ', ' + pernottoTxt;
+        }).join('\n');
 
         window.db.collection('campo50_registrazioni').add({
             referente_nome: nome, referente_cognome: cognome,
