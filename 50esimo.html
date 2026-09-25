@@ -299,11 +299,36 @@
 
     window.campo50AggiungiRiga = function() {
         var wrap = document.getElementById('c50-partecipanti');
+        var primaRiga = wrap.children.length === 0;
         var div = document.createElement('div');
         div.innerHTML = rigaHtml();
-        wrap.appendChild(div.firstChild);
+        var riga = div.firstChild;
+        wrap.appendChild(riga);
+        if (primaRiga) {
+            // Chi compila il modulo partecipa spesso anche lui/lei stesso: il nome
+            // del primo partecipante si pre-compila da "I tuoi dati" (nome+cognome)
+            // così può subito impostare la propria taglia e il proprio pernotto,
+            // senza doversi riscrivere. Basta scrivere qualcosa di diverso in
+            // questo campo per interrompere la sincronizzazione automatica.
+            var nomeInput = riga.querySelector('.c50-riga-nome');
+            nomeInput.dataset.auto = '1';
+            nomeInput.addEventListener('input', function(){ nomeInput.dataset.auto = '0'; });
+            campo50SincronizzaPrimoPartecipante();
+        }
         aggiornaContatore();
     };
+
+    function campo50SincronizzaPrimoPartecipante() {
+        var primaRiga = document.querySelector('#c50-partecipanti .c50-riga');
+        if (!primaRiga) return;
+        var nomeInput = primaRiga.querySelector('.c50-riga-nome');
+        if (nomeInput.dataset.auto !== '1') return;
+        var nomeReferente = document.getElementById('c50-nome').value.trim();
+        var cognomeReferente = document.getElementById('c50-cognome').value.trim();
+        nomeInput.value = (nomeReferente + ' ' + cognomeReferente).trim();
+    }
+    document.getElementById('c50-nome').addEventListener('input', campo50SincronizzaPrimoPartecipante);
+    document.getElementById('c50-cognome').addEventListener('input', campo50SincronizzaPrimoPartecipante);
 
     window.campo50RimuoviRiga = function(btn) {
         var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
