@@ -256,21 +256,25 @@
                 '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
             '</div>' +
             '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
-                '<div>' +
-                    '<label class="form-label">Taglia maglietta</label>' +
-                    '<select class="input-field c50-riga-taglia">' +
-                        '<option value="XS">XS</option>' +
-                        '<option value="S">S</option>' +
-                        '<option value="M" selected>M</option>' +
-                        '<option value="L">L</option>' +
-                        '<option value="XL">XL</option>' +
-                        '<option value="XXL">XXL</option>' +
-                    '</select>' +
-                '</div>' +
-                '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer sm:mt-6">' +
+                '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
+                    '<input type="checkbox" class="c50-riga-maglietta w-4 h-4 accent-scout" onchange="campo50ToggleMaglietta(this)">' +
+                    'Vuole la maglietta del 50°' +
+                '</label>' +
+                '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
                     '<input type="checkbox" class="c50-riga-pernotto w-4 h-4 accent-scout" onchange="campo50TogglePernotto(this)">' +
                     'Pernotto (si ferma a dormire)' +
                 '</label>' +
+            '</div>' +
+            '<div class="c50-riga-taglia-wrap hidden">' +
+                '<label class="form-label">Taglia maglietta</label>' +
+                '<select class="input-field c50-riga-taglia">' +
+                    '<option value="XS">XS</option>' +
+                    '<option value="S">S</option>' +
+                    '<option value="M" selected>M</option>' +
+                    '<option value="L">L</option>' +
+                    '<option value="XL">XL</option>' +
+                    '<option value="XXL">XXL</option>' +
+                '</select>' +
             '</div>' +
             '<div class="c50-riga-alloggio-wrap hidden">' +
                 '<label class="form-label">Dove dorme</label>' +
@@ -281,6 +285,11 @@
             '</div>' +
         '</div>';
     }
+
+    window.campo50ToggleMaglietta = function(checkbox) {
+        var wrap = checkbox.closest('.c50-riga').querySelector('.c50-riga-taglia-wrap');
+        wrap.classList.toggle('hidden', !checkbox.checked);
+    };
 
     window.campo50TogglePernotto = function(checkbox) {
         var wrap = checkbox.closest('.c50-riga').querySelector('.c50-riga-alloggio-wrap');
@@ -360,10 +369,11 @@
         var partecipanti = [];
         document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
             var n = r.querySelector('.c50-riga-nome').value.trim();
-            var taglia = r.querySelector('.c50-riga-taglia').value;
+            var maglietta = r.querySelector('.c50-riga-maglietta').checked;
+            var taglia = maglietta ? r.querySelector('.c50-riga-taglia').value : null;
             var pernotto = r.querySelector('.c50-riga-pernotto').checked;
             var alloggio = pernotto ? r.querySelector('.c50-riga-alloggio').value : null;
-            if (n) partecipanti.push({ nome: n, taglia: taglia, pernotto: pernotto, alloggio: alloggio });
+            if (n) partecipanti.push({ nome: n, maglietta: maglietta, taglia: taglia, pernotto: pernotto, alloggio: alloggio });
         });
 
         if (!nome || !cognome || !email || !telefono) {
@@ -381,8 +391,9 @@
         errEl.classList.add('hidden');
 
         var elencoTesto = partecipanti.map(function(p){
+            var magliettaTxt = p.maglietta ? ('taglia maglietta ' + p.taglia) : 'senza maglietta';
             var pernottoTxt = p.pernotto ? ('pernotto in ' + (p.alloggio === 'casa' ? 'casa' : 'tenda')) : 'senza pernotto';
-            return '- ' + p.nome + ' — taglia maglietta ' + p.taglia + ', ' + pernottoTxt;
+            return '- ' + p.nome + ' — ' + magliettaTxt + ', ' + pernottoTxt;
         }).join('\n');
 
         window.db.collection('campo50_registrazioni').add({
