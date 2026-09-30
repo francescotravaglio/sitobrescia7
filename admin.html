@@ -618,7 +618,7 @@
                             <li><strong>Archiviate</strong>: richieste già gestite che vuoi mettere da parte. È l'unica sezione da cui è possibile <strong>eliminare</strong> definitivamente una pre-iscrizione (singolarmente o selezionandone più di una con le checkbox e il pulsante "Elimina selezionate"). Nelle altre due sezioni l'eliminazione non è disponibile, per evitare di perdere per errore una richiesta ancora da gestire.</li>
                         </ul>
                         <p>Su ogni pre-iscrizione con un numero di telefono trovi il pulsante <i class="fab fa-whatsapp" style="color:#25D366"></i> <strong>WhatsApp</strong>: apre una chat con il genitore con un messaggio di conferma già scritto. Il pulsante <i class="fas fa-envelope text-scout"></i> "Rispondi" fa lo stesso ma via email.</p>
-                        <p>"Scarica Excel" esporta tutte le pre-iscrizioni non archiviate in un unico foglio, utile per condividerle con gli altri capi o stamparle.</p>
+                        <p>"Scarica Excel" esporta solo le pre-iscrizioni attive (esclude sia le archiviate sia quelle in lista d'attesa) in un unico foglio, utile per condividerle con gli altri capi o stamparle.</p>
                     </div>
                 </div>
 
@@ -1362,7 +1362,7 @@ function markAllPreLette() {
 }
 
 function exportPreIscrizioniExcel() {
-    const all = (window.preIscrizioniCache || []).filter(r => !r.archiviata);
+    const all = (window.preIscrizioniCache || []).filter(r => !r.archiviata && !r.lista_attesa);
     if (!all.length) { toast('Nessuna pre-iscrizione da esportare.'); return; }
     const rows = all
         .slice()
