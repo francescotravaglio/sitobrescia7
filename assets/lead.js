@@ -153,12 +153,19 @@ window.trackWhatsApp = function(origine) {
     };
 
     function testitUpdateLayout() {
+        if (!window._testitLen) return;
+        var mobile   = window.innerWidth < 640;
         var grid     = document.getElementById('testi-grid');
         var carousel = document.getElementById('testi-carousel');
-        if (!grid || !carousel || !window._testitLen) return;
-        var mobile = window.innerWidth < 640;
-        grid.style.display     = mobile ? 'none'  : '';
-        carousel.style.display = mobile ? 'block' : 'none';
+        var marquee  = document.getElementById('testi-marquee');
+        if (grid)     grid.style.display     = mobile ? 'none'  : '';
+        if (carousel) carousel.style.display = mobile ? 'block' : 'none';
+        // Il nastro scorrevole desktop convive col carosello mobile solo nelle
+        // pagine che lo usano al posto della griglia statica (es. "Parlano di
+        // noi"): lì va nascosto su mobile, a favore del carosello swipeabile.
+        // Nella home il nastro è l'unica visualizzazione (nessun carosello) e
+        // resta sempre visibile su ogni dimensione di schermo.
+        if (marquee && carousel) marquee.style.display = mobile ? 'none' : '';
     }
 
     // Carica le recensioni approvate dopo che Firebase è pronto
