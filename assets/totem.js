@@ -164,12 +164,19 @@
         if (e.key === 'ArrowLeft') window.totemPrevPage();
     });
 
+    // Normalizzazione per il controllo doppioni: spazi/maiuscole non devono
+    // far sembrare diversi due Totem che in realtà sono lo stesso.
+    function normTotem(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
+
+    var approvedEntries = [];
+
     render([]);
     function loadTotemEntries() {
         if (!window.db) return;
         window.db.collection('totem').where('approvato', '==', true).get().then(function (snap) {
             var ok = [];
             snap.forEach(function (d) { ok.push(d.data()); });
+            approvedEntries = ok;
             render(ok);
         }).catch(function (err) { console.error(err); });
     }
@@ -194,6 +201,16 @@
 
         var nome = firstNameCapitalized(nomeRaw);
         var totemNome = titleCase(totemRaw);
+
+        // Avvisa (senza bloccare) se risulta già un Totem identico pubblicato:
+        // capita che qualcuno si dimentichi di averlo già inviato in passato.
+        var giaPresente = approvedEntries.some(function (e) {
+            return String(e.anno || '').trim() === anno && normTotem(e.nome) === normTotem(nome) && normTotem(e.totem) === normTotem(totemNome);
+        });
+        if (giaPresente) {
+            var continua = confirm('Nel Libro dei Totem risulta già "' + nome + ' - ' + totemNome + '" per l\'anno ' + anno + '. Vuoi inviarlo comunque?');
+            if (!continua) return;
+        }
 
         window.db.collection('totem').add({
             anno: anno, nome: nome, totem: totemNome,
