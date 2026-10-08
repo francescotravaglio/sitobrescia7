@@ -952,6 +952,7 @@ function renderTotem() {
     dbRef.collection('totem').get().then(snap => {
         const rows = [];
         snap.forEach(doc => rows.push({ id: doc.id, ...doc.data() }));
+        window.totemCache = rows;
         rows.sort((a,b) => (b.timestamp||'').localeCompare(a.timestamp||''));
 
         const inAttesa = rows.filter(r => !r.approvato).length;
@@ -1019,7 +1020,19 @@ function editTotemSave(id) {
         renderTotem();
     });
 }
+function normTotem(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
+
 function setTotemApprovato(id, val) {
+    if (val) {
+        const corrente = (window.totemCache || []).find(r => r.id === id);
+        const doppione = corrente && (window.totemCache || []).find(r =>
+            r.id !== id && r.approvato &&
+            String(r.anno || '').trim() === String(corrente.anno || '').trim() &&
+            normTotem(r.nome) === normTotem(corrente.nome) &&
+            normTotem(r.totem) === normTotem(corrente.totem)
+        );
+        if (doppione && !confirm(`Esiste già un Totem approvato identico: "${doppione.nome} - ${doppione.totem}" (anno ${doppione.anno}). Approvare comunque questo doppione?`)) return;
+    }
     const dbRef = window.firestoreDb || window.db;
     dbRef.collection('totem').doc(id).update({ approvato: val }).then(renderTotem);
 }
