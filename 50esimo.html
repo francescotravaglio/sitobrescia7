@@ -255,16 +255,24 @@
                 '<input type="text" class="input-field c50-riga-nome flex-1" placeholder="Nome e cognome partecipante">' +
                 '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
             '</div>' +
-            '<div>' +
+            '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
+                '<input type="checkbox" class="c50-riga-pernotto w-4 h-4 accent-scout" onchange="campo50TogglePernotto(this)">' +
+                'Pernotto (si ferma a dormire)' +
+            '</label>' +
+            '<div class="c50-riga-alloggio-wrap hidden">' +
                 '<label class="form-label">Dove dorme</label>' +
-                '<select class="input-field c50-riga-dove-dorme">' +
-                    '<option value="">Non pernotta</option>' +
-                    '<option value="tenda">Pernotto in tenda</option>' +
-                    '<option value="casa">Torna a casa a dormire</option>' +
+                '<select class="input-field c50-riga-alloggio">' +
+                    '<option value="tenda">Tenda</option>' +
+                    '<option value="casa">Casa</option>' +
                 '</select>' +
             '</div>' +
         '</div>';
     }
+
+    window.campo50TogglePernotto = function(checkbox) {
+        var wrap = checkbox.closest('.c50-riga').querySelector('.c50-riga-alloggio-wrap');
+        wrap.classList.toggle('hidden', !checkbox.checked);
+    };
 
     function aggiornaContatore() {
         var righe = document.querySelectorAll('#c50-partecipanti .c50-riga');
@@ -339,9 +347,8 @@
         var partecipanti = [];
         document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
             var n = r.querySelector('.c50-riga-nome').value.trim();
-            var doveDorme = r.querySelector('.c50-riga-dove-dorme').value;
-            var pernotto = doveDorme !== '';
-            var alloggio = pernotto ? doveDorme : null;
+            var pernotto = r.querySelector('.c50-riga-pernotto').checked;
+            var alloggio = pernotto ? r.querySelector('.c50-riga-alloggio').value : null;
             if (n) partecipanti.push({ nome: n, maglietta: null, taglia: null, pernotto: pernotto, alloggio: alloggio });
         });
 
@@ -360,7 +367,7 @@
         errEl.classList.add('hidden');
 
         var elencoTesto = partecipanti.map(function(p){
-            var pernottoTxt = p.alloggio === 'casa' ? 'torna a casa a dormire' : (p.pernotto ? 'pernotto in tenda' : 'non pernotta');
+            var pernottoTxt = p.pernotto ? ('pernotto in ' + (p.alloggio === 'casa' ? 'casa' : 'tenda')) : 'senza pernotto';
             return '- ' + p.nome + ' — ' + pernottoTxt;
         }).join('\n');
 
