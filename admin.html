@@ -621,8 +621,11 @@
                         </div>
 
                         <div id="mfa-stato-attivazione" class="hidden space-y-3">
-                            <p class="text-xs text-gray-500">1. Apri un'app authenticator (Google Authenticator, Authy, ecc.), scegli "Aggiungi account" → "Inserisci una chiave di configurazione" e incolla questa chiave:</p>
-                            <div class="bg-gray-50 rounded-xl p-3 font-mono text-sm tracking-widest text-center text-scout font-bold break-all" id="mfa-secret-key">—</div>
+                            <p class="text-xs text-gray-500">1. Apri un'app authenticator (Google Authenticator, Authy, ecc.), scegli "Aggiungi account" → "Inserisci una chiave di configurazione" e incolla questa chiave (usa il pulsante "Copia": digitarla a mano è facile sbagliarla):</p>
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 bg-gray-50 rounded-xl p-3 font-mono text-sm tracking-widest text-center text-scout font-bold break-all" id="mfa-secret-key">—</div>
+                                <button type="button" onclick="copiaChiaveMfa()" class="btn btn-outline btn-sm flex-shrink-0" id="mfa-copia-btn"><i class="fas fa-copy"></i>Copia</button>
+                            </div>
                             <p class="text-xs text-gray-500">2. Inserisci qui il codice a 6 cifre mostrato dall'app per confermare l'attivazione:</p>
                             <div class="flex gap-2">
                                 <input type="text" id="mfa-enroll-code" placeholder="123456" maxlength="6" inputmode="numeric" class="flex-1">
@@ -1881,6 +1884,17 @@ function avviaAttivazioneMfa() {
             document.getElementById('mfa-enroll-error').classList.add('hidden');
         })
         .catch(e => { console.error(e); toast('Errore nella generazione della chiave. Riprova.', false); });
+}
+
+function copiaChiaveMfa() {
+    const chiave = document.getElementById('mfa-secret-key').textContent;
+    if (!chiave || chiave === '—') return;
+    navigator.clipboard.writeText(chiave).then(() => {
+        const btn = document.getElementById('mfa-copia-btn');
+        const originale = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i>Copiata!';
+        setTimeout(() => { btn.innerHTML = originale; }, 2000);
+    }).catch(() => toast('Impossibile copiare automaticamente: seleziona e copia la chiave a mano.', false));
 }
 
 function confermaAttivazioneMfa() {
