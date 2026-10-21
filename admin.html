@@ -1632,6 +1632,7 @@ function openCampo50(id) {
     const nCasa = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'casa').length;
     const nSenzaPernotto = partecipanti.filter(p => !pernottaP(p)).length;
     const nMagliette = partecipanti.filter(p => vuoleMagliettaP(p)).length;
+    const nSoloDomenica = partecipanti.filter(p => p && p.solo_domenica).length;
     const listaPartecipanti = partecipanti.length
         ? partecipanti.map(p => {
             const pernotta = pernottaP(p);
@@ -1642,9 +1643,12 @@ function openCampo50(id) {
             const tagliaBadge = vuoleMaglietta
                 ? `<span class="badge" style="background:#ede9fe;color:#6d28d9">Taglia ${escapeHtml(p.taglia || '—')}</span>`
                 : `<span class="badge" style="background:#f3f4f6;color:#6b7280">Senza maglietta</span>`;
+            const domenicaBadge = (p && p.solo_domenica)
+                ? `<span class="badge" style="background:#fce7f3;color:#be185d">Solo domenica</span>`
+                : '';
             return `<li class="flex items-center justify-between gap-2 py-1.5 flex-wrap">
                 <span>${escapeHtml(p && p.nome || '—')}</span>
-                <span class="flex items-center gap-1.5">${tagliaBadge}${alloggioBadge}</span>
+                <span class="flex items-center gap-1.5">${domenicaBadge}${tagliaBadge}${alloggioBadge}</span>
             </li>`;
         }).join('')
         : '<li class="text-gray-400">Nessun partecipante indicato.</li>';
@@ -1671,7 +1675,7 @@ function openCampo50(id) {
             <div class="bg-amber-50 rounded-xl p-4">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs text-amber-600 font-bold uppercase tracking-wider">Partecipanti (${partecipanti.length})</span>
-                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa · ${nSenzaPernotto} senza pernotto · ${nMagliette} magliette</span>
+                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa · ${nSenzaPernotto} senza pernotto · ${nMagliette} magliette · ${nSoloDomenica} solo domenica</span>
                 </div>
                 <ul class="divide-y divide-amber-100">${listaPartecipanti}</ul>
             </div>
@@ -1731,6 +1735,7 @@ function exportCampo50Excel() {
                     'Email referente':  r.email    || '',
                     'Telefono referente': r.telefono || '',
                     'Partecipante':     p ? (p.nome || '') : '',
+                    'Solo domenica':    p ? (p.solo_domenica ? 'Sì' : 'No') : '',
                     'Maglietta':        p ? (vuoleMaglietta ? 'Sì' : 'No') : '',
                     'Taglia maglietta': vuoleMaglietta ? (p.taglia || '') : '',
                     'Pernotto':         p ? (pernotta ? 'Sì' : 'No') : '',
@@ -1741,7 +1746,7 @@ function exportCampo50Excel() {
             });
         });
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [24,28,16,24,10,14,10,10,12,8].map(w => ({ wch: w }));
+    ws['!cols'] = [24,28,16,24,12,10,14,10,10,12,8].map(w => ({ wch: w }));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Campo 50');
     XLSX.writeFile(wb, 'campo-50-partecipanti.xlsx');

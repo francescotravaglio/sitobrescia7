@@ -256,6 +256,10 @@
                 '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
             '</div>' +
             '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
+                '<input type="checkbox" class="c50-riga-solo-domenica w-4 h-4 accent-scout">' +
+                'Partecipo solo la domenica' +
+            '</label>' +
+            '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
                 '<input type="checkbox" class="c50-riga-pernotto w-4 h-4 accent-scout" onchange="campo50TogglePernotto(this)">' +
                 'Pernotto (si ferma a dormire)' +
             '</label>' +
@@ -347,9 +351,10 @@
         var partecipanti = [];
         document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
             var n = r.querySelector('.c50-riga-nome').value.trim();
+            var soloDomenica = r.querySelector('.c50-riga-solo-domenica').checked;
             var pernotto = r.querySelector('.c50-riga-pernotto').checked;
             var alloggio = pernotto ? r.querySelector('.c50-riga-alloggio').value : null;
-            if (n) partecipanti.push({ nome: n, maglietta: null, taglia: null, pernotto: pernotto, alloggio: alloggio });
+            if (n) partecipanti.push({ nome: n, maglietta: null, taglia: null, solo_domenica: soloDomenica, pernotto: pernotto, alloggio: alloggio });
         });
 
         if (!nome || !cognome || !email || !telefono) {
@@ -367,8 +372,9 @@
         errEl.classList.add('hidden');
 
         var elencoTesto = partecipanti.map(function(p){
+            var giornoTxt = p.solo_domenica ? 'solo domenica' : 'sabato e domenica';
             var pernottoTxt = p.pernotto ? ('pernotto in ' + (p.alloggio === 'casa' ? 'casa' : 'tenda')) : 'senza pernotto';
-            return '- ' + p.nome + ' — ' + pernottoTxt;
+            return '- ' + p.nome + ' — ' + giornoTxt + ', ' + pernottoTxt;
         }).join('\n');
 
         window.db.collection('campo50_registrazioni').add({
