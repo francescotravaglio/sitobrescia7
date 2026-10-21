@@ -256,10 +256,10 @@
                 '<button type="button" onclick="campo50RimuoviRiga(this)" class="c50-riga-rimuovi w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition" aria-label="Rimuovi partecipante"><i class="fas fa-trash"></i></button>' +
             '</div>' +
             '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
-                '<input type="checkbox" class="c50-riga-solo-domenica w-4 h-4 accent-scout">' +
+                '<input type="checkbox" class="c50-riga-solo-domenica w-4 h-4 accent-scout" onchange="campo50ToggleSoloDomenica(this)">' +
                 'Partecipo solo la domenica' +
             '</label>' +
-            '<label class="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
+            '<label class="c50-riga-pernotto-label flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
                 '<input type="checkbox" class="c50-riga-pernotto w-4 h-4 accent-scout" onchange="campo50TogglePernotto(this)">' +
                 'Pernotto (si ferma a dormire)' +
             '</label>' +
@@ -276,6 +276,19 @@
     window.campo50TogglePernotto = function(checkbox) {
         var wrap = checkbox.closest('.c50-riga').querySelector('.c50-riga-alloggio-wrap');
         wrap.classList.toggle('hidden', !checkbox.checked);
+    };
+
+    // Chi partecipa solo la domenica non pernotta: non c'è una notte da
+    // coprire (il campo finisce quella stessa domenica).
+    window.campo50ToggleSoloDomenica = function(checkbox) {
+        var riga = checkbox.closest('.c50-riga');
+        var pernottoCb = riga.querySelector('.c50-riga-pernotto');
+        pernottoCb.disabled = checkbox.checked;
+        riga.querySelector('.c50-riga-pernotto-label').classList.toggle('opacity-40', checkbox.checked);
+        if (checkbox.checked && pernottoCb.checked) {
+            pernottoCb.checked = false;
+            campo50TogglePernotto(pernottoCb);
+        }
     };
 
     function aggiornaContatore() {
@@ -352,7 +365,7 @@
         document.querySelectorAll('#c50-partecipanti .c50-riga').forEach(function(r){
             var n = r.querySelector('.c50-riga-nome').value.trim();
             var soloDomenica = r.querySelector('.c50-riga-solo-domenica').checked;
-            var pernotto = r.querySelector('.c50-riga-pernotto').checked;
+            var pernotto = !soloDomenica && r.querySelector('.c50-riga-pernotto').checked;
             var alloggio = pernotto ? r.querySelector('.c50-riga-alloggio').value : null;
             if (n) partecipanti.push({ nome: n, maglietta: null, taglia: null, solo_domenica: soloDomenica, pernotto: pernotto, alloggio: alloggio });
         });
