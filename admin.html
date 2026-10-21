@@ -179,46 +179,30 @@
         <h1 class="text-2xl font-black text-scout mb-1">Area Riservata</h1>
         <p class="text-gray-400 text-sm mb-8">Pannello di amministrazione BS7</p>
 
-        <div id="login-step-password">
-            <div class="text-left space-y-4 mb-6">
-                <div>
-                    <label>Email</label>
-                    <input type="email" id="login-email" placeholder="admin@agescibrescia7.com"
+        <div class="text-left space-y-4 mb-6">
+            <div>
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="admin@agescibrescia7.com"
+                       onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div>
+                <label>Password</label>
+                <div class="relative">
+                    <input type="password" id="login-pw" placeholder="••••••••"
                            onkeydown="if(event.key==='Enter')doLogin()">
-                </div>
-                <div>
-                    <label>Password</label>
-                    <div class="relative">
-                        <input type="password" id="login-pw" placeholder="••••••••"
-                               onkeydown="if(event.key==='Enter')doLogin()">
-                        <button onclick="togglePw()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-scout">
-                            <i class="fas fa-eye text-sm" id="pw-icon"></i>
-                        </button>
-                    </div>
+                    <button onclick="togglePw()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-scout">
+                        <i class="fas fa-eye text-sm" id="pw-icon"></i>
+                    </button>
                 </div>
             </div>
-
-            <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Credenziali non valide. Riprova.</p>
-
-            <button onclick="doLogin()"
-                    class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
-                <i class="fas fa-lock-open mr-2"></i>Accedi
-            </button>
         </div>
 
-        <div id="login-step-mfa" class="hidden">
-            <p class="text-left text-sm text-gray-500 mb-4">Inserisci il codice a 6 cifre dalla tua app authenticator.</p>
-            <input type="text" id="login-mfa-code" placeholder="123456" maxlength="6" inputmode="numeric"
-                   class="text-center tracking-[0.4em] text-lg mb-4" onkeydown="if(event.key==='Enter')verificaMfaLogin()">
-            <p id="login-mfa-error" class="text-red-500 text-xs mb-4 hidden">Codice non valido. Riprova.</p>
-            <button onclick="verificaMfaLogin()"
-                    class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
-                <i class="fas fa-shield-halved mr-2"></i>Verifica
-            </button>
-            <button onclick="annullaMfaLogin()" class="block w-full mt-3 text-xs text-gray-400 hover:text-scout transition">
-                ← Torna al login
-            </button>
-        </div>
+        <p id="login-error" class="text-red-500 text-xs mb-4 hidden">Credenziali non valide. Riprova.</p>
+
+        <button onclick="doLogin()"
+                class="w-full bg-scout text-white font-black py-3.5 rounded-xl hover:bg-scout-dark transition text-sm tracking-widest uppercase">
+            <i class="fas fa-lock-open mr-2"></i>Accedi
+        </button>
 
         <a href="/" class="block mt-5 text-xs text-gray-400 hover:text-scout transition">
             ← Torna al sito
@@ -608,36 +592,6 @@
                         <span id="imp-50esimo-salvato" class="text-xs text-green-600 font-semibold hidden"><i class="fas fa-check"></i> Salvato</span>
                     </div>
                 </div>
-
-                <div class="panel overflow-hidden max-w-lg">
-                    <div class="panel-head">
-                        <h3><span class="panel-icon bg-emerald-50 text-emerald-600"><i class="fas fa-shield-halved"></i></span>Autenticazione a due fattori</h3>
-                    </div>
-                    <div class="panel-body space-y-4">
-                        <p class="text-xs text-gray-400 -mt-1">Aggiunge un secondo passaggio al login del TUO account (serve un'app authenticator come Google Authenticator o Authy): anche chi scoprisse la tua password da sola non potrebbe entrare. Riguarda solo l'account con cui hai fatto l'accesso ora, non gli altri capi.</p>
-
-                        <div id="mfa-stato-nessuno">
-                            <button onclick="avviaAttivazioneMfa()" class="btn btn-primary btn-sm"><i class="fas fa-shield-halved"></i>Attiva autenticazione a due fattori</button>
-                        </div>
-
-                        <div id="mfa-stato-attivazione" class="hidden space-y-3">
-                            <p class="text-xs text-gray-500">1. Apri un'app authenticator (Google Authenticator, Authy, ecc.), scegli "Aggiungi account" → "Inserisci una chiave di configurazione" e incolla questa chiave:</p>
-                            <div class="bg-gray-50 rounded-xl p-3 font-mono text-sm tracking-widest text-center text-scout font-bold break-all" id="mfa-secret-key">—</div>
-                            <p class="text-xs text-gray-500">2. Inserisci qui il codice a 6 cifre mostrato dall'app per confermare l'attivazione:</p>
-                            <div class="flex gap-2">
-                                <input type="text" id="mfa-enroll-code" placeholder="123456" maxlength="6" inputmode="numeric" class="flex-1">
-                                <button onclick="confermaAttivazioneMfa()" class="btn btn-primary btn-sm">Conferma</button>
-                            </div>
-                            <p id="mfa-enroll-error" class="text-red-500 text-xs hidden"></p>
-                            <button onclick="annullaAttivazioneMfa()" class="text-xs text-gray-400 hover:underline">Annulla</button>
-                        </div>
-
-                        <div id="mfa-stato-attivo" class="hidden">
-                            <p class="text-sm text-emerald-700 font-semibold"><i class="fas fa-circle-check"></i> Autenticazione a due fattori attiva sul tuo account</p>
-                            <button onclick="disattivaMfa()" class="btn btn-outline btn-sm mt-3" style="color:#dc2626;border-color:#fecaca"><i class="fas fa-shield-halved"></i>Disattiva</button>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <!-- ──────────────────────── GUIDA ───────────────────── -->
@@ -807,11 +761,6 @@ function toast(msg, ok = true) {
 }
 
 // ── Login (Firebase Auth) ─────────────────────────────────────────
-// pendingMfaResolver: valorizzato quando l'account ha l'autenticazione a due
-// fattori attiva e Firebase chiede il secondo passaggio prima di completare
-// l'accesso (vedi impostazioni → sezione "Autenticazione a due fattori").
-let pendingMfaResolver = null;
-
 function doLogin() {
     const email = document.getElementById('login-email').value.trim();
     const pw    = document.getElementById('login-pw').value;
@@ -822,18 +771,8 @@ function doLogin() {
         errEl.classList.remove('hidden');
         return;
     }
-    const { auth, signInWithEmailAndPassword, getMultiFactorResolver } = window.authModular;
-    signInWithEmailAndPassword(auth, email, pw)
-        .catch(error => {
-            if (error.code === 'auth/multi-factor-auth-required') {
-                pendingMfaResolver = getMultiFactorResolver(auth, error);
-                document.getElementById('login-step-password').classList.add('hidden');
-                document.getElementById('login-step-mfa').classList.remove('hidden');
-                document.getElementById('login-mfa-error').classList.add('hidden');
-                document.getElementById('login-mfa-code').value = '';
-                document.getElementById('login-mfa-code').focus();
-                return;
-            }
+    firebase.auth().signInWithEmailAndPassword(email, pw)
+        .catch(() => {
             errEl.textContent = 'Credenziali non valide. Riprova.';
             errEl.classList.remove('hidden');
             document.getElementById('login-pw').value = '';
@@ -841,36 +780,8 @@ function doLogin() {
         });
 }
 
-function verificaMfaLogin() {
-    const code = document.getElementById('login-mfa-code').value.trim();
-    const errEl = document.getElementById('login-mfa-error');
-    if (!pendingMfaResolver || !/^\d{6}$/.test(code)) {
-        errEl.textContent = 'Inserisci il codice a 6 cifre.';
-        errEl.classList.remove('hidden');
-        return;
-    }
-    const { TotpMultiFactorGenerator } = window.authModular;
-    const hint = pendingMfaResolver.hints[0];
-    const assertion = TotpMultiFactorGenerator.assertionForSignIn(hint.uid, code);
-    pendingMfaResolver.resolveSignIn(assertion)
-        .then(() => { pendingMfaResolver = null; })
-        .catch(() => {
-            errEl.textContent = 'Codice non valido o scaduto. Riprova.';
-            errEl.classList.remove('hidden');
-            document.getElementById('login-mfa-code').value = '';
-            document.getElementById('login-mfa-code').focus();
-        });
-}
-
-function annullaMfaLogin() {
-    pendingMfaResolver = null;
-    document.getElementById('login-step-mfa').classList.add('hidden');
-    document.getElementById('login-step-password').classList.remove('hidden');
-    document.getElementById('login-pw').value = '';
-}
-
 function logout() {
-    window.authModular.signOut(window.authModular.auth);
+    firebase.auth().signOut();
 }
 
 function togglePw() {
@@ -885,25 +796,22 @@ function togglePw() {
 
 // Auth state observer — unica fonte di verità per login/logout
 document.addEventListener('DOMContentLoaded', () => {
-    const { auth, onAuthStateChanged, signOut } = window.authModular;
-    onAuthStateChanged(auth, user => {
+    firebase.auth().onAuthStateChanged(user => {
         if (user) {
             if (!user.email || !user.email.toLowerCase().endsWith('@agescibrescia7.com')) {
-                signOut(auth);
+                firebase.auth().signOut();
                 const errEl = document.getElementById('login-error');
                 errEl.textContent = 'Accesso non autorizzato per questo account.';
                 errEl.classList.remove('hidden');
                 return;
             }
             if (!user.emailVerified) {
-                signOut(auth);
+                firebase.auth().signOut();
                 const errEl = document.getElementById('login-error');
                 errEl.textContent = 'Email non verificata. Controlla la posta e clicca il link di verifica prima di accedere.';
                 errEl.classList.remove('hidden');
                 return;
             }
-            document.getElementById('login-step-mfa').classList.add('hidden');
-            document.getElementById('login-step-password').classList.remove('hidden');
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('app').classList.remove('hidden');
             document.getElementById('app').classList.add('flex');
@@ -1853,72 +1761,6 @@ function caricaImpostazioni() {
         document.getElementById('imp-email').value = d.email || '';
         document.getElementById('imp-mostra-50esimo').checked = d.mostra_50esimo !== false;
     }).catch(e => console.error('Errore caricaImpostazioni:', e));
-    aggiornaStatoMfa();
-}
-
-// ── Autenticazione a due fattori (TOTP) ────────────────────────────
-let mfaPendingSecret = null;
-
-function aggiornaStatoMfa() {
-    const { auth, multiFactor } = window.authModular;
-    const user = auth.currentUser;
-    const attivo = !!(user && multiFactor(user).enrolledFactors.length);
-    document.getElementById('mfa-stato-nessuno').classList.toggle('hidden', attivo);
-    document.getElementById('mfa-stato-attivazione').classList.add('hidden');
-    document.getElementById('mfa-stato-attivo').classList.toggle('hidden', !attivo);
-}
-
-function avviaAttivazioneMfa() {
-    const { auth, multiFactor, TotpMultiFactorGenerator } = window.authModular;
-    multiFactor(auth.currentUser).getSession()
-        .then(session => TotpMultiFactorGenerator.generateSecret(session))
-        .then(secret => {
-            mfaPendingSecret = secret;
-            document.getElementById('mfa-secret-key').textContent = secret.secretKey;
-            document.getElementById('mfa-stato-nessuno').classList.add('hidden');
-            document.getElementById('mfa-stato-attivazione').classList.remove('hidden');
-            document.getElementById('mfa-enroll-code').value = '';
-            document.getElementById('mfa-enroll-error').classList.add('hidden');
-        })
-        .catch(e => { console.error(e); toast('Errore nella generazione della chiave. Riprova.', false); });
-}
-
-function confermaAttivazioneMfa() {
-    const code = document.getElementById('mfa-enroll-code').value.trim();
-    const errEl = document.getElementById('mfa-enroll-error');
-    if (!mfaPendingSecret || !/^\d{6}$/.test(code)) {
-        errEl.textContent = 'Inserisci il codice a 6 cifre.';
-        errEl.classList.remove('hidden');
-        return;
-    }
-    const { auth, multiFactor, TotpMultiFactorGenerator } = window.authModular;
-    const assertion = TotpMultiFactorGenerator.assertionForEnrollment(mfaPendingSecret, code);
-    multiFactor(auth.currentUser).enroll(assertion, 'App authenticator')
-        .then(() => {
-            mfaPendingSecret = null;
-            toast('Autenticazione a due fattori attivata!');
-            aggiornaStatoMfa();
-        })
-        .catch(e => {
-            console.error(e);
-            errEl.textContent = 'Codice non valido. Riprova.';
-            errEl.classList.remove('hidden');
-        });
-}
-
-function annullaAttivazioneMfa() {
-    mfaPendingSecret = null;
-    aggiornaStatoMfa();
-}
-
-function disattivaMfa() {
-    if (!confirm('Disattivare l\'autenticazione a due fattori sul tuo account? Potrai riattivarla in qualsiasi momento.')) return;
-    const { auth, multiFactor } = window.authModular;
-    const user = auth.currentUser;
-    const factors = multiFactor(user).enrolledFactors;
-    Promise.all(factors.map(f => multiFactor(user).unenroll(f)))
-        .then(() => { toast('Autenticazione a due fattori disattivata.'); aggiornaStatoMfa(); })
-        .catch(e => { console.error(e); toast('Errore durante la disattivazione.', false); });
 }
 
 function toggleMostra50esimo(visibile) {
@@ -1946,7 +1788,7 @@ function salvaImpostazioni() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Email non valida.', false); return; }
     if (!confirm('Confermi di voler cambiare telefono ed email mostrati su TUTTO il sito (menu, footer, pulsanti WhatsApp, pagina Contatti)? La modifica sarà visibile subito a tutti i visitatori, dopo la conferma via email.')) return;
 
-    const user = window.authModular.auth.currentUser;
+    const user = firebase.auth().currentUser;
     if (!user || !user.email) { toast('Sessione non valida: rieffettua il login.', false); return; }
     if (typeof emailjs === 'undefined') { toast('Servizio email non disponibile, riprova tra poco.', false); return; }
 
@@ -2284,11 +2126,9 @@ function deleteEvento(id) {
 </script>
 
 <!-- Firebase SDK -->
-<!-- app/firestore restano sulla libreria "compat" (tutto il resto del pannello
-     usa le chiamate stile .collection().doc()...); solo l'autenticazione usa
-     l'SDK modulare qui sotto, perché l'MFA/TOTP non è disponibile in compat. -->
-<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js" integrity="sha384-tlQhrgxJ7V8OZx+VXHj3tR81OL53pwpHSTPcnSH/OiwNCFBgaP2tHIZBxaaAnmN+" crossorigin="anonymous"></script>
-<script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js" integrity="sha384-ynIEJh/LF4vc94kBn86PdxiRZ74YxQohjabfR2wcK6IJ1FGNQEuOMAAOn8RTiXVQ" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js" integrity="sha384-Nc5ARm3RyW8KveEJE95Jpt7ImqwhlOwGfqVpFGgF4Ao//x1qi8KIDcSj+OLG4ekb" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js" integrity="sha384-86kXGYkdFocjUe4AWPRLlnQjzMA29UWeFlyne4xC/mwpqoVrwkFrRC/mbWZdYsO7" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js" integrity="sha384-7KEsLxyAvzBXN/Ln39jh2knr7dO7QETWBRvJaSYB+KoJOUipOi6LS4Hxi7hIclWO" crossorigin="anonymous"></script>
 <script>
 firebase.initializeApp({
     apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
@@ -2350,41 +2190,6 @@ function setupFirestoreListener() {
             if (document.getElementById('tab-eventi')?.classList.contains('active')) renderEventi();
         }, err => console.error('Firestore eventi listener error:', err));
 }
-</script>
-
-<!-- Autenticazione: SDK modulare, unica versione che supporta l'MFA via TOTP
-     (non disponibile nella libreria "compat" usata sopra per Firestore).
-     Nota sicurezza: a differenza degli altri script di terze parti di questo
-     sito, un import ES module non supporta Subresource Integrity sui moduli
-     importati al suo interno (solo lo script di primo livello potrebbe
-     averla) — limite della piattaforma web, non un'omissione.
-     firebase-app.js qui sotto crea una propria istanza "app" indipendente da
-     quella creata da firebase.initializeApp() (compat) poche righe sopra: le
-     due librerie sono bundle separati e non condividono il registro interno,
-     ma va bene così perché ogni pezzo del pannello usa solo la propria (Auth
-     qui, Firestore via "compat" altrove) — la sessione di login resta comunque
-     la stessa per entrambe, perché Firebase Auth la salva nel browser. -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import {
-    getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
-    multiFactor, TotpMultiFactorGenerator, getMultiFactorResolver
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-const authApp = initializeApp({
-    apiKey: "AIzaSyCABGrbUk5baqcak-iejkJtDsfkaY66III",
-    authDomain: "agescibrescia7-508b0.firebaseapp.com",
-    projectId: "agescibrescia7-508b0",
-    storageBucket: "agescibrescia7-508b0.firebasestorage.app",
-    messagingSenderId: "738190317173",
-    appId: "1:738190317173:web:6ee596fc6e09494f04ca3c"
-}, "auth-modular");
-
-window.authModular = {
-    auth: getAuth(authApp),
-    onAuthStateChanged, signInWithEmailAndPassword, signOut,
-    multiFactor, TotpMultiFactorGenerator, getMultiFactorResolver
-};
 </script>
 </body>
 </html>
