@@ -406,27 +406,18 @@
             }
             if (typeof emailjs === 'undefined') return;
             var dataStr = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
+            // Solo la conferma al referente: niente notifica ai capi per ogni
+            // pre-registrazione (le controllano direttamente da admin.html).
             emailjs.send('service_rtxg48l', 'template_fc1c77j', {
-                to_email:  'brescia7@lombardia.agesci.it',
-                nome:      'Nuova pre-registrazione al campo del 50°',
-                tipo:      'Pre-registrazione campo 50°',
+                to_email:  email,
+                nome:      'Ciao ' + nome + '!',
+                tipo:      'Conferma pre-registrazione al campo del 50°',
                 timestamp: dataStr,
-                iban:      'Referente: ' + nome + ' ' + cognome + '\n' +
-                           'Email: ' + email + '\n' +
-                           'Telefono: ' + telefono + '\n\n' +
-                           'Partecipanti (' + partecipanti.length + '):\n' + elencoTesto
-            }).then(function() {
-                return emailjs.send('service_rtxg48l', 'template_fc1c77j', {
-                    to_email:  email,
-                    nome:      'Ciao ' + nome + '!',
-                    tipo:      'Conferma pre-registrazione al campo del 50°',
-                    timestamp: dataStr,
-                    iban:      'Abbiamo ricevuto la tua pre-registrazione per il campo raduno ex Brescia 7 del 29-30 maggio 2027 alla base scout di Piazzole.\n\n' +
-                               'Partecipanti indicati (' + partecipanti.length + '):\n' + elencoTesto + '\n\n' +
-                               'Questa è solo una pre-registrazione: a ridosso del campo ti invieremo il programma, le informazioni pratiche e le indicazioni per completare l\'iscrizione.\n\n' +
-                               'Per qualsiasi domanda: info@agescibrescia7.com · +39 340 874 0678\n\n' +
-                               'Buona strada!\nGruppo Scout AGESCI Brescia 7'
-                });
+                iban:      'Abbiamo ricevuto la tua pre-registrazione per il campo raduno ex Brescia 7 del 29-30 maggio 2027 alla base scout di Piazzole.\n\n' +
+                           'Partecipanti indicati (' + partecipanti.length + '):\n' + elencoTesto + '\n\n' +
+                           'Questa è solo una pre-registrazione: a ridosso del campo ti invieremo il programma, le informazioni pratiche e le indicazioni per completare l\'iscrizione.\n\n' +
+                           'Per qualsiasi domanda: info@agescibrescia7.com · +39 340 874 0678\n\n' +
+                           'Buona strada!\nGruppo Scout AGESCI Brescia 7'
             }).catch(function(e) { console.error('[EmailJS]', JSON.stringify(e)); });
         }).catch(function(err) { console.error(err); alert('Errore. Riprova.'); });
     };
