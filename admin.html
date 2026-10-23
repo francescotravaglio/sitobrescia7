@@ -1707,6 +1707,15 @@ function campo50Row(r) {
     </tr>`;
 }
 
+// alloggio: 'tenda' | 'struttura' (alloggio al coperto fornito dall'organizzazione
+// alla base) | 'casa' (casa propria del partecipante) — tre scelte distinte nel
+// modulo pubblico, tutte mappate sullo stesso campo "alloggio" salvato su Firestore.
+function alloggioBadgeInfo(alloggio) {
+    if (alloggio === 'casa') return { bg: '#eff6ff;color:#1d4ed8', icon: 'house', label: 'Casa propria' };
+    if (alloggio === 'struttura') return { bg: '#e0e7ff;color:#4338ca', icon: 'building', label: 'Struttura' };
+    return { bg: '#fef3c7;color:#b45309', icon: 'campground', label: 'Tenda' };
+}
+
 function openCampo50(id) {
     const r = (window.campo50Cache || []).find(x => x.id === id);
     if (!r) return;
@@ -1724,6 +1733,7 @@ function openCampo50(id) {
     const pernottaP = p => p && (p.pernotto === undefined ? true : p.pernotto);
     const vuoleMagliettaP = p => p && (p.maglietta === undefined ? true : p.maglietta);
     const nTenda = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'tenda').length;
+    const nStruttura = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'struttura').length;
     const nCasa = partecipanti.filter(p => pernottaP(p) && p.alloggio === 'casa').length;
     const nSenzaPernotto = partecipanti.filter(p => !pernottaP(p)).length;
     const nMagliette = partecipanti.filter(p => vuoleMagliettaP(p)).length;
@@ -1732,7 +1742,7 @@ function openCampo50(id) {
         ? partecipanti.map(p => {
             const pernotta = pernottaP(p);
             const alloggioBadge = pernotta
-                ? `<span class="badge" style="background:${p && p.alloggio === 'casa' ? '#eff6ff;color:#1d4ed8' : '#fef3c7;color:#b45309'}"><i class="fas fa-${p && p.alloggio === 'casa' ? 'house' : 'campground'} mr-1"></i>${p && p.alloggio === 'casa' ? 'Casa' : 'Tenda'}</span>`
+                ? (info => `<span class="badge" style="background:${info.bg}"><i class="fas fa-${info.icon} mr-1"></i>${info.label}</span>`)(alloggioBadgeInfo(p && p.alloggio))
                 : `<span class="badge" style="background:#f3f4f6;color:#6b7280">Senza pernotto</span>`;
             const vuoleMaglietta = vuoleMagliettaP(p);
             const tagliaBadge = vuoleMaglietta
@@ -1770,7 +1780,7 @@ function openCampo50(id) {
             <div class="bg-amber-50 rounded-xl p-4">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs text-amber-600 font-bold uppercase tracking-wider">Partecipanti (${partecipanti.length})</span>
-                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nCasa} casa · ${nSenzaPernotto} senza pernotto · ${nMagliette} magliette · ${nSoloDomenica} solo domenica</span>
+                    <span class="text-xs text-amber-700">${nTenda} tenda · ${nStruttura} struttura · ${nCasa} casa propria · ${nSenzaPernotto} senza pernotto · ${nMagliette} magliette · ${nSoloDomenica} solo domenica</span>
                 </div>
                 <ul class="divide-y divide-amber-100">${listaPartecipanti}</ul>
             </div>
@@ -1834,7 +1844,7 @@ function exportCampo50Excel() {
                     'Maglietta':        p ? (vuoleMaglietta ? 'Sì' : 'No') : '',
                     'Taglia maglietta': vuoleMaglietta ? (p.taglia || '') : '',
                     'Pernotto':         p ? (pernotta ? 'Sì' : 'No') : '',
-                    'Alloggio':         pernotta ? (p.alloggio === 'casa' ? 'Casa' : 'Tenda') : '',
+                    'Alloggio':         pernotta ? alloggioBadgeInfo(p.alloggio).label : '',
                     'Data invio':       r.timestamp ? r.timestamp.slice(0, 10) : '',
                     'Letta':            r.letta ? 'Sì' : 'No',
                 });

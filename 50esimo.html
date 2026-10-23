@@ -260,44 +260,41 @@
                 'Partecipo solo la domenica' +
             '</label>' +
             '<label class="c50-riga-pernotto-label flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
-                '<input type="checkbox" class="c50-riga-pernotto-tenda w-4 h-4 accent-scout" onchange="campo50TogglePernottoTenda(this)">' +
+                '<input type="checkbox" class="c50-riga-alloggio-opzione c50-riga-pernotto-tenda w-4 h-4 accent-scout" onchange="campo50TogglePernottoOpzione(this)">' +
                 'Pernotto in tenda' +
             '</label>' +
             '<label class="c50-riga-pernotto-label flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
-                '<input type="checkbox" class="c50-riga-pernotto-casa w-4 h-4 accent-scout" onchange="campo50TogglePernottoCasa(this)">' +
+                '<input type="checkbox" class="c50-riga-alloggio-opzione c50-riga-pernotto-struttura w-4 h-4 accent-scout" onchange="campo50TogglePernottoOpzione(this)">' +
+                'Pernotto in struttura (alloggio coperto fornito dall\'organizzazione)' +
+            '</label>' +
+            '<label class="c50-riga-pernotto-label flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">' +
+                '<input type="checkbox" class="c50-riga-alloggio-opzione c50-riga-pernotto-casa w-4 h-4 accent-scout" onchange="campo50TogglePernottoOpzione(this)">' +
                 'Pernotto a casa propria' +
             '</label>' +
         '</div>';
     }
 
-    // Tenda e casa propria sono alternative tra loro: spuntandone una si
-    // deseleziona automaticamente l'altra.
-    window.campo50TogglePernottoTenda = function(checkbox) {
+    // Tenda, struttura e casa propria sono alternative tra loro: spuntandone
+    // una si deselezionano automaticamente le altre.
+    window.campo50TogglePernottoOpzione = function(checkbox) {
         if (!checkbox.checked) return;
-        var casaCb = checkbox.closest('.c50-riga').querySelector('.c50-riga-pernotto-casa');
-        casaCb.checked = false;
-    };
-    window.campo50TogglePernottoCasa = function(checkbox) {
-        if (!checkbox.checked) return;
-        var tendaCb = checkbox.closest('.c50-riga').querySelector('.c50-riga-pernotto-tenda');
-        tendaCb.checked = false;
+        checkbox.closest('.c50-riga').querySelectorAll('.c50-riga-alloggio-opzione').forEach(function(cb) {
+            if (cb !== checkbox) cb.checked = false;
+        });
     };
 
     // Chi partecipa solo la domenica non pernotta: non c'è una notte da
     // coprire (il campo finisce quella stessa domenica).
     window.campo50ToggleSoloDomenica = function(checkbox) {
         var riga = checkbox.closest('.c50-riga');
-        var tendaCb = riga.querySelector('.c50-riga-pernotto-tenda');
-        var casaCb = riga.querySelector('.c50-riga-pernotto-casa');
-        tendaCb.disabled = checkbox.checked;
-        casaCb.disabled = checkbox.checked;
+        var opzioni = riga.querySelectorAll('.c50-riga-alloggio-opzione');
+        opzioni.forEach(function(cb) {
+            cb.disabled = checkbox.checked;
+            if (checkbox.checked) cb.checked = false;
+        });
         riga.querySelectorAll('.c50-riga-pernotto-label').forEach(function(l) {
             l.classList.toggle('opacity-40', checkbox.checked);
         });
-        if (checkbox.checked) {
-            tendaCb.checked = false;
-            casaCb.checked = false;
-        }
     };
 
     function aggiornaContatore() {
@@ -375,9 +372,10 @@
             var n = r.querySelector('.c50-riga-nome').value.trim();
             var soloDomenica = r.querySelector('.c50-riga-solo-domenica').checked;
             var pernottoTenda = !soloDomenica && r.querySelector('.c50-riga-pernotto-tenda').checked;
+            var pernottoStruttura = !soloDomenica && r.querySelector('.c50-riga-pernotto-struttura').checked;
             var pernottoCasa = !soloDomenica && r.querySelector('.c50-riga-pernotto-casa').checked;
-            var pernotto = pernottoTenda || pernottoCasa;
-            var alloggio = pernottoCasa ? 'casa' : (pernottoTenda ? 'tenda' : null);
+            var pernotto = pernottoTenda || pernottoStruttura || pernottoCasa;
+            var alloggio = pernottoCasa ? 'casa' : (pernottoStruttura ? 'struttura' : (pernottoTenda ? 'tenda' : null));
             if (n) partecipanti.push({ nome: n, maglietta: null, taglia: null, solo_domenica: soloDomenica, pernotto: pernotto, alloggio: alloggio });
         });
 
@@ -397,7 +395,8 @@
 
         var elencoTesto = partecipanti.map(function(p){
             var giornoTxt = p.solo_domenica ? 'solo domenica' : 'sabato e domenica';
-            var pernottoTxt = p.pernotto ? ('pernotto in ' + (p.alloggio === 'casa' ? 'casa' : 'tenda')) : 'senza pernotto';
+            var alloggioTxt = p.alloggio === 'casa' ? 'a casa propria' : (p.alloggio === 'struttura' ? 'in struttura' : 'in tenda');
+            var pernottoTxt = p.pernotto ? ('pernotto ' + alloggioTxt) : 'senza pernotto';
             return '- ' + p.nome + ' — ' + giornoTxt + ', ' + pernottoTxt;
         }).join('\n');
 
