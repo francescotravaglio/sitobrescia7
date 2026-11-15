@@ -230,6 +230,14 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!--  MAIN LAYOUT                                                   -->
 <!-- ══════════════════════════════════════════════════════════════ -->
+<!-- Dentro un <template>: inerte finché non viene clonato nel DOM dopo
+     un login riuscito (vedi montaApp()) — più scomodo da far comparire
+     con un rapido "edit HTML" da DevTools rispetto a un div solo nascosto
+     via CSS. Resta comunque leggibile da chi guarda il sorgente della
+     pagina: su un sito statico non c'è modo di nasconderlo davvero prima
+     dell'autenticazione, che resta garantita dalle regole di Firestore,
+     non da questo. -->
+<template id="app-template">
 <div id="app" class="hidden flex min-h-screen">
 
     <!-- backdrop sidebar (solo mobile) -->
@@ -730,6 +738,7 @@
         </div><!-- /p-8 -->
     </main>
 </div><!-- /app -->
+</template>
 
 <!-- ── MODAL DETTAGLIO PRE-ISCRIZIONE ───────────────────────────── -->
 <div id="modal-pre-iscrizione" class="modal-overlay hidden" onclick="if(event.target===this)closePreModal()">
@@ -886,6 +895,16 @@ function togglePw() {
     }
 }
 
+// Clona il pannello (vedi <template id="app-template">) nel DOM reale.
+// Chiamata solo dopo un login riuscito, e solo la prima volta: non fa
+// nulla se è già stato montato in questa sessione di pagina (es. dopo
+// un logout seguito da un nuovo login).
+function montaApp() {
+    if (document.getElementById('app')) return;
+    const tpl = document.getElementById('app-template');
+    document.body.appendChild(tpl.content.cloneNode(true));
+}
+
 // Auth state observer — unica fonte di verità per login/logout
 document.addEventListener('DOMContentLoaded', () => {
     const { auth, onAuthStateChanged, signOut } = window.fb;
@@ -908,14 +927,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('login-step-mfa').classList.add('hidden');
             document.getElementById('login-step-password').classList.remove('hidden');
             document.getElementById('login-overlay').style.display = 'none';
+            montaApp();
             document.getElementById('app').classList.remove('hidden');
             document.getElementById('app').classList.add('flex');
             setupFirestoreListener();
             refreshAll();
         } else {
             document.getElementById('login-overlay').style.display = 'flex';
-            document.getElementById('app').classList.add('hidden');
-            document.getElementById('app').classList.remove('flex');
+            const appEl = document.getElementById('app');
+            if (appEl) { appEl.classList.add('hidden'); appEl.classList.remove('flex'); }
         }
     });
 });
